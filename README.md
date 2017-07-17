@@ -1,5 +1,5 @@
-# NRMC2017
-Repository for the Bison Robotics NASA Robotic Mining Competition 2017 Entry
+# NRMC2018
+Repository for the Bison Robotics NASA Robotic Mining Competition 2018 Entry
 
 # Getting Started
 ## Environment
@@ -27,15 +27,15 @@ sudo apt-get install python-catkin-tools
 ```
 
 ## Workspace
-Our workspace is the NRMC2017 repository this README lives in. Assuming you have your environment properly configured
+Our workspace is the NRM2018 repository this README lives in. Assuming you have your environment properly configured
 run the following commands.
 ```
 # Clone the repo to your computer
 # If you have ssh keys with github setup on your pc
-git clone git@github.com:BisonRobotics/NRMC2017.git
+git clone git@github.com:BisonRobotics/NRM2018.git
 
 # If not
-git clone https://github.com/BisonRobotics/NRMC2017.git
+git clone https://github.com/BisonRobotics/NRM2018.git
 
 # Install workspace dependencies, respond y to all prompts
 rosdep install --from-paths . --ignore-src --rosdistro=kinetic
@@ -45,5 +45,5 @@ catkin build
 ```
 
 ## Connecting to and configuring the robot (NUC)
-See [Network Config](https://github.com/BisonRobotics/NRMC2017/wiki/Network-Configuration)
+See [Network Config](https://github.com/BisonRobotics/NRM2018/wiki/Network-Configuration)
 
