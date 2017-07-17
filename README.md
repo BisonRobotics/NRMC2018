@@ -44,6 +44,4 @@ rosdep install --from-paths . --ignore-src --rosdistro=kinetic
 catkin build
 ```
 
-## Connecting to and configuring the robot (NUC)
-See [Network Config](https://github.com/BisonRobotics/NRM2018/wiki/Network-Configuration)
 
