@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>localization</name>
+  <name>bucket_control</name>
   <version>0.0.0</version>
-  <description>The localization package</description>
+  <description>The bucket_control package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -19,7 +19,7 @@
   <!-- Url tags are optional, but multiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/localization</url> -->
+  <!-- <url type="website">http://wiki.ros.org/bucket_control</url> -->
 
 
   <!-- Author tags are optional, multiple are allowed, one per tag -->
@@ -41,10 +41,11 @@
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>cmake_modules</build_depend>
-  <build_depend>nav_msgs</build_depend>
   <build_depend>roscpp</build_depend>
-  <run_depend>nav_msgs</run_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <run_depend>cmake_modules</run_depend>
   <run_depend>roscpp</run_depend>
+  <run_depend>sensor_msgs</run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
