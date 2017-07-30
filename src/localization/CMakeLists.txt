@@ -13,7 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 find_package (catkin REQUIRED cmake_modules)
-find_package (Eigen REQUIRED)
+find_package (Eigen3 REQUIRED)
 
 ###################################
 ## catkin specific configuration ##
@@ -28,7 +28,7 @@ catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES localization
 #  CATKIN_DEPENDS nav_msgs roscpp
-   DEPENDS Eigen
+   DEPENDS EIGEN3
 )
 
 ###########
