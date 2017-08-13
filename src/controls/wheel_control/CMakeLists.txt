@@ -4,20 +4,12 @@ project(wheel_control)
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
 
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  nav_msgs
   roscpp
+  pluginlib
+  nav_msgs
   sensor_msgs
 )
-
-## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
-
-find_package (catkin REQUIRED cmake_modules)
-find_package (Eigen3 REQUIRED)
 
 
 ###################################
@@ -30,28 +22,26 @@ find_package (Eigen3 REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-    INCLUDE_DIRS include
-    LIBRARIES BasicSkidSteer
-#  CATKIN_DEPENDS nav_msgs roscpp sensor_msgs
-    DEPENDS EIGEN3
+    #INCLUDE_DIRS include
+    #LIBRARIES BasicSkidSteer
+    #CATKIN_DEPENDS nav_msgs roscpp sensor_msgs
+    #DEPENDS EIGEN3
 )
 
 ###########
 ## Build ##
 ###########
 
-include_directories (include
-        ${catkin_INCLUDE_DIRS}
-        ${Eigen_INCLUDE_DIRS})
+include_directories (include ${catkin_INCLUDE_DIRS})
 
 ## Declare a C++ library
 add_library(BasicSkidSteer
     src/BasicSkidSteer.cpp
 )
-add_dependencies(BasicSkidSteer ${catkin_EXPORTED_TARGETS})
 target_link_libraries(BasicSkidSteer
-        ${catkin_LIBRARIES}
+  ${catkin_LIBRARIES}
 )
+#add_dependencies(BasicSkidSteer ${catkin_EXPORTED_TARGETS})
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries

@@ -1,0 +1,5 @@
+<library path="lib/libSkidSteerPlugins">
+  <class type="wheel_control::BasicSkidSteer" base_class_type="wheel_control::SkidSteerInterface">
+    <description>Basic skid steer plugin.</description>
+  </class>
+</library>

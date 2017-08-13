@@ -2,6 +2,8 @@
 #define PROJECT_BASIC_SKID_STEER_H
 
 #include "SkidSteerInterface.h"
+#include <pluginlib/class_list_macros.h>
+
 
 namespace wheel_control {
 
@@ -17,5 +19,6 @@ namespace wheel_control {
 
 }
 
+PLUGINLIB_EXPORT_CLASS(wheel_control::BasicSkidSteer, wheel_control::SkidSteerInterface)
 
 #endif //PROJECT_BASIC_SKID_STEER_H
