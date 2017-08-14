@@ -1,7 +1,7 @@
 #ifndef PROJECT_BASIC_SKID_STEER_H
 #define PROJECT_BASIC_SKID_STEER_H
 
-#include "SkidSteerInterface.h"
+#include "Interface.h"
 #include <pluginlib/class_list_macros.h>
 
 

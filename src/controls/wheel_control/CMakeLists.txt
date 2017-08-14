@@ -35,6 +35,12 @@ catkin_package(
 include_directories (include ${catkin_INCLUDE_DIRS})
 
 ## Declare a C++ library
+add_library(TwoAxisVelocityController
+  src/TwoAxisVelocityController.cpp
+  src/Wheels.cpp
+)
+
+
 add_library(BasicSkidSteer
     src/BasicSkidSteer.cpp
 )
