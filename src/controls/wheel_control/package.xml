@@ -54,7 +54,7 @@
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->
-    <wheel_control plugin="${prefix}/SkidSteerPlugins.xml" />
+    <wheel_control plugin="${prefix}/wheel_control_plugins.xml" />
 
   </export>
 </package>

@@ -1,0 +1,5 @@
+<library path="lib/libvelocity_plugins">
+  <class type="wheel_control::DifferentialDriveController" base_class_type="wheel_control::VelocityInterface">
+    <description>Differential drive controller for a skid steer</description>
+  </class>
+</library>
