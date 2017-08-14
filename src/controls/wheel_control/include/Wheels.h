@@ -4,11 +4,14 @@
 #include <vector>
 
 namespace wheel_control {
-    struct JointState
+    class JointState
     {
-        double position;
-        double velocity;
-        double effort;
+        public:
+            JointState(double position, double velocity, double effort);
+
+            double position;
+            double velocity;
+            double effort;
     };
 
     class Wheel {
@@ -19,17 +22,17 @@ namespace wheel_control {
             std::string name;
             int id;
             double x_pos, y_pos, radius;
-            JointState current_state, desired_state;
+            JointState *current_state, *desired_state;
     };
 
     class Wheels {
         public:
             Wheels();
             Wheels(double radius, double x_dist, double y_dist);
+            ~Wheels();
 
             Wheel* get_wheel(std::string name);
             std::vector<Wheel*> get();
-
             Wheel *right_front, *right_back, *left_front, *left_back;
     };
 }

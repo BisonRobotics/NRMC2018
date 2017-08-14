@@ -40,13 +40,12 @@ add_library(TwoAxisVelocityController
   src/Wheels.cpp
 )
 
-
-add_library(BasicSkidSteer
-    src/BasicSkidSteer.cpp
-)
-target_link_libraries(BasicSkidSteer
-  ${catkin_LIBRARIES}
-)
+#add_library(BasicSkidSteer
+#    src/BasicSkidSteer.cpp
+#)
+#target_link_libraries(BasicSkidSteer
+#  ${catkin_LIBRARIES}
+#)
 #add_dependencies(BasicSkidSteer ${catkin_EXPORTED_TARGETS})
 
 ## Add cmake target dependencies of the library
@@ -114,10 +113,19 @@ target_link_libraries(BasicSkidSteer
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_wheel_control.cpp)
-# if(TARGET ${PROJECT_NAME}-test)
-#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
-# endif()
+catkin_add_gtest(test_Wheels src/tests/test_Wheels.cpp src/Wheels.cpp)
+if(TARGET test_Wheels)
+  target_link_libraries(test_Wheels
+    ${catkin_LIBRARIES}
+  )
+endif()
+
+catkin_add_gtest(test_Interface src/tests/test_Interface.cpp include/Interface.h src/Wheels.cpp)
+if(TARGET test_Interface)
+  target_link_libraries(test_Interface
+    ${catkin_LIBRARIES}
+  )
+endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)

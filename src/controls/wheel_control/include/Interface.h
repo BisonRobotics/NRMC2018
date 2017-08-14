@@ -4,11 +4,11 @@
 #include <map>
 #include <string>
 #include "Wheels.h"
+#include <stdexcept>
 
 namespace wheel_control
 {
-    typedef std::map<std::string, Wheel> Wheels;
-
+    typedef std::map<std::string, JointState> JointStates;
     class Interface
     {
         public:
@@ -21,13 +21,29 @@ namespace wheel_control
                 delete this->wheels;
             }
 
-            virtual void update() = 0;
-
-            void register_joints(int right_front, int right_back, int left_front, int left_back) {
-
+            void update(JointStates current_wheel_states)
+            {
+                bool flag;
+                for (auto wheel : current_wheel_states)
+                {
+                    flag = true;
+                    for (auto local : this->wheels->get())
+                    {
+                        if (wheel.first == local->name)
+                        {
+                            *(local->current_state) = wheel.second;
+                            flag = false;
+                        }
+                    }
+                    if (flag)
+                    {
+                        std::string error_msg = wheel.first + " wheel not found";
+                        throw std::invalid_argument(error_msg);
+                    }
+                }
             }
 
-            Wheels wheels;
+            Wheels *wheels;
     };
 }
 
