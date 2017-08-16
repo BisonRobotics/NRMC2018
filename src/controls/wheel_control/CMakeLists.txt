@@ -34,6 +34,7 @@ add_library(velocity_plugins
   src/DifferentialDriveController.cpp
   src/Wheels.cpp
 )
+target_link_libraries(velocity_plugins ${catkin_LIBRARIES})
 
 add_library(Wheels src/Wheels.cpp)
 
