@@ -27,6 +27,7 @@ TEST(TEST_DifferentialDriveControllerPlugin, Load_Plugin)
     ASSERT_NEAR(0.0, diff_drive->wheels->left_back  ->desired_state->velocity, 1e-10);
 }
 
+
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv){
   testing::InitGoogleTest(&argc, argv);
