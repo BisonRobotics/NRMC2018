@@ -2,11 +2,13 @@
 //#include "foo/foo.h"
 // Bring in gtest
 #include <gtest/gtest.h>
+#include <RobotParameterWrapper/RobotParameterWrapper.h>
 
 // Declare a test
 TEST(TestSuite, testCase1)
 {
-//<test things here, calling EXPECT_* and/or ASSERT_* macros as needed>
+
+
 }
 
 // Declare another test
