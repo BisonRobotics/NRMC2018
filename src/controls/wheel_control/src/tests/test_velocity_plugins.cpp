@@ -10,7 +10,7 @@ TEST(TEST_DifferentialDriveControllerPlugin, Load_Plugin)
     boost::shared_ptr<VelocityInterface> diff_drive =
           drive_loader.createInstance("wheel_control::DifferentialDriveController");
 
-    Wheels *wheels = new Wheels(1.0, 1.0, 1.0);
+    Wheels *wheels = new Wheels(1.0, 1.0);
     diff_drive->load(wheels);
     diff_drive->set_velocity(1.0, 0.0);
 

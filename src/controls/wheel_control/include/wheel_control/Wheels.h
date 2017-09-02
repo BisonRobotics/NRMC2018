@@ -17,18 +17,18 @@ namespace wheel_control {
     class Wheel {
         public:
             Wheel(std::string name);
-            Wheel(std::string name, double x_pos, double y_pos, double radius);
+            Wheel(std::string name, double x_pos, double y_pos);
 
             std::string name;
             int id;
-            double x_pos, y_pos, radius;
+            double x_pos, y_pos;
             JointState *current_state, *desired_state;
     };
 
     class Wheels {
         public:
             Wheels();
-            Wheels(double radius, double x_dist, double y_dist);
+            Wheels(double x_dist, double y_dist);
             ~Wheels();
 
             Wheel* get_wheel(std::string name);

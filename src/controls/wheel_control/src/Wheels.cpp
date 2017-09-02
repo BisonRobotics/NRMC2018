@@ -17,17 +17,15 @@ Wheel::Wheel(std::string name)
     this->id     = -1;
     this->x_pos  = 0.0;
     this->y_pos  = 0.0;
-    this->radius = 0.0;
 
     this->current_state = new JointState(0.0, 0.0, 0.0);
     this->desired_state = new JointState(0.0, 0.0, 0.0);
 }
 
-Wheel::Wheel(std::string name, double x_pos, double y_pos, double radius) : Wheel(name)
+Wheel::Wheel(std::string name, double x_pos, double y_pos) : Wheel(name)
 {
     this->x_pos  = x_pos;
     this->y_pos  = y_pos;
-    this->radius = radius;
 }
 
 Wheels::Wheels() {
@@ -37,10 +35,8 @@ Wheels::Wheels() {
     this->left_back   = new Wheel("left_back");
 }
 
-Wheels::Wheels(double radius, double x_dist, double y_dist) : Wheels()
+Wheels::Wheels(double x_dist, double y_dist) : Wheels()
 {
-    for (auto wheel : this->get()) wheel->radius = radius;
-
     this->right_front->x_pos =  x_dist / 2.0;
     this->right_back ->x_pos = -x_dist / 2.0;
     this->left_front ->x_pos =  x_dist / 2.0;

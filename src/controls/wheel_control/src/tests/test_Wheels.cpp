@@ -22,7 +22,6 @@ TEST(TEST_Wheels, Instantiate_Wheel_With_Name)
 
     ASSERT_NEAR(0.0, test.x_pos,  1e-10);
     ASSERT_NEAR(0.0, test.y_pos,  1e-10);
-    ASSERT_NEAR(0.0, test.radius, 1e-10);
 
     ASSERT_NEAR(0.0, test.current_state->position, 1e-10);
     ASSERT_NEAR(0.0, test.current_state->velocity, 1e-10);
@@ -34,7 +33,7 @@ TEST(TEST_Wheels, Instantiate_Wheel_With_Name)
 
 TEST(TEST_Wheels, Instantiate_Wheel_With_Name_And_Wheel_Info)
 {
-    Wheel test("Test", 1.0, -1.0, 2.0);
+    Wheel test("Test", 1.0, -1.0);
 
     ASSERT_STREQ("Test", test.name.c_str());
 
@@ -42,7 +41,6 @@ TEST(TEST_Wheels, Instantiate_Wheel_With_Name_And_Wheel_Info)
 
     ASSERT_NEAR( 1.0, test.x_pos, 1e-10);
     ASSERT_NEAR(-1.0, test.y_pos, 1e-10);
-    ASSERT_NEAR( 2.0, test.radius, 1e-10);
 
     ASSERT_NEAR(0.0, test.current_state->position, 1e-10);
     ASSERT_NEAR(0.0, test.current_state->velocity, 1e-10);
@@ -64,17 +62,12 @@ TEST(TEST_Wheels, Instantiate_Wheels)
 
 TEST(TEST_Wheels, Instantiate_Wheels_With_Params)
 {
-    Wheels test(1.0, 1.0, 1.0);
+    Wheels test(1.0, 1.0);
 
     ASSERT_STREQ("right_front", test.right_front->name.c_str());
     ASSERT_STREQ("right_back" , test.right_back ->name.c_str());
     ASSERT_STREQ("left_front" , test.left_front ->name.c_str());
     ASSERT_STREQ("left_back"  , test.left_back  ->name.c_str());
-
-    ASSERT_NEAR(1.0, test.right_front->radius, 1e-10);
-    ASSERT_NEAR(1.0, test.right_back ->radius, 1e-10);
-    ASSERT_NEAR(1.0, test.left_front ->radius, 1e-10);
-    ASSERT_NEAR(1.0, test.left_back  ->radius, 1e-10);
 
     ASSERT_NEAR( 0.5, test.right_front->x_pos, 1e-10);
     ASSERT_NEAR(-0.5, test.right_back ->x_pos, 1e-10);
