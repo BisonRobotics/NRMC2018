@@ -1,1 +1,6 @@
 Requirements for localization:
+
+sub-items:
+CanSensor - object for interfacing with sensors over can
+ - Each sensing element has one canID
+ - Sensing element should extend CanSensor with its own implementation of recieveData();

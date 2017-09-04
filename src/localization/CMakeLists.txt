@@ -25,8 +25,8 @@ find_package (Eigen3 REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES localization
+  INCLUDE_DIRS include/can_sensors/
+  LIBRARIES can_sensors_lib
 #  CATKIN_DEPENDS nav_msgs roscpp
    DEPENDS EIGEN3
 )
@@ -40,13 +40,14 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  include/can_sensors
 )
 
 include_directories (${Eigen_INCLUDE_DIRS})
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/localization.cpp
-# )
+add_library(can_sensors_lib
+  src/can_sensors/can_sensors.cpp
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
