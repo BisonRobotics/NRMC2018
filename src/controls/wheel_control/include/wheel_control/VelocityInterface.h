@@ -7,14 +7,13 @@
 
 #include "Interface.h"
 
-namespace wheel_control {
-
-    class VelocityInterface : public Interface
-    {
-        public:
-            virtual void set_velocity(double x, double y) = 0;
-    };
-
+namespace wheel_control
+{
+class VelocityInterface : public Interface
+{
+public:
+  virtual void set_velocity(double x, double y) = 0;
+};
 }
 
-#endif //PROJECT_SKIDSTEERVELOCITYCONTROLLER_H
+#endif  // PROJECT_SKIDSTEERVELOCITYCONTROLLER_H
