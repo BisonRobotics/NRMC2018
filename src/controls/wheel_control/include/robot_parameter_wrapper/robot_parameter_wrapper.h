@@ -1,6 +1,6 @@
 #ifndef __ROBOT_PARAMETER_WRAPPER__
 #define __ROBOT_PARAMETER_WRAPPER__
-#include <vesc_control/VescSocketCAN.h>
+#include <vesc_control/vesc_socket_can.h>
 
 
 class RobotParameterWrapper {

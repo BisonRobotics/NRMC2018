@@ -1,6 +1,7 @@
 //#include <ros.h>
 //#include <vesc_control/VescSocketCAN.h>
-#include <robot_parameter_wrapper/robotparameterwrapper.h>
+#include <robot_parameter_wrapper/robot_parameter_wrapper.h>
+
 
 RobotParameterWrapper::RobotParameterWrapper (float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit, iVesc *vesc){
   this->vesc = vesc;

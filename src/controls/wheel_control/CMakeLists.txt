@@ -7,7 +7,7 @@ add_compile_options(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   pluginlib
-  #  gtest
+  
   )
 
 
@@ -26,11 +26,12 @@ catkin_package(
 include_directories (include ${catkin_INCLUDE_DIRS} )
 include_directories(${GTEST_INCLUDE_DIRS})
 ## Declare a C++ library
+
 add_library(vesc_lib
-  src/vesc_socket_can/VescSocketCAN.cpp
+  src/vesc_socket_can/vesc_socket_can.cpp
 )
 add_library (robot_parameter_wrapper
-  src/robot_parameter_wrapper/RobotParameterWrapper.cpp
+  src/robot_parameter_wrapper/robot_parameter_wrapper.cpp
 )
  
 ## Specify libraries to link a library or executable target against

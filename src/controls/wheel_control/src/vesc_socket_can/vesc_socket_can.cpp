@@ -1,4 +1,4 @@
-#include "vesc_control/VescSocketCAN.h"
+#include "vesc_control/vesc_socket_can.h"
 #include <byteswap.h>
 #include <cmath>
 

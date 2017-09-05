@@ -1,8 +1,7 @@
-// Bring in my package's API, which is what I'm testing
 //#include "foo/foo.h"
 // Bring in gtest
 #include <gtest/gtest.h>
-#include <robot_parameter_wrapper/robotparameterwrapper.h>
+#include <robot_parameter_wrapper/robot_parameter_wrapper.h>
 #include <vesc_control/mock_vesc.h>
 #include <gmock/gmock.h>
 
