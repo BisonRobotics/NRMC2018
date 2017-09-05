@@ -49,7 +49,7 @@ void RobotParameterWrapper::setLinearVelocityLimit (float meters_per_second){
   this->velocity_limit = meters_per_second;
 }
 
-float RobotParameterWrapper::getVelocityLimit (void){
+float RobotParameterWrapper::getLinearVelocityLimit (void){
   return velocity_limit;
 }
 
