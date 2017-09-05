@@ -2,11 +2,18 @@ cmake_minimum_required(VERSION 2.8.3)
 project(wheel_control)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
- add_compile_options(-std=c++11)
+add_compile_options(-std=c++11)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   pluginlib
+  #  gtest
+  )
+
+
+
+link_directories (
+/usr/src/gmock/build
 )
 
 catkin_package(
@@ -16,14 +23,14 @@ catkin_package(
     #DEPENDS EIGEN3
 )
 
-include_directories (include ${catkin_INCLUDE_DIRS})
-
+include_directories (include ${catkin_INCLUDE_DIRS} )
+include_directories(${GTEST_INCLUDE_DIRS})
 ## Declare a C++ library
 add_library(vesc_lib
-  src/VescSocketCAN.cpp
+  src/vesc_socket_can/VescSocketCAN.cpp
 )
 add_library (robot_parameter_wrapper
-  src/RobotParameterWrapper/RobotParameterWrapper.cpp
+  src/robot_parameter_wrapper/RobotParameterWrapper.cpp
 )
  
 ## Specify libraries to link a library or executable target against
@@ -66,4 +73,12 @@ if(TARGET test_velocity_plugins)
   add_dependencies(test_velocity_plugins velocity_plugins)
 endif()
 
-
+catkin_add_gtest(test_robot_params src/robot_parameter_wrapper/tests/robot_tests.cpp)
+if (TARGET test_robot_params)
+  target_link_libraries(
+    test_robot_params
+    ${catkin_LIBRARIES}
+    robot_parameter_wrapper
+    gmock_main
+    )
+endif ()

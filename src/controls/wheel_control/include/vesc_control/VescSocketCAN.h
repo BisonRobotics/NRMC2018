@@ -1,3 +1,6 @@
+#ifndef __VESC_SOCKET_CAN_H_
+#define __VESC_SOCKET_CAN_H_
+
 #include <iostream>
 //socketcan includes
 #include <stdio.h>
@@ -15,9 +18,9 @@
 #include <linux/can/bcm.h>
 
 #include <sys/time.h>
+#include <vesc_control/vesc_interface.h>
 
-
-class Vesc {
+class Vesc : public iVesc{
 	public:
 		typedef enum {
 			MC_STATE_OFF = 0,
@@ -184,3 +187,6 @@ class Vesc {
 		bool encoderIndexFound();
 		bool isAlive();
 };
+
+
+#endif

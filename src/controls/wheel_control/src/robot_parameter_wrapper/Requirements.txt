@@ -1,6 +1,7 @@
-The Robot parameter Wrapper should wrap a VESC based on the VESC ID
 The Robot Parameter Wrapper should expose a method that sends the linear velocity
 The Robot Parameter Wrapper should expose a method that sends the torque in Nm
 The Robot Parameter Wrapper should expose a method to set velocity limit
 The Robot Parameter Wrapper should be able to set the torque ratio on startup
 The Robot Parameter Wrapper should be able to set an output ratio on startup
+The Robot Parameter Wrapper should be able to correctly set the rpm given a linear velocity
+The Robot Parameter Wrapper should be able to correctly set the Torque given the current
