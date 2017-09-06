@@ -31,9 +31,7 @@
         - tree
         - google-mock
     
-    - name: install gmock
-      shell: ./gmock_setup.shv     
-    
+   
     - name: install ros packages
       become: yes
       apt: pkg=ros-kinetic-{{ item }} state=latest update_cache=true
@@ -41,4 +39,6 @@
         - desktop-full
    
     - name: install gmock
-      shell: ./gmock_setup.shv
+      become: yes
+      shell: ./gmock_setup.sh     
+ 
