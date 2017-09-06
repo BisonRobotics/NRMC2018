@@ -36,7 +36,7 @@
       become: yes
       apt: pkg=ros-kinetic-{{ item }} state=latest update_cache=true
       with_items:
-        - desktop-full
+        - desktop
    
     - name: install gmock
       become: yes
