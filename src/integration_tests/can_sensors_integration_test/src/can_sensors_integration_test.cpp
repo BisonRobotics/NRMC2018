@@ -17,8 +17,8 @@ int main()
 			sprintf(printbuffer, "message data: %d, %d, %d, %d, %d, %d, %d, %d", mybuffer[0], mybuffer[1], mybuffer[2], mybuffer[3], mybuffer[4], mybuffer[5], mybuffer[6], mybuffer[7]);
 			std::cout << printbuffer <<std::endl;
 		}
-		if (canReturn ==-2) std::cout << "wrong ID"<<std::endl;
-		else std::cout << "no message! recieve returned " <<canReturn <<std::endl;
+		//if (canReturn ==-1) std::cout << "no message read!"<<std::endl;
+		else if (canReturn != -1) std::cout << "no message! recieve returned " <<canReturn <<std::endl;
 	}
 	return 0;
 }

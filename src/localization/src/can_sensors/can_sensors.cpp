@@ -41,16 +41,17 @@ int CanSensor::canSend(uint8_t *data, uint8_t len)
 
 int CanSensor::canRecieve(uint8_t *databuffer)
 {
+	struct can_frame readMsg;
 	while(1)
 	{
-		int a = read(s, &msg, sizeof(msg));
+		int a = read(s, &readMsg, sizeof(msg));
 		if(a ==-1) return -1; //no message?
-		if (msg.msg_head.can_id == canID-1)
+		if (readMsg.can_id == canID)
 		{
-			memcpy(databuffer, msg.frame[0].data, 8);
+			memcpy(databuffer, readMsg.data, readMsg.can_dlc);
 			return 1;
 		}
-		else return -2;
+		else return -readMsg.can_id;
 	}
 	
 }
