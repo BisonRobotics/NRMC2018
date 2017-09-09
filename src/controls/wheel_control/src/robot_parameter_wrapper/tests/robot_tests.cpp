@@ -84,6 +84,38 @@ TEST(ParamWrapperTest, saturatesOnNegativeVelocityLimit)
       new RobotParameterWrapper(transmission_ratio, output_ratio, velocity_limit, 30.0f, &vesc);
   wrap->setLinearVelocity(-1.0f*20.0f);
 }
+TEST(ParamWrapperTest, saturatesOnNegativeTorqueLimit)
+{
+  mockVesc vesc;
+  float output_ratio = 10.0f;
+  float transmission_ratio = 10.0f;
+  float torque_limit = 12.0f;
+  EXPECT_CALL(vesc, setCurrent(-1.0f*torque_limit));
+  RobotParameterWrapper *wrap = new RobotParameterWrapper(transmission_ratio, output_ratio, 30.0f, torque_limit, &vesc);
+  wrap->setTorque(-20.0f);
+}
+TEST(ParamWrapperTest, allowZeroTorque)
+{
+  mockVesc vesc;
+  float output_ratio = 10.0f;
+  float transmission_ratio = 10.0f;
+  float torque_limit = 12.0f;
+  EXPECT_CALL(vesc, setCurrent(0.0f));
+  RobotParameterWrapper *wrap = new RobotParameterWrapper(transmission_ratio, output_ratio, 30.0f, torque_limit, &vesc);
+  wrap->setTorque(0.0f);
+}
+TEST(ParamWrapperTest, allowZeroVelocity)
+{
+  mockVesc vesc;
+  float output_ratio = 10.0f;
+  float transmission_ratio = 10.0f;
+  float torque_limit = 12.0f;
+  EXPECT_CALL(vesc, setRpm(0.0f));
+  RobotParameterWrapper *wrap = new RobotParameterWrapper(transmission_ratio, output_ratio, 30.0f, torque_limit, &vesc);
+  wrap->setLinearVelocity(0.0f);
+}
+
+
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {

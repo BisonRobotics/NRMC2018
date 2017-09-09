@@ -42,10 +42,14 @@ void RobotParameterWrapper::setLinearVelocity(float meters_per_second)
 
 void RobotParameterWrapper::setTorque(float newton_meters)
 {
-  if (newton_meters > this->torque_limit)
+  if (fabs(newton_meters) > this->torque_limit)
   {
-    newton_meters = torque_limit;
-  }
+    if (newton_meters >= 0){
+	newton_meters = torque_limit;
+  	} else {
+	newton_meters = -1.0f*torque_limit;
+}
+	}
   this->vesc->setCurrent(newton_meters);
 }
 
