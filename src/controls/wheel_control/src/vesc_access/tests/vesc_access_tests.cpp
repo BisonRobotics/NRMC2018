@@ -8,7 +8,7 @@
 using ::testing::AtLeast;
 
 // Declare a test
-TEST(ParamWrapperTest, canSetLinearVelocity)
+TEST(VescAccessTest, canSetLinearVelocity)
 {
   mockVesc vesc;
   float output_ratio = 10.0f;
@@ -19,7 +19,7 @@ TEST(ParamWrapperTest, canSetLinearVelocity)
   wrap->setLinearVelocity(linear);
 }
 
-TEST(ParamWrapperTest, canSetTorque)
+TEST(VescAccessTest, canSetTorque)
 {
   mockVesc vesc;
   float output_ratio = 10.0f;
@@ -31,7 +31,7 @@ TEST(ParamWrapperTest, canSetTorque)
   wrap->setTorque(torque);
 }
 
-TEST(ParamWrapperTest, canSetVelocityLimit)
+TEST(VescAccessTest, canSetVelocityLimit)
 {
   mockVesc vesc;
   float output_ratio = 10.0f;
@@ -41,7 +41,7 @@ TEST(ParamWrapperTest, canSetVelocityLimit)
   EXPECT_EQ(wrap->getLinearVelocityLimit(), velocity_limit);
 }
 
-TEST(ParamWrapperTest, canSetTorqueLimit)
+TEST(VescAccessTest, canSetTorqueLimit)
 {
   mockVesc vesc;
   float output_ratio = 10.0f;
@@ -51,7 +51,7 @@ TEST(ParamWrapperTest, canSetTorqueLimit)
   EXPECT_EQ(wrap->getTorqueLimit(), torque_limit);
 }
 
-TEST(ParamWrapperTest, saturatesOnTorqueLimit)
+TEST(VescAccessTest, saturatesOnTorqueLimit)
 {
   mockVesc vesc;
   float output_ratio = 10.0f;
@@ -62,7 +62,7 @@ TEST(ParamWrapperTest, saturatesOnTorqueLimit)
   wrap->setTorque(20.0f);
 }
 
-TEST(ParamWrapperTest, saturatesOnVelocityLimit)
+TEST(VescAccessTest, saturatesOnVelocityLimit)
 {
   mockVesc vesc;
   float output_ratio = 10.0f;
@@ -73,7 +73,7 @@ TEST(ParamWrapperTest, saturatesOnVelocityLimit)
   wrap->setLinearVelocity(20.0f);
 }
 
-TEST(ParamWrapperTest, saturatesOnNegativeVelocityLimit)
+TEST(VescAccessTest, saturatesOnNegativeVelocityLimit)
 {
   mockVesc vesc;
   float output_ratio = 10.0f;
@@ -84,7 +84,7 @@ TEST(ParamWrapperTest, saturatesOnNegativeVelocityLimit)
   wrap->setLinearVelocity(-1.0f * 20.0f);
 }
 
-TEST(ParamWrapperTest, saturatesOnNegativeTorqueLimit)
+TEST(VescAccessTest, saturatesOnNegativeTorqueLimit)
 {
   mockVesc vesc;
   float output_ratio = 10.0f;
@@ -95,7 +95,7 @@ TEST(ParamWrapperTest, saturatesOnNegativeTorqueLimit)
   wrap->setTorque(-20.0f);
 }
 
-TEST(ParamWrapperTest, allowZeroTorque)
+TEST(VescAccessTest, allowZeroTorque)
 {
   mockVesc vesc;
   float output_ratio = 10.0f;
@@ -106,7 +106,7 @@ TEST(ParamWrapperTest, allowZeroTorque)
   wrap->setTorque(0.0f);
 }
 
-TEST(ParamWrapperTest, allowZeroVelocity)
+TEST(VescAccessTest, allowZeroVelocity)
 {
   mockVesc vesc;
   float output_ratio = 10.0f;
@@ -117,7 +117,7 @@ TEST(ParamWrapperTest, allowZeroVelocity)
   wrap->setLinearVelocity(0.0f);
 }
 
-TEST(ParamWrapperTest, zeroOuputRatioDefaultToOne)
+TEST(VescAccessTest, zeroOuputRatioDefaultToOne)
 {
   mockVesc vesc;
   float output_ratio = 0.0f;
@@ -127,7 +127,7 @@ TEST(ParamWrapperTest, zeroOuputRatioDefaultToOne)
   EXPECT_EQ(wrap->getOutputRatio(), 1.0f);
 }
 
-TEST(ParamWrapperTest, zeroTransmissionRatioDefaultToOne)
+TEST(VescAccessTest, zeroTransmissionRatioDefaultToOne)
 {
   mockVesc vesc;
   float output_ratio = 0.0f;
@@ -137,7 +137,7 @@ TEST(ParamWrapperTest, zeroTransmissionRatioDefaultToOne)
   EXPECT_EQ(wrap->getTransmissionRatio(), 1.0f);
 }
 
-TEST(ParamWrapperTest, zeroTorqueConstantRatioDefaultToOne)
+TEST(VescAccessTest, zeroTorqueConstantRatioDefaultToOne)
 {
   mockVesc vesc;
   float output_ratio = 0.0f;
