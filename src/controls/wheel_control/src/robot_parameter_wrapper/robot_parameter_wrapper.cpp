@@ -1,5 +1,5 @@
 #include <robot_parameter_wrapper/robot_parameter_wrapper.h>
-
+#include <math.h>
 RobotParameterWrapper::RobotParameterWrapper(float transmission_ratio, float output_ratio, float velocity_limit,
                                              float torque_limit, iVesc *vesc)
 {
@@ -28,9 +28,13 @@ void RobotParameterWrapper::setTransmissionRatio(float transmission_ratio)
 
 void RobotParameterWrapper::setLinearVelocity(float meters_per_second)
 {
-  if (meters_per_second > this->velocity_limit)
+  if (fabs(meters_per_second) > this->velocity_limit)
   {
+	if (meters_per_second >= 0){
     meters_per_second = velocity_limit;
+	}else{
+	meters_per_second = velocity_limit * -1.0f;
+	}
   }
   float rpm = meters_per_second / (this->output_ratio * this->transmission_ratio);
   this->vesc->setRpm(rpm);
