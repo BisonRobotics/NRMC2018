@@ -30,7 +30,7 @@
         - vim-gnome
         - tree
         - google-mock
-    
+        - xclip    
    
     - name: install ros packages
       become: yes
@@ -41,4 +41,7 @@
     - name: install gmock
       become: yes
       shell: ./gmock_setup.sh     
- 
+    
+    - name: source bash
+      become: no
+      shell: source ~/.bashrc 
