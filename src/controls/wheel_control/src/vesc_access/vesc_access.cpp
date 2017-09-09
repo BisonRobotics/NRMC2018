@@ -50,7 +50,7 @@ void VescAccess::setLinearVelocity(float meters_per_second)
       meters_per_second = velocity_limit * -1.0f;
     }
   }
-  float rpm =convertLinearVelocityToRpm(meters_per_second);
+  float rpm = convertLinearVelocityToRpm(meters_per_second);
   this->vesc->setRpm(rpm);
 }
 
@@ -112,32 +112,38 @@ float VescAccess::getTorqueLimit(void)
   return torque_limit;
 }
 
-float VescAccess::convertTorqueToCurrent (float torque){
-  return (torque/torque_constant);
+float VescAccess::convertTorqueToCurrent(float torque)
+{
+  return (torque / torque_constant);
 }
 
-float VescAccess::convertLinearVelocityToRpm (float velocity){
- return ( velocity / (this->output_ratio * this->transmission_ratio));
-}
-  
-float VescAccess::convertRpmToLinearVelocity (float rpm){
-  return (rpm * (this->output_ratio*this->transmission_ratio));
+float VescAccess::convertLinearVelocityToRpm(float velocity)
+{
+  return (velocity / (this->output_ratio * this->transmission_ratio));
 }
 
-float VescAccess::convertRpmToLinearVelocity (int rpm){
-  float f_rpm = (float) rpm;
-  return (convertRpmToLinearVelocity (f_rpm));
+float VescAccess::convertRpmToLinearVelocity(float rpm)
+{
+  return (rpm * (this->output_ratio * this->transmission_ratio));
 }
-  
-float VescAccess::convertCurrentToTorque (float current){
- return (current *torque_constant);
-} 
 
-float VescAccess::getTorque (void){
+float VescAccess::convertRpmToLinearVelocity(int rpm)
+{
+  float f_rpm = (float)rpm;
+  return (convertRpmToLinearVelocity(f_rpm));
+}
+
+float VescAccess::convertCurrentToTorque(float current)
+{
+  return (current * torque_constant);
+}
+
+float VescAccess::getTorque(void)
+{
   return (convertCurrentToTorque(vesc->getCurrent()));
 }
 
-float VescAccess::getLinearVelocity(void){
-  return (convertRpmToLinearVelocity (vesc->getRpm ()));
+float VescAccess::getLinearVelocity(void)
+{
+  return (convertRpmToLinearVelocity(vesc->getRpm()));
 }
-
