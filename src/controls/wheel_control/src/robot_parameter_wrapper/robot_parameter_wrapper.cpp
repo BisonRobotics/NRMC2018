@@ -30,11 +30,14 @@ void RobotParameterWrapper::setLinearVelocity(float meters_per_second)
 {
   if (fabs(meters_per_second) > this->velocity_limit)
   {
-	if (meters_per_second >= 0){
-    meters_per_second = velocity_limit;
-	}else{
-	meters_per_second = velocity_limit * -1.0f;
-	}
+    if (meters_per_second >= 0)
+    {
+      meters_per_second = velocity_limit;
+    }
+    else
+    {
+      meters_per_second = velocity_limit * -1.0f;
+    }
   }
   float rpm = meters_per_second / (this->output_ratio * this->transmission_ratio);
   this->vesc->setRpm(rpm);
@@ -44,12 +47,15 @@ void RobotParameterWrapper::setTorque(float newton_meters)
 {
   if (fabs(newton_meters) > this->torque_limit)
   {
-    if (newton_meters >= 0){
-	newton_meters = torque_limit;
-  	} else {
-	newton_meters = -1.0f*torque_limit;
-}
-	}
+    if (newton_meters >= 0)
+    {
+      newton_meters = torque_limit;
+    }
+    else
+    {
+      newton_meters = -1.0f * torque_limit;
+    }
+  }
   this->vesc->setCurrent(newton_meters);
 }
 

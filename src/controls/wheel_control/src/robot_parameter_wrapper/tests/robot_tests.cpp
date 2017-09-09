@@ -79,10 +79,10 @@ TEST(ParamWrapperTest, saturatesOnNegativeVelocityLimit)
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float velocity_limit = 12.0f;
-  EXPECT_CALL(vesc, setRpm(-1.0f*(velocity_limit / (output_ratio * transmission_ratio))));
+  EXPECT_CALL(vesc, setRpm(-1.0f * (velocity_limit / (output_ratio * transmission_ratio))));
   RobotParameterWrapper *wrap =
       new RobotParameterWrapper(transmission_ratio, output_ratio, velocity_limit, 30.0f, &vesc);
-  wrap->setLinearVelocity(-1.0f*20.0f);
+  wrap->setLinearVelocity(-1.0f * 20.0f);
 }
 TEST(ParamWrapperTest, saturatesOnNegativeTorqueLimit)
 {
@@ -90,7 +90,7 @@ TEST(ParamWrapperTest, saturatesOnNegativeTorqueLimit)
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float torque_limit = 12.0f;
-  EXPECT_CALL(vesc, setCurrent(-1.0f*torque_limit));
+  EXPECT_CALL(vesc, setCurrent(-1.0f * torque_limit));
   RobotParameterWrapper *wrap = new RobotParameterWrapper(transmission_ratio, output_ratio, 30.0f, torque_limit, &vesc);
   wrap->setTorque(-20.0f);
 }
@@ -114,7 +114,6 @@ TEST(ParamWrapperTest, allowZeroVelocity)
   RobotParameterWrapper *wrap = new RobotParameterWrapper(transmission_ratio, output_ratio, 30.0f, torque_limit, &vesc);
   wrap->setLinearVelocity(0.0f);
 }
-
 
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
