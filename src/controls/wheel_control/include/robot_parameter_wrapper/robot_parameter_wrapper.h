@@ -20,7 +20,7 @@ public:
 private:
   void setTorqueLimit(float newtown_meters);
   void setLinearVelocityLimit(float meters_per_second);
-  void setTorqueConstant (float torque_ratio);
+  void setTorqueConstant(float torque_ratio);
   float transmission_ratio;
   float output_ratio;
   float torque_constant;
