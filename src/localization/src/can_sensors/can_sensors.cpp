@@ -51,7 +51,7 @@ int CanSensor::canRecieve(uint8_t *databuffer)
 			memcpy(databuffer, readMsg.data, readMsg.can_dlc);
 			return 1;
 		}
-		else return -readMsg.can_id;
+		//else return -readMsg.can_id;
 	}
 	
 }
