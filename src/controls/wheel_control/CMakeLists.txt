@@ -30,12 +30,12 @@ include_directories(${GTEST_INCLUDE_DIRS})
 add_library(vesc_lib
   src/vesc_socket_can/vesc_socket_can.cpp
 )
-add_library (robot_parameter_wrapper
-  src/robot_parameter_wrapper/robot_parameter_wrapper.cpp
+add_library (vesc_access
+  src/vesc_access/vesc_access.cpp
 )
  
 ## Specify libraries to link a library or executable target against
-target_link_libraries(robot_parameter_wrapper
+target_link_libraries(vesc_access
   ${catkin_LIBRARIES}
   vesc_lib
 )
@@ -74,12 +74,12 @@ if(TARGET test_velocity_plugins)
   add_dependencies(test_velocity_plugins velocity_plugins)
 endif()
 
-catkin_add_gtest(test_robot_params src/robot_parameter_wrapper/tests/robot_tests.cpp)
-if (TARGET test_robot_params)
+catkin_add_gtest(test_vesc_access src/vesc_access/tests/vesc_access_tests.cpp)
+if (TARGET test_vesc_access)
   target_link_libraries(
-    test_robot_params
+    test_vesc_access
     ${catkin_LIBRARIES}
-    robot_parameter_wrapper
+    vesc_access
     gmock_main
-    )
+  )
 endif ()
