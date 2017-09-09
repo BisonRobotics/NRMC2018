@@ -9,8 +9,9 @@ find_package(catkin REQUIRED COMPONENTS
   pluginlib
   genmsg 
   actionlib_msgs 
-  actionlib 
- )
+  actionlib
+  std_msgs 
+)
 
 
 
