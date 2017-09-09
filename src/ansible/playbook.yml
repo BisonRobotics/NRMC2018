@@ -31,7 +31,7 @@
         - tree
         - google-mock
         - xclip    
-   
+        - sl   
     - name: install ros packages
       become: yes
       apt: pkg=ros-kinetic-{{ item }} state=latest update_cache=true
