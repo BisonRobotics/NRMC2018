@@ -18,9 +18,10 @@ include_directories(
 
 add_executable(can_sensors_integration_test src/can_sensors_integration_test.cpp)
 
-add_dependencies(can_sensors_integration_test localization)
+add_dependencies(can_sensors_integration_test can_sensors_lib imu_can_sensor_lib)
 
 target_link_libraries(can_sensors_integration_test
   ${catkin_LIBRARIES}
   can_sensors_lib
+  imu_can_sensor_lib
 )

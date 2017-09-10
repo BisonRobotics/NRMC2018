@@ -15,6 +15,8 @@ find_package(catkin REQUIRED COMPONENTS
 find_package (catkin REQUIRED cmake_modules)
 find_package (Eigen3 REQUIRED)
 
+
+
 ###################################
 ## catkin specific configuration ##
 ###################################
@@ -26,7 +28,7 @@ find_package (Eigen3 REQUIRED)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include/can_sensors/
-  LIBRARIES can_sensors_lib
+  LIBRARIES can_sensors_lib imu_can_sensor_lib
 #  CATKIN_DEPENDS nav_msgs roscpp
    DEPENDS EIGEN3
 )
@@ -48,6 +50,12 @@ include_directories (${Eigen_INCLUDE_DIRS})
 add_library(can_sensors_lib
   src/can_sensors/can_sensors.cpp
 )
+add_library(imu_can_sensor_lib
+  src/can_sensors/imu_can_sensor.cpp
+)
+#target_link_libraries(imu_can_sensor_lib
+#  can_sensors_lib
+#)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
