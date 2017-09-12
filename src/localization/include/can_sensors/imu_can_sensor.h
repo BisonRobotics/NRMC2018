@@ -13,9 +13,9 @@ class IMUCanSensor : public CanSensor, public ReadableSensors
 			float z; //z
 		} imuData;
 
-		IMUCanSensor(int cID, char* interface);
-
+  		IMUCanSensor(int cID, char* interface);
 		ReadableSensors::ReadStatus receiveData();
+
 	private:
 		uint8_t receiveBuffer[8];
 };

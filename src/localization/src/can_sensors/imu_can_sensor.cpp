@@ -7,7 +7,6 @@
 IMUCanSensor::IMUCanSensor(int cID, char* interface)
 	: CanSensor(cID, interface)
 {
-
 }
 
 ReadableSensors::ReadStatus IMUCanSensor::receiveData()
@@ -33,6 +32,7 @@ ReadableSensors::ReadStatus IMUCanSensor::receiveData()
 		return ReadableSensors::ReadStatus::READ_SUCCESS;
 	}
 	else return ReadableSensors::ReadStatus::READ_FAILED;
+
 }
 
-//int IMUCanSensor::setRefreshRate(uint8_t Hz); //future feature
+// int IMUCanSensor::setRefreshRate(uint8_t Hz); //future feature

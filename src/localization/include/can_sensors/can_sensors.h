@@ -2,7 +2,7 @@
 #define CAN_SENSORS_H
 
 #include <iostream>
-//socketcan includes
+// socketcan includes
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -51,6 +51,5 @@ class CanSensor {
 		//int setRefreshRate(uint8_t Hz); //future feature
 		//virtual int recieveData(void * ret)=0; //moved to readable_sensors
 };
-
 
 #endif
