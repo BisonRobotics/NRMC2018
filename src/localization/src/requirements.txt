@@ -1,6 +1,5 @@
 Requirements for localization:
+Localization should be able to accept a vector of pointer to readable_Sensor objects that contain an update method
+Localization should be able to update the vector of readable_Sensor objects
+Localization should be able to update a 9DOF state vector
 
-sub-items:
-CanSensor - object for interfacing with sensors over can
- - Each sensing element has one canID
- - Sensing element should extend CanSensor with its own implementation of recieveData();
