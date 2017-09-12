@@ -2,11 +2,12 @@
 #define IMU_CAN_SENSOR_H
 
 #include <can_sensors.h>
+#include <readable_sensors.h>
 
-class IMUCanSensor : public CanSensor
+class IMUCanSensor : public CanSensor, public ReadableSensors
 {
 	public:
-		typedef struct {
+		struct data_s{
 			float x; //x acceleration in m/s^2
 			float y; //y
 			float z; //z
@@ -14,9 +15,9 @@ class IMUCanSensor : public CanSensor
 
 		IMUCanSensor(int cID, char* interface);
 
-		int recieveData(void * ret);
+		ReadableSensors::ReadStatus receiveData();
 	private:
-		uint8_t recieveBuffer[8];
+		uint8_t receiveBuffer[8];
 };
 
 #endif

@@ -42,13 +42,13 @@ class CanSensor {
 
 	protected:
 		int canSend(uint8_t *data, uint8_t len); //future feature, not tested
-		int canRecieve(uint8_t *databuffer);
+		int canReceive(uint8_t *databuffer);
 		
 	public:
 
 		CanSensor(int cID, char* interface);
 		//int setRefreshRate(uint8_t Hz); //future feature
-		virtual int recieveData(void * ret)=0; //future feature
+		//virtual int recieveData(void * ret)=0; //moved to readable_sensors
 };
 
 

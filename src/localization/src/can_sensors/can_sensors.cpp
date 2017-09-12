@@ -39,7 +39,7 @@ int CanSensor::canSend(uint8_t *data, uint8_t len)
 	return 1;
 }
 
-int CanSensor::canRecieve(uint8_t *databuffer)
+int CanSensor::canReceive(uint8_t *databuffer)
 {
 	struct can_frame readMsg;
 	while(1)

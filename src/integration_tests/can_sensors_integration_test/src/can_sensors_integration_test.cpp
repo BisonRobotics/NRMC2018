@@ -1,4 +1,5 @@
 #include <imu_can_sensor.h>
+#include <readable_sensors.h>
 #include <iostream>
 
 int main()
@@ -7,16 +8,15 @@ int main()
 	IMUCanSensor mySensor(20, interface);
 	//CanSensor mySensor2(21, interface);
 	//uint8_t mybuffer[8];
-	IMUCanSensor::imuData myData;
 	char printbuffer[30];
-	int canReturn;
+	ReadableSensors::ReadStatus canReturn;
 
 	while(1)
 	{
-		canReturn = mySensor.recieveData(&myData);
-		if (canReturn ==1) 
+		canReturn = mySensor.receiveData();
+		if (canReturn ==ReadableSensors::ReadStatus::READ_SUCCESS) 
 		{
-			sprintf(printbuffer, "message dataS1: \nX: %f,\nY: %f,\nZ: %f\n\n", myData.x, myData.y, myData.z);
+			sprintf(printbuffer, "message dataS1: \nX: %f,\nY: %f,\nZ: %f\n\n", mySensor.imuData.x, mySensor.imuData.y, mySensor.imuData.z);
 			std::cout << printbuffer <<std::endl;
 		}
 		//else if (canReturn == -1) std::cout << "no message! recieve returned " <<canReturn <<std::endl;
