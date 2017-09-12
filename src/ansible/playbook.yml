@@ -15,6 +15,10 @@
         dest=~/.bashrc
         line="source /opt/ros/kinetic/setup.bash"
 
+    - lineinfile:
+        dest=~/.bashrc
+        line="alias lintme='find . -name '*.h' -or -name '*.hpp' -or -name '*.cpp' | xargs clang-format-3.6 -i -style=file $1'
+
     #- name: update apt packages
     #  become: yes
     #  apt:  
@@ -32,16 +36,15 @@
         - google-mock
         - xclip    
         - sl   
+        - clang-format-3.6
+
     - name: install ros packages
       become: yes
       apt: pkg=ros-kinetic-{{ item }} state=latest update_cache=true
       with_items:
         - desktop
         - catkin  
+
     - name: install gmock
       become: yes
-      shell: ./gmock_setup.sh     
-    
-    - name: source bash
-      become: no
-      shell: source ~/.bashrc 
+      shell: ./gmock_setup.sh      
