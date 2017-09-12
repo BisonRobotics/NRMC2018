@@ -10,7 +10,7 @@ VescAccess::VescAccess(float transmission_ratio, float output_ratio, float veloc
   setTorqueLimit(torque_limit);
   setLinearVelocityLimit(velocity_limit);
   setTorqueConstant(torque_constant);
-  setPolePairs (pole_pairs);
+  setPolePairs(pole_pairs);
 }
 
 VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_ratio, float velocity_limit,
@@ -149,14 +149,19 @@ float VescAccess::getLinearVelocity(void)
   return (convertRpmToLinearVelocity(convertErpmToRpm(vesc->getRpm())));
 }
 
-float VescAccess::convertErpmToRpm (float rpm){
-  return (rpm/(1.0f*this->pole_pairs));
+float VescAccess::convertErpmToRpm(float rpm)
+{
+  return (rpm / (1.0f * this->pole_pairs));
 }
 
-void VescAccess::setPolePairs (unsigned int pole_pairs){
-  if (pole_pairs == 0){
+void VescAccess::setPolePairs(unsigned int pole_pairs)
+{
+  if (pole_pairs == 0)
+  {
     this->pole_pairs = 1;
-  }else {
+  }
+  else
+  {
     this->pole_pairs = pole_pairs;
   }
 }

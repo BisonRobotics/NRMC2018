@@ -5,18 +5,20 @@
 
 class IMUCanSensor : public CanSensor
 {
-	public:
-		typedef struct {
-			float x; //x acceleration in m/s^2
-			float y; //y
-			float z; //z
-		} imuData;
+public:
+  typedef struct
+  {
+    float x;  // x acceleration in m/s^2
+    float y;  // y
+    float z;  // z
+  } imuData;
 
-		IMUCanSensor(int cID, char* interface);
+  IMUCanSensor(int cID, char* interface);
 
-		int recieveData(void * ret);
-	private:
-		uint8_t recieveBuffer[8];
+  int recieveData(void* ret);
+
+private:
+  uint8_t recieveBuffer[8];
 };
 
 #endif

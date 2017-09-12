@@ -23,7 +23,7 @@ private:
   void setTorqueLimit(float newtown_meters);
   void setLinearVelocityLimit(float meters_per_second);
   void setTorqueConstant(float torque_ratio);
-  void setPolePairs (unsigned int pole_pairs);
+  void setPolePairs(unsigned int pole_pairs);
   float transmission_ratio;
   float output_ratio;
   float torque_constant;
@@ -38,7 +38,7 @@ private:
   float convertRpmToLinearVelocity(float rpm);
   float convertRpmToLinearVelocity(int rpm);
   float convertCurrentToTorque(float current);
-  float convertErpmToRpm (float rpm);
+  float convertErpmToRpm(float rpm);
 };
 
 #endif
