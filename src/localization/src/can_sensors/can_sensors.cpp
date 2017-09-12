@@ -21,7 +21,7 @@ CanSensor::CanSensor(int cID, char* interface)
 	if(ret == -1) throw "Unable to connect bcm socket";
 }
 
-int CanSensor::canSend(uint8_t *data, uint8_t len)
+CanSensor::CanReadStatus CanSensor::canSend(uint8_t *data, uint8_t len)
 {
 	msg.msg_head.opcode = TX_SETUP;
 	msg.msg_head.can_id = canID;
@@ -36,20 +36,20 @@ int CanSensor::canSend(uint8_t *data, uint8_t len)
 	memcpy(msg.frame[0].data, data, len);
 	write(sbcm, &msg, sizeof(msg));
 
-	return 1;
+	return CanSensor::CanReadStatus::CAN_READ_SUCCESS;
 }
 
-int CanSensor::canReceive(uint8_t *databuffer)
+CanSensor::CanReadStatus CanSensor::canReceive(uint8_t *databuffer)
 {
 	struct can_frame readMsg;
 	while(1)
 	{
 		int a = read(s, &readMsg, sizeof(msg));
-		if(a ==-1) return -1; //no message?
+		if(a ==-1) return CanSensor::CanReadStatus::CAN_READ_FAILED; //no message?
 		if (readMsg.can_id == canID)
 		{
 			memcpy(databuffer, readMsg.data, readMsg.can_dlc);
-			return 1;
+			return CanSensor::CanReadStatus::CAN_READ_SUCCESS;
 		}
 		//else return -readMsg.can_id;
 	}

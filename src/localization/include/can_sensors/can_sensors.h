@@ -41,8 +41,9 @@ class CanSensor {
 		} msg;
 
 	protected:
-		int canSend(uint8_t *data, uint8_t len); //future feature, not tested
-		int canReceive(uint8_t *databuffer);
+		enum class CanReadStatus {CAN_READ_FAILED, CAN_READ_SUCCESS}; //this requires cpp11
+		CanReadStatus canSend(uint8_t *data, uint8_t len); //future feature, not tested
+		CanReadStatus canReceive(uint8_t *databuffer);
 		
 	public:
 

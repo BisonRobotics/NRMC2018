@@ -13,7 +13,7 @@ IMUCanSensor::IMUCanSensor(int cID, char* interface)
 ReadableSensors::ReadStatus IMUCanSensor::receiveData()
 {
 	//do a canRecieve,
-	if (canReceive(receiveBuffer) ==1)
+	if (canReceive(receiveBuffer) ==CanSensor::CanReadStatus::CAN_READ_SUCCESS)
 	{
 		//recieved data is in the form [X LSB, X MSB, Y LSB, Y MSB, Z LSB, Z MSB]
 		//representing 16bits of signed data from -2g to +2g
