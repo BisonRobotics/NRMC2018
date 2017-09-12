@@ -160,6 +160,18 @@ TEST(VescAccessTest, canSetPolePairs)
   VescAccess *wrap = new VescAccess(transmission_ratio, output_ratio, 30.0f, torque_limit, 0.0f, &vesc, 4);
   EXPECT_EQ(wrap->getLinearVelocity(), 100.0f);
 }
+
+TEST(VescAccessTest, canBeReadOnlyVelocity)
+{
+  mockVesc vesc;
+  float output_ratio = 1.0f;
+  float transmission_ratio = 1.0f;
+  float torque_limit = 12.0f;
+  EXPECT_CALL(vesc, setRpm(_)).Times(0);
+  VescAccess *wrap = new VescAccess(transmission_ratio, output_ratio, 30.0f, torque_limit, 0.0f, &vesc, 4, true);
+  wrap->setLinearVelocity(1.0f);
+}
+
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {

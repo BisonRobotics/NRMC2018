@@ -8,26 +8,28 @@
 
 class Localizer
 {
-	public:
-		struct stateVector_s {
-			float xPos; //in world coordinates
-			float yPos; //in world coordinates
-			float theta; //robot rotation about its own center with reference to the 
-						 //world's x axis and positive angles CCW
+public:
+  struct stateVector_s
+  {
+    float xPos;  // in world coordinates
+    float yPos;  // in world coordinates
+    float theta;  // robot rotation about its own center with reference to the
+    // world's x axis and positive angles CCW
 
-			float xVel; //derivitive of xPos
-			float yVel; //derivitive of yPos
-			float omega;//derivitive of theta
-			
-			float xAccel;
-			float yAccel;
-			float alpha;
-		} stateVector;
+    float xVel;  // derivitive of xPos
+    float yVel;  // derivitive of yPos
+    float omega;  // derivitive of theta
 
-		Localizer(std::vector<ReadableSensors* sArray);
-		updateStateVector();
-	private:
-		std::Vector<ReadableSensors *> sensorArray;
+    float xAccel;
+    float yAccel;
+    float alpha;
+  } stateVector;
+
+  Localizer(std::vector < ReadableSensors * sArray);
+  updateStateVector();
+
+private:
+  std::Vector<ReadableSensors *> sensorArray;
 }
 
 #endif

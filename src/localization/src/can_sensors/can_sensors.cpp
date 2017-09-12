@@ -39,22 +39,22 @@ CanSensor::CanReadStatus CanSensor::canSend(uint8_t *data, uint8_t len)
   memcpy(msg.frame[0].data, data, len);
   write(sbcm, &msg, sizeof(msg));
 
-	return CanSensor::CanReadStatus::CAN_READ_SUCCESS;
+  return CanSensor::CanReadStatus::CAN_READ_SUCCESS;
 }
 
 CanSensor::CanReadStatus CanSensor::canReceive(uint8_t *databuffer)
 {
-	struct can_frame readMsg;
-	while(1)
-	{
-		int a = read(s, &readMsg, sizeof(msg));
-		if(a ==-1) return CanSensor::CanReadStatus::CAN_READ_FAILED; //no message?
-		if (readMsg.can_id == canID)
-		{
-			memcpy(databuffer, readMsg.data, readMsg.can_dlc);
-			return CanSensor::CanReadStatus::CAN_READ_SUCCESS;
-		}
-		//else return -readMsg.can_id;
-	}
-	
+  struct can_frame readMsg;
+  while (1)
+  {
+    int a = read(s, &readMsg, sizeof(msg));
+    if (a == -1)
+      return CanSensor::CanReadStatus::CAN_READ_FAILED;  // no message?
+    if (readMsg.can_id == canID)
+    {
+      memcpy(databuffer, readMsg.data, readMsg.can_dlc);
+      return CanSensor::CanReadStatus::CAN_READ_SUCCESS;
+    }
+    // else return -readMsg.can_id;
+  }
 }

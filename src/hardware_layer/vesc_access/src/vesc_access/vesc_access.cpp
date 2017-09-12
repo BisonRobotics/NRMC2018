@@ -11,6 +11,7 @@ VescAccess::VescAccess(float transmission_ratio, float output_ratio, float veloc
   setLinearVelocityLimit(velocity_limit);
   setTorqueConstant(torque_constant);
   setPolePairs(pole_pairs);
+  this->read_only = false;
 }
 
 VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_ratio, float velocity_limit,
@@ -18,6 +19,27 @@ VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_r
 {
   VescAccess(transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_constant,
              new Vesc(can_network, VESC_ID), pole_pairs);
+}
+
+VescAccess::VescAccess(float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
+                       float torque_constant, iVesc *vesc, unsigned int pole_pairs, bool read_only)
+{
+  this->vesc = vesc;
+  setTransmissionRatio(transmission_ratio);
+  setOutputRatio(output_ratio);
+  setTorqueLimit(torque_limit);
+  setLinearVelocityLimit(velocity_limit);
+  setTorqueConstant(torque_constant);
+  setPolePairs(pole_pairs);
+  this->read_only = read_only;
+}
+
+VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_ratio, float velocity_limit,
+                       float torque_limit, float torque_constant, char *can_network, unsigned int pole_pairs,
+                       bool read_only)
+{
+  VescAccess(transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_constant,
+             new Vesc(can_network, VESC_ID), pole_pairs, read_only);
 }
 
 void VescAccess::setOutputRatio(float output_ratio)
@@ -40,35 +62,41 @@ void VescAccess::setTransmissionRatio(float transmission_ratio)
 
 void VescAccess::setLinearVelocity(float meters_per_second)
 {
-  if (fabs(meters_per_second) > this->velocity_limit)
+  if (!read_only)
   {
-    if (meters_per_second >= 0)
+    if (fabs(meters_per_second) > this->velocity_limit)
     {
-      meters_per_second = velocity_limit;
+      if (meters_per_second >= 0)
+      {
+        meters_per_second = velocity_limit;
+      }
+      else
+      {
+        meters_per_second = velocity_limit * -1.0f;
+      }
     }
-    else
-    {
-      meters_per_second = velocity_limit * -1.0f;
-    }
+    float rpm = convertLinearVelocityToRpm(meters_per_second);
+    this->vesc->setRpm(rpm);
   }
-  float rpm = convertLinearVelocityToRpm(meters_per_second);
-  this->vesc->setRpm(rpm);
 }
 
 void VescAccess::setTorque(float newton_meters)  // TODO utilize torque constant here
 {
-  if (fabs(newton_meters) > this->torque_limit)
+  if (!read_only)
   {
-    if (newton_meters >= 0)
+    if (fabs(newton_meters) > this->torque_limit)
     {
-      newton_meters = torque_limit;
+      if (newton_meters >= 0)
+      {
+        newton_meters = torque_limit;
+      }
+      else
+      {
+        newton_meters = -1.0f * torque_limit;
+      }
     }
-    else
-    {
-      newton_meters = -1.0f * torque_limit;
-    }
+    this->vesc->setCurrent(convertTorqueToCurrent(newton_meters));
   }
-  this->vesc->setCurrent(convertTorqueToCurrent(newton_meters));
 }
 
 void VescAccess::setTorqueConstant(float torque_constant)
