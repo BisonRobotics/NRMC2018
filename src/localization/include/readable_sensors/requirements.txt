@@ -1,0 +1,3 @@
+This is an abstract interface which includes a "int recieveData(void *) "
+method which populates a memory address with data read from the sensor
+and returns a value indicating how it went. preferrabley an enumed status thing

@@ -1,0 +1,7 @@
+can sensors requirements
+
+expose an init method which takes the name of the can interface and the canID of the sensor
+expose a can write and a can read function which can be used by objects that extend this object
+
+IMU can senosr is an example of a sensor which extends the can sensor object and implements 
+the readable_sensor interface
