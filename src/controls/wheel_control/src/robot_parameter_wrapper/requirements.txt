@@ -1,7 +1,0 @@
-The Robot Parameter Wrapper should expose a method that sends the linear velocity
-The Robot Parameter Wrapper should expose a method that sends the torque in Nm
-The Robot Parameter Wrapper should expose a method to set velocity limit
-The Robot Parameter Wrapper should be able to correctly set the rpm given a linear velocity
-The Robot Parameter Wrapper should be able to correctly set the Torque given the current
-he Robot Parameter Wrapper should set the maximum velocity if it tries to set a velocity above the limit
-The Robot Paramete Wrapper should set the maxmimum torque if it tires to set a torque above the limit

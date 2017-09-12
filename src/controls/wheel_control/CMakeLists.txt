@@ -7,14 +7,21 @@ add_compile_options(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   pluginlib
-  
-  )
+  genmsg 
+  actionlib_msgs 
+  actionlib
+  std_msgs 
+)
 
 
 
 link_directories (
 /usr/src/gmock/build
 )
+
+
+add_action_files(DIRECTORY action FILES distance.action)
+generate_messages(DEPENDENCIES actionlib_msgs)
 
 catkin_package(
     INCLUDE_DIRS include

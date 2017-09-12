@@ -16,6 +16,8 @@ public:
   float getTransmissionRatio(void);
   float getOutputRatio(void);
   float getTorqueLimit(void);
+  float getTorque(void);
+  float getLinearVelocity(void);
 
 private:
   void setTorqueLimit(float newtown_meters);
@@ -29,6 +31,11 @@ private:
   iVesc *vesc;
   void setTransmissionRatio(float transmission_ratio);
   void setOutputRatio(float output_ratio);
+  float convertTorqueToCurrent(float torque);
+  float convertLinearVelocityToRpm(float velocity);
+  float convertRpmToLinearVelocity(float rpm);
+  float convertRpmToLinearVelocity(int rpm);
+  float convertCurrentToTorque(float current);
 };
 
 #endif
