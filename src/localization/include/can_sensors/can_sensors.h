@@ -46,7 +46,7 @@ protected:
   {
     CAN_READ_FAILED,
     CAN_READ_SUCCESS
-  };  // this requires cpp11
+  };                                                  // this requires cpp11
   CanReadStatus canSend(uint8_t *data, uint8_t len);  // future feature, not tested
   CanReadStatus canReceive(uint8_t *databuffer);
 

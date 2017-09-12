@@ -167,7 +167,7 @@ TEST(VescAccessTest, canBeReadOnlyVelocity)
   float output_ratio = 1.0f;
   float transmission_ratio = 1.0f;
   float torque_limit = 12.0f;
-  EXPECT_CALL (vesc, setRpm (_)).Times(0);
+  EXPECT_CALL(vesc, setRpm(_)).Times(0);
   VescAccess *wrap = new VescAccess(transmission_ratio, output_ratio, 30.0f, torque_limit, 0.0f, &vesc, 4, true);
   wrap->setLinearVelocity(1.0f);
 }

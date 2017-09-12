@@ -19,7 +19,7 @@ ReadableSensors::ReadStatus IMUCanSensor::receiveData()
 
     // populate ret, this should be correct
     int16_t tempx = receiveBuffer[0] | receiveBuffer[1] << 8;  // make an int out of 2 uints
-    this->imuData.x = tempx / MAXREADVALUE * TWO * GRAVITY;  // convert to m/s^2, tempx/max value * full scale
+    this->imuData.x = tempx / MAXREADVALUE * TWO * GRAVITY;    // convert to m/s^2, tempx/max value * full scale
     int16_t tempy = receiveBuffer[2] | receiveBuffer[3] << 8;
     imuData.y = tempy / MAXREADVALUE * TWO * GRAVITY;
     int16_t tempz = receiveBuffer[4] | receiveBuffer[5] << 8;
