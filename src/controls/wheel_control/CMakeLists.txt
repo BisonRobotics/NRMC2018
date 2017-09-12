@@ -68,12 +68,4 @@ if(TARGET test_velocity_plugins)
   add_dependencies(test_velocity_plugins velocity_plugins)
 endif()
 
-catkin_add_gtest(test_vesc_access src/vesc_access/tests/vesc_access_tests.cpp)
-if (TARGET test_vesc_access)
-  target_link_libraries(
-    test_vesc_access
-    ${catkin_LIBRARIES}
-    vesc_access
-    gmock_main
-  )
-endif ()
+
