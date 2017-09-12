@@ -51,12 +51,25 @@ include_directories (${Eigen_INCLUDE_DIRS})
 add_library(can_sensors_lib
   src/can_sensors/can_sensors.cpp
 )
+
 add_library(imu_can_sensor_lib
   src/can_sensors/imu_can_sensor.cpp
 )
-#target_link_libraries(imu_can_sensor_lib
-#  can_sensors_lib
-#)
+
+target_link_libraries(imu_can_sensor_lib
+  can_sensors_lib
+)
+
+add_executable(can_sensors_integration_test src/can_sensors/tests/can_sensors_integration_test.cpp)
+
+add_dependencies(can_sensors_integration_test imu_can_sensor_lib)
+
+target_link_libraries(can_sensors_integration_test
+  ${catkin_LIBRARIES}
+  imu_can_sensor_lib
+)
+
+##Graveyard below##
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
