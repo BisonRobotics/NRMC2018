@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(localization)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -27,7 +27,7 @@ find_package (Eigen3 REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include/can_sensors/
+  INCLUDE_DIRS include/can_sensors/ include/readable_sensors/
   LIBRARIES can_sensors_lib imu_can_sensor_lib
 #  CATKIN_DEPENDS nav_msgs roscpp
    DEPENDS EIGEN3
@@ -43,6 +43,7 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
   include/can_sensors
+  include/readable_sensors
 )
 
 include_directories (${Eigen_INCLUDE_DIRS})
@@ -50,12 +51,25 @@ include_directories (${Eigen_INCLUDE_DIRS})
 add_library(can_sensors_lib
   src/can_sensors/can_sensors.cpp
 )
+
 add_library(imu_can_sensor_lib
   src/can_sensors/imu_can_sensor.cpp
 )
-#target_link_libraries(imu_can_sensor_lib
-#  can_sensors_lib
-#)
+
+target_link_libraries(imu_can_sensor_lib
+  can_sensors_lib
+)
+
+add_executable(can_sensors_integration_test src/can_sensors/tests/can_sensors_integration_test.cpp)
+
+add_dependencies(can_sensors_integration_test imu_can_sensor_lib)
+
+target_link_libraries(can_sensors_integration_test
+  ${catkin_LIBRARIES}
+  imu_can_sensor_lib
+)
+
+##Graveyard below##
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries

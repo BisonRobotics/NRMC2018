@@ -1,3 +1,7 @@
-CanSensor - object for interfacing with sensors over can
- Each sensing element has one canID
- Sensing element should extend CanSensor with its own implementation of recieveData();
+can sensors requirements
+
+expose an init method which takes the name of the can interface and the canID of the sensor
+expose a can write and a can read function which can be used by objects that extend this object
+
+IMU can senosr is an example of a sensor which extends the can sensor object and implements 
+the readable_sensor interface
