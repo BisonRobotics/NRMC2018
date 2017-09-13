@@ -34,19 +34,6 @@ include_directories (include ${catkin_INCLUDE_DIRS} )
 include_directories(${GTEST_INCLUDE_DIRS})
 ## Declare a C++ library
 
-add_library(vesc_lib
-  src/vesc_socket_can/vesc_socket_can.cpp
-)
-add_library (vesc_access
-  src/vesc_access/vesc_access.cpp
-)
- 
-## Specify libraries to link a library or executable target against
-target_link_libraries(vesc_access
-  ${catkin_LIBRARIES}
-  vesc_lib
-)
-
 add_library(velocity_plugins
   src/DifferentialDriveController.cpp
   src/Wheels.cpp
@@ -81,12 +68,4 @@ if(TARGET test_velocity_plugins)
   add_dependencies(test_velocity_plugins velocity_plugins)
 endif()
 
-catkin_add_gtest(test_vesc_access src/vesc_access/tests/vesc_access_tests.cpp)
-if (TARGET test_vesc_access)
-  target_link_libraries(
-    test_vesc_access
-    ${catkin_LIBRARIES}
-    vesc_access
-    gmock_main
-  )
-endif ()
+

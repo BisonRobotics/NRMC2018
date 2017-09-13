@@ -21,35 +21,39 @@
 
 #include <sys/time.h>
 
-//TODO, Move includes to cpp file for betterness
-//TODO, Add timeout to canRecieve
+// TODO, Move includes to cpp file for betterness
+// TODO, Add timeout to canRecieve
 
-class CanSensor {
-	private:
-		struct ifreq ifr;
-		struct sockaddr_can addr;
-		int s;
-		int sbcm;
-		int canID;
+class CanSensor
+{
+private:
+  struct ifreq ifr;
+  struct sockaddr_can addr;
+  int s;
+  int sbcm;
+  int canID;
 
-		struct timeval prevmsgtime;
+  struct timeval prevmsgtime;
 
+  struct can_msg
+  {
+    struct bcm_msg_head msg_head;
+    struct can_frame frame[1];
+  } msg;
 
-		struct can_msg {
-			struct bcm_msg_head msg_head;
-			struct can_frame frame[1];
-		} msg;
+protected:
+  enum class CanReadStatus
+  {
+    CAN_READ_FAILED,
+    CAN_READ_SUCCESS
+  };                                                  // this requires cpp11
+  CanReadStatus canSend(uint8_t *data, uint8_t len);  // future feature, not tested
+  CanReadStatus canReceive(uint8_t *databuffer);
 
-	protected:
-		enum class CanReadStatus {CAN_READ_FAILED, CAN_READ_SUCCESS}; //this requires cpp11
-		CanReadStatus canSend(uint8_t *data, uint8_t len); //future feature, not tested
-		CanReadStatus canReceive(uint8_t *databuffer);
-		
-	public:
-
-		CanSensor(int cID, char* interface);
-		//int setRefreshRate(uint8_t Hz); //future feature
-		//virtual int recieveData(void * ret)=0; //moved to readable_sensors
+public:
+  CanSensor(int cID, char *interface);
+  // int setRefreshRate(uint8_t Hz); //future feature
+  // virtual int recieveData(void * ret)=0; //moved to readable_sensors
 };
 
 #endif

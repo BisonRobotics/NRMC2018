@@ -6,18 +6,20 @@
 
 class IMUCanSensor : public CanSensor, public ReadableSensors
 {
-	public:
-		struct data_s{
-			float x; //x acceleration in m/s^2
-			float y; //y
-			float z; //z
-		} imuData;
+public:
+  struct data_s
+  {
+    float x;  // x acceleration in m/s^2
+    float y;  // y
+    float z;  // z
+  } imuData;
 
-  		IMUCanSensor(int cID, char* interface);
-		ReadableSensors::ReadStatus receiveData();
+  IMUCanSensor(int cID, char* interface);
 
-	private:
-		uint8_t receiveBuffer[8];
+  ReadableSensors::ReadStatus receiveData();
+
+private:
+  uint8_t receiveBuffer[8];
 };
 
 #endif

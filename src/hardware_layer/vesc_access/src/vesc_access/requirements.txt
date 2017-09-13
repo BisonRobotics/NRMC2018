@@ -12,3 +12,4 @@ The Robot Parameter Wrapper should allow a zero torque
 The Robot Parameter Wrapper should allow a torque constant that converts torque to current
 The Robot Parameter Wrapper should default a value of zero for a constant to a value of 1
 The Robot Parameter Wrapper should take in a parameter to convert between eRPM and RPM in its constructor
+The Robot Parameter Wrapper should have a read only mode that is only allowed to read values

@@ -7,9 +7,13 @@ class VescAccess
 public:
   //    VescAccess (unsigned int VESC_ID, double transmission_ratio, double output_ratio);
   VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
-             float torque_constant, char *can_network, unsigned int pole_pairs);
+             float torque_constant, char *can_network, unsigned int pole_pairs, bool read_only);
+  VescAccess(float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
+             float torque_constant, iVesc *vesc, unsigned int pole_pairs, bool read_only);
   VescAccess(float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
              float torque_constant, iVesc *vesc, unsigned int pole_pairs);
+  VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
+             float torque_constant, char *can_network, unsigned int pole_pairs);
   void setTorque(float newton_meters);
   void setLinearVelocity(float meters_per_second);
   float getLinearVelocityLimit(void);
@@ -39,6 +43,7 @@ private:
   float convertRpmToLinearVelocity(int rpm);
   float convertCurrentToTorque(float current);
   float convertErpmToRpm(float rpm);
+  bool read_only;
 };
 
 #endif
