@@ -1,10 +1,10 @@
 #ifndef LOCALIZER_H
 #define LOCALIZER_H
 
-#include <vesc_access.h>
+#include <vesc_access/vesc_access.h>
 #include <imu_can_sensor.h>
 #include <readable_sensors.h>
-#include <vector>
+#include <sys/time.h>
 
 class Localizer
 {
@@ -25,24 +25,25 @@ public:
     float alpha;
   } stateVector;
 
-    enum class UpdateStatus
-    {
-      UPDATE_FAILED_SENSOR_ERROR,
-      UPDATE_SUCCESS
-    };
+  enum class UpdateStatus
+  {
+    UPDATE_FAILED_SENSOR_ERROR,
+    UPDATE_SUCCESS
+  };
 
-    Localizer(VescAccess *frontLeftVesc, VescAccess *frontRightVesc, VescAccess *backRightVesc,
-              VescAccess *backLeftVesc);  // pass wheel linear vel sensors in as FL, FR, BR, BL
-    UpdateStatus updateStateVector();
+  Localizer(VescAccess *frontLeftVesc, VescAccess *frontRightVesc, VescAccess *backRightVesc,
+            VescAccess *backLeftVesc);  // pass wheel linear vel sensors in as FL, FR, BR, BL
+  UpdateStatus updateStateVector();
 
-  private:
-    float dt;
-    float prevtime;
-    VescAccess *fleftVesc;
-    VescAccess *frightVesc;
-    VescAccess *bleftVesc;
-    VescAccess *brightVesc;
-
-}
+private:
+  struct timeval prevtime;
+  struct timeval currtime;
+  int dtms;  // dt in ms
+  VescAccess *fleftVesc;
+  VescAccess *frightVesc;
+  VescAccess *brightVesc;
+  VescAccess *bleftVesc;
+  int timediffms(struct timeval curr, struct timeval prev);
+};
 
 #endif
