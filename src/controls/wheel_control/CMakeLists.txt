@@ -48,7 +48,7 @@ target_link_libraries(velocity_plugins ${catkin_LIBRARIES})
 add_library(Wheels src/Wheels.cpp)
 
 add_library(pos_control src/position_controller/position_controller.cpp)
-
+target_link_libraries (pos_control vesc_access)
 ## Tests
 catkin_add_gtest(test_Wheels src/tests/test_Wheels.cpp src/Wheels.cpp)
 if(TARGET test_Wheels)
@@ -79,6 +79,7 @@ if(TARGET test_position_controller)
     test_position_controller
     ${catkin_LIBRARIES}
     pos_control
+    gmock_main
   )
   add_dependencies(test_position_controller vesc_access)
 endif()

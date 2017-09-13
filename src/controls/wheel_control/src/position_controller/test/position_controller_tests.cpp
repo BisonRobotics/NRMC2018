@@ -1,8 +1,8 @@
-//#include "foo/foo.h"
+
 // Bring in gtest
 #include <gtest/gtest.h>
 #include <position_controller/position_controller.h>
-
+#include <vesc_access/mock_vesc_access.h>
 #include <gmock/gmock.h>
 
 using ::testing::AtLeast;
@@ -11,11 +11,16 @@ using ::testing::_;
 using ::testing::AnyNumber;
 using ::testing::Gt;
 // Declare a test
+
 TEST(PositionControlTest, canBeInstantiatedWithAVelocity )
 {
   float velocity = 10.0f;
   float tolerance = 10.0f;
-  PositionController *pos = new PositionController (velocity, tolerance );
+  MockVescAccess br;
+  MockVescAccess bl;
+  MockVescAccess fr;
+  MockVescAccess fl;
+  PositionController *pos = new PositionController (velocity, tolerance, &fl, &fr, &br, &bl );
 
   EXPECT_EQ (pos->getVelocity (), velocity);
 }
@@ -23,7 +28,13 @@ TEST(PositionControlTest, canBeInstantiatedWithAVelocity )
 TEST(PositionControlTest, canBeGivenTolerance){
   float velocity = 10.0f;
   float tolerance = 0.01f;
-  PositionController *pos = new PositionController (velocity, tolerance);
+  MockVescAccess br;
+  MockVescAccess bl;
+  MockVescAccess fr;
+  MockVescAccess fl;
+  PositionController *pos = new PositionController (velocity, tolerance, &fl, &fr, &br, &bl );
+
+
   EXPECT_EQ(pos->getTolerance (), tolerance);
 }
 
@@ -31,7 +42,11 @@ TEST(PositionControlTest, canBeGivenTolerance){
 TEST(PositionControlTest, canBeGivenDistanceToTravel){
   float velocity = 10.0f;
   float tolerance = 0.01f;
-  PositionController *pos = new PositionController (velocity, tolerance);
+  MockVescAccess br;
+  MockVescAccess bl;
+  MockVescAccess fr;
+  MockVescAccess fl;
+  PositionController *pos = new PositionController (velocity, tolerance, &fl, &fr, &br, &bl );
   pos->setDistance (3.0f);
   EXPECT_EQ (pos->getDistance (), 3.0f);
 }
@@ -39,22 +54,23 @@ TEST(PositionControlTest, canBeGivenDistanceToTravel){
 TEST(PositionControlTest, canBeUpdatedWithPosition){
   float velocity = 10.0f;
   float tolerance = .001f;
-  PositionController *pos = new PositionController (velocity, tolerance);
-  pos->update (2.0f);
+  MockVescAccess br;
+  MockVescAccess bl;
+  MockVescAccess fr;
+  MockVescAccess fl;
+  PositionController *pos = new PositionController (velocity, tolerance, &fl, &fr, &br, &bl );
+
 }
 
 TEST(PositionControlTest, shouldTakeAbsValOfVelocity){
   float velocity = 10.0f;
   float tolerance = .001f;
-  PositionController *pos = new PositionController (-1.0f*velocity, tolerance);
+  MockVescAccess br;
+  MockVescAccess bl;
+  MockVescAccess fr;
+  MockVescAccess fl;
+  PositionController *pos = new PositionController (-1.0f*velocity, tolerance, &fl, &fr, &br, &bl );
   EXPECT_EQ (pos->getVelocity(), velocity);
-}
-
-TEST(PositionControlTest, shouldBeAbleToReturnMoving){
-  float velocity = 10.0f;
-  float tolerance = .001f;
-  PositionController *pos = new PositionController (velocity, tolerance);
-  EXPECT_EQ (pos->isMoving, false);
 }
 
 
