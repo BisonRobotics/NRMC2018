@@ -24,10 +24,17 @@ class Localizer
 			float alpha;
 		} stateVector;
 
-		Localizer(std::vector<ReadableSensors* sArray);
-		updateStateVector();
+		enum class UpdateStatus {UPDATE_FAILED_SENSOR_ERROR, UPDATE_SUCCESS};
+
+		Localizer(VescAccess * frontLeftVesc, VescAccess * frontRightVesc, VescAccess * backRightVesc, VescAccess * backLeftVesc); //pass wheel linear vel sensors in as FL, FR, BR, BL
+		UpdateStatus updateStateVector();
 	private:
-		std::Vector<ReadableSensors *> sensorArray;
+		float dt;
+		float prevtime;
+		VescAccess * fleftVesc;
+		VescAccess * frightVesc;
+		VescAccess * bleftVesc;
+		VescAccess * brightVesc;
 }
 
 #endif
