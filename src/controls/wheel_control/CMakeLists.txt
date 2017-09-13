@@ -10,7 +10,8 @@ find_package(catkin REQUIRED COMPONENTS
   genmsg 
   actionlib_msgs 
   actionlib
-  std_msgs 
+  std_msgs
+  vesc_access 
 )
 
 
@@ -32,6 +33,7 @@ catkin_package(
 
 include_directories (include ${catkin_INCLUDE_DIRS} )
 include_directories(${GTEST_INCLUDE_DIRS})
+include_directories(${vesc_access_INCLUDE_DIRS})
 ## Declare a C++ library
 
 add_library(velocity_plugins
@@ -39,10 +41,13 @@ add_library(velocity_plugins
   src/Wheels.cpp
 )
 
+add_executable (wheel_goal_master src/wheel_goal_master.cpp)
+target_link_libraries (wheel_goal_master ${catkin_LIBRARIES})
 target_link_libraries(velocity_plugins ${catkin_LIBRARIES})
 
 add_library(Wheels src/Wheels.cpp)
 
+add_library(pos_control src/position_controller/position_controller.cpp)
 
 ## Tests
 catkin_add_gtest(test_Wheels src/tests/test_Wheels.cpp src/Wheels.cpp)
@@ -66,6 +71,16 @@ if(TARGET test_velocity_plugins)
     Wheels
   )
   add_dependencies(test_velocity_plugins velocity_plugins)
+endif()
+
+catkin_add_gtest(test_position_controller src/position_controller/test/position_controller_tests.cpp)
+if(TARGET test_position_controller)
+  target_link_libraries(
+    test_position_controller
+    ${catkin_LIBRARIES}
+    pos_control
+  )
+  add_dependencies(test_position_controller vesc_access)
 endif()
 
 
