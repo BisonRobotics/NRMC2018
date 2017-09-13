@@ -20,7 +20,11 @@ public:
     float yVel;   // derivitive of yPos
     float omega;  // derivitive of theta
 
-<<<<<<< HEAD:src/localization/include/localizer/2localizer.h
+    float xAccel;
+    float yAccel;
+    float alpha;
+  } stateVector;
+
     enum class UpdateStatus
     {
       UPDATE_FAILED_SENSOR_ERROR,
@@ -38,18 +42,7 @@ public:
     VescAccess *frightVesc;
     VescAccess *bleftVesc;
     VescAccess *brightVesc;
-=======
-    float xAccel;
-    float yAccel;
-    float alpha;
-  } stateVector;
 
-  Localizer(std::vector < ReadableSensors * sArray);
-  updateStateVector();
-
-private:
-  std::Vector<ReadableSensors *> sensorArray;
->>>>>>> b27727ff340932655b079dd2efdaa32bf4fbebc3:src/localization/include/localizer/localizer.h
 }
 
 #endif
