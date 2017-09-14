@@ -30,6 +30,7 @@ private:
   float tol_sqr;
   bool goal_received;
   bool position_received;
+  bool currently_moving;
   bool inTolerance(void);
   void setVelocity(float velocity);
   void setCurrentState(float position_x, float position_y);

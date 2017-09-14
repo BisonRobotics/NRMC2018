@@ -75,6 +75,53 @@ TEST(PositionControlTest, shouldTakeAbsValOfVelocity)
   EXPECT_EQ(pos->getVelocity(), velocity);
 }
 
+TEST(PositionControlTest, shouldMoveAfterGettingGoal)
+{
+  float velocity = 10.0f;
+  float tolerance = .001f;
+  MockVescAccess br;
+  MockVescAccess bl;
+  MockVescAccess fr;
+  MockVescAccess fl;
+  EXPECT_CALL(br, setLinearVelocity(velocity));
+  PositionController *pos = new PositionController(-1.0f * velocity, tolerance, &fl, &fr, &br, &bl);
+  pos->update(0.0f, 0.0f);
+  pos->setDistance(1.0f);
+  pos->update(0.0f, 0.0f);
+}
+
+TEST(PositionControlTest, shouldGoUntilPositionReached)
+{
+  float velocity = 10.0f;
+  float tolerance = .001f;
+  MockVescAccess br;
+  MockVescAccess bl;
+  MockVescAccess fr;
+  MockVescAccess fl;
+  PositionController *pos = new PositionController(-1.0f * velocity, tolerance, &fl, &fr, &br, &bl);
+  pos->update(0.0f, 0.0f);
+  pos->setDistance(1.0f);
+  pos->update(0.0f, 0.0f);
+  EXPECT_CALL(br, setLinearVelocity(0.0f));
+  pos->update(1.0f, 0.0f);
+}
+
+TEST(PositionControlTest, shouldStopIfGreater)
+{
+  float velocity = 10.0f;
+  float tolerance = .001f;
+  MockVescAccess br;
+  MockVescAccess bl;
+  MockVescAccess fr;
+  MockVescAccess fl;
+  PositionController *pos = new PositionController(-1.0f * velocity, tolerance, &fl, &fr, &br, &bl);
+  pos->update(0.0f, 0.0f);
+  pos->setDistance(1.0f);
+  pos->update(0.0f, 0.0f);
+  EXPECT_CALL(br, setLinearVelocity(0.0f));
+  pos->update(3.0f, 0.0f);
+}
+
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {

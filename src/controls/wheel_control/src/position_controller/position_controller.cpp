@@ -95,6 +95,7 @@ void PositionController::setInitialState(void)
 
 void PositionController::startVescs(void)
 {
+  currently_moving = true;
   fleft_wheel->setLinearVelocity(this->velocity);
   fright_wheel->setLinearVelocity(this->velocity);
   bright_wheel->setLinearVelocity(this->velocity);
@@ -110,7 +111,7 @@ void PositionController::update(float position_x, float position_y)
     {
       if (!inTolerance())
       {
-        if (!isMoving())
+        if (!currently_moving)
         {
           startVescs();
         }
@@ -125,10 +126,7 @@ void PositionController::update(float position_x, float position_y)
 
 bool PositionController::isMoving(void)
 {
-  const float tol = 0.01;
-  float sum_vel = fabs(fleft_wheel->getLinearVelocity()) + fabs(fright_wheel->getLinearVelocity());
-  sum_vel += fabs(bright_wheel->getLinearVelocity()) + fabs(bleft_wheel->getLinearVelocity());
-  return (tol >= sum_vel);
+  return currently_moving;
 }
 
 bool PositionController::inTolerance(void)
@@ -147,6 +145,7 @@ void PositionController::closeGoal(void)
 
 void PositionController::stopVescs(void)
 {
+  currently_moving = false;
   fleft_wheel->setLinearVelocity(0.0f);
   fright_wheel->setLinearVelocity(0.0f);
   bright_wheel->setLinearVelocity(0.0f);
