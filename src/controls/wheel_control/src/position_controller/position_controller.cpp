@@ -30,6 +30,7 @@ PositionController::PositionController(float velocity, float tolerance)
                                       torque_constant, name, pole_pairs);
   this->bleft_wheel = new VescAccess(BACK_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
                                      torque_constant, name, pole_pairs);
+  this->currently_moving = false;
 }
 
 PositionController::PositionController(float velocity, float tolerance, iVescAccess *fl, iVescAccess *fr,
@@ -37,6 +38,7 @@ PositionController::PositionController(float velocity, float tolerance, iVescAcc
 {
   setVelocity(velocity);
   setTolerance(tolerance);
+  this->currently_moving = false;
   this->bleft_wheel = bl;
   this->bright_wheel = br;
   this->fright_wheel = fr;
@@ -65,7 +67,7 @@ void PositionController::setDistance(float distance)
 {
   if (!goal_received)
   {
-    this->distance = distance;
+    this->distance = fabs(distance);
     this->goal_received = true;
   }
 }
@@ -109,7 +111,7 @@ void PositionController::update(float position_x, float position_y)
   {
     if (position_received)
     {
-      if (!inTolerance())
+      if (!inTolerance() && !exceededDistance())
       {
         if (!currently_moving)
         {
@@ -129,12 +131,20 @@ bool PositionController::isMoving(void)
   return currently_moving;
 }
 
+float PositionController::getDistanceTravelledSqr (void){
+  float euclid_dist_sqr;  
+  euclid_dist_sqr =  ((initial_state.x - current_state.x) * (initial_state.x - current_state.x));
+  euclid_dist_sqr += ((initial_state.y - current_state.y) * (initial_state.y - current_state.y));
+  return (euclid_dist_sqr);
+}
+
+bool PositionController::exceededDistance (void){
+  return (getDistanceTravelledSqr () > (distance*distance));
+}
+
 bool PositionController::inTolerance(void)
 {
-  float euclid_dist = (initial_state.x - current_state.x) * (initial_state.x - current_state.x);
-  euclid_dist += (initial_state.y - current_state.y) * (initial_state.y - current_state.y);
-  euclid_dist = fabs(euclid_dist - distance);
-  return (tol_sqr >= euclid_dist);
+    return (this->tol_sqr >= fabs(getDistanceTravelledSqr() - this->distance));
 }
 
 void PositionController::closeGoal(void)

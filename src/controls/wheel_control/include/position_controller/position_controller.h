@@ -19,7 +19,6 @@ public:
   float getTolerance(void);
   void setTolerance(float tolerance);
   bool isMoving(void);
-
 private:
   float velocity;
   float distance;
@@ -38,4 +37,6 @@ private:
   void closeGoal(void);
   void stopVescs(void);
   void startVescs(void);
+  float getDistanceTravelledSqr (void);
+  bool exceededDistance (void);
 };
