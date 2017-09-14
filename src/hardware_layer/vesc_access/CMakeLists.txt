@@ -133,13 +133,23 @@ add_library (vesc_access
   src/vesc_access/vesc_access.cpp
   src/vesc_socket_can/vesc_socket_can.cpp
 )
- 
+
+
+
 ## Specify libraries to link a library or executable target against
 target_link_libraries(vesc_access
   ${catkin_LIBRARIES}
   #vesc_lib
 )
-## Declare a C++ library
+add_executable (vesc_integration_test
+  test/vesc_access_integration_test.cpp
+)
+ 
+target_link_libraries (vesc_integration_test
+  vesc_access
+)
+
+# Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/vesc_access.cpp
 # )

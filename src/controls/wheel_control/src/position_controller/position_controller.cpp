@@ -66,11 +66,12 @@ float PositionController::getDistance(void)
 
 void PositionController::setDistance(float distance)
 {
-  if (!goal_received)
+  if (!goal_received && position_received)
   {
     this->distance = fabs(distance);
     this->goal_received = true;
     this->distance_square = distance * distance;
+    setInitialState ();
   }
 }
 
@@ -90,7 +91,7 @@ void PositionController::setInitialState(void)
 void PositionController::startVescs(void)
 {
   this->currently_moving = true;
-  setInitialState();
+//  setInitialState();
   fleft_wheel->setLinearVelocity(this->velocity);
   fright_wheel->setLinearVelocity(this->velocity);
   bright_wheel->setLinearVelocity(this->velocity);
@@ -102,7 +103,7 @@ void PositionController::update(float position_x, float position_y)
   setCurrentState(position_x, position_y);
   if (this->goal_received && this->position_received)
   {
-    if (exceededDistance())
+    if (exceededDistance() && currently_moving )
     {
       closeGoal();
     }
@@ -131,7 +132,7 @@ float PositionController::getDistanceTravelledSqr(void)
 
 bool PositionController::exceededDistance(void)
 {
-  return (getDistanceTravelledSqr() >= (this->distance * this->distance));
+  return (getDistanceTravelledSqr() >= (this->distance_square));
 }
 
 void PositionController::closeGoal(void)
@@ -159,3 +160,8 @@ PositionController::~PositionController()
     delete bleft_wheel;
   }
 }
+
+float PositionController::getDistanceRemaining (void){
+  return fabs( distance - sqrt(getDistanceTravelledSqr()) );
+}
+

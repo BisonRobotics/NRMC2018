@@ -13,6 +13,7 @@ public:
   PositionController(float velocity, iVescAccess *fl, iVescAccess *fr, iVescAccess *br, iVescAccess *bl);
   float getVelocity(void);
   float getDistance(void);
+  float getDistanceRemaining (void);
   void setDistance(float distance);
   void update(float position_x, float position_y);
   bool isMoving(void);

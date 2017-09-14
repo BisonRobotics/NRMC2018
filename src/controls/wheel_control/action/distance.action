@@ -5,4 +5,4 @@ float32 distance  # Distance to travel
 float32 distance_left
 ---
 # Define a feedback message
-float32 distance_traveled
+float32 distance_travelled
