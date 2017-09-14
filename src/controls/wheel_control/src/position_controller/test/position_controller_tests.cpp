@@ -83,12 +83,12 @@ TEST(PositionControlTest, shouldMoveAfterGettingGoal)
   MockVescAccess bl;
   MockVescAccess fr;
   MockVescAccess fl;
-//  EXPECT_CALL(br, setLinearVelocity(velocity));
+  //  EXPECT_CALL(br, setLinearVelocity(velocity));
   PositionController *pos = new PositionController(velocity, tolerance, &fl, &fr, &br, &bl);
   pos->update(0.0f, 0.0f);
   pos->setDistance(1.0f);
   pos->update(0.0f, 0.0f);
-  EXPECT_TRUE (pos->isMoving ());
+  EXPECT_TRUE(pos->isMoving());
 }
 
 TEST(PositionControlTest, shouldGoUntilPositionReached)
@@ -119,9 +119,9 @@ TEST(PositionControlTest, shouldStopIfGreater)
   pos->update(0.0f, 0.0f);
   pos->setDistance(1.0f);
   pos->update(0.0f, 0.0f);
-  EXPECT_TRUE (pos->isMoving ());
+  EXPECT_TRUE(pos->isMoving());
   pos->update(3.0f, 0.0f);
-  EXPECT_FALSE (pos->isMoving ());
+  EXPECT_FALSE(pos->isMoving());
 }
 
 TEST(PositionControlTest, takesAbsValOfDistance)
@@ -135,11 +135,8 @@ TEST(PositionControlTest, takesAbsValOfDistance)
   PositionController *pos = new PositionController(velocity, tolerance, &fl, &fr, &br, &bl);
   pos->update(0.0f, 0.0f);
   pos->setDistance(-1.0f);
-  EXPECT_EQ (pos->getDistance(), 1.0f); 
+  EXPECT_EQ(pos->getDistance(), 1.0f);
 }
-
-
-
 
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)

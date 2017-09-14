@@ -131,20 +131,22 @@ bool PositionController::isMoving(void)
   return currently_moving;
 }
 
-float PositionController::getDistanceTravelledSqr (void){
-  float euclid_dist_sqr;  
-  euclid_dist_sqr =  ((initial_state.x - current_state.x) * (initial_state.x - current_state.x));
+float PositionController::getDistanceTravelledSqr(void)
+{
+  float euclid_dist_sqr;
+  euclid_dist_sqr = ((initial_state.x - current_state.x) * (initial_state.x - current_state.x));
   euclid_dist_sqr += ((initial_state.y - current_state.y) * (initial_state.y - current_state.y));
   return (euclid_dist_sqr);
 }
 
-bool PositionController::exceededDistance (void){
-  return (getDistanceTravelledSqr () > (distance*distance));
+bool PositionController::exceededDistance(void)
+{
+  return (getDistanceTravelledSqr() > (distance * distance));
 }
 
 bool PositionController::inTolerance(void)
 {
-    return (this->tol_sqr >= fabs(getDistanceTravelledSqr() - this->distance));
+  return (this->tol_sqr >= fabs(getDistanceTravelledSqr() - this->distance));
 }
 
 void PositionController::closeGoal(void)
