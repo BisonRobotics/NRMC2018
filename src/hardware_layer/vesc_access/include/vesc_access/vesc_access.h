@@ -1,7 +1,8 @@
 #ifndef __ROBOT_PARAMETER_WRAPPER__
 #define __ROBOT_PARAMETER_WRAPPER__
 #include <vesc_control/vesc_socket_can.h>
-#include <vesc_access/vesc_access_interface.h>
+#include <vesc_access/ivesc_access.h>
+
 class VescAccess : public iVescAccess
 {
 public:
