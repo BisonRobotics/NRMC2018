@@ -1,7 +1,7 @@
 #ifndef __MOCK_VESC_H_
 #define __MOCK_VESC_H_
 
-#include <vesc_control/vesc_interface.h>
+#include <vesc_control/ivesc.h>
 #include <gmock/gmock.h>
 
 class mockVesc : public iVesc

@@ -25,7 +25,7 @@ Localizer::Localizer(VescAccess *frontLeftVesc, VescAccess *frontRightVesc, Vesc
   bleftVesc = backLeftVesc;
 
   gettimeofday(&currtime, NULL);  // initialize _prevmsgtime with something
-  currtime.tv_sec -= 1;  // make it in the past to avoid false positives
+  currtime.tv_sec -= 1;           // make it in the past to avoid false positives
 }
 
 Localizer::UpdateStatus Localizer::updateStateVector()
@@ -58,7 +58,7 @@ Localizer::UpdateStatus Localizer::updateStateVector()
     if (w != 0.0f)  // no dividing by zero
     {
       R = AXELLEN / 2 * (avgRightVel + avgLeftVel) / (avgRightVel - avgLeftVel);  // turn radius
-      rot << cos(w * dt), -sin(w * dt), sin(w * dt), cos(w * dt);  // rotation matrix
+      rot << cos(w * dt), -sin(w * dt), sin(w * dt), cos(w * dt);                 // rotation matrix
       RonY << 0, -R;
       dPos = rot * (RonY)-RonY;
       dTheta = w * dt;

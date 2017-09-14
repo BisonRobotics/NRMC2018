@@ -18,7 +18,7 @@
 #include <linux/can/bcm.h>
 
 #include <sys/time.h>
-#include <vesc_control/vesc_interface.h>
+#include <vesc_control/ivesc.h>
 
 class Vesc : public iVesc
 {

@@ -4,7 +4,8 @@
 
 typedef actionlib::SimpleActionServer<wheel_control::distanceAction> Server;
 
-void execute(const wheel_control::distanceGoalConstPtr& goal, Server* as)  // Note: "Action" is not appended to DoDishes here
+void execute(const wheel_control::distanceGoalConstPtr& goal,
+             Server* as)  // Note: "Action" is not appended to DoDishes here
 {
   // Do lots of awesome groundbreaking robot stuff here
   as->setSucceeded();

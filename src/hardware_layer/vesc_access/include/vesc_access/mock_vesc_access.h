@@ -13,7 +13,4 @@ public:
   MOCK_METHOD0(getTorque, float(void));
 };
 
-
-
-
 #endif
