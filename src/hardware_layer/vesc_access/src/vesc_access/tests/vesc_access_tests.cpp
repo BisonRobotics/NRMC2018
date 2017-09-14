@@ -10,10 +10,11 @@ using ::testing::Return;
 using ::testing::_;
 using ::testing::AnyNumber;
 using ::testing::Gt;
+using ::testing::NiceMock;
 // Declare a test
 TEST(VescAccessTest, canSetLinearVelocity)
 {
-  mockVesc vesc;
+  NiceMock<MockVesc> vesc;
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float linear = 15.0f;
@@ -24,7 +25,7 @@ TEST(VescAccessTest, canSetLinearVelocity)
 
 TEST(VescAccessTest, canSetTorque)
 {
-  mockVesc vesc;
+  NiceMock<MockVesc> vesc;
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float torque = 14.0f;
@@ -36,7 +37,7 @@ TEST(VescAccessTest, canSetTorque)
 
 TEST(VescAccessTest, canSetVelocityLimit)
 {
-  mockVesc vesc;
+  NiceMock<MockVesc> vesc;
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float velocity_limit = 12.0f;
@@ -46,7 +47,7 @@ TEST(VescAccessTest, canSetVelocityLimit)
 
 TEST(VescAccessTest, canSetTorqueLimit)
 {
-  mockVesc vesc;
+  NiceMock<MockVesc> vesc;
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float torque_limit = 12.0f;
@@ -56,7 +57,7 @@ TEST(VescAccessTest, canSetTorqueLimit)
 
 TEST(VescAccessTest, saturatesOnTorqueLimit)
 {
-  mockVesc vesc;
+  NiceMock<MockVesc> vesc;
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float torque_limit = 12.0f;
@@ -67,7 +68,7 @@ TEST(VescAccessTest, saturatesOnTorqueLimit)
 
 TEST(VescAccessTest, saturatesOnVelocityLimit)
 {
-  mockVesc vesc;
+  NiceMock<MockVesc> vesc;
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float velocity_limit = 12.0f;
@@ -78,7 +79,7 @@ TEST(VescAccessTest, saturatesOnVelocityLimit)
 
 TEST(VescAccessTest, saturatesOnNegativeVelocityLimit)
 {
-  mockVesc vesc;
+  NiceMock<MockVesc> vesc;
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float velocity_limit = 12.0f;
@@ -89,7 +90,7 @@ TEST(VescAccessTest, saturatesOnNegativeVelocityLimit)
 
 TEST(VescAccessTest, saturatesOnNegativeTorqueLimit)
 {
-  mockVesc vesc;
+  NiceMock<MockVesc> vesc;
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float torque_limit = 12.0f;
@@ -100,7 +101,7 @@ TEST(VescAccessTest, saturatesOnNegativeTorqueLimit)
 
 TEST(VescAccessTest, allowZeroTorque)
 {
-  mockVesc vesc;
+  NiceMock<MockVesc> vesc;
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float torque_limit = 12.0f;
@@ -111,7 +112,7 @@ TEST(VescAccessTest, allowZeroTorque)
 
 TEST(VescAccessTest, allowZeroVelocity)
 {
-  mockVesc vesc;
+  NiceMock<MockVesc> vesc;
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float torque_limit = 12.0f;
@@ -122,7 +123,7 @@ TEST(VescAccessTest, allowZeroVelocity)
 
 TEST(VescAccessTest, zeroOuputRatioDefaultToOne)
 {
-  mockVesc vesc;
+  NiceMock<MockVesc> vesc;
   float output_ratio = 0.0f;
   float transmission_ratio = 10.0f;
   float torque_limit = 12.0f;
@@ -132,7 +133,7 @@ TEST(VescAccessTest, zeroOuputRatioDefaultToOne)
 
 TEST(VescAccessTest, zeroTransmissionRatioDefaultToOne)
 {
-  mockVesc vesc;
+  NiceMock<MockVesc> vesc;
   float output_ratio = 0.0f;
   float transmission_ratio = 0.0f;
   float torque_limit = 12.0f;
@@ -142,7 +143,7 @@ TEST(VescAccessTest, zeroTransmissionRatioDefaultToOne)
 
 TEST(VescAccessTest, zeroTorqueConstantRatioDefaultToOne)
 {
-  mockVesc vesc;
+  NiceMock<MockVesc> vesc;
   float output_ratio = 0.0f;
   float transmission_ratio = 0.0f;
   float torque_limit = 12.0f;
@@ -152,7 +153,7 @@ TEST(VescAccessTest, zeroTorqueConstantRatioDefaultToOne)
 
 TEST(VescAccessTest, canSetPolePairs)
 {
-  mockVesc vesc;
+  NiceMock<MockVesc> vesc;
   float output_ratio = 1.0f;
   float transmission_ratio = 1.0f;
   float torque_limit = 12.0f;
@@ -163,7 +164,7 @@ TEST(VescAccessTest, canSetPolePairs)
 
 TEST(VescAccessTest, canBeReadOnlyVelocity)
 {
-  mockVesc vesc;
+  NiceMock<MockVesc> vesc;
   float output_ratio = 1.0f;
   float transmission_ratio = 1.0f;
   float torque_limit = 12.0f;

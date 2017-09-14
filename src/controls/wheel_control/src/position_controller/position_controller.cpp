@@ -7,7 +7,7 @@
 #define BACK_LEFT_WHEEL_ID 3
 #define CAN_NETWORK ("can0")
 
-PositionController::PositionController(float velocity, float tolerance)
+PositionController::PositionController(float velocity)
 {
   float max_velocity = 20.0f;
   float max_torque = 20.0f;
@@ -16,28 +16,28 @@ PositionController::PositionController(float velocity, float tolerance)
   unsigned int pole_pairs = 8;
   float output_ratio = 10.0f;
   char *name = (char *)CAN_NETWORK;
-  setVelocity(velocity);
-  setTolerance(tolerance);
-  this->goal_received = false;
-  this->position_received = false;
-  this->fleft_wheel = new VescAccess(FRONT_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
-                                     torque_constant, name, pole_pairs);
+  iVescAccess *fl = new VescAccess(FRONT_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
+                                   torque_constant, name, pole_pairs);
+  iVescAccess *fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
+                                   torque_constant, name, pole_pairs);
 
-  this->fright_wheel = new VescAccess(FRONT_RIGHT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
-                                      torque_constant, name, pole_pairs);
-
-  this->bright_wheel = new VescAccess(BACK_RIGHT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
-                                      torque_constant, name, pole_pairs);
-  this->bleft_wheel = new VescAccess(BACK_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
-                                     torque_constant, name, pole_pairs);
-  this->currently_moving = false;
+  iVescAccess *br = new VescAccess(BACK_RIGHT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
+                                   torque_constant, name, pole_pairs);
+  iVescAccess *bl = new VescAccess(BACK_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
+                                   torque_constant, name, pole_pairs);
+  PositionController(velocity, fl, fr, br, bl);
+  this->internally_alloc = true;
 }
 
-PositionController::PositionController(float velocity, float tolerance, iVescAccess *fl, iVescAccess *fr,
-                                       iVescAccess *br, iVescAccess *bl)
+PositionController::PositionController(float velocity, iVescAccess *fl, iVescAccess *fr, iVescAccess *br,
+                                       iVescAccess *bl)
 {
   setVelocity(velocity);
-  setTolerance(tolerance);
+  this->distance = 0.0f;
+  initial_state.x = 0.0f;
+  initial_state.y = 0.0f;
+  current_state.x = 0.0f;
+  current_state.y = 0.0f;
   this->currently_moving = false;
   this->bleft_wheel = bl;
   this->bright_wheel = br;
@@ -45,6 +45,7 @@ PositionController::PositionController(float velocity, float tolerance, iVescAcc
   this->fleft_wheel = fl;
   this->goal_received = false;
   this->position_received = false;
+  this->internally_alloc = false;
 }
 
 void PositionController::setVelocity(float velocity)
@@ -69,18 +70,8 @@ void PositionController::setDistance(float distance)
   {
     this->distance = fabs(distance);
     this->goal_received = true;
+    this->distance_square = distance * distance;
   }
-}
-
-void PositionController::setTolerance(float tolerance)
-{
-  this->tolerance = tolerance;
-  this->tol_sqr = tolerance * tolerance;
-}
-
-float PositionController::getTolerance(void)
-{
-  return (tolerance);
 }
 
 void PositionController::setCurrentState(float position_x, float position_y)
@@ -92,12 +83,14 @@ void PositionController::setCurrentState(float position_x, float position_y)
 
 void PositionController::setInitialState(void)
 {
-  initial_state = current_state;
+  this->initial_state.x = this->current_state.x;
+  this->initial_state.y = this->current_state.y;
 }
 
 void PositionController::startVescs(void)
 {
-  currently_moving = true;
+  this->currently_moving = true;
+  setInitialState();
   fleft_wheel->setLinearVelocity(this->velocity);
   fright_wheel->setLinearVelocity(this->velocity);
   bright_wheel->setLinearVelocity(this->velocity);
@@ -107,20 +100,17 @@ void PositionController::startVescs(void)
 void PositionController::update(float position_x, float position_y)
 {
   setCurrentState(position_x, position_y);
-  if (goal_received)
+  if (this->goal_received && this->position_received)
   {
-    if (position_received)
+    if (exceededDistance())
     {
-      if (!inTolerance() && !exceededDistance())
+      closeGoal();
+    }
+    else
+    {
+      if (!currently_moving)
       {
-        if (!currently_moving)
-        {
-          startVescs();
-        }
-      }
-      else
-      {
-        closeGoal();
+        startVescs();
       }
     }
   }
@@ -141,12 +131,7 @@ float PositionController::getDistanceTravelledSqr(void)
 
 bool PositionController::exceededDistance(void)
 {
-  return (getDistanceTravelledSqr() > (distance * distance));
-}
-
-bool PositionController::inTolerance(void)
-{
-  return (this->tol_sqr >= fabs(getDistanceTravelledSqr() - this->distance));
+  return (getDistanceTravelledSqr() >= (this->distance * this->distance));
 }
 
 void PositionController::closeGoal(void)
@@ -162,4 +147,15 @@ void PositionController::stopVescs(void)
   fright_wheel->setLinearVelocity(0.0f);
   bright_wheel->setLinearVelocity(0.0f);
   bleft_wheel->setLinearVelocity(0.0f);
+}
+
+PositionController::~PositionController()
+{
+  if (internally_alloc)
+  {
+    delete fleft_wheel;
+    delete fright_wheel;
+    delete bright_wheel;
+    delete bleft_wheel;
+  }
 }
