@@ -10,14 +10,14 @@ class PositionController
 {
 public:
   PositionController(float velocity);
-  PositionController(float velocity, iVescAccess *fl, iVescAccess *fr, iVescAccess *br,
-                     iVescAccess *bl);
+  PositionController(float velocity, iVescAccess *fl, iVescAccess *fr, iVescAccess *br, iVescAccess *bl);
   float getVelocity(void);
   float getDistance(void);
   void setDistance(float distance);
   void update(float position_x, float position_y);
   bool isMoving(void);
-  ~PositionController ();
+  ~PositionController();
+
 private:
   float velocity;
   float distance;

@@ -20,7 +20,7 @@ TEST(PositionControlTest, canBeInstantiatedWithAVelocity)
   NiceMock<MockVescAccess> bl;
   NiceMock<MockVescAccess> fr;
   NiceMock<MockVescAccess> fl;
-  PositionController  pos =   PositionController(velocity, &fl, &fr, &br, &bl);
+  PositionController pos = PositionController(velocity, &fl, &fr, &br, &bl);
 
   EXPECT_EQ(pos.getVelocity(), velocity);
 }
@@ -32,7 +32,7 @@ TEST(PositionControlTest, canBeGivenDistanceToTravel)
   NiceMock<MockVescAccess> bl;
   NiceMock<MockVescAccess> fr;
   NiceMock<MockVescAccess> fl;
-  PositionController  pos =   PositionController(velocity, &fl, &fr, &br, &bl);
+  PositionController pos = PositionController(velocity, &fl, &fr, &br, &bl);
   pos.setDistance(3.0f);
   EXPECT_EQ(pos.getDistance(), 3.0f);
 }
@@ -44,7 +44,7 @@ TEST(PositionControlTest, canBeUpdatedWithPosition)
   NiceMock<MockVescAccess> bl;
   NiceMock<MockVescAccess> fr;
   NiceMock<MockVescAccess> fl;
-  PositionController  pos =   PositionController(velocity, &fl, &fr, &br, &bl);
+  PositionController pos = PositionController(velocity, &fl, &fr, &br, &bl);
   pos.update(2.0f, 2.0f);
 }
 
@@ -55,7 +55,7 @@ TEST(PositionControlTest, shouldTakeAbsValOfVelocity)
   NiceMock<MockVescAccess> bl;
   NiceMock<MockVescAccess> fr;
   NiceMock<MockVescAccess> fl;
-  PositionController  pos =   PositionController(-1.0f*velocity, &fl, &fr, &br, &bl);
+  PositionController pos = PositionController(-1.0f * velocity, &fl, &fr, &br, &bl);
   EXPECT_EQ(pos.getVelocity(), velocity);
 }
 
@@ -66,7 +66,7 @@ TEST(PositionControlTest, shouldMoveAfterGettingGoal)
   NiceMock<MockVescAccess> bl;
   NiceMock<MockVescAccess> fr;
   NiceMock<MockVescAccess> fl;
-  PositionController  pos =   PositionController(velocity, &fl, &fr, &br, &bl);
+  PositionController pos = PositionController(velocity, &fl, &fr, &br, &bl);
   pos.update(0.0f, 0.0f);
   pos.setDistance(1.0f);
   pos.update(0.0f, 0.0f);
@@ -81,11 +81,11 @@ TEST(PositionControlTest, shouldGoUntilPositionReached)
   NiceMock<MockVescAccess> bl;
   NiceMock<MockVescAccess> fr;
   NiceMock<MockVescAccess> fl;
-  PositionController  pos =   PositionController(velocity, &fl, &fr, &br, &bl);
+  PositionController pos = PositionController(velocity, &fl, &fr, &br, &bl);
   pos.update(0.0f, 0.0f);
   pos.setDistance(1.0f);
   pos.update(0.0f, 0.0f);
-  EXPECT_TRUE(pos.isMoving ());
+  EXPECT_TRUE(pos.isMoving());
   pos.update(1.0f, 0.0f);
   EXPECT_FALSE(pos.isMoving());
 }
@@ -114,15 +114,14 @@ TEST(PositionControlTest, takesAbsValOfDistance)
   NiceMock<MockVescAccess> bl;
   NiceMock<MockVescAccess> fr;
   NiceMock<MockVescAccess> fl;
-  PositionController  pos =   PositionController(velocity, &fl, &fr, &br, &bl);
+  PositionController pos = PositionController(velocity, &fl, &fr, &br, &bl);
   pos.update(0.0f, 0.0f);
   pos.setDistance(-1.0f);
   EXPECT_EQ(pos.getDistance(), 1.0f);
 }
 
-
 // Run all the tests that were declared with TEST()
-int main(int argc, char  **argv)
+int main(int argc, char **argv)
 {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

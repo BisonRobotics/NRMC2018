@@ -17,20 +17,20 @@ PositionController::PositionController(float velocity)
   float output_ratio = 10.0f;
   char *name = (char *)CAN_NETWORK;
   iVescAccess *fl = new VescAccess(FRONT_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
-                                     torque_constant, name, pole_pairs);
+                                   torque_constant, name, pole_pairs);
   iVescAccess *fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
-                                      torque_constant, name, pole_pairs);
+                                   torque_constant, name, pole_pairs);
 
   iVescAccess *br = new VescAccess(BACK_RIGHT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
-                                      torque_constant, name, pole_pairs);
+                                   torque_constant, name, pole_pairs);
   iVescAccess *bl = new VescAccess(BACK_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
-                                     torque_constant, name, pole_pairs);
-  PositionController (velocity, fl, fr, br, bl);
+                                   torque_constant, name, pole_pairs);
+  PositionController(velocity, fl, fr, br, bl);
   this->internally_alloc = true;
 }
 
-PositionController::PositionController(float velocity, iVescAccess *fl, iVescAccess *fr,
-                                       iVescAccess *br, iVescAccess *bl)
+PositionController::PositionController(float velocity, iVescAccess *fl, iVescAccess *fr, iVescAccess *br,
+                                       iVescAccess *bl)
 {
   setVelocity(velocity);
   this->distance = 0.0f;
@@ -70,7 +70,7 @@ void PositionController::setDistance(float distance)
   {
     this->distance = fabs(distance);
     this->goal_received = true;
-    this->distance_square = distance*distance;
+    this->distance_square = distance * distance;
   }
 }
 
@@ -90,7 +90,7 @@ void PositionController::setInitialState(void)
 void PositionController::startVescs(void)
 {
   this->currently_moving = true;
-  setInitialState ();
+  setInitialState();
   fleft_wheel->setLinearVelocity(this->velocity);
   fright_wheel->setLinearVelocity(this->velocity);
   bright_wheel->setLinearVelocity(this->velocity);
@@ -104,15 +104,15 @@ void PositionController::update(float position_x, float position_y)
   {
     if (exceededDistance())
     {
-      closeGoal ();
+      closeGoal();
     }
-    else 
+    else
     {
-      if (!currently_moving){
-        startVescs ();
+      if (!currently_moving)
+      {
+        startVescs();
       }
     }
-
   }
 }
 
@@ -149,9 +149,10 @@ void PositionController::stopVescs(void)
   bleft_wheel->setLinearVelocity(0.0f);
 }
 
-
-PositionController::~PositionController (){
-  if (internally_alloc){
+PositionController::~PositionController()
+{
+  if (internally_alloc)
+  {
     delete fleft_wheel;
     delete fright_wheel;
     delete bright_wheel;
