@@ -9,29 +9,25 @@ struct PosXy
 class PositionController
 {
 public:
-  PositionController(float velocity, float tolerance);
-  PositionController(float velocity, float tolerance, iVescAccess *fl, iVescAccess *fr, iVescAccess *br,
+  PositionController(float velocity);
+  PositionController(float velocity, iVescAccess *fl, iVescAccess *fr, iVescAccess *br,
                      iVescAccess *bl);
   float getVelocity(void);
   float getDistance(void);
   void setDistance(float distance);
   void update(float position_x, float position_y);
-  float getTolerance(void);
-  void setTolerance(float tolerance);
   bool isMoving(void);
-
+  ~PositionController ();
 private:
   float velocity;
   float distance;
+  float distance_square;
   PosXy initial_state;
   PosXy current_state;
-  float tolerance;
   iVescAccess *fleft_wheel, *fright_wheel, *bright_wheel, *bleft_wheel;
-  float tol_sqr;
   bool goal_received;
   bool position_received;
   bool currently_moving;
-  bool inTolerance(void);
   void setVelocity(float velocity);
   void setCurrentState(float position_x, float position_y);
   void setInitialState(void);
@@ -40,4 +36,5 @@ private:
   void startVescs(void);
   float getDistanceTravelledSqr(void);
   bool exceededDistance(void);
+  bool internally_alloc;
 };
