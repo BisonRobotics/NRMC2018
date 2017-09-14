@@ -16,7 +16,9 @@ find_package (catkin REQUIRED cmake_modules)
 find_package (Eigen3 REQUIRED)
 find_package (vesc_access REQUIRED)
 
-
+link_directories (
+/usr/src/gmock/build
+)
 
 ###################################
 ## catkin specific configuration ##
@@ -48,7 +50,7 @@ include_directories(
   include/readable_sensors
   include/localizer
 )
-
+include_directories(${GTEST_INCLUDE_DIRS})
 include_directories (${EIGEN3_INCLUDE_DIRS}) #figure that one out
 ## Declare a C++ library
 add_library(can_sensors_lib
@@ -154,6 +156,17 @@ target_link_libraries(can_sensors_integration_test
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
+
+catkin_add_gtest(test_localization src/tests/localizer_test_cycle1.cpp)
+if(TARGET test_localization)
+  target_link_libraries(
+    test_localization
+    ${catkin_LIBRARIES}
+    localizer_lib
+    gmock_main
+  )
+  add_dependencies(test_localization vesc_access)
+endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)

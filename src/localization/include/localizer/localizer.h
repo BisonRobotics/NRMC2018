@@ -31,18 +31,19 @@ public:
     UPDATE_SUCCESS
   };
 
-  Localizer(VescAccess *frontLeftVesc, VescAccess *frontRightVesc, VescAccess *backRightVesc,
-            VescAccess *backLeftVesc);  // pass wheel linear vel sensors in as FL, FR, BR, BL
+  Localizer(iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
+            iVescAccess *backLeftVesc);  // pass wheel linear vel sensors in as FL, FR, BR, BL
   UpdateStatus updateStateVector();
+  UpdateStatus updateStateVector(float dt);
 
 private:
   struct timeval prevtime;
   struct timeval currtime;
   int dtms;  // dt in ms
-  VescAccess *fleftVesc;
-  VescAccess *frightVesc;
-  VescAccess *brightVesc;
-  VescAccess *bleftVesc;
+  iVescAccess *fleftVesc;
+  iVescAccess *frightVesc;
+  iVescAccess *brightVesc;
+  iVescAccess *bleftVesc;
   int timediffms(struct timeval curr, struct timeval prev);
 };
 
