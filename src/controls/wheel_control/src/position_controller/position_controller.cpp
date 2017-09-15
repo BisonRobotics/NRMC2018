@@ -71,7 +71,7 @@ void PositionController::setDistance(float distance)
     this->distance = fabs(distance);
     this->goal_received = true;
     this->distance_square = distance * distance;
-    setInitialState ();
+    setInitialState();
   }
 }
 
@@ -91,7 +91,7 @@ void PositionController::setInitialState(void)
 void PositionController::startVescs(void)
 {
   this->currently_moving = true;
-//  setInitialState();
+  //  setInitialState();
   fleft_wheel->setLinearVelocity(this->velocity);
   fright_wheel->setLinearVelocity(this->velocity);
   bright_wheel->setLinearVelocity(this->velocity);
@@ -103,7 +103,7 @@ void PositionController::update(float position_x, float position_y)
   setCurrentState(position_x, position_y);
   if (this->goal_received && this->position_received)
   {
-    if (exceededDistance() && currently_moving )
+    if (exceededDistance() && currently_moving)
     {
       closeGoal();
     }
@@ -161,8 +161,7 @@ PositionController::~PositionController()
   }
 }
 
-float PositionController::getDistanceRemaining (void){
-  return fabs( distance - sqrt(getDistanceTravelledSqr()) );
+float PositionController::getDistanceRemaining(void)
+{
+  return fabs(distance - sqrt(getDistanceTravelledSqr()));
 }
-
-

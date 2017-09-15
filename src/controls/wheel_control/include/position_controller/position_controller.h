@@ -13,12 +13,13 @@ public:
   PositionController(float velocity, iVescAccess *fl, iVescAccess *fr, iVescAccess *br, iVescAccess *bl);
   float getVelocity(void);
   float getDistance(void);
-  float getDistanceRemaining (void);
+  float getDistanceRemaining(void);
   void setDistance(float distance);
   void update(float position_x, float position_y);
   bool isMoving(void);
   ~PositionController();
-  void closeGoal (void);
+  void closeGoal(void);
+
 private:
   float velocity;
   float distance;
@@ -32,7 +33,7 @@ private:
   void setVelocity(float velocity);
   void setCurrentState(float position_x, float position_y);
   void setInitialState(void);
-//  void closeGoal(void);
+  //  void closeGoal(void);
   void stopVescs(void);
   void startVescs(void);
   float getDistanceTravelledSqr(void);
