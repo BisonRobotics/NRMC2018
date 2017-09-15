@@ -18,6 +18,10 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "wheel_controller");
   ros::NodeHandle n;
+  
+  pos.update (0.0f, 0.0f);
+
+
   Server server(n, "drive a distance", boost::bind(&execute, _1, &server), false);
   server.start();
   ros::Rate r (100);

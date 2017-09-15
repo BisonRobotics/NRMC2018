@@ -10,3 +10,4 @@ The position controller should stop if the measured distance is greater than the
 The position controller should not be able to accept a new distance until the old one has finished
 The position controller should expose a method to return how much distance it has left 
 The position controller should be able return the current linear velocity of the wheels
+The position controller should expose a method to cancel a goal, which should stop the robot

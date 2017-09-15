@@ -135,6 +135,24 @@ TEST(PositionControlTest, exposeMethodToTellDistanceLeft){
   EXPECT_EQ(pos.getDistanceRemaining(), 2.0f);
 }
 
+TEST(PositionControlTest, cancancelGoals){
+
+  float velocity = 10.0f;
+  NiceMock<MockVescAccess> br;
+  NiceMock<MockVescAccess> bl;
+  NiceMock<MockVescAccess> fr;
+  NiceMock<MockVescAccess> fl;
+  PositionController pos = PositionController(velocity, &fl, &fr, &br, &bl);
+  pos.update(0.0f, 0.0f);
+  pos.setDistance(3.0f);
+  pos.update(1.0f, 0.0f);
+  EXPECT_TRUE(pos.isMoving ());
+  pos.closeGoal ();
+  EXPECT_FALSE(pos.isMoving());
+}
+
+
+
 
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
