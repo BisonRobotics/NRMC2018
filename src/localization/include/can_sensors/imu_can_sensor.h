@@ -1,8 +1,8 @@
 #ifndef IMU_CAN_SENSOR_H
 #define IMU_CAN_SENSOR_H
 
-#include <can_sensors.h>
-#include <readable_sensors.h>
+#include <can_sensors/can_sensors.h>
+#include <readable_sensors/readable_sensors.h>
 
 class IMUCanSensor : public CanSensor, public ReadableSensors
 {

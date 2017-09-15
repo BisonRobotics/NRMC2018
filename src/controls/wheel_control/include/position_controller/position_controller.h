@@ -19,6 +19,7 @@ public:
   bool isMoving(void);
   ~PositionController();
   void closeGoal(void);
+  iVescAccess *fleft_wheel, *fright_wheel, *bright_wheel, *bleft_wheel;
 
 private:
   float velocity;
@@ -26,7 +27,6 @@ private:
   float distance_square;
   PosXy initial_state;
   PosXy current_state;
-  iVescAccess *fleft_wheel, *fright_wheel, *bright_wheel, *bleft_wheel;
   bool goal_received;
   bool position_received;
   bool currently_moving;

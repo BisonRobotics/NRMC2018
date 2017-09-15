@@ -1,4 +1,4 @@
-#include <imu_can_sensor.h>
+#include <can_sensors/imu_can_sensor.h>
 
 #define MAXREADVALUE 32768.0f
 #define GRAVITY 9.81f

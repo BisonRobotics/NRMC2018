@@ -2,8 +2,8 @@
 #define LOCALIZER_H
 
 #include <vesc_access/vesc_access.h>
-#include <imu_can_sensor.h>
-#include <readable_sensors.h>
+#include <can_sensors/imu_can_sensor.h>
+#include <readable_sensors/readable_sensors.h>
 #include <sys/time.h>
 
 class Localizer

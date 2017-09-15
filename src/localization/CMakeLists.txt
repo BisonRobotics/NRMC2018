@@ -30,8 +30,8 @@ link_directories (
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include/can_sensors/ include/readable_sensors/
-  LIBRARIES can_sensors_lib imu_can_sensor_lib localizer_lib
+  INCLUDE_DIRS include/ 
+  LIBRARIES localizer_lib
 #  CATKIN_DEPENDS nav_msgs roscpp
    DEPENDS EIGEN3 vesc_access
 )
@@ -46,9 +46,7 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
   ${vesc_access_INCLUDE_DIRS}
-  include/can_sensors
-  include/readable_sensors
-  include/localizer
+  include/
 )
 include_directories(${GTEST_INCLUDE_DIRS})
 include_directories (${EIGEN3_INCLUDE_DIRS}) #figure that one out
@@ -127,18 +125,18 @@ target_link_libraries(can_sensors_integration_test
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_node
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+ install(TARGETS localizer_lib
+   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+ )
 
 ## Mark cpp header files for installation
-# install(DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
-# )
+ install(DIRECTORY include/
+   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+   FILES_MATCHING PATTERN "*.h"
+   PATTERN ".svn" EXCLUDE
+ )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES

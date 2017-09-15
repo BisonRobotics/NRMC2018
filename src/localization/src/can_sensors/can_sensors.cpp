@@ -1,4 +1,4 @@
-#include <can_sensors.h>
+#include <can_sensors/can_sensors.h>
 
 CanSensor::CanSensor(int cID, char *interface)
 {

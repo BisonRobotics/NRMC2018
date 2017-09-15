@@ -1,5 +1,5 @@
-#include <imu_can_sensor.h>
-#include <readable_sensors.h>
+#include <can_sensors/imu_can_sensor.h>
+#include <readable_sensors/readable_sensors.h>
 #include <iostream>
 
 int main()

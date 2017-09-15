@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib
   std_msgs
   vesc_access 
+  localization
 )
 
 
@@ -34,6 +35,7 @@ catkin_package(
 include_directories (include ${catkin_INCLUDE_DIRS} )
 include_directories(${GTEST_INCLUDE_DIRS})
 include_directories(${vesc_access_INCLUDE_DIRS})
+include_directories(${localization_INCLUDE_DIRS})
 ## Declare a C++ library
 
 add_library(velocity_plugins
@@ -49,7 +51,9 @@ add_library(pos_control src/position_controller/position_controller.cpp)
 target_link_libraries (pos_control vesc_access)
 
 add_executable (wheel_goal_master src/wheel_goal_master.cpp)
-target_link_libraries (wheel_goal_master ${catkin_LIBRARIES} pos_control )
+target_link_libraries (wheel_goal_master ${catkin_LIBRARIES} pos_control localizer_lib)
+
+add_dependencies (wheel_goal_master localizer_lib)
 
 ## Tests
 catkin_add_gtest(test_Wheels src/tests/test_Wheels.cpp src/Wheels.cpp)

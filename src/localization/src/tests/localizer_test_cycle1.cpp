@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <localizer.h>
+#include <localizer/localizer.h>
 #include <vesc_access/mock_vesc_access.h>
 #include <gmock/gmock.h>
 
