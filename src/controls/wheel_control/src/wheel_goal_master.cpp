@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 
   pos.update(0.0f, 0.0f);
 
-  Server server(n, "drive a distance", boost::bind(&execute, _1, &server), false);
+  Server server(n, "drive_a_distance", boost::bind(&execute, _1, &server), false);
   server.start();
   ros::Rate r(100);
   wheel_control::distanceFeedback feedback;

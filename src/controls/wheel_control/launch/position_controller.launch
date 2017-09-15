@@ -1,0 +1,3 @@
+<launch>
+  <node name="position_controller" pkg="wheel_control" type="wheel_goal_master"/>
+</launch>
