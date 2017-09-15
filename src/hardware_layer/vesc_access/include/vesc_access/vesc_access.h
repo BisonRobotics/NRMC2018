@@ -1,5 +1,5 @@
-#ifndef __ROBOT_PARAMETER_WRAPPER__
-#define __ROBOT_PARAMETER_WRAPPER__
+#ifndef __VESC_ACCESS__
+#define __VESC_ACCESS__
 #include <vesc_control/vesc_socket_can.h>
 #include <vesc_access/ivesc_access.h>
 
@@ -43,8 +43,9 @@ private:
   float convertRpmToLinearVelocity(float rpm);
   float convertRpmToLinearVelocity(int rpm);
   float convertCurrentToTorque(float current);
-  float convertErpmToRpm(float rpm);
+  float convertErpmToRpm(float erpm);
   bool read_only;
+  float convertRpmToErpm(float rpm);
 };
 
 #endif

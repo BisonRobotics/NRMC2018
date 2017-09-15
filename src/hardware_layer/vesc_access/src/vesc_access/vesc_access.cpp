@@ -76,7 +76,7 @@ void VescAccess::setLinearVelocity(float meters_per_second)
       }
     }
     float rpm = convertLinearVelocityToRpm(meters_per_second);
-    this->vesc->setRpm(rpm);
+    this->vesc->setRpm(convertRpmToErpm(rpm ));
   }
 }
 
@@ -177,9 +177,13 @@ float VescAccess::getLinearVelocity(void)
   return (convertRpmToLinearVelocity(convertErpmToRpm(vesc->getRpm())));
 }
 
-float VescAccess::convertErpmToRpm(float rpm)
+float VescAccess::convertErpmToRpm(float erpm)
 {
-  return (rpm / (1.0f * this->pole_pairs));
+  return (erpm / (1.0f * this->pole_pairs));
+}
+
+float VescAccess::convertRpmToErpm (float rpm){
+  return (rpm * this->pole_pairs);
 }
 
 void VescAccess::setPolePairs(unsigned int pole_pairs)

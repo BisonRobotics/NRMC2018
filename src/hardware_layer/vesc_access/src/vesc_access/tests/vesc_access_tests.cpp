@@ -173,6 +173,18 @@ TEST(VescAccessTest, canBeReadOnlyVelocity)
   wrap->setLinearVelocity(1.0f);
 }
 
+TEST(VescAccessTest, canBeReadOnlyTorque)
+{
+  NiceMock<MockVesc> vesc;
+  float output_ratio = 1.0f;
+  float transmission_ratio = 1.0f;
+  float torque_limit = 12.0f;
+  EXPECT_CALL(vesc, setCurrent(_)).Times(0);
+  VescAccess *wrap = new VescAccess(transmission_ratio, output_ratio, 30.0f, torque_limit, 0.0f, &vesc, 4, true);
+  wrap->setTorque(1.0f);
+}
+
+
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {
