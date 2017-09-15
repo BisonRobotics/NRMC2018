@@ -4,7 +4,7 @@
 #include <vesc_control/ivesc.h>
 #include <gmock/gmock.h>
 
-class mockVesc : public iVesc
+class MockVesc : public iVesc
 {
 public:
   //    MOCK_METHOD0 (~mockVesc);

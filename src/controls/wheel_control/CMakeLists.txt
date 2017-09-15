@@ -41,14 +41,16 @@ add_library(velocity_plugins
   src/Wheels.cpp
 )
 
-add_executable (wheel_goal_master src/wheel_goal_master.cpp)
-target_link_libraries (wheel_goal_master ${catkin_LIBRARIES})
 target_link_libraries(velocity_plugins ${catkin_LIBRARIES})
 
 add_library(Wheels src/Wheels.cpp)
 
 add_library(pos_control src/position_controller/position_controller.cpp)
 target_link_libraries (pos_control vesc_access)
+
+add_executable (wheel_goal_master src/wheel_goal_master.cpp)
+target_link_libraries (wheel_goal_master ${catkin_LIBRARIES} pos_control )
+
 ## Tests
 catkin_add_gtest(test_Wheels src/tests/test_Wheels.cpp src/Wheels.cpp)
 if(TARGET test_Wheels)
