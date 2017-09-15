@@ -138,7 +138,7 @@ target_link_libraries(localizer_lib
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
-catkin_add_gtest(test_localization src/tests/localizer_test_cycle1.cpp)
+catkin_add_gtest(test_localization src/localizer/tests/localizer_test_cycle1.cpp)
 if(TARGET test_localization)
   target_link_libraries(
     test_localization

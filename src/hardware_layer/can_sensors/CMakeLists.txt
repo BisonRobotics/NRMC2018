@@ -132,7 +132,7 @@ target_link_libraries(imu_can_sensor_lib
 )
 
 
-add_executable(can_sensors_integration_test src/can_sensors/tests/can_sensors_integration_test.cpp)
+add_executable(can_sensors_integration_test tests/can_sensors_integration_test.cpp)
 
 add_dependencies(can_sensors_integration_test imu_can_sensor_lib)
 target_link_libraries(can_sensors_integration_test
