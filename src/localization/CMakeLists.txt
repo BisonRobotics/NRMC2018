@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
 find_package (catkin REQUIRED cmake_modules)
 find_package (Eigen3 REQUIRED)
 find_package (vesc_access REQUIRED)
+find_package (can_sensors REQUIRED)
 
 link_directories (
 /usr/src/gmock/build
@@ -33,7 +34,7 @@ catkin_package(
   INCLUDE_DIRS include/ 
   LIBRARIES localizer_lib
 #  CATKIN_DEPENDS nav_msgs roscpp
-   DEPENDS EIGEN3 vesc_access
+   DEPENDS EIGEN3 vesc_access can_sensors
 )
 
 ###########
@@ -43,44 +44,26 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
   ${catkin_INCLUDE_DIRS}
   ${vesc_access_INCLUDE_DIRS}
+  ${can_sensors_INCLUDE_DIRS}
   include/
 )
+
+
+
 include_directories(${GTEST_INCLUDE_DIRS})
 include_directories (${EIGEN3_INCLUDE_DIRS}) #figure that one out
-## Declare a C++ library
-add_library(can_sensors_lib
-  src/can_sensors/can_sensors.cpp
-)
-
-add_library(imu_can_sensor_lib
-  src/can_sensors/imu_can_sensor.cpp
-)
-
-target_link_libraries(imu_can_sensor_lib
-  can_sensors_lib
-)
 
 add_library(localizer_lib
 	src/localizer/localizer.cpp
 )
 
-add_dependencies(localizer_lib vesc_access)
+add_dependencies(localizer_lib vesc_access imu_can_sensor_lib )
 
 target_link_libraries(localizer_lib
-  #${vesc_access_LIBRARIES}
-  vesc_access
-)
-
-add_executable(can_sensors_integration_test src/can_sensors/tests/can_sensors_integration_test.cpp)
-
-add_dependencies(can_sensors_integration_test imu_can_sensor_lib)
-
-target_link_libraries(can_sensors_integration_test
-  ${catkin_LIBRARIES}
-  imu_can_sensor_lib
+ vesc_access
+ imu_can_sensor_lib
 )
 
 ##Graveyard below##
