@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "wheel_control/Interface.h"
+#include "wheel_control/interface/interface.h"
 
 using namespace wheel_control;
 

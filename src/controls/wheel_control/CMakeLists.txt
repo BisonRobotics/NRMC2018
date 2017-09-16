@@ -63,7 +63,7 @@ if(TARGET test_Wheels)
   )
 endif()
 
-catkin_add_gtest(test_Interface src/interface/test/interface_tests.cpp include/wheel_control/Interface.h src/wheels/wheels.cpp)
+catkin_add_gtest(test_Interface src/interface/test/interface_tests.cpp include/wheel_control/interface/interface.h src/wheels/wheels.cpp)
 if(TARGET test_Interface)
   target_link_libraries(test_Interface
     ${catkin_LIBRARIES}

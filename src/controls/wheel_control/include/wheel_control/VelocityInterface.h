@@ -5,7 +5,7 @@
 #ifndef PROJECT_SKIDSTEERVELOCITYCONTROLLER_H
 #define PROJECT_SKIDSTEERVELOCITYCONTROLLER_H
 
-#include "Interface.h"
+#include "wheel_control/interface/interface.h"
 
 namespace wheel_control
 {

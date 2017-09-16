@@ -3,7 +3,7 @@
 
 #include <map>
 #include <string>
-#include "Wheels.h"
+#include "wheel_control/Wheels.h"
 #include <stdexcept>
 
 namespace wheel_control
