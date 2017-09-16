@@ -11,13 +11,13 @@ class Localizer
 public:
   struct stateVector_s
   {
-    float x_pos;   // in world coordinates
-    float y_pos;   // in world coordinates
+    float x_pos;  // in world coordinates
+    float y_pos;  // in world coordinates
     float theta;  // robot rotation about its own center with reference to the
     // world's x axis and positive angles CCW
 
-    float x_vel;   // derivitive of xPos
-    float y_vel;   // derivitive of yPos
+    float x_vel;  // derivitive of xPos
+    float y_vel;  // derivitive of yPos
     float omega;  // derivitive of theta
 
     float x_accel;

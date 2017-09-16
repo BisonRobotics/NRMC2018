@@ -64,8 +64,9 @@ Localizer::UpdateStatus Localizer::updateStateVector(float dt)
 
   if (w != 0.0f)  // no dividing by zero
   {
-    turn_radius = AXLE_LENGTH / 2 * (average_right_velocity + average_left_velocity) / (average_right_velocity - average_left_velocity);  // turn radius
-    rot << cos(w * dt), -sin(w * dt), sin(w * dt), cos(w * dt);                 // rotation matrix
+    turn_radius = AXLE_LENGTH / 2 * (average_right_velocity + average_left_velocity) /
+                  (average_right_velocity - average_left_velocity);  // turn radius
+    rot << cos(w * dt), -sin(w * dt), sin(w * dt), cos(w * dt);      // rotation matrix
     rotation_on_y << 0, -turn_radius;
     d_pos = rot * (rotation_on_y)-rotation_on_y;
     d_theta = w * dt;
