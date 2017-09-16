@@ -13,7 +13,7 @@ using ::testing::Gt;
 using ::testing::NiceMock;
 // Declare a test
 
-TEST(PositionControlTest, canBeInstantiatedWithAVelocity)
+TEST(PositionControllerTests, canBeInstantiatedWithAVelocity)
 {
   float velocity = 10.0f;
   NiceMock<MockVescAccess> br;
@@ -25,7 +25,7 @@ TEST(PositionControlTest, canBeInstantiatedWithAVelocity)
   EXPECT_EQ(pos.getVelocity(), velocity);
 }
 
-TEST(PositionControlTest, canBeGivenDistanceToTravel)
+TEST(PositionControllerTests, canBeGivenDistanceToTravel)
 {
   float velocity = 10.0f;
   NiceMock<MockVescAccess> br;
@@ -38,7 +38,7 @@ TEST(PositionControlTest, canBeGivenDistanceToTravel)
   EXPECT_EQ(pos.getDistance(), 3.0f);
 }
 
-TEST(PositionControlTest, canBeUpdatedWithPosition)
+TEST(PositionControllerTests, canBeUpdatedWithPosition)
 {
   float velocity = 10.0f;
   NiceMock<MockVescAccess> br;
@@ -49,7 +49,7 @@ TEST(PositionControlTest, canBeUpdatedWithPosition)
   pos.update(2.0f, 2.0f);
 }
 
-TEST(PositionControlTest, shouldTakeAbsValOfVelocity)
+TEST(PositionControllerTests, shouldTakeAbsValOfVelocity)
 {
   float velocity = 10.0f;
   NiceMock<MockVescAccess> br;
@@ -60,7 +60,7 @@ TEST(PositionControlTest, shouldTakeAbsValOfVelocity)
   EXPECT_EQ(pos.getVelocity(), velocity);
 }
 
-TEST(PositionControlTest, shouldMoveAfterGettingGoal)
+TEST(PositionControllerTests, shouldMoveAfterGettingGoal)
 {
   float velocity = 10.0f;
   NiceMock<MockVescAccess> br;
@@ -74,7 +74,7 @@ TEST(PositionControlTest, shouldMoveAfterGettingGoal)
   EXPECT_TRUE(pos.isMoving());
 }
 
-TEST(PositionControlTest, shouldGoUntilPositionReached)
+TEST(PositionControllerTests, shouldGoUntilPositionReached)
 {
   float velocity = 10.0f;
   float tolerance = .001f;
@@ -91,7 +91,7 @@ TEST(PositionControlTest, shouldGoUntilPositionReached)
   EXPECT_FALSE(pos.isMoving());
 }
 
-TEST(PositionControlTest, shouldStopIfGreater)
+TEST(PositionControllerTests, shouldStopIfGreater)
 {
   float velocity = 10.0f;
   float tolerance = .001f;
@@ -107,7 +107,7 @@ TEST(PositionControlTest, shouldStopIfGreater)
   EXPECT_FALSE(pos.isMoving());
 }
 
-TEST(PositionControlTest, takesAbsValOfDistance)
+TEST(PositionControllerTests, takesAbsValOfDistance)
 {
   float velocity = 10.0f;
   float tolerance = .001f;
@@ -121,7 +121,7 @@ TEST(PositionControlTest, takesAbsValOfDistance)
   EXPECT_EQ(pos.getDistance(), 1.0f);
 }
 
-TEST(PositionControlTest, exposeMethodToTellDistanceLeft)
+TEST(PositionControllerTests, exposeMethodToTellDistanceLeft)
 {
   float velocity = 10.0f;
   NiceMock<MockVescAccess> br;
@@ -135,7 +135,7 @@ TEST(PositionControlTest, exposeMethodToTellDistanceLeft)
   EXPECT_EQ(pos.getDistanceRemaining(), 2.0f);
 }
 
-TEST(PositionControlTest, cancancelGoals)
+TEST(PositionControllerTests, cancancelGoals)
 {
   float velocity = 10.0f;
   NiceMock<MockVescAccess> br;

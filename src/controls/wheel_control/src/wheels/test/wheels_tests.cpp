@@ -3,7 +3,7 @@
 
 using namespace wheel_control;
 
-TEST(TEST_Wheels, Instantiate_JointState)
+TEST(WheelsTests, instantiateJointState)
 {
   JointState test(1.1, 1.2, 1.3);
 
@@ -12,7 +12,7 @@ TEST(TEST_Wheels, Instantiate_JointState)
   ASSERT_NEAR(1.3, test.effort, 1e-10);
 }
 
-TEST(TEST_Wheels, Instantiate_Wheel_With_Name)
+TEST(WheelsTests, instantiateWheelWithName)
 {
   Wheel test("Test");
 
@@ -31,7 +31,7 @@ TEST(TEST_Wheels, Instantiate_Wheel_With_Name)
   ASSERT_NEAR(0.0, test.desired_state->effort, 1e-10);
 }
 
-TEST(TEST_Wheels, Instantiate_Wheel_With_Name_And_Wheel_Info)
+TEST(WheelsTests, instantiateWheelWithNameAndWheelInfo)
 {
   Wheel test("Test", 1.0, -1.0);
 
@@ -50,7 +50,7 @@ TEST(TEST_Wheels, Instantiate_Wheel_With_Name_And_Wheel_Info)
   ASSERT_NEAR(0.0, test.desired_state->effort, 1e-10);
 }
 
-TEST(TEST_Wheels, Instantiate_Wheels)
+TEST(WheelsTests, instantiateWheels)
 {
   Wheels test;
 
@@ -60,7 +60,7 @@ TEST(TEST_Wheels, Instantiate_Wheels)
   ASSERT_STREQ("left_back", test.left_back->name.c_str());
 }
 
-TEST(TEST_Wheels, Instantiate_Wheels_With_Params)
+TEST(WheelsTests, instantiateWheelsWithParams)
 {
   Wheels test(1.0, 1.0);
 
@@ -80,7 +80,7 @@ TEST(TEST_Wheels, Instantiate_Wheels_With_Params)
   ASSERT_NEAR(-0.5, test.left_back->y_pos, 1e-10);
 }
 
-TEST(TEST_Wheels, Method_get_wheel)
+TEST(WheelsTests, getWheel)
 {
   Wheels test;
 
@@ -101,7 +101,7 @@ TEST(TEST_Wheels, Method_get_wheel)
   }
 }
 
-TEST(TEST_Wheels, Method_get)
+TEST(WheelsTests, getWheelVector)
 {
   Wheels test;
   std::vector<Wheel *> wheel_vector = test.get();

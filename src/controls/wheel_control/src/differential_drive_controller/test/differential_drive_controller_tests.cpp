@@ -4,7 +4,7 @@
 
 using namespace wheel_control;
 
-TEST(TEST_DifferentialDriveControllerPlugin, Load_Plugin)
+TEST(DifferentialDriveControllerTests, loadPlugin)
 {
   pluginlib::ClassLoader<VelocityInterface> drive_loader("wheel_control", "wheel_control::VelocityInterface");
   boost::shared_ptr<VelocityInterface> diff_drive =

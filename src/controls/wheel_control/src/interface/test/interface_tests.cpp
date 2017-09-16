@@ -3,7 +3,7 @@
 
 using namespace wheel_control;
 
-TEST(TEST_Interface, Load_Interface)
+TEST(InterfaceTests, loadInterface)
 {
   Interface test;
   auto *wheels = new Wheels();
@@ -15,7 +15,7 @@ TEST(TEST_Interface, Load_Interface)
   ASSERT_STREQ("left_back", test.wheels->left_back->name.c_str());
 }
 
-TEST(TEST_Interface, Method_update)
+TEST(InterfaceTests, updateMethod)
 {
   Interface test;
   auto *wheels = new Wheels();
@@ -43,7 +43,7 @@ TEST(TEST_Interface, Method_update)
   ASSERT_NEAR(4.2, test.wheels->left_back->current_state->effort, 1e-10);
 }
 
-TEST(TEST_Interface, Method_update_invalid)
+TEST(InterfaceTests, updateMethodInvalidArgument)
 {
   Interface test;
   auto *wheels = new Wheels();
