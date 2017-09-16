@@ -1,24 +1,22 @@
-#include <vesc_access/vesc_access.h>
+#include <vesc_control/vesc_socket_can.h>
 #include <unistd.h>
+
+#define rpm_fast        16000.0f
+
 
 int main(int argc, char **argv)
 {
-  float transmission_ratio = 1.0f;
-  float output_ratio = 1.0f;
-  float velocity_limit = 100.0f;
-  float torque_limit = 2.0f;
-  unsigned int pole_pairs = 14;
-  float torque_const = 1.0f;
-  Vesc *vesc = new Vesc((char *)"can0", 0);
+ Vesc *vesc = new Vesc((char *)"can0", 7);
 
   unsigned int number_of_cycles = 4;
   for (unsigned int ctr = 0; ctr < number_of_cycles; ctr++)
   {
-    vesc->setRpm(60.0f);
+    std::cout << "going forward" << std::endl; 
+    vesc->setRpm(rpm_fast);
     sleep(1);
     vesc->setRpm(0.0f);
     sleep(1);
-    vesc->setRpm(-60.0f);
+    vesc->setRpm(-rpm_fast);
     sleep(1);
   }
 }
