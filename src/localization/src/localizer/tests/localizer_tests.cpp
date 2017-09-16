@@ -8,8 +8,9 @@ using ::testing::Return;
 using ::testing::_;
 using ::testing::AnyNumber;
 using ::testing::Gt;
+
 // Declare a test
-TEST(MotionTracking, GoesForward)
+TEST(LocalizerTests, GoesForward)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
   Localizer loki(&flvesc, &frvesc, &brvesc, &blvesc);
@@ -28,7 +29,7 @@ TEST(MotionTracking, GoesForward)
   EXPECT_TRUE(loki.stateVector.theta >= -.0001 && loki.stateVector.theta <= .0001);
 }
 
-TEST(MotionTracking, ForwardLeft)
+TEST(LocalizerTests, ForwardLeft)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
   Localizer loki(&flvesc, &frvesc, &brvesc, &blvesc);
@@ -47,7 +48,7 @@ TEST(MotionTracking, ForwardLeft)
   EXPECT_TRUE(loki.stateVector.theta >= .0039 && loki.stateVector.theta <= .0041);
 }
 
-TEST(MotionTracking, ForwardRight)
+TEST(LocalizerTests, ForwardRight)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
   Localizer loki(&flvesc, &frvesc, &brvesc, &blvesc);
@@ -66,7 +67,7 @@ TEST(MotionTracking, ForwardRight)
   EXPECT_TRUE(loki.stateVector.theta >= -.0041 && loki.stateVector.theta <= -.0039);
 }
 
-TEST(MotionTracking, GoesBackward)
+TEST(LocalizerTests, GoesBackward)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
   Localizer loki(&flvesc, &frvesc, &brvesc, &blvesc);
@@ -85,7 +86,7 @@ TEST(MotionTracking, GoesBackward)
   EXPECT_TRUE(loki.stateVector.theta >= -.0001 && loki.stateVector.theta <= .0001);
 }
 
-TEST(MotionTracking, BackwardRight)
+TEST(LocalizerTests, BackwardRight)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
   Localizer loki(&flvesc, &frvesc, &brvesc, &blvesc);
@@ -104,7 +105,7 @@ TEST(MotionTracking, BackwardRight)
   EXPECT_TRUE(loki.stateVector.theta >= .0039 && loki.stateVector.theta <= .0041);
 }
 
-TEST(MotionTracking, BackwardLeft)
+TEST(LocalizerTests, BackwardLeft)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
   Localizer loki(&flvesc, &frvesc, &brvesc, &blvesc);
