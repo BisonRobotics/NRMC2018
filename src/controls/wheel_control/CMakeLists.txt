@@ -40,12 +40,12 @@ include_directories(${localization_INCLUDE_DIRS})
 
 add_library(velocity_plugins
   src/DifferentialDriveController.cpp
-  src/Wheels.cpp
+        src/wheels/wheels.cpp
 )
 
 target_link_libraries(velocity_plugins ${catkin_LIBRARIES})
 
-add_library(Wheels src/Wheels.cpp)
+add_library(Wheels src/wheels/wheels.cpp)
 
 add_library(pos_control src/position_controller/position_controller.cpp)
 target_link_libraries (pos_control vesc_access)
@@ -56,14 +56,14 @@ target_link_libraries (wheel_goal_master ${catkin_LIBRARIES} pos_control localiz
 add_dependencies (wheel_goal_master localizer_lib)
 
 ## Tests
-catkin_add_gtest(test_Wheels src/tests/test_Wheels.cpp src/Wheels.cpp)
+catkin_add_gtest(test_Wheels src/wheels/test/wheels_tests.cpp src/wheels/wheels.cpp)
 if(TARGET test_Wheels)
   target_link_libraries(test_Wheels
     ${catkin_LIBRARIES}
   )
 endif()
 
-catkin_add_gtest(test_Interface src/tests/test_Interface.cpp include/wheel_control/Interface.h src/Wheels.cpp)
+catkin_add_gtest(test_Interface src/tests/test_Interface.cpp include/wheel_control/Interface.h src/wheels/wheels.cpp)
 if(TARGET test_Interface)
   target_link_libraries(test_Interface
     ${catkin_LIBRARIES}
