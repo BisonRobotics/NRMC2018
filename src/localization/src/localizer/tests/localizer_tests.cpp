@@ -23,9 +23,9 @@ TEST(MotionTracking, GoesForward)
   EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
-  EXPECT_TRUE(loki.stateVector.xPos >= .0049 && loki.stateVector.xPos <= .0051);
-  EXPECT_TRUE(loki.stateVector.yPos >= -.0001 && loki.stateVector.yPos <= .0001);
-  EXPECT_TRUE(loki.stateVector.theta >= -.0001 && loki.stateVector.theta <= .0001);
+  EXPECT_TRUE(loki.state_vector.x_pos >= .0049 && loki.state_vector.x_pos <= .0051);
+  EXPECT_TRUE(loki.state_vector.y_pos >= -.0001 && loki.state_vector.y_pos <= .0001);
+  EXPECT_TRUE(loki.state_vector.theta >= -.0001 && loki.state_vector.theta <= .0001);
 }
 
 TEST(MotionTracking, ForwardLeft)
@@ -42,9 +42,9 @@ TEST(MotionTracking, ForwardLeft)
   EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
-  EXPECT_TRUE(loki.stateVector.xPos >= .0039 && loki.stateVector.xPos <= .0041);
-  EXPECT_TRUE(loki.stateVector.yPos >= .0000079 && loki.stateVector.yPos <= .0000081);
-  EXPECT_TRUE(loki.stateVector.theta >= .0039 && loki.stateVector.theta <= .0041);
+  EXPECT_TRUE(loki.state_vector.x_pos >= .0039 && loki.state_vector.x_pos <= .0041);
+  EXPECT_TRUE(loki.state_vector.y_pos >= .0000079 && loki.state_vector.y_pos <= .0000081);
+  EXPECT_TRUE(loki.state_vector.theta >= .0039 && loki.state_vector.theta <= .0041);
 }
 
 TEST(MotionTracking, ForwardRight)
@@ -61,9 +61,9 @@ TEST(MotionTracking, ForwardRight)
   EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
-  EXPECT_TRUE(loki.stateVector.xPos >= .0039 && loki.stateVector.xPos <= .0041);
-  EXPECT_TRUE(loki.stateVector.yPos >= -.0000081 && loki.stateVector.yPos <= -.0000079);
-  EXPECT_TRUE(loki.stateVector.theta >= -.0041 && loki.stateVector.theta <= -.0039);
+  EXPECT_TRUE(loki.state_vector.x_pos >= .0039 && loki.state_vector.x_pos <= .0041);
+  EXPECT_TRUE(loki.state_vector.y_pos >= -.0000081 && loki.state_vector.y_pos <= -.0000079);
+  EXPECT_TRUE(loki.state_vector.theta >= -.0041 && loki.state_vector.theta <= -.0039);
 }
 
 TEST(MotionTracking, GoesBackward)
@@ -80,9 +80,9 @@ TEST(MotionTracking, GoesBackward)
   EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
-  EXPECT_TRUE(loki.stateVector.xPos >= -.0051 && loki.stateVector.xPos <= -.0049);
-  EXPECT_TRUE(loki.stateVector.yPos >= -.0001 && loki.stateVector.yPos <= .0001);
-  EXPECT_TRUE(loki.stateVector.theta >= -.0001 && loki.stateVector.theta <= .0001);
+  EXPECT_TRUE(loki.state_vector.x_pos >= -.0051 && loki.state_vector.x_pos <= -.0049);
+  EXPECT_TRUE(loki.state_vector.y_pos >= -.0001 && loki.state_vector.y_pos <= .0001);
+  EXPECT_TRUE(loki.state_vector.theta >= -.0001 && loki.state_vector.theta <= .0001);
 }
 
 TEST(MotionTracking, BackwardRight)
@@ -99,9 +99,9 @@ TEST(MotionTracking, BackwardRight)
   EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
-  EXPECT_TRUE(loki.stateVector.xPos >= -.0041 && loki.stateVector.xPos <= -.0039);
-  EXPECT_TRUE(loki.stateVector.yPos >= -.0000081 && loki.stateVector.yPos <= -.0000079);
-  EXPECT_TRUE(loki.stateVector.theta >= .0039 && loki.stateVector.theta <= .0041);
+  EXPECT_TRUE(loki.state_vector.x_pos >= -.0041 && loki.state_vector.x_pos <= -.0039);
+  EXPECT_TRUE(loki.state_vector.y_pos >= -.0000081 && loki.state_vector.y_pos <= -.0000079);
+  EXPECT_TRUE(loki.state_vector.theta >= .0039 && loki.state_vector.theta <= .0041);
 }
 
 TEST(MotionTracking, BackwardLeft)
@@ -118,9 +118,9 @@ TEST(MotionTracking, BackwardLeft)
   EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
-  EXPECT_TRUE(loki.stateVector.xPos >= -.0041 && loki.stateVector.xPos <= -.0039);
-  EXPECT_TRUE(loki.stateVector.yPos >= .0000079 && loki.stateVector.yPos <= .0000081);
-  EXPECT_TRUE(loki.stateVector.theta >= -.0041 && loki.stateVector.theta <= -.0039);
+  EXPECT_TRUE(loki.state_vector.x_pos >= -.0041 && loki.state_vector.x_pos <= -.0039);
+  EXPECT_TRUE(loki.state_vector.y_pos >= .0000079 && loki.state_vector.y_pos <= .0000081);
+  EXPECT_TRUE(loki.state_vector.theta >= -.0041 && loki.state_vector.theta <= -.0039);
 }
 
 // Run all the tests that were declared with TEST()
