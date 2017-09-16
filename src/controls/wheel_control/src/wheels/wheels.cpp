@@ -1,6 +1,6 @@
 #include <string>
 #include <stdexcept>
-#include "wheel_control/Wheels.h"
+#include "wheel_control/wheels/wheels.h"
 
 using namespace wheel_control;
 
