@@ -5,21 +5,25 @@ int main(int argc, char **argv)
 {
   float transmission_ratio = 1.0f;
   float output_ratio = 1.0f;
-  float velocity_limit = 100.0f;
+  float velocity_limit = 10000.0f;
   float torque_limit = 2.0f;
   unsigned int pole_pairs = 14;
   float torque_const = 1.0f;
-  VescAccess *vesc = new VescAccess(0, transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_const,
+
+  VescAccess *vesc = new VescAccess(7, transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_const,
                                     (char *)"can0", pole_pairs);
 
-  unsigned int number_of_cycles = 10;
+  std::cout << "starting" << std::endl;
+
+  unsigned int number_of_cycles = 4;
   for (unsigned int ctr = 0; ctr < number_of_cycles; ctr++)
   {
-    vesc->setLinearVelocity(60.0f);
-    sleep(1);
+    std::cout << "setting forward" << std::endl;
+    vesc->setLinearVelocity(1000.0f);
+    sleep(3);
     vesc->setLinearVelocity(0.0f);
-    sleep(1);
-    vesc->setLinearVelocity(-60.0f);
-    sleep(1);
+    sleep(3);
+    vesc->setLinearVelocity(-1000.0f);
+    sleep(3);
   }
 }

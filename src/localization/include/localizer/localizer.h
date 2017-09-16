@@ -11,19 +11,19 @@ class Localizer
 public:
   struct stateVector_s
   {
-    float xPos;   // in world coordinates
-    float yPos;   // in world coordinates
+    float x_pos;  // in world coordinates
+    float y_pos;  // in world coordinates
     float theta;  // robot rotation about its own center with reference to the
     // world's x axis and positive angles CCW
 
-    float xVel;   // derivitive of xPos
-    float yVel;   // derivitive of yPos
+    float x_vel;  // derivitive of xPos
+    float y_vel;  // derivitive of yPos
     float omega;  // derivitive of theta
 
-    float xAccel;
-    float yAccel;
+    float x_accel;
+    float y_accel;
     float alpha;
-  } stateVector;
+  } state_vector;
 
   enum class UpdateStatus
   {
@@ -37,13 +37,13 @@ public:
   UpdateStatus updateStateVector(float dt);
 
 private:
-  struct timeval prevtime;
-  struct timeval currtime;
+  struct timeval previous_time;
+  struct timeval current_time;
   int dtms;  // dt in ms
-  iVescAccess *fleftVesc;
-  iVescAccess *frightVesc;
-  iVescAccess *brightVesc;
-  iVescAccess *bleftVesc;
+  iVescAccess *front_left_vesc;
+  iVescAccess *front_right_vesc;
+  iVescAccess *back_right_vesc;
+  iVescAccess *back_left_vesc;
   int timediffms(struct timeval curr, struct timeval prev);
 };
 

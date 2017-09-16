@@ -1,31 +1,31 @@
 #include <localizer/localizer.h>
 #include <Eigen/Dense>
 #include <cmath>
-#define CONSTANTTOAVERAGETWONUMBERS 2.0f
-#define AXELLEN .5f  // meters between wheels side to side (width of robot)
+#define CONSTANT_TO_AVERAGE_TWO_NUMBERS 2.0f
+#define AXLE_LENGTH .5f  // meters between wheels side to side (width of robot)
 
 Localizer::Localizer(iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
                      iVescAccess *backLeftVesc)
 {
-  stateVector.xPos = 0;
-  stateVector.yPos = 0;
-  stateVector.theta = 0;
+  state_vector.x_pos = 0;
+  state_vector.y_pos = 0;
+  state_vector.theta = 0;
 
-  stateVector.xVel = 0;
-  stateVector.yVel = 0;
-  stateVector.omega = 0;
+  state_vector.x_vel = 0;
+  state_vector.y_vel = 0;
+  state_vector.omega = 0;
 
-  stateVector.xAccel = 0;
-  stateVector.yAccel = 0;
-  stateVector.alpha = 0;
+  state_vector.x_accel = 0;
+  state_vector.y_accel = 0;
+  state_vector.alpha = 0;
 
-  fleftVesc = frontLeftVesc;
-  frightVesc = frontRightVesc;
-  brightVesc = backRightVesc;
-  bleftVesc = backLeftVesc;
+  front_left_vesc = frontLeftVesc;
+  front_right_vesc = frontRightVesc;
+  back_right_vesc = backRightVesc;
+  back_left_vesc = backLeftVesc;
 
-  gettimeofday(&currtime, NULL);  // initialize _prevmsgtime with something
-  currtime.tv_sec -= 1;           // make it in the past to avoid false positives
+  gettimeofday(&current_time, NULL);  // initialize _prevmsgtime with something
+  current_time.tv_sec -= 1;           // make it in the past to avoid false positives
 }
 
 Localizer::UpdateStatus Localizer::updateStateVector()
@@ -35,9 +35,9 @@ Localizer::UpdateStatus Localizer::updateStateVector()
   else
   {
     // take current time and subtract it from previous time to get dt
-    prevtime = currtime;
-    gettimeofday(&currtime, NULL);
-    dtms = timediffms(currtime, prevtime);
+    previous_time = current_time;
+    gettimeofday(&current_time, NULL);
+    dtms = timediffms(current_time, previous_time);
     float dt = dtms / 1000.0f;
     updateStateVector(dt);
     return Localizer::UpdateStatus::UPDATE_SUCCESS;
@@ -47,48 +47,49 @@ Localizer::UpdateStatus Localizer::updateStateVector()
 Localizer::UpdateStatus Localizer::updateStateVector(float dt)
 {
   // get linear velocities of wheels
-  float frontleftvel = this->fleftVesc->getLinearVelocity();
-  float frontrightvel = this->frightVesc->getLinearVelocity();
-  float backrightvel = this->brightVesc->getLinearVelocity();
-  float backleftvel = this->bleftVesc->getLinearVelocity();
+  float front_left_velocity = this->front_left_vesc->getLinearVelocity();
+  float front_right_velocity = this->front_right_vesc->getLinearVelocity();
+  float back_right_velocity = this->back_right_vesc->getLinearVelocity();
+  float back_left_velocity = this->back_left_vesc->getLinearVelocity();
 
-  float avgLeftVel = (frontleftvel + backleftvel) / CONSTANTTOAVERAGETWONUMBERS;
-  float avgRightVel = (frontrightvel + backrightvel) / CONSTANTTOAVERAGETWONUMBERS;
+  float average_left_velocity = (front_left_velocity + back_left_velocity) / CONSTANT_TO_AVERAGE_TWO_NUMBERS;
+  float average_right_velocity = (front_right_velocity + back_right_velocity) / CONSTANT_TO_AVERAGE_TWO_NUMBERS;
 
-  float w = (avgRightVel - avgLeftVel) / AXELLEN;
-  float R;
+  float w = (average_right_velocity - average_left_velocity) / AXLE_LENGTH;
+  float turn_radius;
   Eigen::Matrix2f rot;
-  Eigen::Vector2f dPos;
-  Eigen::Vector2f RonY;
-  float dTheta;
+  Eigen::Vector2f d_pos;
+  Eigen::Vector2f rotation_on_y;
+  float d_theta;
 
   if (w != 0.0f)  // no dividing by zero
   {
-    R = AXELLEN / 2 * (avgRightVel + avgLeftVel) / (avgRightVel - avgLeftVel);  // turn radius
-    rot << cos(w * dt), -sin(w * dt), sin(w * dt), cos(w * dt);                 // rotation matrix
-    RonY << 0, -R;
-    dPos = rot * (RonY)-RonY;
-    dTheta = w * dt;
+    turn_radius = AXLE_LENGTH / 2 * (average_right_velocity + average_left_velocity) /
+                  (average_right_velocity - average_left_velocity);  // turn radius
+    rot << cos(w * dt), -sin(w * dt), sin(w * dt), cos(w * dt);      // rotation matrix
+    rotation_on_y << 0, -turn_radius;
+    d_pos = rot * (rotation_on_y)-rotation_on_y;
+    d_theta = w * dt;
   }
   else
   {
-    dPos << avgRightVel *dt, 0;
-    dTheta = 0;
+    d_pos << average_right_velocity *dt, 0;
+    d_theta = 0;
   }
 
-  // dPos is in robot coordinates, must transform to world
+  // d_pos is in robot coordinates, must transform to world
   // rotate by worldrobot theta
 
   Eigen::Matrix2f wrot;
-  wrot << cos(stateVector.theta), -sin(stateVector.theta), sin(stateVector.theta), cos(stateVector.theta);
-  Eigen::Vector2f dPosWorld;
-  dPosWorld = wrot * dPos;
+  wrot << cos(state_vector.theta), -sin(state_vector.theta), sin(state_vector.theta), cos(state_vector.theta);
+  Eigen::Vector2f d_pos_world;
+  d_pos_world = wrot * d_pos;
 
   // add it all up
 
-  stateVector.xPos += dPosWorld(0);
-  stateVector.yPos += dPosWorld(1);
-  stateVector.theta += dTheta;
+  state_vector.x_pos += d_pos_world(0);
+  state_vector.y_pos += d_pos_world(1);
+  state_vector.theta += d_theta;
   return Localizer::UpdateStatus::UPDATE_SUCCESS;
 }
 

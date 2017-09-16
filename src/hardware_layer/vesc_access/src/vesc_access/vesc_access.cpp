@@ -1,30 +1,9 @@
 #include <vesc_access/vesc_access.h>
 #include <math.h>
 
-VescAccess::VescAccess(float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
-                       float torque_constant, iVesc *vesc, unsigned int pole_pairs)
+void VescAccess::initializeMembers(float transmission_ratio, float output_ratio, float velocity_limit,
+                                   float torque_limit, float torque_constant, unsigned int pole_pairs, bool read_only)
 {
-  this->vesc = vesc;
-  setTransmissionRatio(transmission_ratio);
-  setOutputRatio(output_ratio);
-  setTorqueLimit(torque_limit);
-  setLinearVelocityLimit(velocity_limit);
-  setTorqueConstant(torque_constant);
-  setPolePairs(pole_pairs);
-  this->read_only = false;
-}
-
-VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_ratio, float velocity_limit,
-                       float torque_limit, float torque_constant, char *can_network, unsigned int pole_pairs)
-{
-  VescAccess(transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_constant,
-             new Vesc(can_network, VESC_ID), pole_pairs);
-}
-
-VescAccess::VescAccess(float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
-                       float torque_constant, iVesc *vesc, unsigned int pole_pairs, bool read_only)
-{
-  this->vesc = vesc;
   setTransmissionRatio(transmission_ratio);
   setOutputRatio(output_ratio);
   setTorqueLimit(torque_limit);
@@ -34,12 +13,34 @@ VescAccess::VescAccess(float transmission_ratio, float output_ratio, float veloc
   this->read_only = read_only;
 }
 
+VescAccess::VescAccess(float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
+                       float torque_constant, iVesc *vesc, unsigned int pole_pairs)
+{
+  this->vesc = vesc;
+  initializeMembers(transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_constant, pole_pairs, false);
+}
+
+VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_ratio, float velocity_limit,
+                       float torque_limit, float torque_constant, char *can_network, unsigned int pole_pairs)
+{
+  this->vesc = new Vesc(can_network, VESC_ID);
+  initializeMembers(transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_constant, pole_pairs, false);
+}
+
+VescAccess::VescAccess(float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
+                       float torque_constant, iVesc *vesc, unsigned int pole_pairs, bool read_only)
+{
+  this->vesc = vesc;
+  initializeMembers(transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_constant, pole_pairs,
+                    read_only);
+}
+
 VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_ratio, float velocity_limit,
                        float torque_limit, float torque_constant, char *can_network, unsigned int pole_pairs,
                        bool read_only)
 {
-  VescAccess(transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_constant,
-             new Vesc(can_network, VESC_ID), pole_pairs, read_only);
+  this->vesc = new Vesc(can_network, VESC_ID);
+  initializeMembers(transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_constant, pole_pairs, false);
 }
 
 void VescAccess::setOutputRatio(float output_ratio)
@@ -76,7 +77,15 @@ void VescAccess::setLinearVelocity(float meters_per_second)
       }
     }
     float rpm = convertLinearVelocityToRpm(meters_per_second);
-    this->vesc->setRpm(convertRpmToErpm(rpm));
+    // std::cout << "setting linear" << std::endl;
+    if (this->vesc)
+    {
+      this->vesc->setRpm(convertRpmToErpm(rpm));
+    }
+    else
+    {
+      //  std::cout << "vesc not allocated" << std::endl;
+    }
   }
 }
 

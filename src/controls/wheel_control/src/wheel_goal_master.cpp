@@ -21,7 +21,7 @@ int main(int argc, char** argv)
   Localizer loc = Localizer(pos.fleft_wheel, pos.fright_wheel, pos.bright_wheel, pos.bleft_wheel);
   Server server(n, "drive_a_distance", boost::bind(&execute, _1, &server), false);
   loc.updateStateVector();
-  pos.update(loc.stateVector.xPos, loc.stateVector.yPos);
+  pos.update(loc.state_vector.x_pos, loc.state_vector.y_pos);
   server.start();
   ros::Rate r(100);
   wheel_control::distanceFeedback feedback;
@@ -29,7 +29,7 @@ int main(int argc, char** argv)
   while (ros::ok())
   {
     loc.updateStateVector();
-    pos.update(loc.stateVector.xPos, loc.stateVector.yPos);
+    pos.update(loc.state_vector.x_pos, loc.state_vector.y_pos);
     if (server.isActive())
     {
       if (!pos.isMoving())
