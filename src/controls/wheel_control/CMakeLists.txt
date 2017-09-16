@@ -39,7 +39,7 @@ include_directories(${localization_INCLUDE_DIRS})
 ## Declare a C++ library
 
 add_library(velocity_plugins
-  src/DifferentialDriveController.cpp
+        src/differential_drive_controller/differential_drive_controller.cpp
         src/wheels/wheels.cpp
 )
 
@@ -70,7 +70,7 @@ if(TARGET test_Interface)
   )
 endif()
 
-catkin_add_gtest(test_velocity_plugins src/tests/test_velocity_plugins.cpp)
+catkin_add_gtest(test_velocity_plugins src/differential_drive_controller/test/differential_drive_controller_tests.cpp)
 if(TARGET test_velocity_plugins)
   target_link_libraries(test_velocity_plugins
     ${catkin_LIBRARIES}
