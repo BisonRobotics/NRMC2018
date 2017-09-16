@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <pluginlib/class_loader.h>
-#include "wheel_control/VelocityInterface.h"
+#include "wheel_control/velocity_interface/velocity_interface.h"
 
 using namespace wheel_control;
 
