@@ -19,7 +19,7 @@ public:
   bool isMoving(void);
   ~PositionController();
   void closeGoal(void);
-  iVescAccess *fleft_wheel, *fright_wheel, *bright_wheel, *bleft_wheel;
+  iVescAccess *front_left_wheel, *front_right_wheel, *back_right_wheel, *back_left_wheel;
 
 private:
   float velocity;

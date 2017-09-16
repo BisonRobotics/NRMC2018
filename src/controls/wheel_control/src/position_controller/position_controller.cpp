@@ -39,10 +39,10 @@ PositionController::PositionController(float velocity, iVescAccess *fl, iVescAcc
   current_state.x = 0.0f;
   current_state.y = 0.0f;
   this->currently_moving = false;
-  this->bleft_wheel = bl;
-  this->bright_wheel = br;
-  this->fright_wheel = fr;
-  this->fleft_wheel = fl;
+  this->back_left_wheel = bl;
+  this->back_right_wheel = br;
+  this->front_right_wheel = fr;
+  this->front_left_wheel = fl;
   this->goal_received = false;
   this->position_received = false;
   this->internally_alloc = false;
@@ -92,10 +92,10 @@ void PositionController::startVescs(void)
 {
   this->currently_moving = true;
   //  setInitialState();
-  fleft_wheel->setLinearVelocity(this->velocity);
-  fright_wheel->setLinearVelocity(this->velocity);
-  bright_wheel->setLinearVelocity(this->velocity);
-  bleft_wheel->setLinearVelocity(this->velocity);
+  front_left_wheel->setLinearVelocity(this->velocity);
+  front_right_wheel->setLinearVelocity(this->velocity);
+  back_right_wheel->setLinearVelocity(this->velocity);
+  back_left_wheel->setLinearVelocity(this->velocity);
 }
 
 void PositionController::update(float position_x, float position_y)
@@ -144,20 +144,20 @@ void PositionController::closeGoal(void)
 void PositionController::stopVescs(void)
 {
   currently_moving = false;
-  fleft_wheel->setLinearVelocity(0.0f);
-  fright_wheel->setLinearVelocity(0.0f);
-  bright_wheel->setLinearVelocity(0.0f);
-  bleft_wheel->setLinearVelocity(0.0f);
+  front_left_wheel->setLinearVelocity(0.0f);
+  front_right_wheel->setLinearVelocity(0.0f);
+  back_right_wheel->setLinearVelocity(0.0f);
+  back_left_wheel->setLinearVelocity(0.0f);
 }
 
 PositionController::~PositionController()
 {
   if (internally_alloc)
   {
-    delete fleft_wheel;
-    delete fright_wheel;
-    delete bright_wheel;
-    delete bleft_wheel;
+    delete front_left_wheel;
+    delete front_right_wheel;
+    delete back_right_wheel;
+    delete back_left_wheel;
   }
 }
 
