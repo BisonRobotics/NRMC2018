@@ -12,7 +12,7 @@ int main(int argc, char **argv)
   VescAccess *vesc = new VescAccess(0, transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_const,
                                     (char *)"can0", pole_pairs);
 
-  unsigned int number_of_cycles = 10;
+  unsigned int number_of_cycles = 4;
   for (unsigned int ctr = 0; ctr < number_of_cycles; ctr++)
   {
     vesc->setLinearVelocity(60.0f);

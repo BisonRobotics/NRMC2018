@@ -11,7 +11,7 @@ int main(int argc, char **argv)
   float torque_const = 1.0f;
   Vesc *vesc = new Vesc((char *)"can0", 0);
 
-  unsigned int number_of_cycles = 10;
+  unsigned int number_of_cycles = 4;
   for (unsigned int ctr = 0; ctr < number_of_cycles; ctr++)
   {
     vesc->setRpm(60.0f);
