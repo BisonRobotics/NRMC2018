@@ -15,15 +15,15 @@
         dest=~/.bashrc
         line="source /opt/ros/kinetic/setup.bash"
 
-    - lineinfile:
-        dest=~/.bashrc
-        line="alias lintme='find . -name '*.h' -or -name '*.hpp' -or -name '*.cpp' | xargs clang-format-3.6 -i -style=file $1'
+   # - lineinfile:
+   #     dest=~/.bashrc
+   #     line="alias lintme='find . -name '*.h' -or -name '*.hpp' -or -name '*.cpp' | xargs clang-format-3.6 -i -style=file $1'"
 
-    - name: update apt packages
-      become: yes
-      apt:  
-        update_cache: yes
-        upgrade: safe
+   # - name: update apt packages
+   #   become: yes
+   #   apt:  
+   #     update_cache: yes
+   #     upgrade: safe
 
     - name: install other packages
       become: yes
