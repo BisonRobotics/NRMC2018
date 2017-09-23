@@ -11,17 +11,17 @@ PositionController::PositionController(float velocity)
 {
   float max_velocity = 20.0f;
   float max_torque = 20.0f;
-  float gear_ratio = 12.0f;
+  float gear_ratio = 49.4f;
   float torque_constant = 4.0f;
-  unsigned int pole_pairs = 8;
-  float output_ratio = 10.0f;
+  unsigned int pole_pairs = 1;
+  float output_ratio = 0.3048f;
   char *name = (char *)CAN_NETWORK;
   iVescAccess *fl = new VescAccess(FRONT_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
                                    torque_constant, name, pole_pairs);
-  iVescAccess *fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
+  iVescAccess *fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, -1.0f*gear_ratio, output_ratio, max_velocity, max_torque,
                                    torque_constant, name, pole_pairs);
 
-  iVescAccess *br = new VescAccess(BACK_RIGHT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
+  iVescAccess *br = new VescAccess(BACK_RIGHT_WHEEL_ID, -1.0f*gear_ratio, output_ratio, max_velocity, max_torque,
                                    torque_constant, name, pole_pairs);
   iVescAccess *bl = new VescAccess(BACK_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
                                    torque_constant, name, pole_pairs);
