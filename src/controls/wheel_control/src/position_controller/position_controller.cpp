@@ -29,15 +29,15 @@ PositionController::PositionController(float velocity)
   unsigned int pole_pairs = 1;
   float output_ratio = 0.3048f;
   char *name = (char *)CAN_NETWORK;
-  iVescAccess *fl = new VescAccess(FRONT_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
-                                   torque_constant, name, pole_pairs);
-  iVescAccess *fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, -1.0f * gear_ratio, output_ratio, max_velocity, max_torque,
-                                   torque_constant, name, pole_pairs);
+  this->front_left_wheel = new VescAccess(FRONT_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
+                                          torque_constant, name, pole_pairs);
+  this->front_right_wheel = new VescAccess(FRONT_RIGHT_WHEEL_ID, -1.0f * gear_ratio, output_ratio, max_velocity,
+                                           max_torque, torque_constant, name, pole_pairs);
 
-  iVescAccess *br = new VescAccess(BACK_RIGHT_WHEEL_ID, -1.0f * gear_ratio, output_ratio, max_velocity, max_torque,
-                                   torque_constant, name, pole_pairs);
-  iVescAccess *bl = new VescAccess(BACK_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
-                                   torque_constant, name, pole_pairs);
+  this->back_right_wheel = new VescAccess(BACK_RIGHT_WHEEL_ID, -1.0f * gear_ratio, output_ratio, max_velocity,
+                                          max_torque, torque_constant, name, pole_pairs);
+  this->back_left_wheel = new VescAccess(BACK_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
+                                         torque_constant, name, pole_pairs);
   initializeMembers(velocity);
   this->internally_alloc = true;
 }
