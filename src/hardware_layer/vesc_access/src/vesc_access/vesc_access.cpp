@@ -152,7 +152,7 @@ float VescAccess::getTorqueLimit(void)
 
 float VescAccess::convertTorqueToCurrent(float torque)
 {
-  return (torque / torque_constant);
+  return (torque / (this->torque_constant * this->transmission_ratio));
 }
 
 float VescAccess::convertLinearVelocityToRpm(float velocity)
@@ -173,7 +173,7 @@ float VescAccess::convertRpmToLinearVelocity(int rpm)
 
 float VescAccess::convertCurrentToTorque(float current)
 {
-  return (current * torque_constant);
+  return (current * this->torque_constant * this->transmission_ratio);
 }
 
 float VescAccess::getTorque(void)

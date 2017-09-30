@@ -30,7 +30,7 @@ TEST(VescAccessTests, canSetTorque)
   float transmission_ratio = 10.0f;
   float torque = 14.0f;
   float torque_ratio = 2.0f;
-  EXPECT_CALL(vesc, setCurrent(torque / torque_ratio));
+  EXPECT_CALL(vesc, setCurrent(torque / (torque_ratio * transmission_ratio)));
   VescAccess *wrap = new VescAccess(transmission_ratio, output_ratio, 30.0f, 30.0f, torque_ratio, &vesc, 1);
   wrap->setTorque(torque);
 }
@@ -61,7 +61,7 @@ TEST(VescAccessTests, saturatesOnTorqueLimit)
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float torque_limit = 12.0f;
-  EXPECT_CALL(vesc, setCurrent(torque_limit));
+  EXPECT_CALL(vesc, setCurrent(torque_limit / transmission_ratio));
   VescAccess *wrap = new VescAccess(transmission_ratio, output_ratio, 30.0f, torque_limit, 1.0f, &vesc, 1);
   wrap->setTorque(20.0f);
 }
@@ -94,7 +94,7 @@ TEST(VescAccessTests, saturatesOnNegativeTorqueLimit)
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float torque_limit = 12.0f;
-  EXPECT_CALL(vesc, setCurrent(-1.0f * torque_limit));
+  EXPECT_CALL(vesc, setCurrent(-1.0f * torque_limit / transmission_ratio));
   VescAccess *wrap = new VescAccess(transmission_ratio, output_ratio, 30.0f, torque_limit, 1.0f, &vesc, 1);
   wrap->setTorque(-20.0f);
 }
