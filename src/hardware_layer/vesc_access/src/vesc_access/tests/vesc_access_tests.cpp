@@ -18,7 +18,7 @@ TEST(VescAccessTests, canSetLinearVelocity)
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float linear = 15.0f;
-  EXPECT_CALL(vesc, setRpm(linear / (output_ratio * transmission_ratio)));
+  EXPECT_CALL(vesc, setRpm(linear*transmission_ratio / (output_ratio )));
   VescAccess *wrap = new VescAccess(transmission_ratio, output_ratio, 30.0f, 30.0f, 1.0f, &vesc, 1);
   wrap->setLinearVelocity(linear);
 }
@@ -72,7 +72,7 @@ TEST(VescAccessTests, saturatesOnVelocityLimit)
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float velocity_limit = 12.0f;
-  EXPECT_CALL(vesc, setRpm((velocity_limit / (output_ratio * transmission_ratio))));
+  EXPECT_CALL(vesc, setRpm((velocity_limit*transmission_ratio / (output_ratio ))));
   VescAccess *wrap = new VescAccess(transmission_ratio, output_ratio, velocity_limit, 30.0f, 1.0f, &vesc, 1);
   wrap->setLinearVelocity(20.0f);
 }
@@ -83,7 +83,7 @@ TEST(VescAccessTests, saturatesOnNegativeVelocityLimit)
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float velocity_limit = 12.0f;
-  EXPECT_CALL(vesc, setRpm(-1.0f * (velocity_limit / (output_ratio * transmission_ratio))));
+  EXPECT_CALL(vesc, setRpm(-1.0f * (velocity_limit *transmission_ratio/ (output_ratio))));
   VescAccess *wrap = new VescAccess(transmission_ratio, output_ratio, velocity_limit, 30.0f, 1.0f, &vesc, 1);
   wrap->setLinearVelocity(-1.0f * 20.0f);
 }
