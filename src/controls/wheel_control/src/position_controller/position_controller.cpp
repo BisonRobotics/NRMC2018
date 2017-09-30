@@ -7,11 +7,24 @@
 #define BACK_LEFT_WHEEL_ID 3
 #define CAN_NETWORK ("can0")
 
+void PositionController::initializeMembers (float velocity){
+  setVelocity(velocity);
+  this->distance = 0.0f;
+  initial_state.x = 0.0f;
+  initial_state.y = 0.0f;
+  current_state.x = 0.0f;
+  current_state.y = 0.0f;
+  this->currently_moving = false;
+  this->goal_received = false;
+  this->position_received = false;
+ 
+}
+
 PositionController::PositionController(float velocity)
 {
-  float max_velocity = 20.0f;
+  float max_velocity = 2.0f;
   float max_torque = 20.0f;
-  float gear_ratio = 49.4f;
+  float gear_ratio = 181.4f;
   float torque_constant = 4.0f;
   unsigned int pole_pairs = 1;
   float output_ratio = 0.3048f;
@@ -25,27 +38,19 @@ PositionController::PositionController(float velocity)
                                    torque_constant, name, pole_pairs);
   iVescAccess *bl = new VescAccess(BACK_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
                                    torque_constant, name, pole_pairs);
-  PositionController(velocity, fl, fr, br, bl);
+  initializeMembers (velocity);
   this->internally_alloc = true;
 }
 
 PositionController::PositionController(float velocity, iVescAccess *fl, iVescAccess *fr, iVescAccess *br,
                                        iVescAccess *bl)
 {
-  setVelocity(velocity);
-  this->distance = 0.0f;
-  initial_state.x = 0.0f;
-  initial_state.y = 0.0f;
-  current_state.x = 0.0f;
-  current_state.y = 0.0f;
-  this->currently_moving = false;
-  this->back_left_wheel = bl;
+ this->back_left_wheel = bl;
   this->back_right_wheel = br;
   this->front_right_wheel = fr;
   this->front_left_wheel = fl;
-  this->goal_received = false;
-  this->position_received = false;
-  this->internally_alloc = false;
+ this->internally_alloc = false;
+ initializeMembers (velocity);
 }
 
 void PositionController::setVelocity(float velocity)
@@ -63,6 +68,10 @@ float PositionController::getDistance(void)
 {
   return (distance);
 }
+
+
+
+
 
 void PositionController::setDistance(float distance)
 {

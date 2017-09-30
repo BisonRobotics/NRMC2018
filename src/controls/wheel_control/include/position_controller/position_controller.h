@@ -39,4 +39,5 @@ private:
   float getDistanceTravelledSqr(void);
   bool exceededDistance(void);
   bool internally_alloc;
+  void initializeMembers (float velocity);
 };
