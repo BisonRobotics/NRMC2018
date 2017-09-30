@@ -157,7 +157,7 @@ float VescAccess::convertTorqueToCurrent(float torque)
 
 float VescAccess::convertLinearVelocityToRpm(float velocity)
 {
-  return (velocity *this->transmission_ratio)/ this->output_ratio;
+  return (velocity * this->transmission_ratio) / this->output_ratio;
 }
 
 float VescAccess::convertRpmToLinearVelocity(float rpm)

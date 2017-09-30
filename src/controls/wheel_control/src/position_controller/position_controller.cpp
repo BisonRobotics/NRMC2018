@@ -7,7 +7,8 @@
 #define BACK_LEFT_WHEEL_ID 3
 #define CAN_NETWORK ("can0")
 
-void PositionController::initializeMembers (float velocity){
+void PositionController::initializeMembers(float velocity)
+{
   setVelocity(velocity);
   this->distance = 0.0f;
   initial_state.x = 0.0f;
@@ -17,7 +18,6 @@ void PositionController::initializeMembers (float velocity){
   this->currently_moving = false;
   this->goal_received = false;
   this->position_received = false;
- 
 }
 
 PositionController::PositionController(float velocity)
@@ -31,26 +31,26 @@ PositionController::PositionController(float velocity)
   char *name = (char *)CAN_NETWORK;
   iVescAccess *fl = new VescAccess(FRONT_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
                                    torque_constant, name, pole_pairs);
-  iVescAccess *fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, -1.0f*gear_ratio, output_ratio, max_velocity, max_torque,
+  iVescAccess *fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, -1.0f * gear_ratio, output_ratio, max_velocity, max_torque,
                                    torque_constant, name, pole_pairs);
 
-  iVescAccess *br = new VescAccess(BACK_RIGHT_WHEEL_ID, -1.0f*gear_ratio, output_ratio, max_velocity, max_torque,
+  iVescAccess *br = new VescAccess(BACK_RIGHT_WHEEL_ID, -1.0f * gear_ratio, output_ratio, max_velocity, max_torque,
                                    torque_constant, name, pole_pairs);
   iVescAccess *bl = new VescAccess(BACK_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
                                    torque_constant, name, pole_pairs);
-  initializeMembers (velocity);
+  initializeMembers(velocity);
   this->internally_alloc = true;
 }
 
 PositionController::PositionController(float velocity, iVescAccess *fl, iVescAccess *fr, iVescAccess *br,
                                        iVescAccess *bl)
 {
- this->back_left_wheel = bl;
+  this->back_left_wheel = bl;
   this->back_right_wheel = br;
   this->front_right_wheel = fr;
   this->front_left_wheel = fl;
- this->internally_alloc = false;
- initializeMembers (velocity);
+  this->internally_alloc = false;
+  initializeMembers(velocity);
 }
 
 void PositionController::setVelocity(float velocity)
@@ -68,10 +68,6 @@ float PositionController::getDistance(void)
 {
   return (distance);
 }
-
-
-
-
 
 void PositionController::setDistance(float distance)
 {
