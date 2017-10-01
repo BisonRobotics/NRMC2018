@@ -1,7 +1,0 @@
-<launch>
-  <!-- Very simple launch file for turtlebot (autonomous robot used for testing at JMU) -->
-  <include file="$(find turtlebot_bringup)/launch/minimal.launch"/>
-  <include file="$(find turtlebot_bringup)/launch/3dsensor.launch">
-    <arg name="depth_registration" value="false"/>
-  </include>
-</launch>

@@ -1,8 +1,0 @@
-<launch>
-   <!-- "Dummy" information (lightly based on first informational meeting)-->
-  <param name="occupancy_grid_squares" value="500"/>
-  <param name="occupancy_grid_width" value="10"/>
-  <param name="minimum_movement_distance" value="10"/>
-  <param name="waypoint_distance" value="10"/>
-  </include>
-</launch>
