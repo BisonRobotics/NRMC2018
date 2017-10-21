@@ -42,6 +42,11 @@ add_library( teleop_interface
 
 target_link_libraries (teleop_interface ${catkin_LIBRARIES} vesc_access)
 
+add_executable (teleop_interface_exec src/teleop.cpp)
+
+target_link_libraries (teleop_interface_exec teleop_interface)
+
+
 #############
 ## Install ##
 #############

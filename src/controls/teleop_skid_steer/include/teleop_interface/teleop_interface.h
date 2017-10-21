@@ -7,6 +7,7 @@ public:
   TeleopInterface(float velocity);
   float getVelocity();
   void update(float left_vel, float right_vel);
+  ~TeleopInterface();
 
 private:
   float velocity_scale;
@@ -16,5 +17,4 @@ private:
   void initializeVars(float velocity);
   bool internally_alloc;
   float clamp(float number, float max, float min);
-  ~TeleopInterface();
 };
