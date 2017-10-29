@@ -4,6 +4,7 @@
 
 using namespace wheel_control;
 
+JointState::JointState() {}
 JointState::JointState(double position, double velocity, double effort)
 {
   this->position = position;
@@ -36,17 +37,22 @@ Wheels::Wheels()
   this->left_back = new Wheel("left_back");
 }
 
-Wheels::Wheels(double x_dist, double y_dist) : Wheels()
+Wheels::Wheels(double x, double y) : Wheels()
 {
-  this->right_front->x_pos = x_dist / 2.0;
-  this->right_back->x_pos = -x_dist / 2.0;
-  this->left_front->x_pos = x_dist / 2.0;
-  this->left_back->x_pos = -x_dist / 2.0;
+  set_distance(x, y);
+}
 
-  this->right_front->y_pos = y_dist / 2.0;
-  this->right_back->y_pos = y_dist / 2.0;
-  this->left_front->y_pos = -y_dist / 2.0;
-  this->left_back->y_pos = -y_dist / 2.0;
+void Wheels::set_distance(double x, double y)
+{
+  this->right_front->x_pos =  x / 2.0;
+  this->right_back->x_pos  = -x / 2.0;
+  this->left_front->x_pos  =  x / 2.0;
+  this->left_back->x_pos   = -x / 2.0;
+
+  this->right_front->y_pos =  y / 2.0;
+  this->right_back->y_pos  =  y / 2.0;
+  this->left_front->y_pos  = -y / 2.0;
+  this->left_back->y_pos   = -y / 2.0;
 }
 
 Wheel* Wheels::get_wheel(std::string name)

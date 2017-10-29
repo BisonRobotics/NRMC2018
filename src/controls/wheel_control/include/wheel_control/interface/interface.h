@@ -1,14 +1,12 @@
 #ifndef PROJECT_SKIDSTEERINTERFACE_H
 #define PROJECT_SKIDSTEERINTERFACE_H
 
-#include <map>
 #include <string>
 #include "wheel_control/wheels/wheels.h"
 #include <stdexcept>
 
 namespace wheel_control
 {
-typedef std::map<std::string, JointState> JointStates;
 class Interface
 {
 public:
