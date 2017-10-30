@@ -62,7 +62,7 @@ git checkout <branch_name>
 git submodule update --init --recursive
 
 # Install workspace dependencies, respond y to all prompts
-rosdep install --from-paths . --ignore-src --rosdistro=kinetic --default-yes
+rosdep install --from-paths . --ignore-src --rosdistro=kinetic --default-yes -r
 
 # Build workspace
 catkin_make
