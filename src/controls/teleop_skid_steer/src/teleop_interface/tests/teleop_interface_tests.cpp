@@ -13,7 +13,7 @@ using ::testing::Gt;
 using ::testing::NiceMock;
 // Declare a test
 
-TEST(PositionControllerTests, canBeInstantiatedWithAVelocity)
+TEST(TeleopControllerTests, canBeInstantiatedWithAVelocity)
 {
   float velocity = 10.0f;
   NiceMock<MockVescAccess> br;
@@ -25,7 +25,7 @@ TEST(PositionControllerTests, canBeInstantiatedWithAVelocity)
   EXPECT_EQ(tele.getVelocity(), velocity);
 }
 
-TEST(PositionControllerTests, startsWithNoVelocity)
+TEST(TeleopControllerTests, startsWithNoVelocity)
 {
   float velocity = 10.0f;
   NiceMock<MockVescAccess> br;
@@ -41,7 +41,7 @@ TEST(PositionControllerTests, startsWithNoVelocity)
   TeleopInterface tele = TeleopInterface(velocity, &fl, &fr, &br, &bl);
 }
 
-TEST(PositionControllerTests, takesAbsOfMaxVelocity)
+TEST(TeleopControllerTests, takesAbsOfMaxVelocity)
 {
   float velocity = 10.0f;
   NiceMock<MockVescAccess> br;
@@ -53,7 +53,7 @@ TEST(PositionControllerTests, takesAbsOfMaxVelocity)
   EXPECT_EQ(tele.getVelocity(), velocity);
 }
 
-TEST(PositionControllerTests, canBeUpdated)
+TEST(TeleopControllerTests, canBeUpdated)
 {
   float velocity = 10.0f;
   NiceMock<MockVescAccess> br;
@@ -71,7 +71,7 @@ TEST(PositionControllerTests, canBeUpdated)
 }
 /*
 
-TEST(PositionControllerTests, saturatesVelocities)
+TEST(TeleopControllerTests, saturatesVelocities)
 {
   float velocity = 10.0f;
   NiceMock<MockVescAccess> br;

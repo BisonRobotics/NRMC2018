@@ -87,10 +87,10 @@ target_link_libraries (teleop_interface_exec teleop_interface)
 #############
 
 ## Add gtest based cpp test target and link libraries
-catkin_add_gtest(test_teleop src/teleop_interface/tests/teleop_interface_tests.cpp)
-if(TARGET test_teleop)
-   target_link_libraries(test_teleop ${catkin_LIBRARIES} teleop_interface gmock_main)
-   add_dependencies (test_teleop vesc_access)
-endif()
+#catkin_add_gtest(test_teleop src/teleop_interface/tests/teleop_interface_tests.cpp)
+#if(TARGET test_teleop)
+#   target_link_libraries(test_teleop ${catkin_LIBRARIES} teleop_interface gmock_main)
+#   add_dependencies (test_teleop vesc_access)
+#endif()
 
 
