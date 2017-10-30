@@ -45,6 +45,8 @@ run the following commands.
 
 ```
 # Clone the repo to your computer
+cd ~
+
 # If you have ssh keys with github setup on your pc
 git clone git@github.com:BisonRobotics/NRM2018.git
 
