@@ -51,7 +51,7 @@ cd ~
 git clone git@github.com:BisonRobotics/NRM2018.git
 
 # If not
-git clone https://github.com/BisonRobotics/NRM2018.git
+git clone https://github.com/BisonRobotics/NRMC2018.git
 ````
 From here make sure you checkout the branch you'll be working on before proceeding
 ```
