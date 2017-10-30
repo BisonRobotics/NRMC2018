@@ -8,27 +8,41 @@ The default and recommended environment for this year
   - Available at: https://www.ubuntu.com/download/desktop
 - ROS Kinetic
   - Available at : http://wiki.ros.org/kinetic/Installation/Ubuntu
-    - Follow instructions for desktop install (not full-desktop install)
-- VREP
-  - Download modified VREP from [here](https://github.com/BisonRobotics/VREP-ROS-Support/blob/master/vrep.tar.gz)
-  - Unzip and move to /opt
-  - Add an alias to your bashrc for easy launching : `echo "alias vrep='/opt/VREP/vrep.sh'" >> ~/.bashrc`
+    - Follow instructions for desktop install (not full-desktop install)`
 
-## Build tool
-Using catkin-tools. See the following link for additional usage and info: https://catkin-tools.readthedocs.io/en/latest/
+## Configure git and other helpful utils
 ```
-# Add repo and keys
-sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros-latest.list'
-wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
-
-# Install build tool
 sudo apt-get update
-sudo apt-get install python-catkin-tools
+sudo apt-get install git tmux ssh vim
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash 
+apt-get install -y git-lfs
+```
+
+## Setup your ssh keys
+Follow these instructions https://help.github.com/articles/connecting-to-github-with-ssh/
+
+## Setup an IDE
+I highly recommend using the clion IDE available at https://www.jetbrains.com/clion/. Make sure you sign up for an education account so you don't have to pay for it. Otherwise if you're as hardcore as Dr. Ding, VIM works too.
+
+## Install and build gmock
+```
+sudo apt-get install google-mock
+cd /usr/src/gmock
+mkdir build
+cd build
+cmake ../
+make
+```
+
+## Install clang
+```
+sudo apt-get install clang-format-3.6
 ```
 
 ## Workspace
 Our workspace is the NRM2018 repository this README lives in. Assuming you have your environment properly configured
 run the following commands.
+
 ```
 # Clone the repo to your computer
 # If you have ssh keys with github setup on your pc
@@ -36,12 +50,33 @@ git clone git@github.com:BisonRobotics/NRM2018.git
 
 # If not
 git clone https://github.com/BisonRobotics/NRM2018.git
+````
+From here make sure you checkout the branch you'll be working on before proceeding
+```
+# Checkout branch
+git checkout <branch_name>
+
+# Pull in submodules
+git submodule update --init --recursive
 
 # Install workspace dependencies, respond y to all prompts
-rosdep install --from-paths . --ignore-src --rosdistro=kinetic
+rosdep install --from-paths . --ignore-src --rosdistro=kinetic --default-yes
 
 # Build workspace
-catkin build
+catkin_make
 ```
+If you are using the VREP simulator
+```
+# Link vrep plugin to vrep install directory (Assumes you placed NRMC2018 and vrep in home directory)
+ln -s ~/NRMC2018/devel/lib/libv_repExtRosInterface.so ~/vrep/
+```
+Add some optional alias that make launching stuff and working with ROS easier
+```
+echo "alias vrep='~/vrep/vrep.sh'"                    >> ~/.bashrc
+echo "alias clion='~/clion/bin/clion.sh'"             >> ~/.bashrc
+echo "alias ws='cd ~/NRMC2018'"                       >> ~/.bashrc
+echo "alias wss='source ~/NRMC2018/devel/setup.bash'" >> ~/.bashrc
+```
+
 
 
