@@ -14,8 +14,8 @@ The default and recommended environment for this year
 ```
 sudo apt-get update
 sudo apt-get install git tmux ssh vim
-curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash 
-apt-get install -y git-lfs
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash 
+sudo apt-get install -y git-lfs
 ```
 
 ## Setup your ssh keys
