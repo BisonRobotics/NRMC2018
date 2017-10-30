@@ -26,12 +26,12 @@ I highly recommend using the clion IDE available at https://www.jetbrains.com/cl
 
 ## Install and build gmock
 ```
-sudo apt-get install google-mock
+sudo apt-get install build-essential google-mock
 cd /usr/src/gmock
-mkdir build
+sudo mkdir build
 cd build
-cmake ../
-make
+sudo cmake ../
+sudo make
 ```
 
 ## Install clang
