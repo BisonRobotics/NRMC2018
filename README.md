@@ -48,7 +48,7 @@ run the following commands.
 cd ~
 
 # If you have ssh keys with github setup on your pc
-git clone git@github.com:BisonRobotics/NRM2018.git
+git clone git@github.com:BisonRobotics/NRMC2018.git
 
 # If not
 git clone https://github.com/BisonRobotics/NRMC2018.git
