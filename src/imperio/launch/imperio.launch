@@ -1,0 +1,6 @@
+<launch>
+
+<node name="dashboard" pkg="imperio" type="dashboardLaunch.bash"/>
+<node name="imperio" pkg="imperio" type="imperio.py"/>
+
+</launch>

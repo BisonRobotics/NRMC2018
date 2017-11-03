@@ -15,7 +15,7 @@ class Imperio(object):
     # Initializer for the imperio node
     def __init__(self):
         rospy.init_node('imperio')
-        self.robot = turtlebot_robot()
+        self.robot = None
         self.run()
 
     # The operational loop for Imperio
