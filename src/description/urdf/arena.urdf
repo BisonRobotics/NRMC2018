@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<robot name="arena">
+
+    <material name="blue">
+        <color rgba="0 0 0.8 1"/>
+    </material>
+
+    <material name="white">
+        <color rgba="1 1 1 1"/>
+    </material>
+
+
+    <link name="world">
+        <visual>
+            <geometry>dd
+                <mesh filename="package://description/scenes/arena.dae" />
+            </geometry>
+            <!--<material name="blue"/>-->
+        </visual>
+    </link>
+</robot>
