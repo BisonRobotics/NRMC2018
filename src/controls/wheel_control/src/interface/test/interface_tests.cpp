@@ -9,10 +9,10 @@ TEST(InterfaceTests, loadInterface)
   auto *wheels = new Wheels();
   test.load(wheels);
 
-  ASSERT_STREQ("right_front", test.wheels->right_front->name.c_str());
-  ASSERT_STREQ("right_back", test.wheels->right_back->name.c_str());
-  ASSERT_STREQ("left_front", test.wheels->left_front->name.c_str());
-  ASSERT_STREQ("left_back", test.wheels->left_back->name.c_str());
+  ASSERT_STREQ("front_right", test.wheels->front_right->name.c_str());
+  ASSERT_STREQ("back_right", test.wheels->back_right->name.c_str());
+  ASSERT_STREQ("front_left", test.wheels->front_left->name.c_str());
+  ASSERT_STREQ("back_left", test.wheels->back_left->name.c_str());
 }
 
 TEST(InterfaceTests, updateMethod)
@@ -21,26 +21,26 @@ TEST(InterfaceTests, updateMethod)
   auto *wheels = new Wheels();
   test.load(wheels);
 
-  JointStates current_state = { { "right_front", JointState(1.0, 1.1, 1.2) },
-                                { "right_back", JointState(2.0, 2.1, 2.2) },
-                                { "left_front", JointState(3.0, 3.1, 3.2) },
-                                { "left_back", JointState(4.0, 4.1, 4.2) } };
+  JointStates current_state = { { "front_right", JointState(1.0, 1.1, 1.2) },
+                                { "back_right", JointState(2.0, 2.1, 2.2) },
+                                { "front_left", JointState(3.0, 3.1, 3.2) },
+                                { "back_left", JointState(4.0, 4.1, 4.2) } };
   test.update(current_state);
 
-  ASSERT_NEAR(1.0, test.wheels->right_front->current_state->position, 1e-10);
-  ASSERT_NEAR(2.0, test.wheels->right_back->current_state->position, 1e-10);
-  ASSERT_NEAR(3.0, test.wheels->left_front->current_state->position, 1e-10);
-  ASSERT_NEAR(4.0, test.wheels->left_back->current_state->position, 1e-10);
+  ASSERT_NEAR(1.0, test.wheels->front_right->current_state->position, 1e-10);
+  ASSERT_NEAR(2.0, test.wheels->back_right->current_state->position, 1e-10);
+  ASSERT_NEAR(3.0, test.wheels->front_left->current_state->position, 1e-10);
+  ASSERT_NEAR(4.0, test.wheels->back_left->current_state->position, 1e-10);
 
-  ASSERT_NEAR(1.1, test.wheels->right_front->current_state->velocity, 1e-10);
-  ASSERT_NEAR(2.1, test.wheels->right_back->current_state->velocity, 1e-10);
-  ASSERT_NEAR(3.1, test.wheels->left_front->current_state->velocity, 1e-10);
-  ASSERT_NEAR(4.1, test.wheels->left_back->current_state->velocity, 1e-10);
+  ASSERT_NEAR(1.1, test.wheels->front_right->current_state->velocity, 1e-10);
+  ASSERT_NEAR(2.1, test.wheels->back_right->current_state->velocity, 1e-10);
+  ASSERT_NEAR(3.1, test.wheels->front_left->current_state->velocity, 1e-10);
+  ASSERT_NEAR(4.1, test.wheels->back_left->current_state->velocity, 1e-10);
 
-  ASSERT_NEAR(1.2, test.wheels->right_front->current_state->effort, 1e-10);
-  ASSERT_NEAR(2.2, test.wheels->right_back->current_state->effort, 1e-10);
-  ASSERT_NEAR(3.2, test.wheels->left_front->current_state->effort, 1e-10);
-  ASSERT_NEAR(4.2, test.wheels->left_back->current_state->effort, 1e-10);
+  ASSERT_NEAR(1.2, test.wheels->front_right->current_state->effort, 1e-10);
+  ASSERT_NEAR(2.2, test.wheels->back_right->current_state->effort, 1e-10);
+  ASSERT_NEAR(3.2, test.wheels->front_left->current_state->effort, 1e-10);
+  ASSERT_NEAR(4.2, test.wheels->back_left->current_state->effort, 1e-10);
 }
 
 TEST(InterfaceTests, updateMethodInvalidArgument)
@@ -49,9 +49,9 @@ TEST(InterfaceTests, updateMethodInvalidArgument)
   auto *wheels = new Wheels();
   test.load(wheels);
 
-  JointStates current_state = { { "right_front", JointState(1.0, 1.1, 1.2) },
-                                { "right_back", JointState(2.0, 2.1, 2.2) },
-                                { "left_front", JointState(3.0, 3.1, 3.2) },
+  JointStates current_state = { { "front_right", JointState(1.0, 1.1, 1.2) },
+                                { "back_right", JointState(2.0, 2.1, 2.2) },
+                                { "front_left", JointState(3.0, 3.1, 3.2) },
                                 { "invalid", JointState(4.0, 4.1, 4.2) } };
 
   ASSERT_THROW(test.update(current_state), std::invalid_argument);

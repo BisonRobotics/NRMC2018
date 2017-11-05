@@ -31,10 +31,10 @@ Wheel::Wheel(std::string name, double x_pos, double y_pos) : Wheel(name)
 
 Wheels::Wheels()
 {
-  this->right_front = new Wheel("right_front");
-  this->right_back = new Wheel("right_back");
-  this->left_front = new Wheel("left_front");
-  this->left_back = new Wheel("left_back");
+  this->front_left = new Wheel("front_left");
+  this->front_right = new Wheel("front_right");
+  this->back_left = new Wheel("back_left");
+  this->back_right = new Wheel("back_right");
 }
 
 Wheels::Wheels(double x, double y) : Wheels()
@@ -44,15 +44,15 @@ Wheels::Wheels(double x, double y) : Wheels()
 
 void Wheels::set_distance(double x, double y)
 {
-  this->right_front->x_pos =  x / 2.0;
-  this->right_back->x_pos  = -x / 2.0;
-  this->left_front->x_pos  =  x / 2.0;
-  this->left_back->x_pos   = -x / 2.0;
+  this->front_right->x_pos =  x / 2.0;
+  this->back_right->x_pos  = -x / 2.0;
+  this->front_left->x_pos  =  x / 2.0;
+  this->back_left->x_pos   = -x / 2.0;
 
-  this->right_front->y_pos =  y / 2.0;
-  this->right_back->y_pos  =  y / 2.0;
-  this->left_front->y_pos  = -y / 2.0;
-  this->left_back->y_pos   = -y / 2.0;
+  this->front_right->y_pos =  y / 2.0;
+  this->back_right->y_pos  =  y / 2.0;
+  this->front_left->y_pos  = -y / 2.0;
+  this->back_left->y_pos   = -y / 2.0;
 }
 
 Wheel* Wheels::get_wheel(std::string name)
@@ -71,15 +71,15 @@ Wheel* Wheels::get_wheel(std::string name)
 std::vector<Wheel*> Wheels::get()
 {
   std::vector<Wheel*> wheels;
-  wheels.push_back(this->right_front);
-  wheels.push_back(this->right_back);
-  wheels.push_back(this->left_front);
-  wheels.push_back(this->left_back);
+  wheels.push_back(this->front_left);
+  wheels.push_back(this->front_right);
+  wheels.push_back(this->back_left);
+  wheels.push_back(this->back_right);
   return wheels;
 }
 
 // TODO figure out way of testing
 Wheels::~Wheels()
 {
-  delete right_front, right_back, left_front, left_back;
+  delete front_right, back_right, front_left, back_left;
 }

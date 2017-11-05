@@ -39,7 +39,7 @@ public:
 
   Wheel *get_wheel(std::string name);
   std::vector<Wheel *> get();
-  Wheel *right_front, *right_back, *left_front, *left_back;
+  Wheel *front_right, *back_right, *front_left, *back_left;
   void set_distance(double x, double y);
 };
 }

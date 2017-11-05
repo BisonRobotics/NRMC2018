@@ -54,40 +54,40 @@ TEST(WheelsTests, instantiateWheels)
 {
   Wheels test;
 
-  ASSERT_STREQ("right_front", test.right_front->name.c_str());
-  ASSERT_STREQ("right_back", test.right_back->name.c_str());
-  ASSERT_STREQ("left_front", test.left_front->name.c_str());
-  ASSERT_STREQ("left_back", test.left_back->name.c_str());
+  ASSERT_STREQ("front_right", test.front_right->name.c_str());
+  ASSERT_STREQ("back_right", test.back_right->name.c_str());
+  ASSERT_STREQ("front_left", test.front_left->name.c_str());
+  ASSERT_STREQ("back_left", test.back_left->name.c_str());
 }
 
 TEST(WheelsTests, instantiateWheelsWithParams)
 {
   Wheels test(1.0, 1.0);
 
-  ASSERT_STREQ("right_front", test.right_front->name.c_str());
-  ASSERT_STREQ("right_back", test.right_back->name.c_str());
-  ASSERT_STREQ("left_front", test.left_front->name.c_str());
-  ASSERT_STREQ("left_back", test.left_back->name.c_str());
+  ASSERT_STREQ("front_right", test.front_right->name.c_str());
+  ASSERT_STREQ("back_right", test.back_right->name.c_str());
+  ASSERT_STREQ("front_left", test.front_left->name.c_str());
+  ASSERT_STREQ("back_left", test.back_left->name.c_str());
 
-  ASSERT_NEAR(0.5, test.right_front->x_pos, 1e-10);
-  ASSERT_NEAR(-0.5, test.right_back->x_pos, 1e-10);
-  ASSERT_NEAR(0.5, test.left_front->x_pos, 1e-10);
-  ASSERT_NEAR(-0.5, test.left_back->x_pos, 1e-10);
+  ASSERT_NEAR(0.5, test.front_right->x_pos, 1e-10);
+  ASSERT_NEAR(-0.5, test.back_right->x_pos, 1e-10);
+  ASSERT_NEAR(0.5, test.front_left->x_pos, 1e-10);
+  ASSERT_NEAR(-0.5, test.back_left->x_pos, 1e-10);
 
-  ASSERT_NEAR(0.5, test.right_front->y_pos, 1e-10);
-  ASSERT_NEAR(0.5, test.right_back->y_pos, 1e-10);
-  ASSERT_NEAR(-0.5, test.left_front->y_pos, 1e-10);
-  ASSERT_NEAR(-0.5, test.left_back->y_pos, 1e-10);
+  ASSERT_NEAR(0.5, test.front_right->y_pos, 1e-10);
+  ASSERT_NEAR(0.5, test.back_right->y_pos, 1e-10);
+  ASSERT_NEAR(-0.5, test.front_left->y_pos, 1e-10);
+  ASSERT_NEAR(-0.5, test.back_left->y_pos, 1e-10);
 }
 
 TEST(WheelsTests, getWheel)
 {
   Wheels test;
 
-  ASSERT_STREQ("right_front", test.get_wheel("right_front")->name.c_str());
-  ASSERT_STREQ("right_back", test.get_wheel("right_back")->name.c_str());
-  ASSERT_STREQ("left_front", test.get_wheel("left_front")->name.c_str());
-  ASSERT_STREQ("left_back", test.get_wheel("left_back")->name.c_str());
+  ASSERT_STREQ("front_right", test.get_wheel("front_right")->name.c_str());
+  ASSERT_STREQ("back_right", test.get_wheel("back_right")->name.c_str());
+  ASSERT_STREQ("front_left", test.get_wheel("front_left")->name.c_str());
+  ASSERT_STREQ("back_left", test.get_wheel("back_left")->name.c_str());
 
   ASSERT_THROW(test.get_wheel("invalid"), std::invalid_argument);
 
@@ -106,10 +106,10 @@ TEST(WheelsTests, getWheelVector)
   Wheels test;
   std::vector<Wheel *> wheel_vector = test.get();
 
-  ASSERT_STREQ("right_front", wheel_vector[0]->name.c_str());
-  ASSERT_STREQ("right_back", wheel_vector[1]->name.c_str());
-  ASSERT_STREQ("left_front", wheel_vector[2]->name.c_str());
-  ASSERT_STREQ("left_back", wheel_vector[3]->name.c_str());
+  ASSERT_STREQ("front_left",  wheel_vector[0]->name.c_str());
+  ASSERT_STREQ("front_right", wheel_vector[1]->name.c_str());
+  ASSERT_STREQ("back_left",   wheel_vector[2]->name.c_str());
+  ASSERT_STREQ("back_right",  wheel_vector[3]->name.c_str());
 }
 
 // Run all the tests that were declared with TEST()

@@ -14,17 +14,17 @@ TEST(DifferentialDriveControllerTests, loadPlugin)
   diff_drive->load(wheels);
   diff_drive->set_velocity(1.0, 0.0);
 
-  ASSERT_NEAR(1.0, diff_drive->wheels->right_front->desired_state->velocity, 1e-10);
-  ASSERT_NEAR(1.0, diff_drive->wheels->right_back->desired_state->velocity, 1e-10);
-  ASSERT_NEAR(1.0, diff_drive->wheels->left_front->desired_state->velocity, 1e-10);
-  ASSERT_NEAR(1.0, diff_drive->wheels->left_back->desired_state->velocity, 1e-10);
+  ASSERT_NEAR(1.0, diff_drive->wheels->front_right->desired_state->velocity, 1e-10);
+  ASSERT_NEAR(1.0, diff_drive->wheels->back_right->desired_state->velocity, 1e-10);
+  ASSERT_NEAR(1.0, diff_drive->wheels->front_left->desired_state->velocity, 1e-10);
+  ASSERT_NEAR(1.0, diff_drive->wheels->back_left->desired_state->velocity, 1e-10);
 
   diff_drive->set_velocity(1.0, 1.0);
 
-  ASSERT_NEAR(2.0, diff_drive->wheels->right_front->desired_state->velocity, 1e-10);
-  ASSERT_NEAR(2.0, diff_drive->wheels->right_back->desired_state->velocity, 1e-10);
-  ASSERT_NEAR(0.0, diff_drive->wheels->left_front->desired_state->velocity, 1e-10);
-  ASSERT_NEAR(0.0, diff_drive->wheels->left_back->desired_state->velocity, 1e-10);
+  ASSERT_NEAR(2.0, diff_drive->wheels->front_right->desired_state->velocity, 1e-10);
+  ASSERT_NEAR(2.0, diff_drive->wheels->back_right->desired_state->velocity, 1e-10);
+  ASSERT_NEAR(0.0, diff_drive->wheels->front_left->desired_state->velocity, 1e-10);
+  ASSERT_NEAR(0.0, diff_drive->wheels->back_left->desired_state->velocity, 1e-10);
 }
 
 // Run all the tests that were declared with TEST()
