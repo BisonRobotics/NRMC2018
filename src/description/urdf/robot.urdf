@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot">
+
+    <!-- Define materials -->
+    <material name="brown">
+        <color rgba="0.45 0.45 0.28 1"/>
+    </material>
+
+    <material name="red">
+        <color rgba="0.5 0.24 0.00 1"/>
+    </material>
+
+    <material name="green">
+        <color rgba="0.24 0.34 0.00 1"/>
+    </material>
+
+    <material name="black">
+        <color rgba="0.10 0.10 0.10 1"/>
+    </material>
+
+    <!-- Define linkages and joints -->
+    <link name="base_link" />
+        <!--<visual>
+            <geometry>
+                <box size="0.001 0.001 0.001" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="orange" />
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.001 0.001 0.001" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </collision>
+    </link>-->
+
+    <link name="frame">
+        <visual>
+            <geometry>
+                <box size="1.1938e+00 4.9530e-01 2.5400e-02" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="brown" />
+        </visual>
+        <collision>
+            <geometry>
+                <box size="1.1938e+00 4.9530e-01 2.5400e-02" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </collision>
+    </link>
+
+    <joint name="base_link_to_frame" type="fixed">
+        <parent link="base_link"/>
+        <child link="frame"/>
+        <origin xyz="0 0 2.0796e-01" rpy="0 0 0" />
+    </joint>
+
+    <xacro:macro name="wheel" params="x_name y_name x_dir y_dir color">
+        <link name="${x_name}_${y_name}_wheel">
+            <visual>
+                <geometry>
+                    <cylinder length="1.0160e-01" radius="1.524e-01" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+                <material name="${color}"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder length="1.0160e-01" radius="1.524e-01" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+            </collision>
+        </link>
+
+        <joint name="frame_to_${x_name}_${y_name}_wheel" type="fixed">
+            <parent link="frame"/>
+            <child link="${x_name}_${y_name}_wheel"/>
+            <origin xyz="${x_dir*(3.4290e-01)} ${y_dir*(3.2067e-01)} -5.5512e-02" />
+        </joint>
+    </xacro:macro>
+    <xacro:wheel x_name="front" y_name="left"  x_dir="1"  y_dir="1"  color="red"   />
+    <xacro:wheel x_name="front" y_name="right" x_dir="1"  y_dir="-1" color="green" />
+    <xacro:wheel x_name="back"  y_name="left"  x_dir="-1" y_dir="1"  color="red"   />
+    <xacro:wheel x_name="back"  y_name="right" x_dir="-1" y_dir="-1" color="green" />
+
+    <link name="sensor">
+        <visual>
+            <geometry>
+                <cylinder length="7.0003e-02" radius="2.5e-02" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="black" />
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="7.0003e-02" radius="2.5e-02" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </collision>
+    </link>
+
+    <joint name="frame_to_sensor" type="fixed">
+        <parent link="frame"/>
+        <child link="sensor"/>
+        <origin xyz="5.0000e-01 0 -1.5796e-01" rpy="0 0 0" />
+    </joint>
+
+</robot>
+
+

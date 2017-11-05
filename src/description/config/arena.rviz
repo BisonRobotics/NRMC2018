@@ -5,7 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /Status1
       Splitter Ratio: 0.5
     Tree Height: 707
   - Class: rviz/Selection
@@ -26,7 +25,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: LaserScan
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -41,11 +40,11 @@ Visualization Manager:
       Name: Grid
       Normal Cell Count: 0
       Offset:
-        X: 0
+        X: 3.68600011
         Y: 0
         Z: -0.940439999
       Plane: XY
-      Plane Cell Count: 20
+      Plane Cell Count: 15
       Reference Frame: <Fixed Frame>
       Value: true
     - Alpha: 1
@@ -64,7 +63,7 @@ Visualization Manager:
           Show Trail: false
           Value: true
       Name: RobotModel
-      Robot Description: robot_description
+      Robot Description: arena_description
       TF Prefix: ""
       Update Interval: 0
       Value: true
@@ -74,7 +73,19 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        emididae:
+        back_left_wheel:
+          Value: true
+        back_right_wheel:
+          Value: true
+        base_link:
+          Value: true
+        frame:
+          Value: true
+        front_left_wheel:
+          Value: true
+        front_right_wheel:
+          Value: true
+        sensor:
           Value: true
         world:
           Value: true
@@ -85,8 +96,18 @@ Visualization Manager:
       Show Names: true
       Tree:
         world:
-          emididae:
-            {}
+          base_link:
+            frame:
+              back_left_wheel:
+                {}
+              back_right_wheel:
+                {}
+              front_left_wheel:
+                {}
+              front_right_wheel:
+                {}
+              sensor:
+                {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -119,6 +140,56 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        back_left_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        back_right_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_left_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_right_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        sensor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel
+      Robot Description: robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -143,7 +214,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 10.2775459
+      Distance: 9.65750504
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
@@ -158,10 +229,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.998583794
+      Pitch: 0.778583825
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.83592606
+      Yaw: 3.58590961
     Saved: ~
 Window Geometry:
   Displays:
@@ -179,5 +250,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 959
-  X: 0
+  X: 145
   Y: 0
