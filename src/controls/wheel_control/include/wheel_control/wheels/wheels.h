@@ -3,43 +3,27 @@
 
 #include <vector>
 #include <map>
+#include <sensor_msgs/JointState.h>
 
 namespace wheel_control
 {
-class JointState
-{
-public:
-  JointState();
-  JointState(double position, double velocity, double effort);
 
-  double position;
-  double velocity;
-  double effort;
-};
-typedef std::map<std::string, JointState> JointStates;
-
-class Wheel
-{
-public:
-  Wheel(std::string name);
-  Wheel(std::string name, double x_pos, double y_pos);
-
-  std::string name;
-  int id;
-  double x_pos, y_pos;
-  JointState *current_state, *desired_state;
-};
+const int FLI = 0;
+const int FRI = 1;
+const int BLI = 2;
+const int BRI = 3;
 
 class Wheels
 {
 public:
+
   Wheels();
   Wheels(double x, double y);
-  ~Wheels();
 
-  Wheel *get_wheel(std::string name);
-  std::vector<Wheel *> get();
-  Wheel *front_right, *back_right, *front_left, *back_left;
+  std::vector<std::string> name;
+  std::vector<double> x_pos, y_pos;
+  std::vector<int> id;
+  sensor_msgs::JointState current_state, desired_state;
   void set_distance(double x, double y);
 };
 }

@@ -2,8 +2,9 @@
 #define PROJECT_SKIDSTEERINTERFACE_H
 
 #include <string>
-#include "wheel_control/wheels/wheels.h"
 #include <stdexcept>
+#include <sensor_msgs/JointState.h>
+#include <wheel_control/wheels/wheels.h>
 
 namespace wheel_control
 {
@@ -20,26 +21,9 @@ public:
     delete this->wheels;
   }
 
-  void update(JointStates current_wheel_states)
+  void update(sensor_msgs::JointState *current_wheel_states)
   {
-    bool flag;
-    for (auto wheel : current_wheel_states)
-    {
-      flag = true;
-      for (auto local : this->wheels->get())
-      {
-        if (wheel.first == local->name)
-        {
-          *(local->current_state) = wheel.second;
-          flag = false;
-        }
-      }
-      if (flag)
-      {
-        std::string error_msg = wheel.first + " wheel not found";
-        throw std::invalid_argument(error_msg);
-      }
-    }
+    this->wheels->current_state = *current_wheel_states;
   }
 
   Wheels *wheels;
