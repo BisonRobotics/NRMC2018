@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """ Move the robot to desired location.
 
-Author: Nicole Maguire
+Author: James Madison University
 Date: 9/26/2017
 Version: 1
 
@@ -10,7 +10,7 @@ Version: 1
 import math
 
 from robot import *
-from turtlebot_robot import *
+from ndsu_robot import *
 
 # navigates the robot around obstacles to the final goal
 def navigate_to_goal(robot, goal):

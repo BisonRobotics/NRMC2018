@@ -1,6 +1,7 @@
+<!-- Launch file for autonomy. Author : James Madison University -->
 <launch>
 
 <node name="dashboard" pkg="imperio" type="dashboardLaunch.bash"/>
-<node name="imperio" pkg="imperio" type="imperio.py"/>
+<!-- node name="imperio" pkg="imperio" type="imperio.py"/ -->
 
 </launch>

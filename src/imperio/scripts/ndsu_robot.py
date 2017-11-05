@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """ Robot class for NSDU robot
 
-Author: Nicole Maguire
+Author: James Madison University
 Date: 9/26/2017
 Version: 1
 

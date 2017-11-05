@@ -2,7 +2,7 @@
 """ Tests the robots base method implementation using integration tests
     i.e. observe the robot and make sure it behaves as you think it will
 
-Author: Nicole Maguire
+Author: James Madison University
 Date: 10/1/2017
 Version: 1
 

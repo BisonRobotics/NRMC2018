@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """ Move the robot to desired location.
 
-Author: Nicole Maguire
+Author: James Madison University
 Date: 9/26/2017
 Version: 1
 
@@ -15,7 +15,7 @@ class Imperio(object):
     # Initializer for the imperio node
     def __init__(self):
         rospy.init_node('imperio')
-        self.robot = None
+        self.robot = ndsu_robot()
         self.run()
 
     # The operational loop for Imperio
