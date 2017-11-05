@@ -31,10 +31,10 @@ Wheel::Wheel(std::string name, double x_pos, double y_pos) : Wheel(name)
 
 Wheels::Wheels()
 {
-  this->front_left = new Wheel("front_left");
-  this->front_right = new Wheel("front_right");
-  this->back_left = new Wheel("back_left");
-  this->back_right = new Wheel("back_right");
+  this->front_left  = new Wheel("wheel_front_left");
+  this->front_right = new Wheel("wheel_front_right");
+  this->back_left   = new Wheel("wheel_back_left");
+  this->back_right  = new Wheel("wheel_back_right");
 }
 
 Wheels::Wheels(double x, double y) : Wheels()

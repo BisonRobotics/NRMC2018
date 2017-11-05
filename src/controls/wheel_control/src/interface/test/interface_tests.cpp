@@ -9,10 +9,10 @@ TEST(InterfaceTests, loadInterface)
   auto *wheels = new Wheels();
   test.load(wheels);
 
-  ASSERT_STREQ("front_right", test.wheels->front_right->name.c_str());
-  ASSERT_STREQ("back_right", test.wheels->back_right->name.c_str());
-  ASSERT_STREQ("front_left", test.wheels->front_left->name.c_str());
-  ASSERT_STREQ("back_left", test.wheels->back_left->name.c_str());
+  ASSERT_STREQ("wheel_front_right", test.wheels->front_right->name.c_str());
+  ASSERT_STREQ("wheel_back_right", test.wheels->back_right->name.c_str());
+  ASSERT_STREQ("wheel_front_left", test.wheels->front_left->name.c_str());
+  ASSERT_STREQ("wheel_back_left", test.wheels->back_left->name.c_str());
 }
 
 TEST(InterfaceTests, updateMethod)
@@ -21,10 +21,10 @@ TEST(InterfaceTests, updateMethod)
   auto *wheels = new Wheels();
   test.load(wheels);
 
-  JointStates current_state = { { "front_right", JointState(1.0, 1.1, 1.2) },
-                                { "back_right", JointState(2.0, 2.1, 2.2) },
-                                { "front_left", JointState(3.0, 3.1, 3.2) },
-                                { "back_left", JointState(4.0, 4.1, 4.2) } };
+  JointStates current_state = { { "wheel_front_right", JointState(1.0, 1.1, 1.2) },
+                                { "wheel_back_right",  JointState(2.0, 2.1, 2.2) },
+                                { "wheel_front_left",  JointState(3.0, 3.1, 3.2) },
+                                { "wheel_back_left",   JointState(4.0, 4.1, 4.2) } };
   test.update(current_state);
 
   ASSERT_NEAR(1.0, test.wheels->front_right->current_state->position, 1e-10);
@@ -49,10 +49,10 @@ TEST(InterfaceTests, updateMethodInvalidArgument)
   auto *wheels = new Wheels();
   test.load(wheels);
 
-  JointStates current_state = { { "front_right", JointState(1.0, 1.1, 1.2) },
-                                { "back_right", JointState(2.0, 2.1, 2.2) },
-                                { "front_left", JointState(3.0, 3.1, 3.2) },
-                                { "invalid", JointState(4.0, 4.1, 4.2) } };
+  JointStates current_state = { { "wheel_front_right", JointState(1.0, 1.1, 1.2) },
+                                { "wheel_back_right",  JointState(2.0, 2.1, 2.2) },
+                                { "wheel_front_left",  JointState(3.0, 3.1, 3.2) },
+                                { "invalid",           JointState(4.0, 4.1, 4.2) } };
 
   ASSERT_THROW(test.update(current_state), std::invalid_argument);
   try
