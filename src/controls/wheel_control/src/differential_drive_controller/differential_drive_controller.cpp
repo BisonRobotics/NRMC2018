@@ -2,6 +2,11 @@
 
 using namespace wheel_control;
 
+DifferentialDriveController::DifferentialDriveController()
+{
+  type = vel_t;
+}
+
 void DifferentialDriveController::set_velocity(double lin_vel, double ang_vel)
 {
   // Assumes all wheels are the same size and equidistant, which is valid for our robot

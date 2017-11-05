@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
-#include "wheel_control/wheels/wheels.h"
+#include "wheel_control/wheels/test_wheels.h"
 
 using namespace wheel_control;
 
 TEST(WheelsTests, instantiateWheels)
 {
-  Wheels test;
+  TestWheels test;
 
   ASSERT_STREQ("wheel_front_left",  test.name[FLI].c_str());
   ASSERT_STREQ("wheel_front_right", test.name[FRI].c_str());
@@ -15,7 +15,7 @@ TEST(WheelsTests, instantiateWheels)
 
 TEST(WheelsTests, instantiateWheelsWithParams)
 {
-  Wheels test(1.0, 1.0);
+  TestWheels test(1.0, 1.0);
 
   ASSERT_STREQ("wheel_front_left",  test.name[FLI].c_str());
   ASSERT_STREQ("wheel_front_right", test.name[FRI].c_str());
@@ -27,10 +27,10 @@ TEST(WheelsTests, instantiateWheelsWithParams)
   ASSERT_NEAR(-0.5, test.x_pos[BLI], 1e-10);
   ASSERT_NEAR(-0.5, test.x_pos[BRI], 1e-10);
 
-  ASSERT_NEAR(-0.5, test.y_pos[FLI], 1e-10);
-  ASSERT_NEAR(0.5,  test.y_pos[FRI], 1e-10);
-  ASSERT_NEAR(-0.5, test.y_pos[BLI], 1e-10);
-  ASSERT_NEAR(0.5,  test.y_pos[BRI], 1e-10);
+  ASSERT_NEAR(0.5,  test.y_pos[FLI], 1e-10);
+  ASSERT_NEAR(-0.5, test.y_pos[FRI], 1e-10);
+  ASSERT_NEAR(0.5,  test.y_pos[BLI], 1e-10);
+  ASSERT_NEAR(-0.5, test.y_pos[BRI], 1e-10);
 }
 
 // Run all the tests that were declared with TEST()

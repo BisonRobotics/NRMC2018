@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <pluginlib/class_loader.h>
-#include "wheel_control/velocity_interface/velocity_interface.h"
+#include <wheel_control/velocity_interface/velocity_interface.h>
+#include <wheel_control/wheels/test_wheels.h>
 
 using namespace wheel_control;
 
@@ -10,8 +11,8 @@ TEST(DifferentialDriveControllerTests, loadPlugin)
   boost::shared_ptr<VelocityInterface> diff_drive =
       drive_loader.createInstance("wheel_control::DifferentialDriveController");
 
-  Wheels *wheels = new Wheels(1.0, 1.0);
-  diff_drive->load(wheels);
+  TestWheels wheels(1.0, 1.0);
+  diff_drive->load(&wheels);
   diff_drive->set_velocity(1.0, 0.0);
 
   ASSERT_NEAR(1.0, diff_drive->wheels->desired_state.velocity[FLI], 1e-10);

@@ -1,5 +1,5 @@
-#ifndef PROJECT_SKIDSTEERINTERFACE_H
-#define PROJECT_SKIDSTEERINTERFACE_H
+#ifndef PROJECT_WHEELCONTROLINTERFACE_H
+#define PROJECT_WHEELCONTROLINTERFACE_H
 
 #include <string>
 #include <stdexcept>
@@ -8,9 +8,19 @@
 
 namespace wheel_control
 {
+const int pos_t = 0;
+const int vel_t = 1;
+const int eff_t = 2;
+
 class Interface
 {
 public:
+
+  int type = -1;
+  Wheels *wheels;
+
+  virtual void update_desired_state() = 0;
+  
   void load(Wheels *wheels)
   {
     this->wheels = wheels;
@@ -21,13 +31,36 @@ public:
     delete this->wheels;
   }
 
-  void update(sensor_msgs::JointState *current_wheel_states)
+  void send_joint_commands()
   {
-    this->wheels->current_state = *current_wheel_states;
+    update_desired_state();
+    if (type == pos_t)
+    {
+      for (int i = 0; i < 4; i++)
+      {
+        wheels->set_position(i, wheels->desired_state.position[i]);
+      }
+    }
+    if (type == vel_t)
+    {
+      for (int i = 0; i < 4; i++)
+      {
+        wheels->set_velocity(i, wheels->desired_state.velocity[i]);
+      }
+    }
+    if (type == eff_t)
+    {
+      for (int i = 0; i < 4; i++)
+      {
+        wheels->set_effort(i, wheels->desired_state.effort[i]);
+      }
+    }
+    else
+    {
+      // TODO throw error
+    }
   }
-
-  Wheels *wheels;
 };
 }
 
-#endif  // PROJECT_SKIDSTEERINTERFACE_H
+#endif  // PROJECT_WHEELCONTROLINTERFACE_H

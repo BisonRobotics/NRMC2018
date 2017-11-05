@@ -66,3 +66,13 @@ void Wheels::set_distance(double x, double y)
     }
   }
 }
+
+void Wheels::update_current_state()
+{
+  for (int i = 0; i < 4; i++)
+  {
+    current_state.position[i] = get_position(i);
+    current_state.velocity[i] = get_velocity(i); //TODO figure out which index this should be
+    current_state.effort[i]   = get_effort(i);
+  }
+}
