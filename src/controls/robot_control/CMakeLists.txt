@@ -36,10 +36,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## catkin specific configuration ##
 ###################################
 
-catkin_package(CATKIN_DEPENDS
-        roscpp
-        std_msgs
-        wheel_control
+catkin_package(
+        INCLUDE_DIRS include
+        LIBRARIES robot_control
+        CATKIN_DEPENDS roscpp std_msgs wheel_control
 )
 
 ###########
@@ -53,7 +53,7 @@ include_directories(include ${catkin_INCLUDE_DIRS} $ENV{HOME}/NRMC2018/devel/inc
 ## Build libraries
 add_library(robot_control
         src/robot/robot.cpp)
-add_dependencies(robot_control ${catkin_EXPORTED_TARGETS} wheel_control)
+add_dependencies(robot_control ${catkin_EXPORTED_TARGETS})
 target_link_libraries(robot_control ${catkin_LIBRARIES})
 
 #############
