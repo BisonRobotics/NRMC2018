@@ -79,6 +79,11 @@ echo "alias clion='~/clion/bin/clion.sh'"             >> ~/.bashrc
 echo "alias ws='cd ~/NRMC2018'"                       >> ~/.bashrc
 echo "alias wss='source ~/NRMC2018/devel/setup.bash'" >> ~/.bashrc
 ```
+To start the simulator
+```
+# New terminal for each command
+roscore
+vrep
 
-
+```
 
