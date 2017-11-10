@@ -7,7 +7,7 @@ DifferentialDriveController::DifferentialDriveController()
   type = vel_t;
 }
 
-void DifferentialDriveController::set_velocity(double lin_vel, double ang_vel)
+void DifferentialDriveController::setVelocity(double lin_vel, double ang_vel)
 {
   // Assumes all wheels are the same size and equidistant, which is valid for our robot
   double wheel_separation = 2.0 * this->wheels->y_pos[FLI];

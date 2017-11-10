@@ -8,7 +8,7 @@ namespace wheel_control
 class TestInterface : public Interface
 {
 public:
-  void update_desired_state() override {};
+  void updateDesiredState() override {};
 };
 }
 

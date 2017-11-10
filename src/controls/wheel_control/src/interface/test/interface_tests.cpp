@@ -4,7 +4,7 @@
 
 using namespace wheel_control;
 
-TEST(InterfaceTests, load_interface)
+TEST(InterfaceTests, loadInterface)
 {
   TestInterface test;
   TestWheels wheels;
@@ -16,7 +16,7 @@ TEST(InterfaceTests, load_interface)
   ASSERT_STREQ("wheel_back_right",  test.wheels->name[BRI].c_str());
 }
 
-TEST(InterfaceTests, update_current_state)
+TEST(InterfaceTests, updateCurrentState)
 {
   TestInterface test;
   TestWheels wheels;

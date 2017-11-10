@@ -26,15 +26,15 @@ Wheels::Wheels()
     this->desired_state.effort.push_back(0.0);
   }
 
-  set_distance(1.0, 1.0);
+  setDistance(1.0, 1.0);
 }
 
 Wheels::Wheels(double x, double y) : Wheels()
 {
-  set_distance(x, y);
+  setDistance(x, y);
 }
 
-void Wheels::set_distance(double x, double y)
+void Wheels::setDistance(double x, double y)
 {
   for (int i = 0; i < 4; i++)
   {
@@ -67,12 +67,12 @@ void Wheels::set_distance(double x, double y)
   }
 }
 
-void Wheels::update_current_state()
+void Wheels::updateCurrentState()
 {
   for (int i = 0; i < 4; i++)
   {
-    current_state.position[i] = get_position(i);
-    current_state.velocity[i] = get_velocity(i); //TODO figure out which index this should be
-    current_state.effort[i]   = get_effort(i);
+    current_state.position[i] = getPosition(i);
+    current_state.velocity[i] = getVelocity(i); //TODO figure out which index this should be
+    current_state.effort[i]   = getEffort(i);
   }
 }

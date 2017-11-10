@@ -25,15 +25,15 @@ public:
   std::vector<int> id;
   sensor_msgs::JointState current_state, desired_state;
 
-  virtual void set_position(int index, double position) = 0;
-  virtual void set_velocity(int index, double velocity) = 0;
-  virtual void set_effort(int index, double effort) = 0;
-  virtual double get_position(int index) = 0;
-  virtual double get_velocity(int index) = 0;
-  virtual double get_effort(int index) = 0;
+  virtual void setPosition(int index, double position) = 0;
+  virtual void setVelocity(int index, double velocity) = 0;
+  virtual void setEffort(int index, double effort) = 0;
+  virtual double getPosition(int index) = 0;
+  virtual double getVelocity(int index) = 0;
+  virtual double getEffort(int index) = 0;
 
-  void set_distance(double x, double y);
-  void update_current_state();
+  void setDistance(double x, double y);
+  void updateCurrentState();
 };
 }
 

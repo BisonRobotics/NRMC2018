@@ -11,12 +11,12 @@ Robot::Robot()
 
 void Robot::spin_once()
 {
-  wheel_controller->send_joint_commands();
+  wheel_controller->sendJointCommands();
 }
 
 
 void Robot::set_velocity(double linear, double angular)
 {
-  wheel_controller->set_velocity(linear, angular);
+  wheel_controller->setVelocity(linear, angular);
 }
 

@@ -11,10 +11,10 @@ class DifferentialDriveController : public VelocityInterface
 public:
   DifferentialDriveController();
 
-  void set_velocity(double lin_vel, double ang_vel) override;
+  void setVelocity(double lin_vel, double ang_vel) override;
 
   // This controller doesn't rely upon the current state of the wheels, so it doesn't need to update every cycle
-  void update_desired_state() {};
+  void updateDesiredState() {};
 };
 }
 

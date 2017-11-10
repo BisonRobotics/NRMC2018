@@ -8,7 +8,7 @@ namespace wheel_control
 class VelocityInterface : public Interface
 {
 public:
-  virtual void set_velocity(double x, double y) = 0;
+  virtual void setVelocity(double x, double y) = 0;
 };
 }
 

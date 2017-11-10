@@ -18,12 +18,12 @@ public:
   TestWheels(double x, double y) : Wheels(x, y) {};
 
   // These methods were created for interacting with the hardware or simulation, don't need them for unit tests.
-  void set_position(int index, double position) override {};
-  void set_velocity(int index, double velocity) override {};
-  void set_effort(int index, double effort) override {};
-  double get_position(int index) override {};
-  double get_velocity(int index) override {};
-  double get_effort(int index) override {};
+  void setPosition(int index, double position) override {};
+  void setVelocity(int index, double velocity) override {};
+  void setEffort(int index, double effort) override {};
+  double getPosition(int index) override {};
+  double getVelocity(int index) override {};
+  double getEffort(int index) override {};
 };
 }
 

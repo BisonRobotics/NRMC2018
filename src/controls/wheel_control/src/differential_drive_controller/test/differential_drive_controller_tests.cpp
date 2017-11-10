@@ -13,14 +13,14 @@ TEST(DifferentialDriveControllerTests, loadPlugin)
 
   TestWheels wheels(1.0, 1.0);
   diff_drive->load(&wheels);
-  diff_drive->set_velocity(1.0, 0.0);
+  diff_drive->setVelocity(1.0, 0.0);
 
   ASSERT_NEAR(1.0, diff_drive->wheels->desired_state.velocity[FLI], 1e-10);
   ASSERT_NEAR(1.0, diff_drive->wheels->desired_state.velocity[FRI], 1e-10);
   ASSERT_NEAR(1.0, diff_drive->wheels->desired_state.velocity[BLI], 1e-10);
   ASSERT_NEAR(1.0, diff_drive->wheels->desired_state.velocity[BRI], 1e-10);
 
-  diff_drive->set_velocity(1.0, 1.0);
+  diff_drive->setVelocity(1.0, 1.0);
 
   ASSERT_NEAR(0.0, diff_drive->wheels->desired_state.velocity[FLI], 1e-10);
   ASSERT_NEAR(2.0, diff_drive->wheels->desired_state.velocity[FRI], 1e-10);

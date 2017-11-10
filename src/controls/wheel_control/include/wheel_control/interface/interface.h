@@ -19,7 +19,7 @@ public:
   int type = -1;
   Wheels *wheels;
 
-  virtual void update_desired_state() = 0;
+  virtual void updateDesiredState() = 0;
   
   void load(Wheels *wheels)
   {
@@ -31,28 +31,28 @@ public:
     delete this->wheels;
   }
 
-  void send_joint_commands()
+  void sendJointCommands()
   {
-    update_desired_state();
+    updateDesiredState();
     if (type == pos_t)
     {
       for (int i = 0; i < 4; i++)
       {
-        wheels->set_position(i, wheels->desired_state.position[i]);
+        wheels->setPosition(i, wheels->desired_state.position[i]);
       }
     }
     if (type == vel_t)
     {
       for (int i = 0; i < 4; i++)
       {
-        wheels->set_velocity(i, wheels->desired_state.velocity[i]);
+        wheels->setVelocity(i, wheels->desired_state.velocity[i]);
       }
     }
     if (type == eff_t)
     {
       for (int i = 0; i < 4; i++)
       {
-        wheels->set_effort(i, wheels->desired_state.effort[i]);
+        wheels->setEffort(i, wheels->desired_state.effort[i]);
       }
     }
     else
