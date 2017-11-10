@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "wheel_control/wheels/test_wheels.h"
+#include <wheel_control/wheels/test_wheels.h>
 
 using namespace wheel_control;
 

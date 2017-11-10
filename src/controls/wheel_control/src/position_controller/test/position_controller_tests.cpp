@@ -1,5 +1,3 @@
-
-// Bring in gtest
 #include <gtest/gtest.h>
 #include <position_controller/position_controller.h>
 #include <vesc_access/mock_vesc_access.h>

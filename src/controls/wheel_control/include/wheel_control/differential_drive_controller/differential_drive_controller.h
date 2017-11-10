@@ -2,7 +2,7 @@
 #define PROJECT_DIFFERENTIALDRIVECONTROLLER_H
 
 #include <pluginlib/class_list_macros.h>
-#include "wheel_control/velocity_interface/velocity_interface.h"
+#include <wheel_control/velocity_interface/velocity_interface.h>
 
 namespace wheel_control
 {

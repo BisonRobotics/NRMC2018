@@ -1,7 +1,7 @@
 #ifndef PROJECT_WHEELCONTROLVELOCITYCONTROLLER_H
 #define PROJECT_WHEELCONTROLVELOCITYCONTROLLER_H
 
-#include "wheel_control/interface/interface.h"
+#include <wheel_control/interface/interface.h>
 
 namespace wheel_control
 {
