@@ -1,11 +1,6 @@
 #include <position_controller/position_controller.h>
 #include <math.h>
-
-#define FRONT_LEFT_WHEEL_ID 0
-#define FRONT_RIGHT_WHEEL_ID 1
-#define BACK_RIGHT_WHEEL_ID 2
-#define BACK_LEFT_WHEEL_ID 3
-#define CAN_NETWORK ("can0")
+#include <wheel_params/wheel_params.h>
 
 void PositionController::initializeMembers(float velocity)
 {
@@ -22,13 +17,13 @@ void PositionController::initializeMembers(float velocity)
 
 PositionController::PositionController(float velocity)
 {
-  float max_velocity = 2.0f;
-  float max_torque = 20.0f;
-  float gear_ratio = 181.4f;
-  float torque_constant = 4.0f;
-  unsigned int pole_pairs = 1;
-  float output_ratio = 0.3048f;
-  char *name = (char *)CAN_NETWORK;
+  float max_velocity = MAX_WHEEL_VELOCITY;
+  float max_torque = MAX_WHEEL_TORQUE;
+  float gear_ratio = WHEEL_GEAR_RATIO;
+  float torque_constant = WHEEL_TORQUE_CONSTANT;
+  unsigned int pole_pairs = WHEEL_POLE_PAIRS;
+  float output_ratio = WHEEL_OUTPUT_RATIO;
+  char *name = (char *)WHEEL_CAN_NETWORK;
   this->front_left_wheel = new VescAccess(FRONT_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
                                           torque_constant, name, pole_pairs);
   this->front_right_wheel = new VescAccess(FRONT_RIGHT_WHEEL_ID, -1.0f * gear_ratio, output_ratio, max_velocity,
