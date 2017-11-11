@@ -2,41 +2,38 @@
 #define PROJECT_WHEELS_H
 
 #include <vector>
+#include <map>
+#include <sensor_msgs/JointState.h>
 
 namespace wheel_control
 {
-class JointState
-{
-public:
-  JointState(double position, double velocity, double effort);
 
-  double position;
-  double velocity;
-  double effort;
-};
-
-class Wheel
-{
-public:
-  Wheel(std::string name);
-  Wheel(std::string name, double x_pos, double y_pos);
-
-  std::string name;
-  int id;
-  double x_pos, y_pos;
-  JointState *current_state, *desired_state;
-};
+const int FLI = 0;
+const int FRI = 1;
+const int BLI = 2;
+const int BRI = 3;
 
 class Wheels
 {
 public:
-  Wheels();
-  Wheels(double x_dist, double y_dist);
-  ~Wheels();
 
-  Wheel *get_wheel(std::string name);
-  std::vector<Wheel *> get();
-  Wheel *right_front, *right_back, *left_front, *left_back;
+  Wheels();
+  Wheels(double x, double y);
+
+  std::vector<std::string> name;
+  std::vector<double> x_pos, y_pos;
+  std::vector<int> id;
+  sensor_msgs::JointState current_state, desired_state;
+
+  virtual void setPosition(int index, double position) = 0;
+  virtual void setVelocity(int index, double velocity) = 0;
+  virtual void setEffort(int index, double effort) = 0;
+  virtual double getPosition(int index) = 0;
+  virtual double getVelocity(int index) = 0;
+  virtual double getEffort(int index) = 0;
+
+  void setDistance(double x, double y);
+  void updateCurrentState();
 };
 }
 

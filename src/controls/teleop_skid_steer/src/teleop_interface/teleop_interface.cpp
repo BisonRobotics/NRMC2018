@@ -19,8 +19,8 @@ TeleopInterface::TeleopInterface(float velocity, iVescAccess *fl, iVescAccess *f
 
 TeleopInterface::TeleopInterface(float velocity)
 {
-  float max_velocity = WHEEL_MAX_VELOCITY;
-  float max_torque = WHEEL_MAX_TORQUE;
+  float max_velocity = MAX_WHEEL_VELOCITY;
+  float max_torque = MAX_WHEEL_TORQUE;
   float gear_ratio = WHEEL_GEAR_RATIO;
   float torque_constant = WHEEL_TORQUE_CONSTANT;
   unsigned int pole_pairs = WHEEL_POLE_PAIRS;

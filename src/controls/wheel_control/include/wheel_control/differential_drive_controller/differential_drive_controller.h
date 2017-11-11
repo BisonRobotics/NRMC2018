@@ -2,14 +2,19 @@
 #define PROJECT_DIFFERENTIALDRIVECONTROLLER_H
 
 #include <pluginlib/class_list_macros.h>
-#include "wheel_control/velocity_interface/velocity_interface.h"
+#include <wheel_control/velocity_interface/velocity_interface.h>
 
 namespace wheel_control
 {
 class DifferentialDriveController : public VelocityInterface
 {
 public:
-  void set_velocity(double lin_vel, double ang_vel) override;
+  DifferentialDriveController();
+
+  void setVelocity(double lin_vel, double ang_vel) override;
+
+  // This controller doesn't rely upon the current state of the wheels, so it doesn't need to update every cycle
+  void updateDesiredState() {};
 };
 }
 

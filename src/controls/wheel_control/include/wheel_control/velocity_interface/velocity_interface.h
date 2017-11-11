@@ -1,19 +1,15 @@
-//
-// Created by root on 8/13/17.
-//
+#ifndef PROJECT_WHEELCONTROLVELOCITYCONTROLLER_H
+#define PROJECT_WHEELCONTROLVELOCITYCONTROLLER_H
 
-#ifndef PROJECT_SKIDSTEERVELOCITYCONTROLLER_H
-#define PROJECT_SKIDSTEERVELOCITYCONTROLLER_H
-
-#include "wheel_control/interface/interface.h"
+#include <wheel_control/interface/interface.h>
 
 namespace wheel_control
 {
 class VelocityInterface : public Interface
 {
 public:
-  virtual void set_velocity(double x, double y) = 0;
+  virtual void setVelocity(double x, double y) = 0;
 };
 }
 
-#endif  // PROJECT_SKIDSTEERVELOCITYCONTROLLER_H
+#endif  // PROJECT_WHEELCONTROLVELOCITYCONTROLLER_H
