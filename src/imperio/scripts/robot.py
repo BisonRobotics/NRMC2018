@@ -45,8 +45,3 @@ class robot(object):
     # Commands required for the robot to deposit the regolith
     def deposit(self):
         pass
-
-    # The name of the robot
-    # return : A string Value of the name
-    def to_string(self):
-        return "Default Robot Superclass"
