@@ -11,7 +11,7 @@ import rospy
 from std_msgs.msg import Bool
 
 rospy.init_node('competition_timer')
-timerPublisher = rospy.Publisher('/timesUp', Bool, queue_size=1)
+timerPublisher = rospy.Publisher('/times_up', Bool, queue_size=1)
 timeLimit = rospy.get_param('/time_limit')
 
 rospy.sleep(timeLimit * 60)

@@ -18,8 +18,8 @@ class Imperio(object):
     # Initializer for the imperio node
     def __init__(self):
         rospy.init_node('imperio')
-        rospy.Subscriber('/ohShit', Bool, self.ohShitCallback)
-        rospy.Subscriber('/timesUp', Bool, self.timerCallback)
+        rospy.Subscriber('/oh_shit', Bool, self.ohShitCallback)
+        rospy.Subscriber('/times_up', Bool, self.timerCallback)
 
         self.robot = robot()
         self.run()
