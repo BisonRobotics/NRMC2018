@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot name="arena">
-    <link name="world">
+    <link name="map">
         <visual>
             <geometry>
                 <mesh filename="package://description/meshes/arena.dae" />
