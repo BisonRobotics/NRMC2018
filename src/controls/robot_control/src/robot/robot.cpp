@@ -1,6 +1,8 @@
 #include <robot_control/robot/robot.h>
 
+
 using namespace robot_control;
+
 
 //TODO status bar messages should probably be thrown errors
 Robot::Robot()
@@ -9,13 +11,13 @@ Robot::Robot()
   desired_velocity[1] = 0.0;
 }
 
-void Robot::spin_once()
+void Robot::spinOnce()
 {
   wheel_controller->sendJointCommands();
 }
 
 
-void Robot::set_velocity(double linear, double angular)
+void Robot::setVelocity(double linear, double angular)
 {
   wheel_controller->setVelocity(linear, angular);
 }

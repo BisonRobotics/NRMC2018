@@ -18,10 +18,10 @@ class Robot
 {
 public:
   Robot();
-  void spin_once();
-  void set_velocity(double linear, double angular);
+  void spinOnce();
+  void setVelocity(double linear, double angular);
   virtual void initialize(wheel_control::Wheels *wheels, wheel_control::VelocityInterface *controller) = 0;
-  virtual void get_position(tf::Transform *position) = 0;
+  virtual void getPosition(tf::Transform *position) = 0;
 
 private:
   double desired_velocity[2];
