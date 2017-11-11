@@ -7,6 +7,7 @@ Version: 1
 
 """
 
+import rospy
 from base_movement import *
 from regolith_manipulation import *
 
@@ -20,8 +21,7 @@ class Imperio(object):
 
     # The operational loop for Imperio
     def run(self):
-        # TODO : should this be for time limit or kill? Ask team
-        # Using a simple loop for now
+        # TODO : autonomatically stop after ten minutes
         i = 0
         while i < 3:
             self.navigateOutbound()

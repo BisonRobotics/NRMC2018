@@ -37,6 +37,12 @@ def robot_within_threshold(robot, goal):
     goal_y = goal[1]
 
     location = robot.localize()
+
+    if location == None:
+        #TODO recovery behavior for localization fail, probably a limited loop
+        #currently returning true to get the super fake code to run
+        return True
+
     loc_x = location[0]
     loc_y = location[1]
 

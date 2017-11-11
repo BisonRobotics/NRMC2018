@@ -1,7 +1,12 @@
 <!-- Launch file for autonomy. Author : James Madison University -->
 <launch>
 
-<node name="dashboard" pkg="imperio" type="dashboardLaunch.bash"/>
-<!-- node name="imperio" pkg="imperio" type="imperio.py"/ -->
+
+<!-- commented out the dashboard for development, remove for actual launch -->
+<!-- node name="dashboard" pkg="imperio" type="dashboardLaunch.bash"/ -->
+<node name="imperio" pkg="imperio" type="imperio.py"/>
+
+<param name="time_limit" value="10"/>
+<param name="location_acuracy" value="0.1"/>
 
 </launch>
