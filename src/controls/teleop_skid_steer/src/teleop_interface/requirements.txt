@@ -1,0 +1,7 @@
+The teleop interface should take in a left velocity and a right velocity which are limited between -1 and 1
+The teleop interface should be able start out with no velocity
+The teleop interface should take the left and right velocity and scale it by a max
+
+The teleop interface should saturate both high and low input
+The teleop interface should take the absolute value of the input velocity
+
