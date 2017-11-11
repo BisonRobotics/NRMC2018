@@ -12,22 +12,19 @@ import rospy
 
 from robot import *
 
-# navigates the robot around obstacles to the final goal
+# attempts to navigate to the final goal
+# param : the robot : the robot object
+# param : the global goal
+# returns : if robot is within goal threshold
 def navigate_to_goal(robot, goal):
-    while not robot_within_threshold(robot, goal):
-        current_location = robot.localize()
-        actualGoal = transform_coordinates(current_location, goal)
-        # TODO : avoid obstacles
-        robot.move_to_goal(actualGoal)
-
-
-# transforms the coordinates into the frame of the robot
-# returns : coordinates as a tuple (x,y)
-def transform_coordinates(current_location, goal):
-    # TODO : Use tf
-    return goal
+    # calculate A* on an occupancy grid
+    # output those goals to the local planner
+    # wait for the local planner to finish
+    return robot_within_threshold(robot, goal)
 
 # Determines whether or not the robot is within the threshold to the goal
+# param : The robot
+# param : The global goal
 # returns : boolean
 def robot_within_threshold(robot, goal):
     errorThreshold = rospy.get_param('/location_accuracy')
@@ -35,16 +32,24 @@ def robot_within_threshold(robot, goal):
     goal_x = goal[0]
     goal_y = goal[1]
 
-    location = robot.localize()
+    (location, pose) = robot.localize()
 
     if location == None:
+        print("Imperio: Unable to localize the robot")
         #TODO recovery behavior for localization fail, probably a limited loop
         #currently returning true to get the super fake code to run
         return True
 
-    loc_x = location[0]
-    loc_y = location[1]
+    #TODO : check object type of localize return
+    loc_x = 0
+    loc_y = 0
 
+    # TODO : Check the orientation of the robot
     abs_distance = math.sqrt((loc_x - goal_x) ** 2 + (loc_y - goal_y) ** 2)
     return  abs_distance < errorThreshold
 
+# Halts the commands for the robot
+def halt_movement(robot):
+    #will need to empty the list of poses/goals to the local planner
+    #will need to tell the planner to stop moving
+    pass

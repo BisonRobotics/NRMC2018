@@ -7,6 +7,9 @@ Version: 1
 
 """
 from enum import Enum
+import time
+import tf
+import rospy
 
 class RobotState(Enum):
     OUTBOUND = 0
@@ -17,7 +20,12 @@ class RobotState(Enum):
     HALT = 5
 
 class robot(object):
-    state = RobotState.OUTBOUND
+
+    def __init__(self, node):
+        self.state = RobotState.OUTBOUND
+        self.tf = tf.TransformListener(node)
+        self.location = None
+        self.pose = None
 
     # This should be the only method that changes the robot state
     # param: The new state the robot should be in
@@ -31,17 +39,21 @@ class robot(object):
     # How the Robot handles a low level movement command (ie Twist)
     #   param : The goal coordinates as (x,y)
     def move_to_goal(self, goal):
-        pass
+        time.sleep(2)
 
     # Localization for the robot
-    # return : The current coordinates of the robot
+    # return : The current location and pose of the robot
     def localize(self):
-        pass
+        try:
+            (self.location, self.pose) = self.tf.lookupTransform('/map', '/base_link', rospy.Time(0))
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            return (None, None)
+        return (self.location, self.pose)
 
     # Commands required for the robot to dig
     def dig(self):
-        pass
+        time.sleep(2)
 
     # Commands required for the robot to deposit the regolith
     def deposit(self):
-        pass
+        time.sleep(2)

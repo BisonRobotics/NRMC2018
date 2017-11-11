@@ -17,11 +17,11 @@ class Imperio(object):
 
     # Initializer for the imperio node
     def __init__(self):
-        rospy.init_node('imperio')
+        self.node = rospy.init_node('imperio')
         rospy.Subscriber('/oh_shit', Bool, self.ohShitCallback)
         rospy.Subscriber('/times_up', Bool, self.timerCallback)
 
-        self.robot = robot()
+        self.robot = robot(self.node)
         self.run()
 
     def ohShitCallback(self, bool_msg):
@@ -52,30 +52,32 @@ class Imperio(object):
     def navigateOutbound(self):
         print("Imperio : Navigating Outbound")
         goal = (5, 8)
-        navigate_to_goal(self.robot, goal)
-        self.robot.change_state(RobotState.DIG)
+        if navigate_to_goal(self.robot, goal):
+            self.robot.change_state(RobotState.DIG)
 
     # Navigates the robot back to the collection bin
     def navigateInbound(self):
         print("Imperio : Navigating Inbound")
         goal = (0, 0)
-        navigate_to_goal(self.robot, goal)
-        self.robot.change_state(RobotState.DEPOSIT)
+        if navigate_to_goal(self.robot, goal):
+            self.robot.change_state(RobotState.DEPOSIT)
 
     # Digs for regolith once the robot is in the desired location
     def dig(self):
         print("Imperio : Digging")
-        dig_regolith(self.robot)
-        self.robot.change_state(RobotState.INBOUND)
+        if dig_regolith(self.robot):
+            self.robot.change_state(RobotState.INBOUND)
 
     # Deposits the regolith once the robot is at the collection bin
     def deposit(self):
         print("Imperio : Depositing")
-        deposit_regolith(self.robot)
-        self.robot.change_state(RobotState.OUTBOUND)
+        if deposit_regolith(self.robot):
+            self.robot.change_state(RobotState.OUTBOUND)
 
     def halt(self):
         print("Imperio : Halting")
+        halt_movement(self.robot)
+        halt_regolithm_commands(self.robot)
 
     def recover(self):
         print("Imperio : Entering Recovery Behavior")
