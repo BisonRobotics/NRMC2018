@@ -8,7 +8,6 @@ Version: 1
 """
 
 from robot import *
-from ndsu_robot import *
 
 
 def dig_regolith(robot):

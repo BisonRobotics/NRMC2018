@@ -11,7 +11,6 @@ import math
 import rospy
 
 from robot import *
-from ndsu_robot import *
 
 # navigates the robot around obstacles to the final goal
 def navigate_to_goal(robot, goal):
