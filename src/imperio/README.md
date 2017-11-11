@@ -9,10 +9,10 @@ Imperio is Robotic Autonomy. It is the top level software for controlling the ro
 
 ### How do I get set up? ###
 
-* Get the repository from github
-  >git checkout autonomy
 * Make sure catkin is properly installed
 * Download as a part of the overall src directory
+* Get the repository from github
+  >git checkout autonomy
 * Navigate to the top of the catkin workspace
 * From the terminal
   >catkin_make  

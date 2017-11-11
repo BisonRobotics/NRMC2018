@@ -2,12 +2,13 @@
 """ Move the robot to desired location.
 
 Author: James Madison University
-Date: 9/26/2017
+Date: 11/11/2017
 Version: 1
 
 """
 
 import math
+import rospy
 
 from robot import *
 from ndsu_robot import *
@@ -30,8 +31,7 @@ def transform_coordinates(current_location, goal):
 # Determines whether or not the robot is within the threshold to the goal
 # returns : boolean
 def robot_within_threshold(robot, goal):
-    # TODO : get this from the launch file
-    errorThreshold = .1
+    errorThreshold = rospy.get_param('/location_accuracy')
 
     goal_x = goal[0]
     goal_y = goal[1]
