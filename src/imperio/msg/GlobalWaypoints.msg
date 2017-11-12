@@ -2,5 +2,4 @@
 
 Header header
 geometry_msgs/PoseStamped[] poses
-nav_msgs/MapMetaData info
-int8[] data
+nav_msgs/OccupancyGrid occupancyGrid
