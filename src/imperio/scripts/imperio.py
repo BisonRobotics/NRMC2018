@@ -9,7 +9,7 @@ Version: 2
 
 import rospy
 
-from base_movement import *
+from global_planner import *
 from regolith_manipulation import *
 from std_msgs.msg import Bool
 
@@ -50,14 +50,14 @@ class Imperio(object):
 
     # Navigates the robot to the area where it will dig
     def navigateOutbound(self):
-        print("Imperio : Navigating Outbound")
+        print("Imperio : Outbound")
         goal = (5, 8)
         if navigate_to_goal(self.robot, goal):
             self.robot.change_state(RobotState.DIG)
 
     # Navigates the robot back to the collection bin
     def navigateInbound(self):
-        print("Imperio : Navigating Inbound")
+        print("Imperio : Inbound")
         goal = (0, 0)
         if navigate_to_goal(self.robot, goal):
             self.robot.change_state(RobotState.DEPOSIT)
