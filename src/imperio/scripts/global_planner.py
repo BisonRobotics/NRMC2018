@@ -36,13 +36,11 @@ def robot_within_threshold(robot, goal):
 
     if location == None:
         print("Imperio: Unable to localize the robot")
-        #TODO recovery behavior for localization fail, probably a limited loop
-        #currently returning true to get the super fake code to run
-        return True
+        #TODO recovery behavior for localization fail
+        return False
 
-    #TODO : check object type of localize return
-    loc_x = 0
-    loc_y = 0
+    loc_x = location[0]
+    loc_y = location[1]
 
     # TODO : Check the orientation of the robot
     abs_distance = math.sqrt((loc_x - goal_x) ** 2 + (loc_y - goal_y) ** 2)
