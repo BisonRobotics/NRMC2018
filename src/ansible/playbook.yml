@@ -61,4 +61,3 @@
         popd
       args:
         executable: /bin/bash
-      #shell: ./gmock_setup.sh      
