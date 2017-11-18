@@ -11,6 +11,7 @@
       become: yes
       apt_repository: repo='deb http://packages.ros.org/ros/ubuntu {{ ansible_distribution_release }} main' state=present
 
+    - name: add source command to bashrc
     - lineinfile:
         dest=~/.bashrc
         line="source /opt/ros/kinetic/setup.bash"
@@ -45,6 +46,17 @@
         - desktop
         - catkin  
 
+    - name:  create gmock directory
+      become: yes
+      file: path=/usr/src/gmock/build state=directory
+
     - name: install gmock
       become: yes
-      shell: ./gmock_setup.sh      
+      shell: |
+        pushd /usr/src/gmock/build
+        sudo cmake ../
+        sudo make
+        popd
+      args:
+        executable: /bin/bash
+      #shell: ./gmock_setup.sh      
