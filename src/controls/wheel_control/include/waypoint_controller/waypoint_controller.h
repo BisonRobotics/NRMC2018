@@ -29,7 +29,7 @@ public:
   std::pair<float, float> getSetSpeeds(); //DEBUG
 
 
-  // haltAndAbort();
+  void haltAndAbort();
 private:
   std::vector<waypointWithManeuvers> navigationQueue;
   iVescAccess *front_left_wheel, *front_right_wheel, *back_right_wheel, *back_left_wheel;

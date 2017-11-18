@@ -79,6 +79,14 @@ std::pair<float, float> WaypointController::getSetSpeeds()
     return std::pair<float,float>(LeftWheelSetSpeed,RightWheelSetSpeed);
 }
 
+void WaypointController::haltAndAbort()
+{
+      front_left_wheel->setLinearVelocity(0);
+      back_left_wheel->setLinearVelocity(0);
+      front_right_wheel->setLinearVelocity(0);
+      back_right_wheel->setLinearVelocity(0);
+}
+
 std::vector<std::pair<float, float> > WaypointController::addWaypoint(pose waypoint, pose currRobotPose)
 {
   // add waypoint to queue, and calculate needed maneuvers to get there
