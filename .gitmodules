@@ -1,3 +1,6 @@
 [submodule "src/ros_vrep_plugin"]
 	path = src/ros_vrep_plugin
 	url = git@github.com:jacobhuesman/ros_vrep_plugin.git
+[submodule "src/apriltags"]
+	path = src/apriltags
+	url = git@github.com:personalrobotics/apriltags.git
