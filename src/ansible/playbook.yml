@@ -43,7 +43,9 @@
       apt: pkg=ros-kinetic-{{ item }} state=latest update_cache=true
       with_items:
         - desktop
-        - catkin  
+        - catkin 
+        - usb-cam
+        - image-test
 
     - name: install gmock
       become: yes
