@@ -136,8 +136,28 @@ sudo passwd root   # use brnrmc
 sudo useradd -m nrmc
 sudo passwd nrmc
 sudo chsh -s /bin/bash nrmc
-
 \end{lstlisting}
+
+\subsection{Running Updates}
+On the Beagle
+\begin{lstlisting}[language=bash]
+su -
+route add default gw 192.168.7.1
+\end{lstlisting}
+On the host
+\begin{lstlisting}[language=bash]
+su -
+
+# Replace wlan0 with the name of your internet facing interface
+iptables --table nat --append POSTROUTING --out-interface wlan0 -j MASQUERADE
+
+# Replace eth5 with the name of your beaglebone interface, if you run an ifconfig that
+# interface should provide your computer with an ip address of 192.168.7.1
+iptables --append FORWARD --in-interface eth5 -j ACCEPT
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+\end{lstlisting}
+
 
 
 \section{Stuff to look into}
