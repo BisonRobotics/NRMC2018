@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   cmake_modules
   message_generation
   geometry_msgs
+  tf
 )
 find_package(OpenCV REQUIRED)
 find_package(Eigen REQUIRED)
@@ -66,6 +67,11 @@ add_dependencies(apriltags ${PROJECT_NAME}_gencpp)
 install(TARGETS apriltags
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION} 
 )
+
+
+add_executable (tf_broad src/tf_publisher/tf_pub.cpp)
+target_link_libraries(tf_broad ${catkin_LIBRARIES})
+
 
 #install(FILES ${apriltagscpp_LIBRARY}
 #  DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
