@@ -7,12 +7,12 @@
 #include <wheel_params/wheel_params.h>
 #include <vector>
 #include <utility>
-#include <actionlib/server/simple_action_server.h>
-#include <wheel_control/waypointAction.h>
+//#include <actionlib/server/simple_action_server.h>
+//#include <wheel_control/waypointAction.h>
 #include <std_msgs/Bool.h>
-
-typedef actionlib::SimpleActionServer<wheel_control::waypointAction> Server;
-bool new_goal = false;
+bool stop = false;
+//typedef actionlib::SimpleActionServer<wheel_control::waypointAction> Server;
+/*bool new_goal = false;
 float gx, gy, gtheta;
 bool stop = false;
 void execute(const wheel_control::waypointGoalConstPtr& goal, Server *as){
@@ -25,7 +25,7 @@ void execute(const wheel_control::waypointGoalConstPtr& goal, Server *as){
 	}
 }
 
-
+*/
 void callback(const std_msgs::Bool::ConstPtr &msg){
 	if (msg->data){
 		stop = true;
@@ -35,7 +35,11 @@ void callback(const std_msgs::Bool::ConstPtr &msg){
 
 int main(int argc, char** argv){
   ros::init(argc, argv, "my_tf_listener");
-
+  float goalx, goaly, goalr;
+  goalx = 3.0f;
+  goaly = 1.0f;
+  goalr = 1.0f;
+  bool isRunning = true;
   ros::NodeHandle node;
   /*
   Initial pose of x = .75, y = -1.0,th = 0;
@@ -43,35 +47,37 @@ int main(int argc, char** argv){
 
 
   */
-  Server server(node, "drive_a_distance", boost::bind(&execute, _1, &server), false);
+  //Server server(node, "drive_a_distance", boost::bind(&execute, _1, &server), false);
+  //server.start ();
   ros::Subscriber sub = node.subscribe("stopper", 1000, callback);
   ros::Time curr;
   ros::Time last;
   ros::Duration delta;
   tf::StampedTransform transform;
   tf::TransformListener listener;
-  pose theWay = {.x = 2, .y = 0, .theta = -3.1415f / 3.0f };
+  pose theWay = {.x = 3.0f, .y = 0.0f, .theta = 1.0f};
   pose currPose;
   pose theCPP;
   listener.waitForTransform ("/map", "/base_link", ros::Time(0), ros::Duration(30));
         listener.lookupTransform("/map", "/base_link",
                                ros::Time(0), transform);
   //pose wcInitial = {.x = .75, .y = 1.0f, .theta = 0 };
-  currPose.x = transform.getOrigin().x();
-  currPose.y = transform.getOrigin().y();
+  currPose.x = -1.0f*transform.getOrigin().x();
+  currPose.y = -1.0f*transform.getOrigin().y();
 
    //transform.getRotation().getAxis(); //need to make sure axis is roughly +Z
   currPose.theta = -transform.getRotation().getAngle();
   std::vector<waypointWithManeuvers> navigationQueue;
   char * can_name = (char *)WHEEL_CAN_NETWORK;
   VescAccess fl(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO,WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, can_name, 1);
-  VescAccess fr(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO,MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, can_name, 1);
-  VescAccess br(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO,MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, can_name, 1);
+  VescAccess fr(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f*WHEEL_OUTPUT_RATIO,MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, can_name, 1);
+  VescAccess br(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f*WHEEL_OUTPUT_RATIO,MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, can_name, 1);
   VescAccess bl(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO,MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, can_name, 1);
 
-  WaypointController wc = WaypointController(.5f, .5f,currPose, &fl, &fr, &br, &bl);
+  WaypointController wc = WaypointController(.5f, 1.0f,currPose, &fl, &fr, &br, &bl);
     WaypointController::Status wcStat;
 
+std::vector<std::pair<float, float> > returnPoints = wc.addWaypoint(theWay, currPose);
   //ros::service::waitForService("spawn");
   //ros::ServiceClient add_turtle =
    // node.serviceClient<turtlesim::Spawn>("spawn");
@@ -94,21 +100,21 @@ int main(int argc, char** argv){
       continue;
     }
 	if (stop){
+		ROS_INFO ("HALT");
 		wc.haltAndAbort();
-		ros::shutdown ();
+		node.shutdown ();
 	}
-	if (new_goal){
-		theWay.x = gx;
+	/*	theWay.x = gx;
 		theWay.y = gy;
 		theWay.theta = gtheta;
-		std::vector<std::pair<float, float> > returnPoints = wc.addWaypoint(theWay, currPose);
 		new_goal = false;
-	}
-   currPose.x = transform.getOrigin().x();
-   currPose.y = transform.getOrigin().y();
+		isRunning = true;
+	}*/
+   currPose.x = -1.0f*transform.getOrigin().x();
+   currPose.y = -1.0f*transform.getOrigin().y();
 
    //transform.getRotation().getAxis(); //need to make sure axis is roughly +Z
-   currPose.theta = -transform.getRotation().getAngle();
+   currPose.theta = transform.getRotation().getAngle();
 
    ROS_INFO("GOING TO UPDATE 5");
    curr = ros::Time::now ();
@@ -120,7 +126,13 @@ int main(int argc, char** argv){
    else if (wcStat == WaypointController::Status::ALLGOOD) ROS_INFO("CONTROLLER SAYS GOOD");
    else if (wcStat == WaypointController::Status::GOALREACHED){
 	ROS_INFO("GOOOOOAAAAALLLLL!!");
-	server.setSucceeded ();
+//	if (server.isActive()){
+	if (isRunning){
+//		server.setSucceeded ();
+		isRunning = false;
+		ros::shutdown ();
+	}
+//	}
    }
    navigationQueue = wc.getNavigationQueue();
    theCPP = wc.getCPP();
@@ -151,7 +163,7 @@ int main(int argc, char** argv){
 
    //wheel_vels.publish(daJoint);
 
-
+    ros::spinOnce ();
     rate.sleep();
   }
   return 0;

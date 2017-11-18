@@ -1,9 +1,9 @@
 
 
 
-#define FRONT_LEFT_WHEEL_ID 1
+#define FRONT_LEFT_WHEEL_ID 3
 #define FRONT_RIGHT_WHEEL_ID 2
-#define BACK_RIGHT_WHEEL_ID 3
+#define BACK_RIGHT_WHEEL_ID 1
 #define BACK_LEFT_WHEEL_ID 4
 #define WHEEL_CAN_NETWORK ("can0")
 
