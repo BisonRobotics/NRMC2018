@@ -1,0 +1,5 @@
+float32 waypoint
+---
+float32 dist
+---
+bool done

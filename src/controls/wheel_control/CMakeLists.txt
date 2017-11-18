@@ -13,6 +13,8 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   vesc_access 
   localization
+  geometry_msgs
+  tf
 )
 
 
@@ -22,8 +24,14 @@ link_directories (
 )
 
 
-add_action_files(DIRECTORY action FILES distance.action)
-generate_messages(DEPENDENCIES actionlib_msgs)
+add_action_files(DIRECTORY action FILES 
+    distance.action 
+)
+generate_messages(DEPENDENCIES
+    std_msgs
+)
+
+
 
 catkin_package(
     INCLUDE_DIRS include
@@ -59,8 +67,12 @@ target_link_libraries (way_control vesc_access way_control_helper)
 add_executable (wheel_goal_master src/wheel_goal_master.cpp)
 target_link_libraries (wheel_goal_master ${catkin_LIBRARIES} pos_control localizer_lib)
 
-add_dependencies (wheel_goal_master localizer_lib)
 
+add_executable(waypoint_goal_master src/waypoint_goal_master.cpp)
+target_link_libraries (waypoint_goal_master way_control)
+
+add_dependencies (wheel_goal_master localizer_lib)
+add_dependencies (waypoint_goal_master ${PROJECT_NAME}_gencpp)
 ## Tests
 catkin_add_gtest(test_WaypointControllerHelper include/waypoint_controller/waypoint_controller_helper.h src/waypoint_controller/test/waypoint_controller_helper_tests.cpp)
 if(TARGET test_WaypointControllerHelper)
