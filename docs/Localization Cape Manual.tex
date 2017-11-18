@@ -73,6 +73,7 @@
 \maketitle
 \tableofcontents
 
+
 \chapter{Notes}
 \section{Using this document}
 All urls and table of contents entries are active. If you click on them they'll take you to the url or document location respectively.
@@ -81,6 +82,7 @@ The code view is copy and paste able only on particular pdf viewers. Firefox wor
 
 If you contribute to this document, make sure you add your name to the authors list.
 
+
 \chapter{Beagle Configuration}
 \section{Notes}
 Sometimes you need to reload the udev rules before sshing
@@ -88,11 +90,13 @@ Sometimes you need to reload the udev rules before sshing
 sudo udevadm control --reload-rules
 \end{lstlisting}
 
+
 \section{Hardware}
-\begin{itemize}
+\begin{itemize}%[noitemsep]
 	\item BeagleBone Black
 	\item Class 10 SD Card
 \end{itemize}
+
 
 \section{Configuration}
 \subsection{Getting an OS}
@@ -123,12 +127,7 @@ sudo useradd -m nrmc
 sudo passwd nrmc
 sudo chsh -s /bin/bash nrmc
 
-
-
-
-
 \end{lstlisting}
-
 
 
 \section{Stuff to look into}
