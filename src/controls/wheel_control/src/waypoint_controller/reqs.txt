@@ -1,0 +1,66 @@
+This is the requirements document (again) for the waypoint controller
+and its supporting software.
+It replaces the one that was tragically lost when mousepad took a shit.
+-----------------------------------------------------------------------
+There are serveral terms used in this document which are defined here.
+Manuever: an arc of a certain length and single turn radius which the 
+		  robot will follow. They are performed by the controller
+pose    : a 2d coordinate pair and an angle in radians (x,y,theta)
+waypoint: a destination pose for the robot to achieve, these are
+		  converted to manuevers by waypoint2manuever
+-----------------------------------------------------------------------
+===================
+The controller interface to Autonomy Reqs
+===================
+Listen to a topic (global_planner_goal) which posts an array of poses (which are goal points) and the occupancy grid
+From this topic
+-if a series of poses is posted these should override any pending poses
+-if the topic is updated with an empty list of poses, the robot must stop and abandon any pending poses
+-the planner must check any planned path to be consistant with the occupancy grid
+
+The controller must publish to a topic (drive_controller_status) indicating its status
+Status can be either HasReachedGoal, isStuck, canNotPlanPath
+
+
+===================
+The controller reqs
+===================
+
+The controller must be initiallized with robot parameters:
+	axel length, max safe speed, and vesc access layers
+	for each wheel.
+The controller must have an update method which updates the
+	commanded velocity to the vescs and passes the command
+	to the vesc through the vesc interface. It will take 
+	manuevers off of the queue as needed and perform them.
+	If there are no manuevers on the queue, the robot will 
+	stay still. As an input, it takes the time elapsed since
+	the last time it was called and the current pose of the 
+	robot in world coord.
+The controller must have a method to add waypoints to the 
+	queue by converting them to manuevers and adding those
+	manuevers to the manuever queue.
+The controller must have a method to halt the robot, abort 
+	any pending manuevers, and remove them from the queue.
+The controller must have a method to report the distance
+	remaining to the goal along the intended path.
+The controller must be able to accept a waypoint in any quadrant
+	and calculate if it would be best to move in reverse or forward.
+
+====================
+Supporting functions
+====================
+These are functions used by the controller, they should be in the
+waypoint controller helper 
+
+waypoint2manuevers - This functions converts a waypoint to 
+	a list of manuevers, corresponding turn centers and whether
+	each manuever should be performed forward or backward. As
+	input, it takes a waypoint and the pose of the robot.
+FindCPP - This function finds the Closest Path Point (CPP)
+	on a manuever to the robot and the ideal angle of the robot
+	should it be at that point.
+manuevers2points - This function converts a series of waypoints
+	to the list of points that would be covered. It is used by
+	autonomy to check that the robot is not going to a bad place.
+

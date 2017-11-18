@@ -42,6 +42,7 @@ catkin_package(
                  image_transport
                  roscpp
                  geometry_msgs
+		tf
 )
 
 # CGAL requires that -frounding-math be set.
@@ -72,6 +73,7 @@ install(TARGETS apriltags
 add_executable (tf_broad src/tf_publisher/tf_pub.cpp)
 target_link_libraries(tf_broad ${catkin_LIBRARIES})
 
+add_dependencies (tf_broad ${PROJECT_NAME}_gencpp)
 
 #install(FILES ${apriltagscpp_LIBRARY}
 #  DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}

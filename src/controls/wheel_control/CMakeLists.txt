@@ -50,12 +50,38 @@ add_library(Wheels src/wheels/wheels.cpp)
 add_library(pos_control src/position_controller/position_controller.cpp)
 target_link_libraries (pos_control vesc_access)
 
+add_library(way_control_helper src/waypoint_controller/waypoint_controller_helper.cpp)
+
+add_library(way_control src/waypoint_controller/waypoint_controller.cpp)
+add_dependencies(way_control vesc_access way_control_helper)
+target_link_libraries (way_control vesc_access way_control_helper)
+
 add_executable (wheel_goal_master src/wheel_goal_master.cpp)
 target_link_libraries (wheel_goal_master ${catkin_LIBRARIES} pos_control localizer_lib)
 
 add_dependencies (wheel_goal_master localizer_lib)
 
 ## Tests
+catkin_add_gtest(test_WaypointControllerHelper include/waypoint_controller/waypoint_controller_helper.h src/waypoint_controller/test/waypoint_controller_helper_tests.cpp)
+if(TARGET test_WaypointControllerHelper)
+  target_link_libraries(test_WaypointControllerHelper
+    ${catkin_LIBRARIES}
+    gmock_main
+	way_control_helper
+  )
+endif()
+
+catkin_add_gtest(test_WaypointController include/waypoint_controller/waypoint_controller.h src/waypoint_controller/test/waypoint_controller_tests.cpp)
+if(TARGET test_WaypointController)
+  target_link_libraries(test_WaypointController
+    ${catkin_LIBRARIES}
+    way_control
+	way_control_helper
+    gmock_main
+  )
+  add_dependencies(test_WaypointController way_control_helper way_control vesc_access)
+endif()
+
 catkin_add_gtest(test_Wheels src/wheels/test/wheels_tests.cpp src/wheels/wheels.cpp)
 if(TARGET test_Wheels)
   target_link_libraries(test_Wheels
