@@ -1,0 +1,2 @@
+This is an abstract interface which includes a "status recieveData() "
+method which populates a member object with sensor data as a side effect of the function.

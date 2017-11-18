@@ -1,0 +1,13 @@
+The position controller should be able to be instantiated with a velocity
+The position controller should be able to be given a distance to travel
+The position controller should take the absolute value of the distance to travel
+The position controller should be able to be updated with a current position
+The position controller should take the absolute value of the velocity it is given
+The position controller should expose a method to return whether or it is moving
+The position controller should be still on initialization
+The position controller should spin the wheels at the desired linear velocity until the desired position is obtained after a distance has been received
+The position controller should stop if the measured distance is greater than the required 
+The position controller should not be able to accept a new distance until the old one has finished
+The position controller should expose a method to return how much distance it has left 
+The position controller should be able return the current linear velocity of the wheels
+The position controller should expose a method to cancel a goal, which should stop the robot

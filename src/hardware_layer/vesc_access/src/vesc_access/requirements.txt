@@ -1,0 +1,15 @@
+The Robot Parameter Wrapper should expose a method that sends the linear velocity
+The Robot Parameter Wrapper should expose a method that sends the torque in Nm
+The Robot Parameter Wrapper should expose a method to set velocity limit
+The Robot Parameter Wrapper should be able to correctly set the rpm given a linear velocity
+The Robot Parameter Wrapper should be able to correctly set the Torque given the current
+The Robot Parameter Wrapper should set the maximum velocity if it tries to set a velocity above the limit
+The Robot Parameter Wrapper should set the maxmimum torque if it tries to set a torque above the limit
+The Robot Parameter Wrapper should limit the velocity if it is too negative
+The Robot Parameter Wrapper should limit the torque if it is too positive
+The Robot Parameter Wrapper should allow a zero velocity
+The Robot Parameter Wrapper should allow a zero torque
+The Robot Parameter Wrapper should allow a torque constant that converts torque to current
+The Robot Parameter Wrapper should default a value of zero for a constant to a value of 1
+The Robot Parameter Wrapper should take in a parameter to convert between eRPM and RPM in its constructor
+The Robot Parameter Wrapper should have a read only mode that is only allowed to read values
