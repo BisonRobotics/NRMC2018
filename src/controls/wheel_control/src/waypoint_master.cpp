@@ -8,25 +8,25 @@
 #include <vector>
 #include <utility>
 #include <actionlib/server/simple_action_server.h>
-#include <wheel_control/waypointAction>
+#include <wheel_control/waypointAction.h>
 #include <std_msgs/Bool.h>
 
 typedef actionlib::SimpleActionServer<wheel_control::waypointAction> Server;
 bool new_goal = false;
 float gx, gy, gtheta;
 bool stop = false;
-void execute(const wheel_control::waypointActionConstPtr& goal, Server *as){
+void execute(const wheel_control::waypointGoalConstPtr& goal, Server *as){
 	if (!new_goal){
-		gx = goal->goal.x;
-		gy = goal->goal.y;
-		gtheta = goal->goal.theta;
+		gx = goal->waypoint[0];
+		gy = goal->waypoint[1];
+		gtheta = goal->waypoint[2];
 		new_goal = true;
 		
 	}
 }
 
 
-void callback(const std_msgs::boolConstPtr &tf){
+void callback(const std_msgs::Bool::ConstPtr &msg){
 	if (msg->data){
 		stop = true;
 	}
@@ -38,11 +38,13 @@ int main(int argc, char** argv){
 
   ros::NodeHandle node;
   /*
-  Initial pose of x = .75, y = -1.0, th = 0;
+  Initial pose of x = .75, y = -1.0,th = 0;
   theWay x = 2, y = -.5, th = pi/4; works
 
 
   */
+  Server server(node, "drive_a_distance", boost::bind(&execute, _1, &server), false);
+  ros::Subscriber sub = node.subscribe("stopper", 1000, callback);
   ros::Time curr;
   ros::Time last;
   ros::Duration delta;
@@ -62,10 +64,10 @@ int main(int argc, char** argv){
   currPose.theta = -transform.getRotation().getAngle();
   std::vector<waypointWithManeuvers> navigationQueue;
 
-  VescAccess fl(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, WHEEL_CAN_NETWORK, 1);
-  VescAccess fr(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, WHEEL_CAN_NETWORK, 1);
-  VescAccess br(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, WHEEL_CAN_NETWORK, 1);
-  VescAccess bl(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, WHEEL_CAN_NETWORK, 1);
+  VescAccess fl(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO,WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, WHEEL_CAN_NETWORK, 1);
+  VescAccess fr(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO,MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, WHEEL_CAN_NETWORK, 1);
+  VescAccess br(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO,MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, WHEEL_CAN_NETWORK, 1);
+  VescAccess bl(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO,MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, WHEEL_CAN_NETWORK, 1);
 
   WaypointController wc = WaypointController(.5f, .5f,currPose, &fl, &fr, &br, &bl);
     WaypointController::Status wcStat;
@@ -116,8 +118,10 @@ int main(int argc, char** argv){
 
    if (wcStat == WaypointController::Status::ALLBAD) ROS_INFO("CONTROLLER SAYS BAD");
    else if (wcStat == WaypointController::Status::ALLGOOD) ROS_INFO("CONTROLLER SAYS GOOD");
-   else if (wcStat == WaypointController::Status::GOALREACHED) ROS_INFO("GOOOOOAAAAALLLLL!!");
-
+   else if (wcStat == WaypointController::Status::GOALREACHED){
+	 ROS_INFO("GOOOOOAAAAALLLLL!!");
+		server.setSucceeded ();
+	}
    navigationQueue = wc.getNavigationQueue();
    theCPP = wc.getCPP();
 
@@ -141,7 +145,7 @@ int main(int argc, char** argv){
       ROS_INFO("Nav terminal Pose:\nx: %.4f\ny: %.4f\nth: %.4f",navigationQueue.at(0).terminalPose.x, navigationQueue.at(0).terminalPose.y, navigationQueue.at(0).terminalPose.theta);
 
    }
-   ROS_INFO("Lvel: %.4f   Rvel: %.4f" ,fl.linVel, fr.linVel);
+   //ROS_INFO("Lvel: %.4f   Rvel: %.4f" ,fl.linVel, fr.linVel);
   // daJoint.name = { "wheel_front_left", "wheel_front_right", "wheel_back_right", "wheel_back_left"};
   // daJoint.velocity = {fl.linVel, fr.linVel,br.linVel, bl.linVel};
 

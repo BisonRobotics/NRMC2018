@@ -1,12 +1,6 @@
 #include <teleop_interface/teleop_interface.h>
 #include <wheel_params/wheel_params.h>
 
-#define FRONT_LEFT_WHEEL_ID 0
-#define FRONT_RIGHT_WHEEL_ID 1
-#define BACK_RIGHT_WHEEL_ID 2
-#define BACK_LEFT_WHEEL_ID 3
-#define CAN_NETWORK ("can0")
-
 TeleopInterface::TeleopInterface(float velocity, iVescAccess *fl, iVescAccess *fr, iVescAccess *br, iVescAccess *bl)
 {
   this->fl = fl;
