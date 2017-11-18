@@ -12,7 +12,7 @@
       apt_repository: repo='deb http://packages.ros.org/ros/ubuntu {{ ansible_distribution_release }} main' state=present
 
     - name: add source command to bashrc
-    - lineinfile:
+      lineinfile:
         dest=~/.bashrc
         line="source /opt/ros/kinetic/setup.bash"
 
@@ -46,7 +46,7 @@
         - desktop
         - catkin 
         - usb-cam
-        - image-test
+        - image-view
 
     - name:  create gmock directory
       become: yes
@@ -61,3 +61,6 @@
         popd
       args:
         executable: /bin/bash
+
+    - name: update rosdep
+      command: /usr/bin/rosdep update
