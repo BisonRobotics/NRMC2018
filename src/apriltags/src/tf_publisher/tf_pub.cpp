@@ -8,11 +8,18 @@
 void detectionCallback(const apriltags::AprilTagDetectionsConstPtr& msg){
   static tf::TransformBroadcaster br;
   tf::Transform transform;
-  if (msg->detections.size()){
-  tf::Quaternion q (msg->detections[0].pose.orientation.x, msg->detections[0].pose.orientation.y, msg->detections[0].pose.orientation.z, msg->detections[0].pose.orientation.w);
-  transform.setOrigin(tf::Vector3(msg->detections[0].pose.position.x, msg->detections[0].pose.position.y, msg->detections[0].pose.position.z));
-  transform.setRotation(q);
-  br.sendTransform (tf::StampedTransform(transform, ros::Time::now(), "/world", "/base_link"));
+  for (int ctr = 0; ctr < msg->detections.size(); ctr++){
+    if (msg->detections[ctr].id == 3){ 
+      tf::Quaternion q (msg->detections[ctr].pose.orientation.x, msg->detections[ctr].pose.orientation.y, msg->detections[ctr].pose.orientation.z, msg->detections[ctr].pose.orientation.w);
+      transform.setOrigin(tf::Vector3(msg->detections[ctr].pose.position.x, msg->detections[ctr].pose.position.y, msg->detections[ctr].pose.position.z));
+      transform.setRotation(q);
+      br.sendTransform (tf::StampedTransform(transform, ros::Time::now(), "/camera", "/base_link"));
+    } else if (msg->detections[ctr].id == 1){
+      tf::Quaternion q (msg->detections[ctr].pose.orientation.x, msg->detections[ctr].pose.orientation.y, msg->detections[ctr].pose.orientation.z, msg->detections[ctr].pose.orientation.w);
+      transform.setOrigin(tf::Vector3(msg->detections[ctr].pose.position.x, msg->detections[ctr].pose.position.y, msg->detections[ctr].pose.position.z));
+      transform.setRotation(q);
+      br.sendTransform (tf::StampedTransform(transform, ros::Time::now(), "/camera", "/map"));
+    }
   }
 }
 

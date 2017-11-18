@@ -13,13 +13,13 @@
     <param name="~marker_thickness" value="0.02" />
 
     <rosparam command="delete" param="tag_data" />
-    <rosparam param="tag_data">
+    <!--<rosparam param="tag_data">
       "1": 
         size: 0.035
       "2":
         size: 0.048
     </rosparam>
-
+-->
     <remap from="~image" to="/usb_cam/image_rect_color"/>
     <remap from="~camera_info" to="/usb_cam/camera_info"/>
     <remap from="~marker_array" to="/apriltags/marker_array"/>
