@@ -69,11 +69,9 @@
 \author{Jacob Huesman}
 
 \begin{document}
-{
-	\let\cleardoublepage\clearpage
-	\maketitle
-	\tableofcontents
-}
+\let\cleardoublepage\clearpage
+\maketitle
+\tableofcontents
 
 \chapter{Notes}
 \section{Using this document}
@@ -84,6 +82,12 @@ The code view is copy and paste able only on particular pdf viewers. Firefox wor
 If you contribute to this document, make sure you add your name to the authors list.
 
 \chapter{Beagle Configuration}
+\section{Notes}
+Sometimes you need to reload the udev rules before sshing
+\begin{lstlisting}[language=bash]
+sudo udevadm control --reload-rules
+\end{lstlisting}
+
 \section{Hardware}
 \begin{itemize}
 	\item BeagleBone Black
@@ -96,15 +100,34 @@ Retrieve latest IoT (non-GUI) image from: \url{https://beagleboard.org/latest-im
 
 Follow instructions available at \url{http://beagleboard.org/getting-started} for "Update Board with latest software. You can ignore the start your beagle section.
 
-Configure udev rules for ssh over usb: \url{http://beagleboard.org/static/Drivers/Linux/FTDI/mkudevrule.sh}.
+Configure udev rules for ssh over usb: \url{http://beagleboard.org/static/Drivers/Linux/FTDI/mkudevrule.sh}. Download and run.
 
 After plugging in the usb cable you should now be able to ssh into the BeagleBone Black
 
 \begin{lstlisting}[language=bash]
-ssh debian@192.168.7.2
+ssh debian@192.168.7.2 # password: temppwd
 \end{lstlisting}
 
+\pagebreak
 \subsection{Configuring the OS}
+\begin{lstlisting}[language=bash]
+# ssh into the board
+ssh debian@192.168.7.2 # password: temppwd
+
+# change default passwords
+sudo passwd debian # use brnrmc
+sudo passwd root   # use brnrmc
+
+# add nrmc account
+sudo useradd -m nrmc
+sudo passwd nrmc
+sudo chsh -s /bin/bash nrmc
+
+
+
+
+
+\end{lstlisting}
 
 
 
