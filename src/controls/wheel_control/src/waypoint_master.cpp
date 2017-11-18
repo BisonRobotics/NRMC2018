@@ -63,11 +63,11 @@ int main(int argc, char** argv){
    //transform.getRotation().getAxis(); //need to make sure axis is roughly +Z
   currPose.theta = -transform.getRotation().getAngle();
   std::vector<waypointWithManeuvers> navigationQueue;
-
-  VescAccess fl(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO,WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, WHEEL_CAN_NETWORK, 1);
-  VescAccess fr(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO,MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, WHEEL_CAN_NETWORK, 1);
-  VescAccess br(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO,MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, WHEEL_CAN_NETWORK, 1);
-  VescAccess bl(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO,MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, WHEEL_CAN_NETWORK, 1);
+  char * can_name = (char *)WHEEL_CAN_NETWORK;
+  VescAccess fl(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO,WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, can_name, 1);
+  VescAccess fr(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO,MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, can_name, 1);
+  VescAccess br(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO,MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, can_name, 1);
+  VescAccess bl(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO,MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, can_name, 1);
 
   WaypointController wc = WaypointController(.5f, .5f,currPose, &fl, &fr, &br, &bl);
     WaypointController::Status wcStat;
@@ -111,17 +111,17 @@ int main(int argc, char** argv){
    currPose.theta = -transform.getRotation().getAngle();
 
    ROS_INFO("GOING TO UPDATE 5");
-    curr = ros::Time::now ();
-    delta = curr - last;
+   curr = ros::Time::now ();
+   delta = curr - last;
    wcStat = wc.update(currPose, (float)delta.toSec()); //need to get actual time
    last = curr;
 
    if (wcStat == WaypointController::Status::ALLBAD) ROS_INFO("CONTROLLER SAYS BAD");
    else if (wcStat == WaypointController::Status::ALLGOOD) ROS_INFO("CONTROLLER SAYS GOOD");
    else if (wcStat == WaypointController::Status::GOALREACHED){
-	 ROS_INFO("GOOOOOAAAAALLLLL!!");
-		server.setSucceeded ();
-	}
+	ROS_INFO("GOOOOOAAAAALLLLL!!");
+	server.setSucceeded ();
+   }
    navigationQueue = wc.getNavigationQueue();
    theCPP = wc.getCPP();
 
