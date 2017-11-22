@@ -13,7 +13,7 @@ from global_planner import *
 from regolith_manipulation import *
 from std_msgs.msg import Bool
 
-class Imperio(object):
+class ImperioControl(object):
 
     # Initializer for the imperio node
     def __init__(self):
@@ -22,6 +22,7 @@ class Imperio(object):
         rospy.Subscriber('/times_up', Bool, self.timerCallback)
 
         self.robot = robot(self.node)
+        self.planner = GlobalPlanner(self.robot)
         self.run()
 
     def ohShitCallback(self, bool_msg):
@@ -50,39 +51,39 @@ class Imperio(object):
 
     # Navigates the robot to the area where it will dig
     def navigateOutbound(self):
-        print("Imperio : Outbound")
         goal = (5, 8)
-        if navigate_to_goal(self.robot, goal):
-            self.robot.change_state(RobotState.DIG)
+        result = self.planner.navigate_to_goal(goal)
+        if result == None:
+            self.robot.change_state(RobotState.HALT)
+        if result:
+            self.robot.next_state()
 
     # Navigates the robot back to the collection bin
     def navigateInbound(self):
-        print("Imperio : Inbound")
         goal = (0, 0)
-        if navigate_to_goal(self.robot, goal):
-            self.robot.change_state(RobotState.DEPOSIT)
+        result =  self.planner.navigate_to_goal(goal)
+        if result == None:
+            self.robot.change_state(RobotState.HALT)
+        if result:
+            self.robot.next_state()
 
     # Digs for regolith once the robot is in the desired location
     def dig(self):
-        print("Imperio : Digging")
         if dig_regolith(self.robot):
-            self.robot.change_state(RobotState.INBOUND)
+            self.robot.next_state()
 
     # Deposits the regolith once the robot is at the collection bin
     def deposit(self):
-        print("Imperio : Depositing")
         if deposit_regolith(self.robot):
-            self.robot.change_state(RobotState.OUTBOUND)
+            self.robot.next_state()
 
     def halt(self):
-        print("Imperio : Halting")
         halt_movement(self.robot)
         halt_regolithm_commands(self.robot)
 
     def recover(self):
-        print("Imperio : Entering Recovery Behavior")
         self.robot.change_state(RobotState.HALT)
 
 
 if __name__ == "__main__":
-    nav = Imperio()
+    nav = ImperioControl()
