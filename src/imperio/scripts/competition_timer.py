@@ -14,6 +14,8 @@ rospy.init_node('competition_timer')
 timerPublisher = rospy.Publisher('/times_up', Bool, queue_size=1)
 timeLimit = rospy.get_param('/time_limit')
 
+#TODO : Have a turn around time ad handle responsesin imperio
+
 rospy.sleep(timeLimit * 60)
 
 timesUp = Bool()
