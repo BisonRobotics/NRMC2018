@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-""" Move the robot to desired location.
+"""
+Move the robot to desired location.
 
 Author: James Madison University
-Date: 11/11/2017
-Version: 1
-
+Date: 11/26/2017
+Version: 2
 """
 
 import math
@@ -17,6 +17,9 @@ from robot import *
 #from imperio.msm import DriveStatus
 
 class MovementStatus(Enum):
+    """
+    Movement Status is the enum of the different states that the robot can be in for movement.
+    """
     MOVING = 0
     HAS_REACHED_GOAL = 1
     STUCK = 2
@@ -24,8 +27,15 @@ class MovementStatus(Enum):
 
 
 class GlobalPlanner(object):
+    """
+    Global Planner takes a goal point in relation to the global map and outputs waypoints to the local planner.
+    """
 
     def __init__(self, robot):
+        """
+        Initializes the global planner
+        :param robot: the robot object the planner will be moving
+        """
         #self.waypoints_publisher = rospy.Publisher('/global_planner_goal', GlobalWaypoints, queue_size=1)
         #rospy.Subscriber('/drive_controller_status', DriveStatus, drive_status_callback)
         self.robot = robot
@@ -33,6 +43,10 @@ class GlobalPlanner(object):
         self.movement_status = MovementStatus.HAS_REACHED_GOAL
 
     def drive_status_callback(self, status_message):
+        """
+        Callback for when the drive status is published
+        :param status_message: the message that was published
+        """
         if status_message.has_reached_goal:
             self.movement_status = MovementStatus.HAS_REACHED_GOAL
         if status_message.is_stuck:
@@ -40,12 +54,12 @@ class GlobalPlanner(object):
         if status_message.cannot_plan_path:
             self.movement_status = CANNOT_PLAN_PATH
 
-
-    # attempts to navigate to the final goal
-    # param : the robot : the robot object
-    # param : the global goal
-    # returns : if robot is within goal threshold, returns none for fatal error
     def navigate_to_goal(self, goal):
+        """
+        Attempts to navigate to the final goal
+        :param goal: the global goal (based on the overall map) as (x,y)
+        :return: a boolean of it the robot has reached the goal, None for a fatal error
+        """
         if self.movement_status == MovementStatus.CANNOT_PLAN_PATH:
             return None
         if self.movement_status == MovementStatus.MOVING:
@@ -57,25 +71,32 @@ class GlobalPlanner(object):
         self.publish_waypoints(waypoints)
         return False
 
-    # gets the waypoints for navigating around obstacles to goal
-    # returns : an array of Waypoints
     def find_waypoints(self, goal):
+        """
+        Finds the waypoints in the occupancy grid, navigation around obstacles
+        :param goal: the final goal as (x,y)
+        :return: an array of waypoints
+        """
         #TODO : use A* to find the waypoints on the occupancy grid
         pass
 
-    # publishes the waypoints to the local planner through message passing
     def publish_waypoints(self, waypoints):
+        """
+        Publishes the waypoints to the local planner
+        :param waypoints: an array of warpoints
+        """
         # message = GlobalWaypoints()
         # message.poses = waypoints
         # message.occupancyGrid = self.occupancy_grid.to_message()
         # self.waypoints_publisher.publish(message)
         self.movement_status = MovementStatus.MOVING
 
-    # Determines whether or not the robot is within the threshold to the goal
-    # param : The robot
-    # param : The global goal
-    # returns : boolean
     def robot_within_threshold(self, goal):
+        """
+        Determines if the robot is within a threshold specified in the imperio launch file
+        :param goal: the final goal as (x,y)
+        :return: a boolean of if the robot is within the threshold
+        """
         errorThreshold = rospy.get_param('/location_accuracy')
 
         goal_x = goal[0]
@@ -95,8 +116,10 @@ class GlobalPlanner(object):
         abs_distance = math.sqrt((loc_x - goal_x) ** 2 + (loc_y - goal_y) ** 2)
         return  abs_distance < errorThreshold
 
-    # Halts the commands for the robot
-    def halt_movement(self, robot):
+    def halt_movement(self):
+        """
+        Halts the command of the robot
+        """
         #will need to empty the list of poses/goals to the local planner
         #will need to tell the planner to stop moving
         pass

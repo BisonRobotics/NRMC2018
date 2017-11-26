@@ -14,9 +14,15 @@ from regolith_manipulation import *
 from std_msgs.msg import Bool
 
 class ImperioControl(object):
+    """
+    Control for the entire Imperio Node
+    Should always maintain the control of the robot
+    """
 
-    # Initializer for the imperio node
     def __init__(self):
+        """
+        Initializes the imperio node
+        """
         self.node = rospy.init_node('imperio')
         rospy.Subscriber('/oh_shit', Bool, self.ohShitCallback)
         rospy.Subscriber('/times_up', Bool, self.timerCallback)
@@ -26,15 +32,25 @@ class ImperioControl(object):
         self.run()
 
     def ohShitCallback(self, bool_msg):
+        """
+        Callback for the oh_shit topic, when the user wants to turn off Imperio
+        No matter what the message is, if this topic is publised to, it will Halt the robot
+        :param bool_msg: the passed message
+        """
         self.robot.change_state(RobotState.HALT)
 
     def timerCallback(self, bool_msg):
+        """
+        Callback for the timer
+        :param bool_msg: Published message
+        """
         if bool_msg.data == True:
             self.robot.change_state(RobotState.HALT)
 
-    # The operational loop for Imperio
     def run(self):
-
+        """
+        The operation loop for Imperio
+        """
         while not self.robot.state == RobotState.HALT and not rospy.is_shutdown():
             if self.robot.state == RobotState.OUTBOUND:
                 self.navigateOutbound()
@@ -49,8 +65,11 @@ class ImperioControl(object):
             else:
                 self.halt()
 
-    # Navigates the robot to the area where it will dig
     def navigateOutbound(self):
+        """
+        Navigates the robot to the area where it will dig
+        """
+        # Goal is currently just dummy data
         goal = (5, 8)
         result = self.planner.navigate_to_goal(goal)
         if result == None:
@@ -58,8 +77,10 @@ class ImperioControl(object):
         if result:
             self.robot.next_state()
 
-    # Navigates the robot back to the collection bin
     def navigateInbound(self):
+        """
+        Navigates the robot back to the collection big
+        """
         goal = (0, 0)
         result =  self.planner.navigate_to_goal(goal)
         if result == None:
@@ -67,21 +88,33 @@ class ImperioControl(object):
         if result:
             self.robot.next_state()
 
-    # Digs for regolith once the robot is in the desired location
     def dig(self):
+        """
+        Digs for Regolith
+        """
         if dig_regolith(self.robot):
             self.robot.next_state()
 
-    # Deposits the regolith once the robot is at the collection bin
     def deposit(self):
+        """
+        Deposits the regolith
+        """
         if deposit_regolith(self.robot):
             self.robot.next_state()
 
     def halt(self):
+        """
+        Halts the robot and Imperio
+        """
         halt_movement(self.robot)
         halt_regolithm_commands(self.robot)
 
     def recover(self):
+        """
+        Recovery behavior for the robot
+        """
+        # Currently just halts the Robot
+        print("Robot could not be recovered, please regain control.")
         self.robot.change_state(RobotState.HALT)
 
 
