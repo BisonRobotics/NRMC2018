@@ -47,8 +47,8 @@ CanSensor::CanReadStatus CanSensor::canReceive(uint8_t *databuffer)
 {
   struct can_frame readMsg;
   while (1)
-  {
-    int a = read(s, &readMsg, sizeof(msg)); //why are we reading something of size msg into something of size can_frame...
+  { //changing this from sizeof(msg) to sizeof(readMsg)
+    int a = read(s, &readMsg, sizeof(readMsg)); //why are we reading something of size msg into something of size can_frame...
     //especially when a msg contains a can frame!
     if (a == -1)
       return CanSensor::CanReadStatus::CAN_READ_FAILED;  // no message?
