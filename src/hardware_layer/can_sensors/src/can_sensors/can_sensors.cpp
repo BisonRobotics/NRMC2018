@@ -1,6 +1,6 @@
 #include <can_sensors/can_sensors.h>
 
-CanSensor::CanSensor(int cID, char *interface)
+CanSensor::CanSensor(unsigned int cID, char *interface)
 {
   canID = cID;
   s = socket(PF_CAN, SOCK_RAW | SOCK_NONBLOCK, CAN_RAW);
@@ -24,7 +24,7 @@ CanSensor::CanSensor(int cID, char *interface)
     throw "Unable to connect bcm socket";
 }
 
-CanSensor::CanReadStatus CanSensor::canSend(uint8_t *data, uint8_t len)
+CanSensor::CanWriteStatus CanSensor::canSend(uint8_t *data, uint8_t len)
 {
   msg.msg_head.opcode = TX_SETUP;
   msg.msg_head.can_id = canID;
@@ -37,9 +37,10 @@ CanSensor::CanReadStatus CanSensor::canSend(uint8_t *data, uint8_t len)
   msg.msg_head.ival2.tv_usec = 1000 * 10;
   msg.frame[0].can_dlc = len;
   memcpy(msg.frame[0].data, data, len);
-  write(sbcm, &msg, sizeof(msg));
+  //need to check return value of write or else there is a warning
 
-  return CanSensor::CanReadStatus::CAN_READ_SUCCESS;
+  if (write(sbcm, &msg, sizeof(msg)) > 0) return CanSensor::CanWriteStatus::CAN_WRITE_SUCCESS;
+  else return CanSensor::CanWriteStatus::CAN_WRITE_FAILED;
 }
 
 CanSensor::CanReadStatus CanSensor::canReceive(uint8_t *databuffer)
@@ -47,12 +48,13 @@ CanSensor::CanReadStatus CanSensor::canReceive(uint8_t *databuffer)
   struct can_frame readMsg;
   while (1)
   {
-    int a = read(s, &readMsg, sizeof(msg));
+    int a = read(s, &readMsg, sizeof(msg)); //why are we reading something of size msg into something of size can_frame...
+    //especially when a msg contains a can frame!
     if (a == -1)
       return CanSensor::CanReadStatus::CAN_READ_FAILED;  // no message?
     if (readMsg.can_id == canID)
     {
-      memcpy(databuffer, readMsg.data, readMsg.can_dlc);
+      memcpy(databuffer, readMsg.data, readMsg.can_dlc); //then here we copy the msg data into the buffer
       return CanSensor::CanReadStatus::CAN_READ_SUCCESS;
     }
     // else return -readMsg.can_id;
