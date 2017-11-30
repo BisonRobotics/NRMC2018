@@ -37,24 +37,27 @@ CanSensor::CanWriteStatus CanSensor::canSend(uint8_t *data, uint8_t len)
   msg.msg_head.ival2.tv_usec = 1000 * 10;
   msg.frame[0].can_dlc = len;
   memcpy(msg.frame[0].data, data, len);
-  //need to check return value of write or else there is a warning
+  // need to check return value of write or else there is a warning
 
-  if (write(sbcm, &msg, sizeof(msg)) > 0) return CanSensor::CanWriteStatus::CAN_WRITE_SUCCESS;
-  else return CanSensor::CanWriteStatus::CAN_WRITE_FAILED;
+  if (write(sbcm, &msg, sizeof(msg)) > 0)
+    return CanSensor::CanWriteStatus::CAN_WRITE_SUCCESS;
+  else
+    return CanSensor::CanWriteStatus::CAN_WRITE_FAILED;
 }
 
 CanSensor::CanReadStatus CanSensor::canReceive(uint8_t *databuffer)
 {
   struct can_frame readMsg;
   while (1)
-  { //changing this from sizeof(msg) to sizeof(readMsg)
-    int a = read(s, &readMsg, sizeof(readMsg)); //why are we reading something of size msg into something of size can_frame...
-    //especially when a msg contains a can frame!
+  {  // changing this from sizeof(msg) to sizeof(readMsg)
+    int a = read(s, &readMsg,
+                 sizeof(readMsg));  // why are we reading something of size msg into something of size can_frame...
+    // especially when a msg contains a can frame!
     if (a == -1)
       return CanSensor::CanReadStatus::CAN_READ_FAILED;  // no message?
     if (readMsg.can_id == canID)
     {
-      memcpy(databuffer, readMsg.data, readMsg.can_dlc); //then here we copy the msg data into the buffer
+      memcpy(databuffer, readMsg.data, readMsg.can_dlc);  // then here we copy the msg data into the buffer
       return CanSensor::CanReadStatus::CAN_READ_SUCCESS;
     }
     // else return -readMsg.can_id;

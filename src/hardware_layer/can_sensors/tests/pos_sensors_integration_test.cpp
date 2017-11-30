@@ -16,8 +16,8 @@ int main()
     canReturn = mySensor.receiveData();
     if (canReturn == ReadableSensors::ReadStatus::READ_SUCCESS)
     {
-      sprintf(printbuffer, "message dataS1: \nX: %f,\nY: %f,\ntheta: %f,\nservoTheta: %f\n\n", mySensor.posData.x, mySensor.posData.y,
-              mySensor.posData.theta, mySensor.posData.servoTheta);
+      sprintf(printbuffer, "message dataS1: \nX: %f,\nY: %f,\ntheta: %f,\nservoTheta: %f\n\n", mySensor.posData.x,
+              mySensor.posData.y, mySensor.posData.theta, mySensor.posData.servoTheta);
       std::cout << printbuffer << std::endl;
     }
     // else if (canReturn == -1) std::cout << "no message! recieve returned " <<canReturn <<std::endl;

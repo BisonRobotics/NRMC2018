@@ -7,20 +7,20 @@
 class POSCanSensor : public CanSensor, public ReadableSensors
 {
 public:
-    struct data_s
-    {
-        float x;
-        float y;
-        float theta;
-        float servoTheta;
-    } posData;
+  struct data_s
+  {
+    float x;
+    float y;
+    float theta;
+    float servoTheta;
+  } posData;
 
-    POSCanSensor(int cID, char* interface);
+  POSCanSensor(int cID, char* interface);
 
-    ReadableSensors::ReadStatus receiveData();
+  ReadableSensors::ReadStatus receiveData();
 
 private:
-    uint8_t receiveBuffer[8];
+  uint8_t receiveBuffer[8];
 };
 
 #endif

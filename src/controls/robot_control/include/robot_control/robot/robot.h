@@ -13,7 +13,6 @@
 
 namespace robot_control
 {
-
 class Robot
 {
 public:
@@ -27,9 +26,7 @@ private:
   double desired_velocity[2];
   wheel_control::Wheels *wheels;
   wheel_control::VelocityInterface *wheel_controller;
-
 };
 }
 
-
-#endif //PROJECT_ROBOT_H
+#endif  // PROJECT_ROBOT_H
