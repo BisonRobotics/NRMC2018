@@ -31,7 +31,7 @@ private:
   struct sockaddr_can addr;
   int s;
   int sbcm;
-  int canID;
+  unsigned int canID;
 
   struct timeval prevmsgtime;
 
@@ -42,16 +42,21 @@ private:
   } msg;
 
 protected:
-  enum class CanReadStatus
+  enum class CanReadStatus  // this requires cpp11
   {
     CAN_READ_FAILED,
     CAN_READ_SUCCESS
-  };                                                  // this requires cpp11
-  CanReadStatus canSend(uint8_t *data, uint8_t len);  // future feature, not tested
+  };
+  enum class CanWriteStatus  // this requires cpp11
+  {
+    CAN_WRITE_FAILED,
+    CAN_WRITE_SUCCESS
+  };
+  CanWriteStatus canSend(uint8_t *data, uint8_t len);  // future feature, not tested
   CanReadStatus canReceive(uint8_t *databuffer);
 
 public:
-  CanSensor(int cID, char *interface);
+  CanSensor(unsigned int cID, char *interface);
   // int setRefreshRate(uint8_t Hz); //future feature
   // virtual int recieveData(void * ret)=0; //moved to readable_sensors
 };

@@ -7,7 +7,6 @@
 
 namespace wheel_control
 {
-
 const int FLI = 0;
 const int FRI = 1;
 const int BLI = 2;
@@ -16,7 +15,6 @@ const int BRI = 3;
 class Wheels
 {
 public:
-
   Wheels();
   Wheels(double x, double y);
 

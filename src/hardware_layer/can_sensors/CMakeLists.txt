@@ -47,16 +47,29 @@ add_library(imu_can_sensor_lib
   src/can_sensors/imu_can_sensor.cpp
 )
 
+add_library(pos_can_sensor_lib
+  src/can_sensors/pos_can_sensor.cpp
+)
+
 target_link_libraries(imu_can_sensor_lib
   can_sensors_lib
 )
 
+target_link_libraries(pos_can_sensor_lib
+  can_sensors_lib
+)
 
 add_executable(can_sensors_integration_test tests/can_sensors_integration_test.cpp)
 
+add_executable(pos_sensors_integration_test tests/pos_sensors_integration_test.cpp)
+
+add_dependencies(pos_sensors_integration_test pos_can_sensor_lib)
+target_link_libraries(pos_sensors_integration_test
+  pos_can_sensor_lib
+)
+
 add_dependencies(can_sensors_integration_test imu_can_sensor_lib)
 target_link_libraries(can_sensors_integration_test
-  ${catkin_LIBRARIES}
   imu_can_sensor_lib
 )
 #
