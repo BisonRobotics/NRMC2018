@@ -1,0 +1,63 @@
+# based off https://github.com/jalessio/ansible-role-ros
+# run locally with "ansible-playbook -i "localhost," -c local playbook.yml"
+---
+- hosts: localhost
+  tasks:
+    - name: Add ROS repository apt-key
+      become: yes
+      apt_key: keyserver=hkp://ha.pool.sks-keyservers.net:80 id=0xB01FA116
+
+    - name: Add ROS repository
+      become: yes
+      apt_repository: repo='deb http://packages.ros.org/ros/ubuntu {{ ansible_distribution_release }} main' state=present
+
+    - name: add source command to bashrc
+    - lineinfile:
+        dest=~/.bashrc
+        line="source /opt/ros/kinetic/setup.bash"
+
+   # - lineinfile:
+   #     dest=~/.bashrc
+   #     line="alias lintme='find . -name '*.h' -or -name '*.hpp' -or -name '*.cpp' | xargs clang-format-3.6 -i -style=file $1'"
+
+   # - name: update apt packages
+   #   become: yes
+   #   apt:  
+   #     update_cache: yes
+   #     upgrade: safe
+
+    - name: install other packages
+      become: yes
+      apt: pkg={{ item }} state=latest update_cache=true
+      with_items:
+        - python-catkin-tools
+        - tmux
+        - vim-gnome
+        - tree
+        - google-mock
+        - xclip    
+        - sl   
+        - clang-format-3.6
+
+    - name: install ros packages
+      become: yes
+      apt: pkg=ros-kinetic-{{ item }} state=latest update_cache=true
+      with_items:
+        - desktop
+        - catkin 
+        - usb-cam
+        - image-test
+
+    - name:  create gmock directory
+      become: yes
+      file: path=/usr/src/gmock/build state=directory
+
+    - name: install gmock
+      become: yes
+      shell: |
+        pushd /usr/src/gmock/build
+        sudo cmake ../
+        sudo make
+        popd
+      args:
+        executable: /bin/bash
