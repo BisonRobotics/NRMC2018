@@ -36,9 +36,9 @@ void callback(const std_msgs::Bool::ConstPtr &msg){
 int main(int argc, char** argv){
   ros::init(argc, argv, "my_tf_listener");
   float goalx, goaly, goalr;
-  goalx = 3.0f;
-  goaly = 1.0f;
-  goalr = 1.0f;
+//  goalx = 2.30f;
+//  goaly = 1.0f;
+//  goalr = -1.420f;
   bool isRunning = true;
   ros::NodeHandle node;
   /*
@@ -55,7 +55,7 @@ int main(int argc, char** argv){
   ros::Duration delta;
   tf::StampedTransform transform;
   tf::TransformListener listener;
-  pose theWay = {.x = 3.0f, .y = 0.0f, .theta = 1.0f};
+  pose theWay = {.x = 2.3f, .y = 0.0f, .theta = -1.42f};
   pose currPose;
   pose theCPP;
   listener.waitForTransform ("/map", "/base_link", ros::Time(0), ros::Duration(30));
@@ -67,6 +67,8 @@ int main(int argc, char** argv){
 
    //transform.getRotation().getAxis(); //need to make sure axis is roughly +Z
   currPose.theta = -transform.getRotation().getAngle();
+
+  ROS_INFO ("currpose x y theta  %.4f \n%.4f\n %.4f\n", currPose.x, currPose.y, currPose.theta);
   std::vector<waypointWithManeuvers> navigationQueue;
   char * can_name = (char *)WHEEL_CAN_NETWORK;
   VescAccess fl(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO,WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,MAX_WHEEL_TORQUE,WHEEL_TORQUE_CONSTANT, can_name, 1);
@@ -114,11 +116,12 @@ std::vector<std::pair<float, float> > returnPoints = wc.addWaypoint(theWay, curr
    currPose.y = -1.0f*transform.getOrigin().y();
 
    //transform.getRotation().getAxis(); //need to make sure axis is roughly +Z
-   currPose.theta = transform.getRotation().getAngle();
+   currPose.theta = -transform.getRotation().getAngle();
 
    ROS_INFO("GOING TO UPDATE 5");
    curr = ros::Time::now ();
    delta = curr - last;
+   ROS_INFO("GOT PAST TIME SHIT");
    wcStat = wc.update(currPose, (float)delta.toSec()); //need to get actual time
    last = curr;
 

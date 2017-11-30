@@ -10,6 +10,6 @@
 #define MAX_WHEEL_VELOCITY      .5f
 #define MAX_WHEEL_TORQUE        176.0f
 #define WHEEL_GEAR_RATIO        181.4f
-#define WHEEL_OUTPUT_RATIO      .3048f
+#define WHEEL_OUTPUT_RATIO      .03048f
 #define WHEEL_POLE_PAIRS        1
 #define WHEEL_TORQUE_CONSTANT   4.0f
