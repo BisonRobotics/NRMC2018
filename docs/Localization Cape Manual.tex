@@ -1,0 +1,181 @@
+\documentclass[]{book}
+
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[left=1.00in, right=1.00in, top=1.00in, bottom=1.00in]{geometry}
+
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage[table]{xcolor}
+\usepackage{hyperref}
+
+\usepackage[T1]{fontenc}
+\usepackage[scaled=1.0]{DejaVuSansMono}
+\usepackage{listings}
+
+
+\hypersetup{
+	colorlinks=true,
+	hidelinks=true,
+	breaklinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	colorlinks=false,
+	pdftitle={Localization Cape Manual},
+	bookmarks=true,
+	pdfpagemode=FullScreen,
+}
+\def\UrlBreaks{\do\/\do-}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.965,0.973,0.980}
+\lstdefinestyle{Default-Custom-Style}{
+	backgroundcolor=\color{backcolour}, 
+	xleftmargin=0.5cm,
+	frame=tlbr,
+	framesep=8pt,
+	framerule=0pt,  
+	%commentstyle=\color{codegreen},
+	%keywordstyle=\color{magenta},
+	%numberstyle=\tiny\color{codegray},
+	%stringstyle=\color{codepurple},
+	basicstyle=\footnotesize\ttfamily,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=none,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+\lstset{style=Default-Custom-Style}
+
+% Code listing structure
+%\begin{lstlisting}[language=bash]
+%
+%\end{lstlisting}
+
+
+\title{Localization Cape Manual}
+\author{Jacob Huesman}
+
+\begin{document}
+\let\cleardoublepage\clearpage
+\maketitle
+\tableofcontents
+
+
+\chapter{Notes}
+\section{Using this document}
+All urls and table of contents entries are active. If you click on them they'll take you to the url or document location respectively.
+
+The code view is copy and paste able only on particular pdf viewers. Firefox works.
+
+If you contribute to this document, make sure you add your name to the authors list.
+
+\section{Compiling this document}
+This document was developed with TeXstudio and and compiled with the TeX Live distribution of LaTeX. The required packages on Ubuntu can be installed with
+\begin{lstlisting}[language=bash]
+sudo apt-get install texstudio texlive texlive-latex-recommended texlive-latex-extra texlive-fonts-extra
+\end{lstlisting}
+To find what Ubuntu package your Latex package lives in, do an
+\begin{lstlisting}
+apt-cache search <name of package>
+\end{lstlisting}
+
+
+\chapter{Beagle Configuration}
+\section{Notes}
+Sometimes you need to reload the udev rules before sshing
+\begin{lstlisting}[language=bash]
+sudo udevadm control --reload-rules
+\end{lstlisting}
+
+
+\section{Hardware}
+\begin{itemize}%[noitemsep]
+	\item BeagleBone Black
+	\item Class 10 SD Card
+\end{itemize}
+
+
+\section{Configuration}
+\subsection{Getting an OS}
+Retrieve latest IoT (non-GUI) image from: \url{https://beagleboard.org/latest-images}.
+
+Follow instructions available at \url{http://beagleboard.org/getting-started} for "Update Board with latest software. You can ignore the start your beagle section.
+
+Configure udev rules for ssh over usb: \url{http://beagleboard.org/static/Drivers/Linux/FTDI/mkudevrule.sh}. Download and run.
+
+After plugging in the usb cable you should now be able to ssh into the BeagleBone Black
+
+\begin{lstlisting}[language=bash]
+ssh debian@192.168.7.2 # password: temppwd
+\end{lstlisting}
+
+\pagebreak
+\subsection{Configuring the OS}
+\begin{lstlisting}[language=bash]
+# ssh into the board
+ssh debian@192.168.7.2 # password: temppwd
+
+# change default passwords
+sudo passwd debian # use brnrmc
+sudo passwd root   # use brnrmc
+
+# add nrmc account
+sudo useradd -m nrmc
+sudo passwd nrmc
+sudo chsh -s /bin/bash nrmc
+\end{lstlisting}
+
+\subsection{Running Updates}
+On the Beagle
+\begin{lstlisting}[language=bash]
+su -
+route add default gw 192.168.7.1
+\end{lstlisting}
+On the host
+\begin{lstlisting}[language=bash]
+su -
+
+# Replace wlan0 with the name of your internet facing interface
+iptables --table nat --append POSTROUTING --out-interface wlan0 -j MASQUERADE
+
+# Replace eth5 with the name of your beaglebone interface, if you run an ifconfig that
+# interface should provide your computer with an ip address of 192.168.7.1
+iptables --append FORWARD --in-interface eth5 -j ACCEPT
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+\end{lstlisting}
+
+
+
+\section{Stuff to look into}
+Building a custom image with just the stuff we need: \url{https://github.com/fhunleth/bbb-buildroot-fwup}, \url{https://elinux.org/BeagleBone_Operating_Systems}
+
+\chapter{Localization Cape Requirements}
+\section{Power Requirements}
+\subsection{Pocket Beagle}
+Should be the same as the BeagleBone Black. Minimum recommended is 5V @ 1.2A, recommended is 5V @ 2A, which includes room for USB peripherals. See: \url{http://beagleboard.org/support/faq}
+
+The actual usage by the BeagleBone Black measured during a test done by Adafruit saw current usage of less than 500mA. Which makes sense since it can operate as a USB device. See: \url{https://learn.adafruit.com/embedded-linux-board-comparison/power-usage}. It might actually be lower since there everything is integrated on the pocket beagle.
+
+\subsection{ELP VGA USB Camera Module}
+According to the specs available on Amazon this camera doesn't exceed 160mA of power usage. See: \url{https://www.amazon.com/gp/product/B01DRG250Q/ref=oh_aui_search_detailpage?ie=UTF8&psc=1}. Since they are USB Devices we can expect no more than 5V @ 500mA. 
+
+\subsection{Dynamixel XL-320}
+See: \url{http://www.robotis.us/dynamixel-xl-320/} and
+6~8.4V
+
+
+\end{document}
