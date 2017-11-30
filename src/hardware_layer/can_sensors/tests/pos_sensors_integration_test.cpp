@@ -4,7 +4,7 @@
 
 int main()
 {
-  char interface[] = "can2";
+  char interface[] = "can0";
   POSCanSensor mySensor(40, interface);
   // CanSensor mySensor2(21, interface);
   // uint8_t mybuffer[8];
