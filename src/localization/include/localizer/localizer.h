@@ -30,13 +30,14 @@ public:
     UPDATE_FAILED_SENSOR_ERROR,
     UPDATE_SUCCESS
   };
-
   Localizer(iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
             iVescAccess *backLeftVesc);  // pass wheel linear vel sensors in as FL, FR, BR, BL
   UpdateStatus updateStateVector();
   UpdateStatus updateStateVector(float dt);
 
-private:
+  Localizer(); // do not use
+
+protected:
   struct timeval previous_time;
   struct timeval current_time;
   int dtms;  // dt in ms

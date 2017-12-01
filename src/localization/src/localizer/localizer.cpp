@@ -90,6 +90,10 @@ Localizer::UpdateStatus Localizer::updateStateVector(float dt)
   state_vector.x_pos += d_pos_world(0);
   state_vector.y_pos += d_pos_world(1);
   state_vector.theta += d_theta;
+
+  state_vector.x_vel = d_pos_world(0);
+  state_vector.y_vel = d_pos_world(1);
+  state_vector.omega = d_theta;
   return Localizer::UpdateStatus::UPDATE_SUCCESS;
 }
 
@@ -104,4 +108,8 @@ int Localizer::timediffms(struct timeval curr, struct timeval prev)
   if (diff.tv_sec < 0)
     diff.tv_sec = diff.tv_usec = 0;
   return diff.tv_sec * 1000 + diff.tv_usec / 1000;
+}
+
+Localizer::Localizer()
+{
 }
