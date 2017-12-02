@@ -15,6 +15,8 @@ class SuperLocalizer : public Localizer
 public:
     SuperLocalizer(iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
                    iVescAccess *backLeftVesc, IMUCanSensor *centerIMU, POSCanSensor* posSensor);
+    SuperLocalizer(iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
+                   iVescAccess *backLeftVesc, POSCanSensor* posSensor);
 	Localizer::UpdateStatus updateStateVector(float dt);
 private:
     Localizer deadReck;
@@ -28,4 +30,8 @@ private:
 
     Localizer::stateVector_s diff(Localizer::stateVector_s const& lhs, Localizer::stateVector_s const& rhs);
     Localizer::stateVector_s multiply(Localizer::stateVector_s const& lhs, Localizer::stateVector_s const& rhs);
+
+    uint8_t num_sensors;
+    bool have_imu;
+	bool have_pos;
 };
