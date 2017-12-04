@@ -1,8 +1,6 @@
 #include <can_sensors/pos_can_sensor.h>
 
-POSCanSensor::POSCanSensor(int cID, char* interface) : CanSensor(cID, interface)
-{
-}
+POSCanSensor::POSCanSensor(int cID, char* interface) : CanSensor(cID, interface){}
 
 ReadableSensors::ReadStatus POSCanSensor::receiveData()
 {
@@ -22,4 +20,25 @@ ReadableSensors::ReadStatus POSCanSensor::receiveData()
   }
   else
     return ReadableSensors::ReadStatus::READ_FAILED;
+}
+
+
+float POSCanSensor::getX()
+{
+    return posData.x;
+}
+
+float POSCanSensor::getY()
+{
+    return posData.y;
+}
+
+float POSCanSensor::getTheta()
+{
+    return posData.theta;
+}
+
+float POSCanSensor::getServoTheta()
+{
+    return posData.servoTheta;
 }

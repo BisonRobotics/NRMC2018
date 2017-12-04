@@ -110,6 +110,11 @@ int Localizer::timediffms(struct timeval curr, struct timeval prev)
   return diff.tv_sec * 1000 + diff.tv_usec / 1000;
 }
 
+Localizer::stateVector_s Localizer::getStateVector()
+{
+    return state_vector;
+}
+
 Localizer::Localizer()
 {
 }

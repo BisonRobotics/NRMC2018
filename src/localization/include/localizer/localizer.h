@@ -2,8 +2,6 @@
 #define LOCALIZER_H
 
 #include <vesc_access/vesc_access.h>
-#include <can_sensors/imu_can_sensor.h>
-#include <readable_sensors/readable_sensors.h>
 #include <sys/time.h>
 
 class Localizer
@@ -23,8 +21,8 @@ public:
     float x_accel;
     float y_accel;
     float alpha;
-  } state_vector;
-
+  }; 
+  stateVector_s getStateVector();
   enum class UpdateStatus
   {
     UPDATE_FAILED_SENSOR_ERROR,
@@ -46,6 +44,8 @@ protected:
   iVescAccess *back_right_vesc;
   iVescAccess *back_left_vesc;
   int timediffms(struct timeval curr, struct timeval prev);
+  stateVector_s state_vector;
+
 };
 
 #endif
