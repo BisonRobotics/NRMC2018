@@ -4,9 +4,9 @@
 class ImuCanSensorInterface
 {
 public:
-    float getX();
-    float getY();
-    float getTheta();
+  float getX();
+  float getY();
+  float getTheta();
 };
 
 #endif

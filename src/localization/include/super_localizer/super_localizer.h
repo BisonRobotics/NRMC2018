@@ -13,30 +13,37 @@
 class SuperLocalizer : public Localizer
 {
 public:
-    SuperLocalizer(iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
-                   iVescAccess *backLeftVesc, IMUCanSensor *centerIMU, POSCanSensor* posSensor, Localizer::stateVector_s gains);
-    SuperLocalizer(iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
-                   iVescAccess *backLeftVesc, POSCanSensor* posSensor, Localizer::stateVector_s gains);
-	Localizer::UpdateStatus updateStateVector(float dt);
+  SuperLocalizer(iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
+                 iVescAccess *backLeftVesc, IMUCanSensor *centerIMU, POSCanSensor *posSensor,
+                 Localizer::stateVector_s gains);
+  SuperLocalizer(iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
+                 iVescAccess *backLeftVesc, POSCanSensor *posSensor, Localizer::stateVector_s gains);
+  Localizer::UpdateStatus updateStateVector(float dt);
 
-    static constexpr Localizer::stateVector_s default_gains = {
-                                                     .x_pos = XRESGAIN, .y_pos = YRESGAIN, .theta = THETARESGAIN,
-                                                     .x_vel = DXRESGAIN, .y_vel = DYRESGAIN, .omega = OMEGARESGAIN,
-                                                     .x_accel =0, .y_accel = 0, .alpha =0 };
+  static constexpr Localizer::stateVector_s default_gains = {.x_pos = XRESGAIN,
+                                                             .y_pos = YRESGAIN,
+                                                             .theta = THETARESGAIN,
+                                                             .x_vel = DXRESGAIN,
+                                                             .y_vel = DYRESGAIN,
+                                                             .omega = OMEGARESGAIN,
+                                                             .x_accel = 0,
+                                                             .y_accel = 0,
+                                                             .alpha = 0 };
+
 private:
-    Localizer deadReck;
+  Localizer deadReck;
 
-    IMUCanSensor * cIMU;
-    POSCanSensor * pSensor;
-    ReadableSensors* sensors[2];
-    uint8_t num_sensors;
-    bool have_imu;
-	bool have_pos;
+  IMUCanSensor *cIMU;
+  POSCanSensor *pSensor;
+  ReadableSensors *sensors[2];
+  uint8_t num_sensors;
+  bool have_imu;
+  bool have_pos;
 
-    Localizer::stateVector_s residual;
-    Localizer::stateVector_s measured;
-    Localizer::stateVector_s gainVector;
+  Localizer::stateVector_s residual;
+  Localizer::stateVector_s measured;
+  Localizer::stateVector_s gainVector;
 
-    Localizer::stateVector_s diff(Localizer::stateVector_s const& lhs, Localizer::stateVector_s const& rhs);
-    Localizer::stateVector_s multiply(Localizer::stateVector_s const& lhs, Localizer::stateVector_s const& rhs);
+  Localizer::stateVector_s diff(Localizer::stateVector_s const &lhs, Localizer::stateVector_s const &rhs);
+  Localizer::stateVector_s multiply(Localizer::stateVector_s const &lhs, Localizer::stateVector_s const &rhs);
 };

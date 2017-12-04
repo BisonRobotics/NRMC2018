@@ -112,7 +112,7 @@ int Localizer::timediffms(struct timeval curr, struct timeval prev)
 
 Localizer::stateVector_s Localizer::getStateVector()
 {
-    return state_vector;
+  return state_vector;
 }
 
 Localizer::Localizer()

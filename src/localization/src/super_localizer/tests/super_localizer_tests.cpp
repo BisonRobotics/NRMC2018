@@ -9,7 +9,6 @@ using ::testing::_;
 using ::testing::AnyNumber;
 using ::testing::Gt;
 
-
 TEST(SuperLocalizerTests, Forward)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
@@ -20,10 +19,7 @@ TEST(SuperLocalizerTests, Forward)
   ON_CALL(blvesc, getLinearVelocity()).WillByDefault(Return(-.3));
 
   ASSERT_TRUE(FALSE);
-  
 }
-
-
 
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)

@@ -21,7 +21,7 @@ public:
     float x_accel;
     float y_accel;
     float alpha;
-  }; 
+  };
   stateVector_s getStateVector();
   enum class UpdateStatus
   {
@@ -33,7 +33,7 @@ public:
   UpdateStatus updateStateVector();
   UpdateStatus updateStateVector(float dt);
 
-  Localizer(); // do not use
+  Localizer();  // do not use
 
 protected:
   struct timeval previous_time;
@@ -45,7 +45,6 @@ protected:
   iVescAccess *back_left_vesc;
   int timediffms(struct timeval curr, struct timeval prev);
   stateVector_s state_vector;
-
 };
 
 #endif

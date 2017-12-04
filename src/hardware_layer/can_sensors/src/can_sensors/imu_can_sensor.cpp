@@ -4,7 +4,9 @@
 #define GRAVITY 9.81f
 #define TWO 2.0f  //+/- range of sensor in g's
 
-IMUCanSensor::IMUCanSensor(int cID, char* interface) : CanSensor(cID, interface) {}
+IMUCanSensor::IMUCanSensor(int cID, char* interface) : CanSensor(cID, interface)
+{
+}
 
 ReadableSensors::ReadStatus IMUCanSensor::receiveData()
 {
@@ -33,15 +35,15 @@ ReadableSensors::ReadStatus IMUCanSensor::receiveData()
 
 float IMUCanSensor::getX()
 {
-    return imuData.x;
+  return imuData.x;
 }
 
 float IMUCanSensor::getY()
 {
-    return imuData.y;
+  return imuData.y;
 }
 
 float IMUCanSensor::getTheta()
 {
-    return imuData.z;
+  return imuData.z;
 }
