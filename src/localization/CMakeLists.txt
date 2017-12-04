@@ -130,7 +130,7 @@ if(TARGET test_localization)
     localizer_lib
     gmock_main
   )
-  add_dependencies(test_localization vesc_access)
+  add_dependencies(test_localization vesc_access localizer_lib)
 endif()
 
 catkin_add_gtest(test_super_localization src/super_localizer/tests/super_localizer_tests.cpp)
@@ -141,7 +141,7 @@ if(TARGET test_super_localization)
     super_localizer_lib
     gmock_main
   )
-  add_dependencies(test_localization vesc_access)
+  add_dependencies(test_super_localization vesc_access super_localizer_lib)
 endif()
 
 ## Add folders to be run by python nosetests

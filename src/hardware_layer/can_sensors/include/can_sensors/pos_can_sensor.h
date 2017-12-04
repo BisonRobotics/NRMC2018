@@ -3,9 +3,8 @@
 
 #include <can_sensors/can_sensors.h>
 #include <can_sensors/pos_can_sensor_interface.h>
-#include <readable_sensors/readable_sensors.h>
 
-class POSCanSensor : public CanSensor, public ReadableSensors, public PosCanSensorInterface
+class POSCanSensor : public CanSensor, public PosCanSensorInterface
 {
 public:
   POSCanSensor(int cID, char* interface);

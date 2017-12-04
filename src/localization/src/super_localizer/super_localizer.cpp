@@ -1,10 +1,10 @@
 #include <super_localizer/super_localizer.h>
 
-SuperLocalizer::SuperLocalizer(iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
-                               iVescAccess *backLeftVesc, IMUCanSensor *centerIMU, POSCanSensor *posSensor,
+SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
+                               iVescAccess *backLeftVesc, ImuCanSensorInterface *centerIMU, PosCanSensorInterface *posSensor,
                                Localizer::stateVector_s gains)
 {
-  deadReck = Localizer(frontLeftVesc, frontRightVesc, backRightVesc, backLeftVesc);
+  deadReck = Localizer(axleLen, xi, yi, thi, frontLeftVesc, frontRightVesc, backRightVesc, backLeftVesc);
 
   cIMU = centerIMU;
   pSensor = posSensor;
@@ -20,10 +20,10 @@ SuperLocalizer::SuperLocalizer(iVescAccess *frontLeftVesc, iVescAccess *frontRig
   gainVector = gains;
 }
 
-SuperLocalizer::SuperLocalizer(iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
-                               iVescAccess *backLeftVesc, POSCanSensor *posSensor, Localizer::stateVector_s gains)
+SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
+                               iVescAccess *backLeftVesc, PosCanSensorInterface *posSensor, Localizer::stateVector_s gains)
 {
-  deadReck = Localizer(frontLeftVesc, frontRightVesc, backRightVesc, backLeftVesc);
+  deadReck = Localizer(axleLen, xi, yi, thi, frontLeftVesc, frontRightVesc, backRightVesc, backLeftVesc);
 
   pSensor = posSensor;
   num_sensors = 1;
@@ -80,7 +80,7 @@ Localizer::UpdateStatus SuperLocalizer::updateStateVector(float dt)
   state_vector = diff(deadReck.getStateVector(), multiply(gainVector, residual));
 }
 
-Localizer::stateVector_s diff(Localizer::stateVector_s const &lhs, Localizer::stateVector_s const &rhs)
+Localizer::stateVector_s SuperLocalizer::diff(Localizer::stateVector_s const &lhs, Localizer::stateVector_s const &rhs)
 {
   Localizer::stateVector_s ret;
   ret.alpha = lhs.alpha - rhs.alpha;
@@ -95,7 +95,7 @@ Localizer::stateVector_s diff(Localizer::stateVector_s const &lhs, Localizer::st
   return ret;
 }
 
-Localizer::stateVector_s multiply(Localizer::stateVector_s const &lhs, Localizer::stateVector_s const &rhs)
+Localizer::stateVector_s SuperLocalizer::multiply(Localizer::stateVector_s const &lhs, Localizer::stateVector_s const &rhs)
 {
   Localizer::stateVector_s ret;
   ret.alpha = lhs.alpha * rhs.alpha;

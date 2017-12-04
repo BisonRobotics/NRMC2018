@@ -3,9 +3,8 @@
 
 #include <can_sensors/can_sensors.h>
 #include <can_sensors/imu_can_sensor_interface.h>
-#include <readable_sensors/readable_sensors.h>
 
-class IMUCanSensor : public CanSensor, public ReadableSensors, public ImuCanSensorInterface
+class IMUCanSensor : public CanSensor, public ImuCanSensorInterface
 {
 public:
   IMUCanSensor(int cID, char* interface);

@@ -2,14 +2,13 @@
 #include <Eigen/Dense>
 #include <cmath>
 #define CONSTANT_TO_AVERAGE_TWO_NUMBERS 2.0f
-#define AXLE_LENGTH .5f  // meters between wheels side to side (width of robot)
 
-Localizer::Localizer(iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
+Localizer::Localizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
                      iVescAccess *backLeftVesc)
 {
-  state_vector.x_pos = 0;
-  state_vector.y_pos = 0;
-  state_vector.theta = 0;
+  state_vector.x_pos = xi;
+  state_vector.y_pos = yi;
+  state_vector.theta = thi;
 
   state_vector.x_vel = 0;
   state_vector.y_vel = 0;
@@ -26,6 +25,8 @@ Localizer::Localizer(iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iV
 
   gettimeofday(&current_time, NULL);  // initialize _prevmsgtime with something
   current_time.tv_sec -= 1;           // make it in the past to avoid false positives
+
+  axle_len = axleLen;
 }
 
 Localizer::UpdateStatus Localizer::updateStateVector()
@@ -55,7 +56,7 @@ Localizer::UpdateStatus Localizer::updateStateVector(float dt)
   float average_left_velocity = (front_left_velocity + back_left_velocity) / CONSTANT_TO_AVERAGE_TWO_NUMBERS;
   float average_right_velocity = (front_right_velocity + back_right_velocity) / CONSTANT_TO_AVERAGE_TWO_NUMBERS;
 
-  float w = (average_right_velocity - average_left_velocity) / AXLE_LENGTH;
+  float w = (average_right_velocity - average_left_velocity) / axle_len;
   float turn_radius;
   Eigen::Matrix2f rot;
   Eigen::Vector2f d_pos;
@@ -64,7 +65,7 @@ Localizer::UpdateStatus Localizer::updateStateVector(float dt)
 
   if (w != 0.0f)  // no dividing by zero
   {
-    turn_radius = AXLE_LENGTH / 2 * (average_right_velocity + average_left_velocity) /
+    turn_radius = axle_len / 2 * (average_right_velocity + average_left_velocity) /
                   (average_right_velocity - average_left_velocity);  // turn radius
     rot << cos(w * dt), -sin(w * dt), sin(w * dt), cos(w * dt);      // rotation matrix
     rotation_on_y << 0, -turn_radius;

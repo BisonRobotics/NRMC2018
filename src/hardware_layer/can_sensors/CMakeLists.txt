@@ -22,7 +22,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include/
-#  LIBRARIES imu_can_sensor_lib
+  LIBRARIES imu_can_sensor_lib pos_can_sensor_lib
 #  CATKIN_DEPENDS roscpp
 #  DEPENDS system_lib
 )

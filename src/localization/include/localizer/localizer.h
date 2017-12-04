@@ -28,7 +28,7 @@ public:
     UPDATE_FAILED_SENSOR_ERROR,
     UPDATE_SUCCESS
   };
-  Localizer(iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
+  Localizer(float axelLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
             iVescAccess *backLeftVesc);  // pass wheel linear vel sensors in as FL, FR, BR, BL
   UpdateStatus updateStateVector();
   UpdateStatus updateStateVector(float dt);
@@ -45,6 +45,7 @@ protected:
   iVescAccess *back_left_vesc;
   int timediffms(struct timeval curr, struct timeval prev);
   stateVector_s state_vector;
+  float axle_len;
 };
 
 #endif
