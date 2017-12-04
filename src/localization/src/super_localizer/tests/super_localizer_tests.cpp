@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <super_localizer/super_loclizer.h>
+#include <super_localizer/super_localizer.h>
 #include <vesc_access/mock_vesc_access.h>
 #include <gmock/gmock.h>
 
@@ -12,13 +12,14 @@ using ::testing::Gt;
 TEST(SuperLocalizerTests, Forward)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
-  SuperLocalizer loki(&flvesc, &frvesc, &brvesc, &blvesc);
+  
+  //SuperLocalizer loki(&flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(-.3));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(-.5));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(-.5));
   ON_CALL(blvesc, getLinearVelocity()).WillByDefault(Return(-.3));
 
-  ASSERT_TRUE(FALSE);
+  ASSERT_TRUE(2 == 3);
 }
 
 // Run all the tests that were declared with TEST()
