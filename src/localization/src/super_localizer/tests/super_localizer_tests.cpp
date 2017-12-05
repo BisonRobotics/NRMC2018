@@ -17,27 +17,37 @@ TEST(SuperLocalizerTests, ForwardWithPos)
   MockPosCanSensor mockPos;
   
   SuperLocalizer loki(.5f, 0,0,0,&flvesc, &frvesc, &brvesc, &blvesc, &mockPos, (Localizer::stateVector_s) SuperLocalizer_default_gains);
-  ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(.3));
-  ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(.3));
-  ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(.3));
-  ON_CALL(blvesc, getLinearVelocity()).WillByDefault(Return(.3));
-  EXPECT_CALL(flvesc, getLinearVelocity());
-  EXPECT_CALL(frvesc, getLinearVelocity());
-  EXPECT_CALL(brvesc, getLinearVelocity());
-  EXPECT_CALL(blvesc, getLinearVelocity());
+  EXPECT_CALL(flvesc, getLinearVelocity()).WillRepeatedly(Return(.3));
+  EXPECT_CALL(frvesc, getLinearVelocity()).WillRepeatedly(Return(.3));
+  EXPECT_CALL(brvesc, getLinearVelocity()).WillRepeatedly(Return(.3));
+  EXPECT_CALL(blvesc, getLinearVelocity()).WillRepeatedly(Return(.3));
+  //EXPECT_CALL(flvesc, getLinearVelocity());
+  //EXPECT_CALL(frvesc, getLinearVelocity());
+  //EXPECT_CALL(brvesc, getLinearVelocity());
+  //EXPECT_CALL(blvesc, getLinearVelocity());
 
-  ON_CALL(mockPos, receiveData()).WillByDefault(Return(ReadableSensors::ReadStatus::READ_SUCCESS));
+  EXPECT_CALL(mockPos, receiveData()).WillRepeatedly(Return(ReadableSensors::ReadStatus::READ_SUCCESS));
 
-  EXPECT_CALL(mockPos, getX())
-        .WillOnce(Return(.01f));
-  EXPECT_CALL(mockPos, getY())
-        .WillOnce(Return(.00f));
-  EXPECT_CALL(mockPos, getTheta())
-        .WillOnce(Return(.00f));
+  for (int iter = 0; iter < 50; iter++) //.5 seconds at dt = .01
+  {
+      EXPECT_CALL(mockPos, getX())
+            .WillOnce(Return(.3f * .01f * iter))
+		    .RetiresOnSaturation();
+      EXPECT_CALL(mockPos, getY())
+            .WillOnce(Return(.00f))
+    		.RetiresOnSaturation();
+      EXPECT_CALL(mockPos, getTheta())
+            .WillOnce(Return(.00f))
+    		.RetiresOnSaturation();
+  }
 
-  loki.updateStateVector(.01f);
+  for (int iter = 0; iter< 50; iter++) 
+  {
+      loki.updateStateVector(.01f);
+  }
 
-  ASSERT_TRUE(loki.getStateVector().x_pos > 0);
+  ASSERT_TRUE(loki.getStateVector().x_pos > .13f && loki.getStateVector().x_pos < .17f) 
+              << "Xpos = " << loki.getStateVector().x_pos;
 }
 
 // Run all the tests that were declared with TEST()
