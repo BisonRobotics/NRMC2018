@@ -75,12 +75,17 @@ Localizer::UpdateStatus SuperLocalizer::updateStateVector(float dt)
   }
 
   // take difference between estimated data and measured data, this is residual
-  residual = diff(measured, deadReck.getStateVector());
+  residual = diff(state_vector, measured);
   // revise estimate by subtracting residual from it * some gain
-  state_vector = diff(deadReck.getStateVector(), multiply(gainVector, residual));
+
+  //it would be more efficient for these calculations to happen in place maybe, instead of all these return shits
+  Localizer::stateVector_s intermediateStateVector = addfrommodel(state_vector, deadReck.getStateVector(),dt);
+  //state_vector = addfrommodel(state_vector, deadReck.getStateVector(),dt);
+  Localizer::stateVector_s intermediate = multiply(gainVector, residual);
+  state_vector = diff(intermediateStateVector, intermediate);
 }
 
-Localizer::stateVector_s SuperLocalizer::diff(Localizer::stateVector_s const &lhs, Localizer::stateVector_s const &rhs)
+Localizer::stateVector_s SuperLocalizer::diff(Localizer::stateVector_s lhs, Localizer::stateVector_s rhs)
 {
   Localizer::stateVector_s ret;
   ret.alpha = lhs.alpha - rhs.alpha;
@@ -95,17 +100,29 @@ Localizer::stateVector_s SuperLocalizer::diff(Localizer::stateVector_s const &lh
   return ret;
 }
 
-Localizer::stateVector_s SuperLocalizer::multiply(Localizer::stateVector_s const &lhs, Localizer::stateVector_s const &rhs)
+Localizer::stateVector_s SuperLocalizer::multiply(Localizer::stateVector_s lhs, Localizer::stateVector_s rhs)
 {
   Localizer::stateVector_s ret;
   ret.alpha = lhs.alpha * rhs.alpha;
   ret.omega = lhs.omega * rhs.omega;
-  ret.theta = lhs.theta * rhs.omega;
+  ret.theta = lhs.theta * rhs.theta;
   ret.x_accel = lhs.x_accel * rhs.x_accel;
   ret.y_accel = lhs.y_accel * rhs.y_accel;
   ret.x_vel = lhs.x_vel * rhs.x_vel;
   ret.y_vel = lhs.y_vel * rhs.y_vel;
   ret.x_pos = lhs.x_pos * rhs.x_pos;
   ret.y_pos = lhs.y_pos * rhs.y_pos;
+  return ret;
+}
+
+Localizer::stateVector_s SuperLocalizer::addfrommodel(Localizer::stateVector_s lhs, Localizer::stateVector_s rhs, float dt)
+{
+  Localizer::stateVector_s ret;
+  ret.x_pos = lhs.x_pos + rhs.x_vel *dt;
+  ret.y_pos = lhs.y_pos + rhs.y_vel *dt;
+  ret.theta = lhs.theta + rhs.omega *dt;
+  ret.x_vel = rhs.x_vel;
+  ret.y_vel = rhs.y_vel;
+  ret.omega = rhs.omega;
   return ret;
 }
