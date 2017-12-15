@@ -59,6 +59,10 @@ add_library(localizer_lib
 	src/localizer/localizer.cpp
 )
 
+add_library(super_localizer_helper_lib
+    src/super_localizer/super_localizer_helper.cpp
+)
+
 add_library(super_localizer_lib
 	src/super_localizer/super_localizer.cpp
 )
@@ -67,12 +71,19 @@ add_dependencies(localizer_lib vesc_access imu_can_sensor_lib )
 
 add_dependencies(super_localizer_lib localizer_lib)
 
+add_dependencies(super_localizer_helper_lib localizer_lib)
+
 target_link_libraries(localizer_lib
  vesc_access
 )
 
+target_link_libraries(super_localizer_helper_lib 
+ localizer_lib
+)
+
 target_link_libraries(super_localizer_lib
  localizer_lib
+ super_localizer_helper_lib
  imu_can_sensor_lib
  pos_can_sensor_lib
 )
@@ -142,6 +153,17 @@ if(TARGET test_super_localization)
     gmock_main
   )
   add_dependencies(test_super_localization vesc_access super_localizer_lib)
+endif()
+
+catkin_add_gtest(test_super_localization_helper src/super_localizer/tests/super_localizer_helper_tests.cpp)
+if(TARGET test_super_localization_helper)
+  target_link_libraries(
+    test_super_localization_helper
+    ${catkin_LIBRARIES}
+    localizer_lib
+    gmock_main
+  )
+  add_dependencies(test_super_localization_helper localizer_lib)
 endif()
 
 ## Add folders to be run by python nosetests

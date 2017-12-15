@@ -21,17 +21,13 @@ TEST(SuperLocalizerTests, ForwardWithPos)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
   MockPosCanSensor mockPos;
-  Localizer posspoof(.5f, 0,0,0,&flvesc, &frvesc, &brvesc, &blvesc);
+  Localizer posspoof(.5f, 0.0f,0.0f,0.0f,&flvesc, &frvesc, &brvesc, &blvesc);
   
-  SuperLocalizer loki(.5f, 0,0,0,&flvesc, &frvesc, &brvesc, &blvesc, &mockPos, (Localizer::stateVector_s) SuperLocalizer_default_gains);
-  EXPECT_CALL(flvesc, getLinearVelocity()).WillRepeatedly(Return(.3));
-  EXPECT_CALL(frvesc, getLinearVelocity()).WillRepeatedly(Return(.3));
-  EXPECT_CALL(brvesc, getLinearVelocity()).WillRepeatedly(Return(.3));
-  EXPECT_CALL(blvesc, getLinearVelocity()).WillRepeatedly(Return(.3));
-  //EXPECT_CALL(flvesc, getLinearVelocity());
-  //EXPECT_CALL(frvesc, getLinearVelocity());
-  //EXPECT_CALL(brvesc, getLinearVelocity());
-  //EXPECT_CALL(blvesc, getLinearVelocity());
+  SuperLocalizer loki(.5f, 0.0f,0.0f,0.0f,&flvesc, &frvesc, &brvesc, &blvesc, &mockPos, SuperLocalizer_default_gains);
+  EXPECT_CALL(flvesc, getLinearVelocity()).WillRepeatedly(Return(.3f));
+  EXPECT_CALL(frvesc, getLinearVelocity()).WillRepeatedly(Return(.3f));
+  EXPECT_CALL(brvesc, getLinearVelocity()).WillRepeatedly(Return(.3f));
+  EXPECT_CALL(blvesc, getLinearVelocity()).WillRepeatedly(Return(.3f));
 
   EXPECT_CALL(mockPos, receiveData()).WillRepeatedly(Return(ReadableSensors::ReadStatus::READ_SUCCESS));
 
@@ -41,14 +37,15 @@ TEST(SuperLocalizerTests, ForwardWithPos)
   for (int iter = 0; iter < 50; iter++) //.5 seconds at dt = .01
   {
       EXPECT_CALL(mockPos, getX())
-            .WillOnce(Return(posspoof.getStateVector().x_pos + normnum(generator)))
+            .WillOnce(Return(posspoof.getStateVector().x_pos))// + normnum(generator)))
 		    .RetiresOnSaturation();
       EXPECT_CALL(mockPos, getY())
-            .WillOnce(Return(posspoof.getStateVector().y_pos + normnum(generator)))
+            .WillOnce(Return(posspoof.getStateVector().y_pos))// + normnum(generator)))
     		.RetiresOnSaturation();
       EXPECT_CALL(mockPos, getTheta())
-            .WillOnce(Return(posspoof.getStateVector().theta + normnum(generator)))
+            .WillOnce(Return(posspoof.getStateVector().theta))// + normnum(generator)))
     		.RetiresOnSaturation();
+
 			posspoof.updateStateVector(.01f);
   }
 
@@ -57,19 +54,35 @@ TEST(SuperLocalizerTests, ForwardWithPos)
       loki.updateStateVector(.01f);
   }
 
-  ASSERT_NEAR(loki.getStateVector().x_pos,.15f, POSTOL) 
+  EXPECT_NEAR(posspoof.getStateVector().x_vel, .3f, POSTOL) 
+              << "Xvel = " << posspoof.getStateVector().x_vel;
+  EXPECT_NEAR(posspoof.getStateVector().y_vel, 0.0f, POSTOL) 
+              << "Yvel = " << posspoof.getStateVector().y_vel;
+  EXPECT_NEAR(posspoof.getStateVector().omega, 0.0f, RADTOL) 
+              << "Omega = " << posspoof.getStateVector().omega;
+
+  EXPECT_NEAR(posspoof.getStateVector().x_pos, .15f, POSTOL) 
+              << "Xpos = " << posspoof.getStateVector().x_pos;
+  EXPECT_NEAR(posspoof.getStateVector().y_pos, 0.0f, POSTOL) 
+              << "Ypos = " << posspoof.getStateVector().y_pos;
+  EXPECT_NEAR(posspoof.getStateVector().theta, 0.0f, RADTOL) 
+              << "Theta = " << posspoof.getStateVector().theta;
+
+  EXPECT_NEAR(loki.getStateVector().x_vel, .3f, POSTOL) 
+              << "Xvel = " << loki.getStateVector().x_vel;
+  EXPECT_NEAR(loki.getStateVector().y_vel, 0.0f, POSTOL) 
+              << "Yvel = " << posspoof.getStateVector().y_vel;
+  EXPECT_NEAR(loki.getStateVector().omega, 0.0f, RADTOL) 
+              << "Omega = " << posspoof.getStateVector().omega;
+
+  EXPECT_NEAR(loki.getStateVector().x_pos,.15f, POSTOL) 
               << "Xpos = " << loki.getStateVector().x_pos;
-  ASSERT_NEAR(loki.getStateVector().y_pos, 0.00f, POSTOL) 
+  EXPECT_NEAR(loki.getStateVector().y_pos, 0.00f, POSTOL) 
               << "Ypos = " << loki.getStateVector().y_pos;
-  ASSERT_NEAR(loki.getStateVector().theta, 0.0f, RADTOL) 
+  EXPECT_NEAR(loki.getStateVector().theta, 0.0f, RADTOL) 
               << "Theta = " << loki.getStateVector().theta;
 
-  ASSERT_NEAR(posspoof.getStateVector().x_pos, .15f, POSTOL) 
-              << "Xpos = " << posspoof.getStateVector().x_pos;
-  ASSERT_NEAR(posspoof.getStateVector().y_pos, 0.0f, POSTOL) 
-              << "Ypos = " << posspoof.getStateVector().y_pos;
-  ASSERT_NEAR(posspoof.getStateVector().theta, 0.0f, RADTOL) 
-              << "Theta = " << posspoof.getStateVector().theta;
+
 }
 
 TEST(SuperLocalizerTests, ForwardLeftWithPos)
@@ -78,15 +91,11 @@ TEST(SuperLocalizerTests, ForwardLeftWithPos)
   MockPosCanSensor mockPos;
   Localizer posspoof(.5f, 0,0,0,&flvesc, &frvesc, &brvesc, &blvesc);
   
-  SuperLocalizer loki(.5f, 0,0,0,&flvesc, &frvesc, &brvesc, &blvesc, &mockPos, (Localizer::stateVector_s) SuperLocalizer_default_gains);
+  SuperLocalizer loki(.5f, 0,0,0,&flvesc, &frvesc, &brvesc, &blvesc, &mockPos, SuperLocalizer_default_gains);
   EXPECT_CALL(flvesc, getLinearVelocity()).WillRepeatedly(Return(.1));
   EXPECT_CALL(frvesc, getLinearVelocity()).WillRepeatedly(Return(.3));
   EXPECT_CALL(brvesc, getLinearVelocity()).WillRepeatedly(Return(.3));
   EXPECT_CALL(blvesc, getLinearVelocity()).WillRepeatedly(Return(.1));
-  //EXPECT_CALL(flvesc, getLinearVelocity());
-  //EXPECT_CALL(frvesc, getLinearVelocity());
-  //EXPECT_CALL(brvesc, getLinearVelocity());
-  //EXPECT_CALL(blvesc, getLinearVelocity());
 
   EXPECT_CALL(mockPos, receiveData()).WillRepeatedly(Return(ReadableSensors::ReadStatus::READ_SUCCESS));
 
@@ -112,18 +121,18 @@ TEST(SuperLocalizerTests, ForwardLeftWithPos)
       loki.updateStateVector(.01f);
   }
 
-  ASSERT_NEAR(loki.getStateVector().x_pos, .099f, POSTOL) 
+  EXPECT_NEAR(loki.getStateVector().x_pos, .099f, POSTOL) 
               << "Xpos = " << loki.getStateVector().x_pos;
-  ASSERT_NEAR(loki.getStateVector().y_pos, 0.01f, POSTOL) 
+  EXPECT_NEAR(loki.getStateVector().y_pos, 0.01f, POSTOL) 
               << "Ypos = " << loki.getStateVector().y_pos;
-  ASSERT_NEAR(loki.getStateVector().theta, .2f, RADTOL) 
+  EXPECT_NEAR(loki.getStateVector().theta, .2f, RADTOL) 
               << "Theta = " << loki.getStateVector().theta;
 
-  ASSERT_NEAR(posspoof.getStateVector().x_pos, .099f, POSTOL) 
+  EXPECT_NEAR(posspoof.getStateVector().x_pos, .099f, POSTOL) 
               << "Xpos = " << posspoof.getStateVector().x_pos;
-  ASSERT_NEAR(posspoof.getStateVector().y_pos, 0.01f, POSTOL) 
+  EXPECT_NEAR(posspoof.getStateVector().y_pos, 0.01f, POSTOL) 
               << "Ypos = " << posspoof.getStateVector().y_pos;
-  ASSERT_NEAR(posspoof.getStateVector().theta, .2f, RADTOL) 
+  EXPECT_NEAR(posspoof.getStateVector().theta, .2f, RADTOL) 
               << "Theta = " << posspoof.getStateVector().theta;
 }
 

@@ -2,6 +2,7 @@
 #include <can_sensors/imu_can_sensor_interface.h>
 #include <can_sensors/pos_can_sensor_interface.h>
 #include <readable_sensors/readable_sensors.h>
+#include <super_localizer/super_localizer_helper.h>
 
 #define XRESGAIN .05f
 #define YRESGAIN .05f
@@ -35,10 +36,6 @@ private:
   Localizer::stateVector_s residual;
   Localizer::stateVector_s measured;
   Localizer::stateVector_s gainVector;
-
-  Localizer::stateVector_s diff(Localizer::stateVector_s lhs, Localizer::stateVector_s rhs);
-  Localizer::stateVector_s multiply(Localizer::stateVector_s lhs, Localizer::stateVector_s rhs);
-  Localizer::stateVector_s addfrommodel(Localizer::stateVector_s lhs, Localizer::stateVector_s rhs, float dt);
 };
 
 //I couldn't figure out how to make this a static class member. I tried quite a few things...

@@ -63,7 +63,7 @@ Localizer::UpdateStatus Localizer::updateStateVector(float dt)
   Eigen::Vector2f rotation_on_y;
   float d_theta;
 
-  if (w != 0.0f)  // no dividing by zero
+  if (std::abs(average_right_velocity - average_left_velocity) > 0.01f)  // no dividing by zero
   {
     turn_radius = axle_len / 2 * (average_right_velocity + average_left_velocity) /
                   (average_right_velocity - average_left_velocity);  // turn radius
@@ -92,9 +92,9 @@ Localizer::UpdateStatus Localizer::updateStateVector(float dt)
   state_vector.y_pos += d_pos_world(1);
   state_vector.theta += d_theta;
 
-  state_vector.x_vel = d_pos_world(0);
-  state_vector.y_vel = d_pos_world(1);
-  state_vector.omega = d_theta;
+  state_vector.x_vel = d_pos_world(0) / dt;
+  state_vector.y_vel = d_pos_world(1) / dt;
+  state_vector.omega = d_theta / dt;
   return Localizer::UpdateStatus::UPDATE_SUCCESS;
 }
 

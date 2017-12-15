@@ -45,8 +45,7 @@ Localizer::UpdateStatus SuperLocalizer::updateStateVector(float dt)
   // do dead reckoning calculation, this uses information from the vescs
   this->deadReck.updateStateVector(dt);
   // read sensors
-  for (int a = 0; a < num_sensors; a++)
-    sensors[a]->receiveData();
+  for (int a = 0; a < num_sensors; a++) sensors[a]->receiveData();
 
   // get IMU data, integrate it. This is measured vel
   if (have_imu)

@@ -9,6 +9,9 @@ using ::testing::_;
 using ::testing::AnyNumber;
 using ::testing::Gt;
 
+#define POSTOL .03f
+#define RADTOL .05f
+
 // Declare a test
 TEST(LocalizerTests, GoesForward)
 {
@@ -27,6 +30,10 @@ TEST(LocalizerTests, GoesForward)
   EXPECT_TRUE(loki.getStateVector().x_pos >= .0049 && loki.getStateVector().x_pos <= .0051);
   EXPECT_TRUE(loki.getStateVector().y_pos >= -.0001 && loki.getStateVector().y_pos <= .0001);
   EXPECT_TRUE(loki.getStateVector().theta >= -.0001 && loki.getStateVector().theta <= .0001);
+
+  ASSERT_NEAR(loki.getStateVector().x_vel, .5f, POSTOL);
+  ASSERT_NEAR(loki.getStateVector().y_vel, .0f, POSTOL);
+  ASSERT_NEAR(loki.getStateVector().omega, .0f, RADTOL);
 }
 
 TEST(LocalizerTests, ForwardLeft)
