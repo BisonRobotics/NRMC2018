@@ -2,9 +2,9 @@
 
 SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
                                iVescAccess *backLeftVesc, ImuCanSensorInterface *centerIMU, PosCanSensorInterface *posSensor,
-                               Localizer::stateVector_s gains)
+                               LocalizerInterface::stateVector gains)
 {
-  deadReck = Localizer(axleLen, xi, yi, thi, frontLeftVesc, frontRightVesc, backRightVesc, backLeftVesc);
+  deadReck = new Localizer(axleLen, xi, yi, thi, frontLeftVesc, frontRightVesc, backRightVesc, backLeftVesc);
 
   cIMU = centerIMU;
   pSensor = posSensor;
@@ -22,9 +22,9 @@ SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVe
 }
 
 SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
-                               iVescAccess *backLeftVesc, PosCanSensorInterface *posSensor, Localizer::stateVector_s gains)
+                               iVescAccess *backLeftVesc, PosCanSensorInterface *posSensor, LocalizerInterface::stateVector gains)
 {
-  deadReck = Localizer(axleLen, xi, yi, thi, frontLeftVesc, frontRightVesc, backRightVesc, backLeftVesc);
+  deadReck = new Localizer(axleLen, xi, yi, thi, frontLeftVesc, frontRightVesc, backRightVesc, backLeftVesc);
 
   pSensor = posSensor;
   num_sensors = 1;
@@ -40,10 +40,10 @@ SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVe
   gainVector = gains;
 }
 
-Localizer::UpdateStatus SuperLocalizer::updateStateVector(float dt)
+SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(float dt)
 {
   // do dead reckoning calculation, this uses information from the vescs
-  this->deadReck.updateStateVector(dt);
+  this->deadReck->updateStateVector(dt);
   // read sensors
   for (int a = 0; a < num_sensors; a++)
     sensors[a]->receiveData();
@@ -53,13 +53,13 @@ Localizer::UpdateStatus SuperLocalizer::updateStateVector(float dt)
   {
     measured.x_vel += cIMU->getX() * dt;
     measured.y_vel += cIMU->getY() * dt;
-    measured.omega = deadReck.getStateVector().omega;  // unimplemented sensor, set to model value so residual stays 0
+    measured.omega = deadReck->getStateVector().omega;  // unimplemented sensor, set to model value so residual stays 0
   }
   else
   {
-    measured.x_vel = deadReck.getStateVector().x_vel;  // unimplemented sensor, set to model value so residual stays 0
-    measured.y_vel = deadReck.getStateVector().y_vel;  // unimplemented sensor, set to model value so residual stays 0
-    measured.omega = deadReck.getStateVector().omega;  // unimplemented sensor, set to model value so residual stays 0
+    measured.x_vel = deadReck->getStateVector().x_vel;  // unimplemented sensor, set to model value so residual stays 0
+    measured.y_vel = deadReck->getStateVector().y_vel;  // unimplemented sensor, set to model value so residual stays 0
+    measured.omega = deadReck->getStateVector().omega;  // unimplemented sensor, set to model value so residual stays 0
   }
 
   // get Pos data, This is measured pos
@@ -71,9 +71,9 @@ Localizer::UpdateStatus SuperLocalizer::updateStateVector(float dt)
   }
   else
   {
-    measured.x_pos = deadReck.getStateVector().x_pos;  // unimplemented sensor, set to model value so residual stays 0
-    measured.y_pos = deadReck.getStateVector().y_pos;  // unimplemented sensor, set to model value so residual stays 0
-    measured.theta = deadReck.getStateVector().theta;  // unimplemented sensor, set to model value so residual stays 0
+    measured.x_pos = deadReck->getStateVector().x_pos;  // unimplemented sensor, set to model value so residual stays 0
+    measured.y_pos = deadReck->getStateVector().y_pos;  // unimplemented sensor, set to model value so residual stays 0
+    measured.theta = deadReck->getStateVector().theta;  // unimplemented sensor, set to model value so residual stays 0
   }
 
   // take difference between estimated data and measured data, this is residual
@@ -81,8 +81,12 @@ Localizer::UpdateStatus SuperLocalizer::updateStateVector(float dt)
   // revise estimate by subtracting residual from it * some gain
 
   //it would be more efficient for these calculations to happen in place maybe, instead of all these return shits
-  Localizer::stateVector_s intermediateStateVector = addfrommodel(state_vector, deadReck.getStateVector(),dt);
-  //state_vector = addfrommodel(state_vector, deadReck.getStateVector(),dt);
-  Localizer::stateVector_s intermediate = multiply(gainVector, residual);
+  LocalizerInterface::stateVector intermediateStateVector = addfrommodel(state_vector, deadReck->getStateVector(),dt);
+  //state_vector = addfrommodel(state_vector, deadReck->getStateVector(),dt);
+  LocalizerInterface::stateVector intermediate = multiply(gainVector, residual);
   state_vector = diff(intermediateStateVector, intermediate);
+}
+
+SuperLocalizer::~SuperLocalizer(){
+	delete deadReck;
 }

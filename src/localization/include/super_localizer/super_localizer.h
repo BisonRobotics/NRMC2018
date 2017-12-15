@@ -11,20 +11,21 @@
 #define DYRESGAIN .05f
 #define OMEGARESGAIN .05f
 
-class SuperLocalizer : public Localizer
+class SuperLocalizer : public LocalizerInterface::LocalizerInterface_c
 {
 public:
   SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
                  iVescAccess *backLeftVesc, ImuCanSensorInterface *centerIMU, PosCanSensorInterface *posSensor,
-                 Localizer::stateVector_s gains);
+                 LocalizerInterface::stateVector gains);
   SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
-                 iVescAccess *backLeftVesc, PosCanSensorInterface *posSensor, Localizer::stateVector_s gains);
-  Localizer::UpdateStatus updateStateVector(float dt);
+                 iVescAccess *backLeftVesc, PosCanSensorInterface *posSensor, LocalizerInterface::stateVector gains);
+  UpdateStatus updateStateVector(float dt);
+  ~SuperLocalizer();
 
   //static constexpr Localizer::stateVector_s default_gains;
 
 private:
-  Localizer deadReck;
+  Localizer *deadReck;
 
   ImuCanSensorInterface *cIMU;
   PosCanSensorInterface *pSensor;
@@ -33,15 +34,17 @@ private:
   bool have_imu;
   bool have_pos;
 
-  Localizer::stateVector_s residual;
-  Localizer::stateVector_s measured;
-  Localizer::stateVector_s gainVector;
+  LocalizerInterface::stateVector residual;
+  LocalizerInterface::stateVector measured;
+  LocalizerInterface::stateVector gainVector;
+
+  LocalizerInterface::stateVector state_vector;
 };
 
 //I couldn't figure out how to make this a static class member. I tried quite a few things...
 //apparently, the declaration is supposed to go in this header and an actual definition in the 
 //.cpp file, but I couldn't find the right way to do that... so here it is instead.
-static constexpr Localizer::stateVector_s SuperLocalizer_default_gains =    {.x_pos = XRESGAIN,
+static constexpr LocalizerInterface::stateVector SuperLocalizer_default_gains =    {.x_pos = XRESGAIN,
                                                              .y_pos = YRESGAIN,
                                                              .theta = THETARESGAIN,
                                                              .x_vel = DXRESGAIN,
