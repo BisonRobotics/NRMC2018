@@ -173,53 +173,6 @@ std::vector<maneuver> doubleArcSolution(pose robotPose, pose waypoint)
     return returnVector;
 }
 
-std::vector<maneuver> doubleArcWithLinearSolution(pose robotPose, pose waypoint)
-{
-    // DoubleArc w/ linear Displacement - credit due to Sam Fehringer
-    // if the intercept is behind the robot and the waypoint is in front of the robot
-    // or if the intercept is ahead of the robot, but the waypoint is behind the robot
-    // then we are performing a "DoubleArc - lineaer displacement"
-    // 3 maneuvers, fisrt a straight segment, then two stacked circles, "like a snowman"
-    // this is for waypoints which are extreme in the robot Y and facing in the same direction
-    maneuver maneuver1, m1UT; //maneuver and untransformed buddy
-    maneuver maneuver2, m2UT;
-    maneuver maneuver3, m3UT;
-    std::vector<maneuver> returnVector;
-
-    pose wp;  // waypoint in robot coord, by inverse transform
-    wp = transformPoseToRobotCoord(robotPose, waypoint);
-
-    // calculate the radii and x-axis displacement
-    float r = std::abs(wp.y) / (3 + cos(wp.theta));  // what is this 3?
-    float firstlinear = wp.x + sin(wp.theta) * r;    // displacement from origin
-
-    // data about the maneuvers can now be known
-    maneuver1.xc = firstlinear / 2;
-    maneuver1.yc = STRAIGHTRADIUS;
-    maneuver1.radius = STRAIGHTRADIUS;
-    maneuver1.distance = firstlinear;
-
-    maneuver2.xc = firstlinear;
-    maneuver2.yc = SIGN(wp.y) * r;
-    maneuver2.radius = r;
-    maneuver2.distance = PI * r;
-
-    maneuver3.xc = firstlinear;
-    maneuver3.yc = SIGN(wp.y) * 3 * r;  // the ycenter is 3 radii from the x axis
-    maneuver3.radius = r;
-    maneuver3.distance = (wp.theta + PI / 2) * r;
-
-    //transform back to world coord
-    m1UT = transformManeuverToWorldCoord(robotPose, maneuver1);
-    m2UT = transformManeuverToWorldCoord(robotPose, maneuver2);
-    m3UT = transformManeuverToWorldCoord(robotPose, maneuver3);
-
-    returnVector.push_back(m1UT);
-    returnVector.push_back(m2UT);
-    returnVector.push_back(m3UT);
-
-    return returnVector;
-}
 
 std::vector<maneuver> waypoint2maneuvers(pose robotPose, pose waypoint)
 {
