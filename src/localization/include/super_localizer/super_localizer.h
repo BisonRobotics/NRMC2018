@@ -23,7 +23,7 @@ public:
   ~SuperLocalizer();
 
   //static constexpr Localizer::stateVector_s default_gains;
-
+  LocalizerInterface::stateVector getStateVector();
 private:
   Localizer *deadReck;
 

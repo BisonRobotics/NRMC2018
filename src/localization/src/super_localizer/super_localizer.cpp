@@ -87,6 +87,12 @@ SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(float dt)
   state_vector = diff(intermediateStateVector, intermediate);
 }
 
-SuperLocalizer::~SuperLocalizer(){
+SuperLocalizer::~SuperLocalizer()
+{
 	delete deadReck;
+}
+
+LocalizerInterface::stateVector SuperLocalizer::getStateVector()
+{
+  return state_vector;
 }

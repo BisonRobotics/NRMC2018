@@ -4,7 +4,7 @@
 
 TEST(SuperLocalizerHelperTests, diffWorks)
 {
-   Localizer::stateVector_s v1 ={.x_pos = 1,
+   LocalizerInterface::stateVector v1 ={.x_pos = 1,
                                                              .y_pos = 1,
                                                              .theta = 1,
                                                              .x_vel = 1,
