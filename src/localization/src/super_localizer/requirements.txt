@@ -1,0 +1,4 @@
+the gains should be equal to the default gains
+the residual for acceleration should always
+the acceleration should always be measured to be 0 (for now)
+the state vector should be initialized to 0

@@ -24,6 +24,13 @@ public:
 
   //static constexpr Localizer::stateVector_s default_gains;
   LocalizerInterface::stateVector getStateVector();
+  uint8_t getNumSensors();
+  bool getHaveImu();
+  bool getHavePosition();
+  LocalizerInterface::stateVector getResidual();
+  LocalizerInterface::stateVector getMeasured();
+  LocalizerInterface::stateVector getGainVector();
+
 private:
   Localizer *deadReck;
 
@@ -33,12 +40,14 @@ private:
   uint8_t num_sensors;
   bool have_imu;
   bool have_pos;
-
+ // LocalizerInterface::stateVector initState ();
   LocalizerInterface::stateVector residual;
   LocalizerInterface::stateVector measured;
   LocalizerInterface::stateVector gainVector;
 
   LocalizerInterface::stateVector state_vector;
+
+    LocalizerInterface::stateVector initState(float xi, float yi, float theta);
 };
 
 //I couldn't figure out how to make this a static class member. I tried quite a few things...

@@ -37,7 +37,7 @@ TEST(LocalizerHelperTests, CanSub)
 }
 
 
-TEST(LocalizerHelperTests, CanAddFromModel)
+/*TEST(LocalizerHelperTests, CanAddFromModel)
 {
   LocalizerInterface::stateVector v1 = {1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0};
   LocalizerInterface::stateVector v2 = {2.0, 3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0};
@@ -53,7 +53,7 @@ TEST(LocalizerHelperTests, CanAddFromModel)
   EXPECT_NEAR (v3.y_accel, 17.0, .01);
   EXPECT_NEAR (v3.alpha, 19.0, .01);
 }
-
+*/
 
 
 

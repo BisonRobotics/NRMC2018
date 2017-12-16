@@ -1,5 +1,21 @@
 #include <super_localizer/super_localizer.h>
 
+
+
+LocalizerInterface::stateVector SuperLocalizer::initState (float xi, float yi, float theta){
+  LocalizerInterface::stateVector ret;
+  ret.x_pos = xi;
+  ret.y_pos = yi;
+  ret.theta = theta;
+  ret.omega = 0.0f;
+  ret.alpha = 0.0f;
+  ret.x_vel = 0.0f;
+  ret.y_vel = 0.0f;
+  ret.x_accel = 0.0f;
+  ret.y_accel = 0.0f;
+  return ret;
+}
+
 SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
                                iVescAccess *backLeftVesc, ImuCanSensorInterface *centerIMU, PosCanSensorInterface *posSensor,
                                LocalizerInterface::stateVector gains)
@@ -14,9 +30,9 @@ SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVe
   this->have_pos = true;
   this->have_imu = true;
 
-  this->state_vector = { 0 };
-  this->residual = { 0 };
-  this->measured = { 0 };
+  this->state_vector = initState (0,0,0);
+  this->residual = initState (0,0,0);
+  this->measured = initState (0,0,0);
 
   this->gainVector = gains;
 }
@@ -33,9 +49,9 @@ SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVe
 
   this->sensors[0] = posSensor;
 
-  this->state_vector = { 0 };
-  this->residual = { 0 };
-  this->measured = { 0 };
+  this->state_vector = initState (0,0,0);
+  this->residual = initState (0,0,0);
+  this->measured = initState (0,0,0);
 
   this->gainVector = gains;
 }
@@ -96,3 +112,24 @@ LocalizerInterface::stateVector SuperLocalizer::getStateVector()
 {
   return state_vector;
 }
+
+LocalizerInterface::stateVector SuperLocalizer::getResidual() {
+  return residual;
+}
+
+LocalizerInterface::stateVector SuperLocalizer::getGainVector() {
+  return gainVector;
+}
+
+LocalizerInterface::stateVector SuperLocalizer::getMeasured(){
+  return measured;
+}
+
+bool SuperLocalizer::getHaveImu() {
+  return have_imu;
+}
+
+bool SuperLocalizer::getHavePosition() {
+  return have_pos;
+}
+

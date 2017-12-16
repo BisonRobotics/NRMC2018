@@ -18,6 +18,17 @@ using ::testing::AnyNumber;
 using ::testing::Gt;
 using ::testing::NiceMock;
 
+TEST(SuperLocalizerTests, residualAccelIsZero){
+  NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
+  NiceMock<MockPosCanSensor> mockPos;
+  SuperLocalizer loki (.5f, 0.0f, 0.0f, 0.0f, &flvesc, &frvesc, &brvesc, &blvesc, &mockPos, SuperLocalizer_default_gains);
+//  LocalizerInterface::stateVector = loki.getResidual();
+
+}
+
+
+
+
 TEST(SuperLocalizerTests, ForwardWithPos)
 {
   NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
@@ -25,19 +36,20 @@ TEST(SuperLocalizerTests, ForwardWithPos)
   Localizer posspoof(.5f, 0.0f,0.0f,0.0f,&flvesc, &frvesc, &brvesc, &blvesc);
   
   SuperLocalizer loki(.5f, 0.0f,0.0f,0.0f,&flvesc, &frvesc, &brvesc, &blvesc, &mockPos, SuperLocalizer_default_gains);
-  ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(.3f));
-  ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(.3f));
-  ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(.3f));
-  ON_CALL(blvesc, getLinearVelocity()).WillByDefault(Return(.3f));
+  ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(0.3f));
+  ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(0.3f));
+  ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(0.3f));
+  ON_CALL(blvesc, getLinearVelocity()).WillByDefault(Return(0.3f));
 
-  EXPECT_CALL(mockPos, receiveData()).WillRepeatedly(Return(ReadableSensors::ReadStatus::READ_SUCCESS));
-
+  ON_CALL(mockPos, receiveData()).WillByDefault(Return(ReadableSensors::ReadStatus::READ_SUCCESS));
+  EXPECT_TRUE (loki.getHavePosition());
+  EXPECT_FALSE (loki.getHaveImu());
   std::default_random_engine generator;
-  std::normal_distribution<float> normnum(0.0f,.0002f);
+  std::normal_distribution<float> normnum(0.0f,.1f);
 
-  for (int iter = 0; iter < 50; iter++) //.5 seconds at dt = .01
+  /*for (int iter = 0; iter < 50; iter++) //.5 seconds at dt = .01
   {
-      EXPECT_CALL(mockPos, getX())
+  /*    EXPECT_CALL(mockPos, getX())
             .WillOnce(Return(posspoof.getStateVector().x_pos))// + normnum(generator)))
 		    .RetiresOnSaturation();
       EXPECT_CALL(mockPos, getY())
@@ -48,11 +60,20 @@ TEST(SuperLocalizerTests, ForwardWithPos)
     		.RetiresOnSaturation();
 
 			posspoof.updateStateVector(.01f);
-  }
+
+   }*/
 
   for (int iter = 0; iter< 50; iter++) 
   {
+    posspoof.updateStateVector(.01f);
+    ON_CALL(mockPos, getX()).WillByDefault(Return(posspoof.getStateVector().x_pos + normnum(generator)));
+    ON_CALL(mockPos, getY()).WillByDefault(Return(posspoof.getStateVector().y_pos + normnum(generator)));
+    ON_CALL(mockPos, getTheta ()).WillByDefault(Return(posspoof.getStateVector().theta + normnum (generator)));
+
       loki.updateStateVector(.01f);
+     /* EXPECT_NEAR(loki.get_measured().x_pos, posspoof.getStateVector().x_pos,.001);
+      EXPECT_NEAR(loki.get_measured().y_pos, posspoof.getStateVector().y_pos,.001);
+      EXPECT_NEAR(loki.get_measured().theta, posspoof.getStateVector().theta,.001);*/
   }
 
   EXPECT_NEAR(posspoof.getStateVector().x_vel, .3f, POSTOL) 
@@ -88,21 +109,21 @@ TEST(SuperLocalizerTests, ForwardWithPos)
 
 TEST(SuperLocalizerTests, ForwardLeftWithPos)
 {
-  MockVescAccess flvesc, frvesc, brvesc, blvesc;
-  MockPosCanSensor mockPos;
+  NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
+  NiceMock<MockPosCanSensor> mockPos;
   Localizer posspoof(.5f, 0,0,0,&flvesc, &frvesc, &brvesc, &blvesc);
   
   SuperLocalizer loki(.5f, 0,0,0,&flvesc, &frvesc, &brvesc, &blvesc, &mockPos, SuperLocalizer_default_gains);
-  EXPECT_CALL(flvesc, getLinearVelocity()).WillRepeatedly(Return(.1));
-  EXPECT_CALL(frvesc, getLinearVelocity()).WillRepeatedly(Return(.3));
-  EXPECT_CALL(brvesc, getLinearVelocity()).WillRepeatedly(Return(.3));
-  EXPECT_CALL(blvesc, getLinearVelocity()).WillRepeatedly(Return(.1));
+  ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(.1));
+  ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(.3));
+  ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(.3));
+  ON_CALL(blvesc, getLinearVelocity()).WillByDefault(Return(.1));
 
-  EXPECT_CALL(mockPos, receiveData()).WillRepeatedly(Return(ReadableSensors::ReadStatus::READ_SUCCESS));
+  ON_CALL(mockPos, receiveData()).WillByDefault(Return(ReadableSensors::ReadStatus::READ_SUCCESS));
 
   std::default_random_engine generator;
-  std::normal_distribution<float> normnum(0.0f,.0002f);
-
+  std::normal_distribution<float> normnum(0.0f,.1f);
+/*
   for (int iter = 0; iter < 50; iter++) //.5 seconds at dt = .01
   {
       EXPECT_CALL(mockPos, getX())
@@ -116,9 +137,13 @@ TEST(SuperLocalizerTests, ForwardLeftWithPos)
     		.RetiresOnSaturation();
 			posspoof.updateStateVector(.01f);
   }
-
+*/
   for (int iter = 0; iter< 50; iter++) 
   {
+      posspoof.updateStateVector(.01f);
+      ON_CALL (mockPos, getX()).WillByDefault(Return (posspoof.getStateVector().x_pos + normnum(generator)));
+      ON_CALL (mockPos, getY()).WillByDefault(Return (posspoof.getStateVector().y_pos + normnum(generator)));
+      ON_CALL (mockPos, getTheta()).WillByDefault(Return (posspoof.getStateVector().theta + normnum(generator)));
       loki.updateStateVector(.01f);
   }
 
