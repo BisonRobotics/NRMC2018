@@ -18,6 +18,54 @@ using ::testing::AnyNumber;
 using ::testing::Gt;
 using ::testing::NiceMock;
 
+TEST(SuperLocalizerTests, CanTurnInPlacecw)
+{
+  NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
+  NiceMock<MockPosCanSensor> mockPos;
+  Localizer posspoof(.5f, 10.0f,10.0f,0.0f,&flvesc, &frvesc, &brvesc, &blvesc);
+
+  SuperLocalizer loki(.5f, 10.0f,10.0f,0.0f,&flvesc, &frvesc, &brvesc, &blvesc, &mockPos, SuperLocalizer_default_gains);
+  ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(1.0f));
+  ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(-1.0f));
+  ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(-1.0f));
+  ON_CALL(blvesc, getLinearVelocity()).WillByDefault(Return(1.0f));
+
+  ON_CALL(mockPos, receiveData()).WillByDefault(Return(ReadableSensors::ReadStatus::READ_SUCCESS));
+  EXPECT_TRUE (loki.getHavePosition());
+  EXPECT_FALSE (loki.getHaveImu());
+  std::default_random_engine generator;
+  std::normal_distribution<float> normnum(0.0f,.05f);
+
+  for (int iter = 0; iter< 50; iter++)
+  {
+    posspoof.updateStateVector(.01f);
+    ON_CALL(mockPos, getX()).WillByDefault(Return(posspoof.getStateVector().x_pos + normnum(generator)));
+    ON_CALL(mockPos, getY()).WillByDefault(Return(posspoof.getStateVector().y_pos + normnum(generator)));
+    ON_CALL(mockPos, getTheta ()).WillByDefault(Return(posspoof.getStateVector().theta + normnum (generator)));
+
+      loki.updateStateVector(.01f);
+  }
+
+  EXPECT_NEAR(posspoof.getStateVector().x_vel, 0.0f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().y_vel, 0.0f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().omega, -4.0f, RADTOL);
+
+  EXPECT_NEAR(posspoof.getStateVector().x_pos, 10.f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().y_pos, 10.0f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().theta, -2.04f, RADTOL);
+
+  EXPECT_NEAR(loki.getStateVector().x_vel, 0.0f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().y_vel, 0.0f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().omega, -4.0f, RADTOL);
+
+  EXPECT_NEAR(loki.getStateVector().x_pos,10.0f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().y_pos,10.00f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().theta,-2.04f, RADTOL);
+
+}
+
+
+
 
 TEST(SuperLocalizerTests, ForwardWithPosInit)
 {
@@ -43,37 +91,24 @@ TEST(SuperLocalizerTests, ForwardWithPosInit)
     ON_CALL(mockPos, getX()).WillByDefault(Return(posspoof.getStateVector().x_pos + normnum(generator)));
     ON_CALL(mockPos, getY()).WillByDefault(Return(posspoof.getStateVector().y_pos + normnum(generator)));
     ON_CALL(mockPos, getTheta ()).WillByDefault(Return(posspoof.getStateVector().theta + normnum (generator)));
-
-      loki.updateStateVector(.01f);
+    loki.updateStateVector(.01f);
   }
 
-  EXPECT_NEAR(posspoof.getStateVector().x_vel, 0.3f, POSTOL)
-              << "Xvel = " << posspoof.getStateVector().x_vel;
-  EXPECT_NEAR(posspoof.getStateVector().y_vel, 0.0f, POSTOL)
-              << "Yvel = " << posspoof.getStateVector().y_vel;
-  EXPECT_NEAR(posspoof.getStateVector().omega, 0.0f, RADTOL)
-              << "Omega = " << posspoof.getStateVector().omega;
+  EXPECT_NEAR(posspoof.getStateVector().x_vel, 0.3f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().y_vel, 0.0f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().omega, 0.0f, RADTOL);
 
-  EXPECT_NEAR(posspoof.getStateVector().x_pos, 10.15f, POSTOL)
-              << "Xpos = " << posspoof.getStateVector().x_pos;
-  EXPECT_NEAR(posspoof.getStateVector().y_pos, 10.0f, POSTOL)
-              << "Ypos = " << posspoof.getStateVector().y_pos;
-  EXPECT_NEAR(posspoof.getStateVector().theta, 0.0f, RADTOL)
-              << "Theta = " << posspoof.getStateVector().theta;
+  EXPECT_NEAR(posspoof.getStateVector().x_pos, 10.15f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().y_pos, 10.0f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().theta, 0.0f, RADTOL);
 
-  EXPECT_NEAR(loki.getStateVector().x_vel, 0.3f, POSTOL)
-              << "Xvel = " << loki.getStateVector().x_vel;
-  EXPECT_NEAR(loki.getStateVector().y_vel, 0.0f, POSTOL)
-              << "Yvel = " << loki.getStateVector().y_vel;
-  EXPECT_NEAR(loki.getStateVector().omega, 0.0f, RADTOL)
-              << "Omega = " << loki.getStateVector().omega;
+  EXPECT_NEAR(loki.getStateVector().x_vel, 0.3f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().y_vel, 0.0f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().omega, 0.0f, RADTOL);
 
-  EXPECT_NEAR(loki.getStateVector().x_pos,10.15f, POSTOL)
-              << "Xpos = " << loki.getStateVector().x_pos;
-  EXPECT_NEAR(loki.getStateVector().y_pos,10.00f, POSTOL)
-              << "Ypos = " << loki.getStateVector().y_pos;
-  EXPECT_NEAR(loki.getStateVector().theta, 0.0f, RADTOL)
-              << "Theta = " << loki.getStateVector().theta;
+  EXPECT_NEAR(loki.getStateVector().x_pos,10.15f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().y_pos,10.00f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().theta, 0.0f, RADTOL);
 }
 
 TEST(SuperLocalizerTests, ForwardLeftWithPosInit)
@@ -102,19 +137,13 @@ TEST(SuperLocalizerTests, ForwardLeftWithPosInit)
       loki.updateStateVector(.01f);
   }
 
-  EXPECT_NEAR(loki.getStateVector().x_pos, 10.099f, POSTOL)
-              << "Xpos = " << loki.getStateVector().x_pos;
-  EXPECT_NEAR(loki.getStateVector().y_pos, 10.01f, POSTOL)
-              << "Ypos = " << loki.getStateVector().y_pos;
-  EXPECT_NEAR(loki.getStateVector().theta, .2f, RADTOL)
-              << "Theta = " << loki.getStateVector().theta;
+  EXPECT_NEAR(loki.getStateVector().x_pos, 10.101f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().y_pos, 10.01f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().theta, .204f, RADTOL);
 
-  EXPECT_NEAR(posspoof.getStateVector().x_pos, 10.099f, POSTOL)
-              << "Xpos = " << posspoof.getStateVector().x_pos;
-  EXPECT_NEAR(posspoof.getStateVector().y_pos, 10.01f, POSTOL)
-              << "Ypos = " << posspoof.getStateVector().y_pos;
-  EXPECT_NEAR(posspoof.getStateVector().theta, .2f, RADTOL)
-              << "Theta = " << posspoof.getStateVector().theta;
+  EXPECT_NEAR(posspoof.getStateVector().x_pos, 10.101f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().y_pos, 10.01f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().theta, .204f, RADTOL);
 }
 
 TEST(SuperLocalizerTests, ForwardRightWithPosInit)
@@ -143,19 +172,13 @@ TEST(SuperLocalizerTests, ForwardRightWithPosInit)
       loki.updateStateVector(.01f);
   }
 
-  EXPECT_NEAR(loki.getStateVector().x_pos, 5.099f, POSTOL)
-              << "Xpos = " << loki.getStateVector().x_pos;
-  EXPECT_NEAR(loki.getStateVector().y_pos, 5.0f-0.01f, POSTOL)
-              << "Ypos = " << loki.getStateVector().y_pos;
-  EXPECT_NEAR(loki.getStateVector().theta, -.2f, RADTOL)
-              << "Theta = " << loki.getStateVector().theta;
+  EXPECT_NEAR(loki.getStateVector().x_pos, 5.101f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().y_pos, 5.0f-0.01f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().theta, -.204f, RADTOL);
 
-  EXPECT_NEAR(posspoof.getStateVector().x_pos,5.0f+ .099f, POSTOL)
-              << "Xpos = " << posspoof.getStateVector().x_pos;
-  EXPECT_NEAR(posspoof.getStateVector().y_pos,5.0f -0.01f, POSTOL)
-              << "Ypos = " << posspoof.getStateVector().y_pos;
-  EXPECT_NEAR(posspoof.getStateVector().theta, -.2f, RADTOL)
-              << "Theta = " << posspoof.getStateVector().theta;
+  EXPECT_NEAR(posspoof.getStateVector().x_pos,5.0f+ .101f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().y_pos,5.0f -0.01f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().theta, -.204f, RADTOL);
 }
 
 TEST(SuperLocalizerTests, BackwardWithPosInit)
@@ -184,19 +207,13 @@ TEST(SuperLocalizerTests, BackwardWithPosInit)
       loki.updateStateVector(.01f);
   }
 
-  EXPECT_NEAR(loki.getStateVector().x_pos,10.0f -.15f, POSTOL)
-              << "Xpos = " << loki.getStateVector().x_pos;
-  EXPECT_NEAR(loki.getStateVector().y_pos, 10.0f, POSTOL)
-              << "Ypos = " << loki.getStateVector().y_pos;
-  EXPECT_NEAR(loki.getStateVector().theta, 0.0f, RADTOL)
-              << "Theta = " << loki.getStateVector().theta;
+  EXPECT_NEAR(loki.getStateVector().x_pos,10.0f -.153f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().y_pos, 10.0f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().theta, 0.0f, RADTOL);
 
-  EXPECT_NEAR(posspoof.getStateVector().x_pos,10.0f -.15f, POSTOL)
-              << "Xpos = " << posspoof.getStateVector().x_pos;
-  EXPECT_NEAR(posspoof.getStateVector().y_pos, 10.00f, POSTOL)
-              << "Ypos = " << posspoof.getStateVector().y_pos;
-  EXPECT_NEAR(posspoof.getStateVector().theta, 0.00f, RADTOL)
-              << "Theta = " << posspoof.getStateVector().theta;
+  EXPECT_NEAR(posspoof.getStateVector().x_pos,10.0f -.153f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().y_pos, 10.00f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().theta, 0.00f, RADTOL);
 }
 
 
@@ -226,19 +243,13 @@ TEST(SuperLocalizerTests, BackwardLeftWithPosInit)
       loki.updateStateVector(.01f);
   }
 
-  EXPECT_NEAR(loki.getStateVector().x_pos,10.0f -.0993, POSTOL)
-              << "Xpos = " << loki.getStateVector().x_pos;
-  EXPECT_NEAR(loki.getStateVector().y_pos, 10.01f, POSTOL)
-              << "Ypos = " << loki.getStateVector().y_pos;
-  EXPECT_NEAR(loki.getStateVector().theta, -.2f, RADTOL)
-              << "Theta = " << loki.getStateVector().theta;
+  EXPECT_NEAR(loki.getStateVector().x_pos,10.0f -.101f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().y_pos, 10.0104f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().theta, -.204f, RADTOL);
 
-  EXPECT_NEAR(posspoof.getStateVector().x_pos,10.0f -.0993f, POSTOL)
-              << "Xpos = " << posspoof.getStateVector().x_pos;
-  EXPECT_NEAR(posspoof.getStateVector().y_pos, 10.01f, POSTOL)
-              << "Ypos = " << posspoof.getStateVector().y_pos;
-  EXPECT_NEAR(posspoof.getStateVector().theta, -.2f, RADTOL)
-              << "Theta = " << posspoof.getStateVector().theta;
+  EXPECT_NEAR(posspoof.getStateVector().x_pos,10.0f -.101f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().y_pos, 10.0104f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().theta, -.204f, RADTOL);
 }
 
 
@@ -268,19 +279,13 @@ TEST(SuperLocalizerTests, BackwardRightWithPosInit)
       loki.updateStateVector(.01f);
   }
 
-  EXPECT_NEAR(loki.getStateVector().x_pos,10.0f -.0993, POSTOL)
-              << "Xpos = " << loki.getStateVector().x_pos;
-  EXPECT_NEAR(loki.getStateVector().y_pos,10.0f -0.01f, POSTOL)
-              << "Ypos = " << loki.getStateVector().y_pos;
-  EXPECT_NEAR(loki.getStateVector().theta, .2f, RADTOL)
-              << "Theta = " << loki.getStateVector().theta;
+  EXPECT_NEAR(loki.getStateVector().x_pos,10.0f -.1013, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().y_pos,10.0f -0.0104f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().theta, .204f, RADTOL);
 
-  EXPECT_NEAR(posspoof.getStateVector().x_pos,10.0f -.0993f, POSTOL)
-              << "Xpos = " << posspoof.getStateVector().x_pos;
-  EXPECT_NEAR(posspoof.getStateVector().y_pos,10.0f -0.01f, POSTOL)
-              << "Ypos = " << posspoof.getStateVector().y_pos;
-  EXPECT_NEAR(posspoof.getStateVector().theta, .2f, RADTOL)
-              << "Theta = " << posspoof.getStateVector().theta;
+  EXPECT_NEAR(posspoof.getStateVector().x_pos,10.0f -.1013f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().y_pos,10.0f -0.0104f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().theta, .204f, RADTOL);
 }
 
 
@@ -309,37 +314,24 @@ TEST(SuperLocalizerTests, ForwardWithPos)
     ON_CALL(mockPos, getX()).WillByDefault(Return(posspoof.getStateVector().x_pos + normnum(generator)));
     ON_CALL(mockPos, getY()).WillByDefault(Return(posspoof.getStateVector().y_pos + normnum(generator)));
     ON_CALL(mockPos, getTheta ()).WillByDefault(Return(posspoof.getStateVector().theta + normnum (generator)));
-
-      loki.updateStateVector(.01f);
+    loki.updateStateVector(.01f);
   }
 
-  EXPECT_NEAR(posspoof.getStateVector().x_vel, .3f, POSTOL)
-              << "Xvel = " << posspoof.getStateVector().x_vel;
-  EXPECT_NEAR(posspoof.getStateVector().y_vel, 0.0f, POSTOL)
-              << "Yvel = " << posspoof.getStateVector().y_vel;
-  EXPECT_NEAR(posspoof.getStateVector().omega, 0.0f, RADTOL)
-              << "Omega = " << posspoof.getStateVector().omega;
+  EXPECT_NEAR(posspoof.getStateVector().x_vel, .3f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().y_vel, 0.0f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().omega, 0.0f, RADTOL);
 
-  EXPECT_NEAR(posspoof.getStateVector().x_pos, .15f, POSTOL)
-              << "Xpos = " << posspoof.getStateVector().x_pos;
-  EXPECT_NEAR(posspoof.getStateVector().y_pos, 0.0f, POSTOL)
-              << "Ypos = " << posspoof.getStateVector().y_pos;
-  EXPECT_NEAR(posspoof.getStateVector().theta, 0.0f, RADTOL)
-              << "Theta = " << posspoof.getStateVector().theta;
+  EXPECT_NEAR(posspoof.getStateVector().x_pos, .15f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().y_pos, 0.0f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().theta, 0.0f, RADTOL);
 
-  EXPECT_NEAR(loki.getStateVector().x_vel, .3f, POSTOL)
-              << "Xvel = " << loki.getStateVector().x_vel;
-  EXPECT_NEAR(loki.getStateVector().y_vel, 0.0f, POSTOL)
-              << "Yvel = " << loki.getStateVector().y_vel;
-  EXPECT_NEAR(loki.getStateVector().omega, 0.0f, RADTOL)
-              << "Omega = " << loki.getStateVector().omega;
+  EXPECT_NEAR(loki.getStateVector().x_vel, .3f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().y_vel, 0.0f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().omega, 0.0f, RADTOL);
 
-  EXPECT_NEAR(loki.getStateVector().x_pos,.15f, POSTOL)
-              << "Xpos = " << loki.getStateVector().x_pos;
-  EXPECT_NEAR(loki.getStateVector().y_pos, 0.00f, POSTOL)
-              << "Ypos = " << loki.getStateVector().y_pos;
-  EXPECT_NEAR(loki.getStateVector().theta, 0.0f, RADTOL)
-              << "Theta = " << loki.getStateVector().theta;
+  EXPECT_NEAR(loki.getStateVector().x_pos,.15f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().y_pos, 0.00f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().theta, 0.0f, RADTOL);
 }
 
 TEST(SuperLocalizerTests, ForwardLeftWithPos)
@@ -368,19 +360,13 @@ TEST(SuperLocalizerTests, ForwardLeftWithPos)
       loki.updateStateVector(.01f);
   }
 
-  EXPECT_NEAR(loki.getStateVector().x_pos, .099f, POSTOL)
-              << "Xpos = " << loki.getStateVector().x_pos;
-  EXPECT_NEAR(loki.getStateVector().y_pos, 0.01f, POSTOL)
-              << "Ypos = " << loki.getStateVector().y_pos;
-  EXPECT_NEAR(loki.getStateVector().theta, .2f, RADTOL)
-              << "Theta = " << loki.getStateVector().theta;
+  EXPECT_NEAR(loki.getStateVector().x_pos, .099f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().y_pos, 0.01f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().theta, .2f, RADTOL);
 
-  EXPECT_NEAR(posspoof.getStateVector().x_pos, .099f, POSTOL)
-              << "Xpos = " << posspoof.getStateVector().x_pos;
-  EXPECT_NEAR(posspoof.getStateVector().y_pos, 0.01f, POSTOL)
-              << "Ypos = " << posspoof.getStateVector().y_pos;
-  EXPECT_NEAR(posspoof.getStateVector().theta, .2f, RADTOL)
-              << "Theta = " << posspoof.getStateVector().theta;
+  EXPECT_NEAR(posspoof.getStateVector().x_pos, .099f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().y_pos, 0.01f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().theta, .2f, RADTOL);
 }
 
 TEST(SuperLocalizerTests, ForwardRightWithPos)
@@ -409,19 +395,13 @@ TEST(SuperLocalizerTests, ForwardRightWithPos)
       loki.updateStateVector(.01f);
   }
 
-  EXPECT_NEAR(loki.getStateVector().x_pos, .099f, POSTOL)
-              << "Xpos = " << loki.getStateVector().x_pos;
-  EXPECT_NEAR(loki.getStateVector().y_pos, -0.01f, POSTOL)
-              << "Ypos = " << loki.getStateVector().y_pos;
-  EXPECT_NEAR(loki.getStateVector().theta, -.2f, RADTOL)
-              << "Theta = " << loki.getStateVector().theta;
+  EXPECT_NEAR(loki.getStateVector().x_pos, .099f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().y_pos, -0.01f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().theta, -.2f, RADTOL);
 
-  EXPECT_NEAR(posspoof.getStateVector().x_pos, .099f, POSTOL)
-              << "Xpos = " << posspoof.getStateVector().x_pos;
-  EXPECT_NEAR(posspoof.getStateVector().y_pos, -0.01f, POSTOL)
-              << "Ypos = " << posspoof.getStateVector().y_pos;
-  EXPECT_NEAR(posspoof.getStateVector().theta, -.2f, RADTOL)
-              << "Theta = " << posspoof.getStateVector().theta;
+  EXPECT_NEAR(posspoof.getStateVector().x_pos, .099f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().y_pos, -0.01f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().theta, -.2f, RADTOL);
 }
 
 TEST(SuperLocalizerTests, BackwardWithPos)
@@ -450,19 +430,13 @@ TEST(SuperLocalizerTests, BackwardWithPos)
       loki.updateStateVector(.01f);
   }
 
-  EXPECT_NEAR(loki.getStateVector().x_pos, -.15f, POSTOL)
-              << "Xpos = " << loki.getStateVector().x_pos;
-  EXPECT_NEAR(loki.getStateVector().y_pos, 0.0f, POSTOL)
-              << "Ypos = " << loki.getStateVector().y_pos;
-  EXPECT_NEAR(loki.getStateVector().theta, 0.0f, RADTOL)
-              << "Theta = " << loki.getStateVector().theta;
+  EXPECT_NEAR(loki.getStateVector().x_pos, -.15f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().y_pos, 0.0f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().theta, 0.0f, RADTOL);
 
-  EXPECT_NEAR(posspoof.getStateVector().x_pos, -.15f, POSTOL)
-              << "Xpos = " << posspoof.getStateVector().x_pos;
-  EXPECT_NEAR(posspoof.getStateVector().y_pos, 0.00f, POSTOL)
-              << "Ypos = " << posspoof.getStateVector().y_pos;
-  EXPECT_NEAR(posspoof.getStateVector().theta, 0.00f, RADTOL)
-              << "Theta = " << posspoof.getStateVector().theta;
+  EXPECT_NEAR(posspoof.getStateVector().x_pos, -.15f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().y_pos, 0.00f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().theta, 0.00f, RADTOL);
 }
 
 
@@ -492,19 +466,13 @@ TEST(SuperLocalizerTests, BackwardLeftWithPos)
       loki.updateStateVector(.01f);
   }
 
-  EXPECT_NEAR(loki.getStateVector().x_pos, -.0993, POSTOL)
-              << "Xpos = " << loki.getStateVector().x_pos;
-  EXPECT_NEAR(loki.getStateVector().y_pos, 0.01f, POSTOL)
-              << "Ypos = " << loki.getStateVector().y_pos;
-  EXPECT_NEAR(loki.getStateVector().theta, -.2f, RADTOL)
-              << "Theta = " << loki.getStateVector().theta;
+  EXPECT_NEAR(loki.getStateVector().x_pos, -.101, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().y_pos, 0.0104f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().theta, -.2f, RADTOL);
 
-  EXPECT_NEAR(posspoof.getStateVector().x_pos, -.0993f, POSTOL)
-              << "Xpos = " << posspoof.getStateVector().x_pos;
-  EXPECT_NEAR(posspoof.getStateVector().y_pos, 0.01f, POSTOL)
-              << "Ypos = " << posspoof.getStateVector().y_pos;
-  EXPECT_NEAR(posspoof.getStateVector().theta, -.2f, RADTOL)
-              << "Theta = " << posspoof.getStateVector().theta;
+  EXPECT_NEAR(posspoof.getStateVector().x_pos, -.101f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().y_pos, 0.0104f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().theta, -.2f, RADTOL);
 }
 
 
@@ -534,19 +502,13 @@ TEST(SuperLocalizerTests, BackwardRightWithPos)
       loki.updateStateVector(.01f);
   }
 
-  EXPECT_NEAR(loki.getStateVector().x_pos, -.0993, POSTOL)
-              << "Xpos = " << loki.getStateVector().x_pos;
-  EXPECT_NEAR(loki.getStateVector().y_pos, -0.01f, POSTOL)
-              << "Ypos = " << loki.getStateVector().y_pos;
-  EXPECT_NEAR(loki.getStateVector().theta, .2f, RADTOL)
-              << "Theta = " << loki.getStateVector().theta;
+  EXPECT_NEAR(loki.getStateVector().x_pos, -.101, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().y_pos, -0.0104f, POSTOL);
+  EXPECT_NEAR(loki.getStateVector().theta, .204f, RADTOL);
 
-  EXPECT_NEAR(posspoof.getStateVector().x_pos, -.0993f, POSTOL)
-              << "Xpos = " << posspoof.getStateVector().x_pos;
-  EXPECT_NEAR(posspoof.getStateVector().y_pos, -0.01f, POSTOL)
-              << "Ypos = " << posspoof.getStateVector().y_pos;
-  EXPECT_NEAR(posspoof.getStateVector().theta, .2f, RADTOL)
-              << "Theta = " << posspoof.getStateVector().theta;
+  EXPECT_NEAR(posspoof.getStateVector().x_pos, -.101f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().y_pos, -0.0104f, POSTOL);
+  EXPECT_NEAR(posspoof.getStateVector().theta, .204f, RADTOL);
 }
 
 
