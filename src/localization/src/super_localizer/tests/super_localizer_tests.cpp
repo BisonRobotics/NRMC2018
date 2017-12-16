@@ -26,9 +26,6 @@ TEST(SuperLocalizerTests, residualAccelIsZero){
 
 }
 
-
-
-
 TEST(SuperLocalizerTests, ForwardWithPos)
 {
   NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
