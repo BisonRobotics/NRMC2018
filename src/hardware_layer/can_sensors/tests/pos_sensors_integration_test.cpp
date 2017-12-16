@@ -1,14 +1,14 @@
-#include <can_sensors/imu_can_sensor.h>
+#include <can_sensors/pos_can_sensor.h>
 #include <readable_sensors/readable_sensors.h>
 #include <iostream>
 
 int main()
 {
   char interface[] = "can0";
-  IMUCanSensor mySensor(20, interface);
+  POSCanSensor mySensor(40, interface);
   // CanSensor mySensor2(21, interface);
   // uint8_t mybuffer[8];
-  char printbuffer[30];
+  char printbuffer[70];
   ReadableSensors::ReadStatus canReturn;
 
   while (1)
@@ -16,8 +16,8 @@ int main()
     canReturn = mySensor.receiveData();
     if (canReturn == ReadableSensors::ReadStatus::READ_SUCCESS)
     {
-      sprintf(printbuffer, "message dataS1: \nX: %f,\nY: %f,\nZ: %f\n\n", mySensor.imuData.x, mySensor.imuData.y,
-              mySensor.imuData.z);
+      sprintf(printbuffer, "message dataS1: \nX: %f,\nY: %f,\ntheta: %f,\nservoTheta: %f\n\n", mySensor.getX(),
+              mySensor.getY(), mySensor.getTheta(), mySensor.getServoTheta());
       std::cout << printbuffer << std::endl;
     }
     // else if (canReturn == -1) std::cout << "no message! recieve returned " <<canReturn <<std::endl;
