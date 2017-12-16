@@ -11,7 +11,7 @@ public:
   MOCK_METHOD0(getY, float());
   MOCK_METHOD0(getTheta, float());
   MOCK_METHOD0(getServoTheta, float());
-  MOCK_METHOD0(receiveData, ReadableSensors::ReadStatus()); //this is an "uninteresting function"
+  MOCK_METHOD0(receiveData, ReadableSensors::ReadStatus());  // this is an "uninteresting function"
 };
 
 #endif

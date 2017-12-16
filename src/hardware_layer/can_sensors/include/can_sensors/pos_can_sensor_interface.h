@@ -11,7 +11,7 @@ public:
   virtual float getTheta() = 0;
   virtual float getServoTheta() = 0;
 
-  virtual ReadableSensors::ReadStatus receiveData() =0;
+  virtual ReadableSensors::ReadStatus receiveData() = 0;
 };
 
 #endif

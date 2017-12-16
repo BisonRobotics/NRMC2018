@@ -3,8 +3,8 @@
 #include <cmath>
 #define CONSTANT_TO_AVERAGE_TWO_NUMBERS 2.0f
 
-Localizer::Localizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
-                     iVescAccess *backLeftVesc)
+Localizer::Localizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc,
+                     iVescAccess *frontRightVesc, iVescAccess *backRightVesc, iVescAccess *backLeftVesc)
 {
   state_vector.x_pos = xi;
   state_vector.y_pos = yi;
@@ -23,8 +23,8 @@ Localizer::Localizer(float axleLen, float xi, float yi, float thi, iVescAccess *
   back_right_vesc = backRightVesc;
   back_left_vesc = backLeftVesc;
 
-  //gettimeofday(&current_time, NULL);  // initialize _prevmsgtime with something
-  //current_time.tv_sec -= 1;           // make it in the past to avoid false positives
+  // gettimeofday(&current_time, NULL);  // initialize _prevmsgtime with something
+  // current_time.tv_sec -= 1;           // make it in the past to avoid false positives
 
   axle_len = axleLen;
 }
@@ -115,4 +115,3 @@ LocalizerInterface::stateVector Localizer::getStateVector()
 {
   return state_vector;
 }
-
