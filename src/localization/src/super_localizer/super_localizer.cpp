@@ -30,7 +30,7 @@ SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVe
   this->have_pos = true;
   this->have_imu = true;
 
-  this->state_vector = initState (0,0,0);
+  this->state_vector = initState (xi,yi,thi);
   this->residual = initState (0,0,0);
   this->measured = initState (0,0,0);
 
@@ -49,7 +49,7 @@ SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVe
 
   this->sensors[0] = posSensor;
 
-  this->state_vector = initState (0,0,0);
+  this->state_vector = initState (xi,yi,thi);
   this->residual = initState (0,0,0);
   this->measured = initState (0,0,0);
 

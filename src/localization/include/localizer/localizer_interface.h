@@ -5,18 +5,18 @@ namespace LocalizerInterface {
 
 	typedef struct stateVector_s
 	{
-	double x_pos;  // in world coordinates
-	double y_pos;  // in world coordinates
-	double theta;  // robot rotation about its own center with reference to the
+	float x_pos;  // in world coordinates
+	float y_pos;  // in world coordinates
+	float theta;  // robot rotation about its own center with reference to the
 	// world's x axis and positive angles CCW
 
-	double x_vel;  // derivitive of xPos
-	double y_vel;  // derivitive of yPos
-	double omega;  // derivitive of theta
+	float x_vel;  // derivitive of xPos
+	float y_vel;  // derivitive of yPos
+	float omega;  // derivitive of theta
 
-	double x_accel;
-	double y_accel;
-	double alpha;
+	float x_accel;
+	float y_accel;
+	float alpha;
 	} stateVector;
 
 	class LocalizerInterface_c
@@ -29,7 +29,6 @@ namespace LocalizerInterface {
 		UPDATE_SUCCESS
 	  };
 
-		//virtual UpdateStatus updateStateVector()=0;
 		virtual UpdateStatus updateStateVector(float dt)=0;
     };
 
