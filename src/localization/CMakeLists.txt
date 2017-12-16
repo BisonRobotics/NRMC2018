@@ -162,6 +162,7 @@ if(TARGET test_super_localization_helper)
     ${catkin_LIBRARIES}
     localizer_lib
     gmock_main
+    super_localizer_helper_lib
   )
   add_dependencies(test_super_localization_helper localizer_lib)
 endif()

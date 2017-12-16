@@ -16,18 +16,19 @@ using ::testing::Return;
 using ::testing::_;
 using ::testing::AnyNumber;
 using ::testing::Gt;
+using ::testing::NiceMock;
 
 TEST(SuperLocalizerTests, ForwardWithPos)
 {
-  MockVescAccess flvesc, frvesc, brvesc, blvesc;
-  MockPosCanSensor mockPos;
+  NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
+  NiceMock<MockPosCanSensor> mockPos;
   Localizer posspoof(.5f, 0.0f,0.0f,0.0f,&flvesc, &frvesc, &brvesc, &blvesc);
   
   SuperLocalizer loki(.5f, 0.0f,0.0f,0.0f,&flvesc, &frvesc, &brvesc, &blvesc, &mockPos, SuperLocalizer_default_gains);
-  EXPECT_CALL(flvesc, getLinearVelocity()).WillRepeatedly(Return(.3f));
-  EXPECT_CALL(frvesc, getLinearVelocity()).WillRepeatedly(Return(.3f));
-  EXPECT_CALL(brvesc, getLinearVelocity()).WillRepeatedly(Return(.3f));
-  EXPECT_CALL(blvesc, getLinearVelocity()).WillRepeatedly(Return(.3f));
+  ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(.3f));
+  ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(.3f));
+  ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(.3f));
+  ON_CALL(blvesc, getLinearVelocity()).WillByDefault(Return(.3f));
 
   EXPECT_CALL(mockPos, receiveData()).WillRepeatedly(Return(ReadableSensors::ReadStatus::READ_SUCCESS));
 

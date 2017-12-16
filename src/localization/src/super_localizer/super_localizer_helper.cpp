@@ -42,6 +42,8 @@ LocalizerInterface::stateVector addfrommodel(LocalizerInterface::stateVector lhs
   ret.x_vel = rhs.x_vel;
   ret.y_vel = rhs.y_vel;
   ret.omega = rhs.omega;
-
+  ret.alpha = 0.0;
+  ret.x_accel = 0.0;
+  ret.y_accel = 0.0;
   return ret;
 }
