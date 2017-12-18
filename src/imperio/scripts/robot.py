@@ -11,6 +11,8 @@ import time
 import tf
 import rospy
 
+from sensor_msgs.msg import LaserScan
+
 class RobotState(Enum):
     """
     RobotState represents the states that the robot can be in
@@ -32,11 +34,20 @@ class robot(object):
         Initializes the robot
         :param node: the ROS node being used
         """
+
+        rospy.Subscriber('/vrep/laser_scan_front', LaserScan, self.laser_scan_callback)
+
         self.state = None
         self.change_state(RobotState.OUTBOUND)
         self.tf = tf.TransformListener(node)
         self.location = None
         self.pose = None
+        self.laser_scan = None
+        self.debug_count = 0
+
+    def laser_scan_callback(self, laser_scan_message):
+            print(laser_scan_message.ranges)
+            print(laser_scan_message.intensities)
 
     def change_state(self, new_state):
         """
@@ -96,8 +107,6 @@ class robot(object):
         """
         try:
             (self.location, self.pose) = self.tf.lookupTransform('/map', '/base_link', rospy.Time(0))
-            print("Robot Current location : ")
-            print(self.location)
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             return (None, None)
         return (self.location, self.pose)

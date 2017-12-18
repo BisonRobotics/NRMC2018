@@ -13,8 +13,8 @@ import rospy
 from robot import *
 
 # TODO : Currently an issue trying to import a custom message, no module named .msg
-#from imperio.msg import GlobalWaypoints
-#from imperio.msm import DriveStatus
+from imperio.msg import GlobalWaypoints
+from imperio.msg import DriveStatus
 
 class MovementStatus(Enum):
     """
@@ -36,8 +36,8 @@ class GlobalPlanner(object):
         Initializes the global planner
         :param robot: the robot object the planner will be moving
         """
-        #self.waypoints_publisher = rospy.Publisher('/global_planner_goal', GlobalWaypoints, queue_size=1)
-        #rospy.Subscriber('/drive_controller_status', DriveStatus, drive_status_callback)
+        self.waypoints_publisher = rospy.Publisher('/global_planner_goal', GlobalWaypoints, queue_size=1)
+        rospy.Subscriber('/drive_controller_status', DriveStatus, self.drive_status_callback)
         self.robot = robot
         self.occupancy_grid = None
         self.movement_status = MovementStatus.HAS_REACHED_GOAL
@@ -47,6 +47,7 @@ class GlobalPlanner(object):
         Callback for when the drive status is published
         :param status_message: the message that was published
         """
+        print("Goly Gee Yeah")
         if status_message.has_reached_goal:
             self.movement_status = MovementStatus.HAS_REACHED_GOAL
         if status_message.is_stuck:
@@ -89,7 +90,8 @@ class GlobalPlanner(object):
         # message.poses = waypoints
         # message.occupancyGrid = self.occupancy_grid.to_message()
         # self.waypoints_publisher.publish(message)
-        self.movement_status = MovementStatus.MOVING
+        #self.movement_status = MovementStatus.MOVING
+        pass
 
     def robot_within_threshold(self, goal):
         """
@@ -97,6 +99,7 @@ class GlobalPlanner(object):
         :param goal: the final goal as (x,y)
         :return: a boolean of if the robot is within the threshold
         """
+
         errorThreshold = rospy.get_param('/location_accuracy')
 
         goal_x = goal[0]
