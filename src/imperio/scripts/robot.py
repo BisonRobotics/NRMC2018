@@ -45,8 +45,7 @@ class robot(object):
         self.debug_count = 0
 
     def laser_scan_callback(self, laser_scan_message):
-            print(laser_scan_message.ranges)
-            print(laser_scan_message.intensities)
+        pass
 
     def change_state(self, new_state):
         """

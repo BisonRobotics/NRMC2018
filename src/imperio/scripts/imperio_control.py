@@ -47,6 +47,9 @@ class ImperioControl(object):
         if bool_msg.data == True:
             self.robot.change_state(RobotState.HALT)
 
+        if bool_msg.data == False:
+            self.runningOutOftime()
+
     def run(self):
         """
         The operation loop for Imperio
@@ -117,6 +120,13 @@ class ImperioControl(object):
         print("Robot could not be recovered, please regain control.")
         self.robot.change_state(RobotState.HALT)
 
+    def runningOutOfTime(self):
+        """
+        What the robot should do when it's running out of time
+        :return: None 
+        """
+        if self.robot.state == RobotState.DIG:
+            self.robot.change_state(RobotState.INBOUND)
 
 if __name__ == "__main__":
     nav = ImperioControl()
