@@ -59,7 +59,6 @@ class robot(object):
         else:
             self.state = new_state
             self.print_state(self.state)
-<<<<<<< HEAD
 
     def print_state(self, state):
         """
@@ -92,40 +91,6 @@ class robot(object):
         if self.state == RobotState.DEPOSIT:
             self.change_state(RobotState.OUTBOUND)
 
-=======
-
-    def print_state(self, state):
-        """
-        Prints the state of the Robot
-        :param state: the state to be printed
-        """
-        if state == RobotState.OUTBOUND:
-            print("Imperio : OUTBOUND")
-        if state == RobotState.DEPOSIT:
-            print("Imperio : DEPOSIT")
-        if state == RobotState.INBOUND:
-            print("Imperio : INBOUND")
-        if state == RobotState.DIG:
-            print("Imperio : DIG")
-        if state == RobotState.RECOVERY:
-            print("Imperio : RECOVERY BEHAVIOR")
-        if state == RobotState.HALT:
-            print("Imperio : HALT")
-
-    def next_state(self):
-        """
-        Ease Function to change the state to the next expected state
-        """
-        if self.state == RobotState.OUTBOUND:
-            self.change_state(RobotState.DIG)
-        if self.state == RobotState.DIG:
-            self.change_state(RobotState.INBOUND)
-        if self.state == RobotState.INBOUND:
-            self.change_state(RobotState.DEPOSIT)
-        if self.state == RobotState.DEPOSIT:
-            self.change_state(RobotState.OUTBOUND)
-
->>>>>>> 106b8f5bbc784aff9cd877957c4989facf001d42
     def move_base_to_goal(self, goal):
         """
         How the robot hangles a low level movement command
@@ -141,8 +106,6 @@ class robot(object):
         """
         try:
             (self.location, self.pose) = self.tf.lookupTransform('/map', '/base_link', rospy.Time(0))
-            print("Robot Current location : ")
-            print(self.location)
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             return (None, None)
         return (self.location, self.pose)
