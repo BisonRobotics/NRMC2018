@@ -99,7 +99,6 @@ class GlobalPlanner(object):
         :param goal: the final goal as (x,y)
         :return: a boolean of if the robot is within the threshold
         """
-
         errorThreshold = rospy.get_param('/location_accuracy')
 
         goal_x = goal[0]
