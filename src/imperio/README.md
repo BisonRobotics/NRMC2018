@@ -2,11 +2,6 @@
 
 Imperio is Robotic Autonomy. It is the top level software for controlling the robot in competition.
 
-## Versions  ##
-1. __Turtlebot__ : The skeletal structure of the code that runs the commands on a turtlebot. Many of the methods are stub methods just to show how the code _would_ work. Most of the focus here is the architecture/design of the code. 
-2. __Simulator__
-3. __NDSU Physical Robot__
-
 ### What is this repository for? ###
 
 * Autonomous software package for NDSU submission of the NASA Robotic Mining Competition
@@ -15,7 +10,9 @@ Imperio is Robotic Autonomy. It is the top level software for controlling the ro
 ### How do I get set up? ###
 
 * Make sure catkin is properly installed
-* Downlaod as a part of the overall src directory
+* Download as a part of the overall src directory
+* Get the repository from github
+  >git checkout autonomy
 * Navigate to the top of the catkin workspace
 * From the terminal
   >catkin_make  
@@ -26,20 +23,19 @@ Imperio is Robotic Autonomy. It is the top level software for controlling the ro
 ### How do I run it? ###
 
 * From the terminal:  
-   >roslaunch
+   >roscore
 
 * From a seperate terminal:  
-   >roslaunch imperio __(preferedRobot)__.launch  
-   >python src/imperio.py   
+   >roslaunch imperio imperio.launch --screen
 
-_note: this will change once it becomes it's own node_
 ### Contribution guidelines ###
 
- * For right now, please don't touch this code without a really good reason and talking to me first.
+ * Just Don't Touch It
 
 ### Who do I talk to? ###
 
 * Nicole Maguire :   
  Email : Maguirne@dukes.jmu.edu  
  [GitHub : NicoleNotUnix](https://github.com/NicoleNotUnix)  
- [BitBucket : NicoleNotUnix](https://bitbucket.org/NicoleNotUnix/)  
+
+
