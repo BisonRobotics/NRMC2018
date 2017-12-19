@@ -109,8 +109,9 @@ class ImperioControl(object):
         """
         Halts the robot and Imperio
         """
-        halt_movement(self.robot)
-        halt_regolithm_commands(self.robot)
+        #halt_movement(self.robot)
+        #halt_regolithm_commands(self.robot)
+        pass
 
     def recover(self):
         """

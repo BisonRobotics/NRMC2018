@@ -9,6 +9,7 @@ Version: 2
 
 import math
 import rospy
+import astar as path_finder
 
 from robot import *
 
@@ -78,7 +79,8 @@ class GlobalPlanner(object):
         :param goal: the final goal as (x,y)
         :return: an array of waypoints
         """
-        #TODO : use A* to find the waypoints on the occupancy grid
+        (location, pose) = self.robot.localize()
+        path_finder.aStar(location, goal, self.occupancy_grid)
         pass
 
     def publish_waypoints(self, waypoints):
@@ -86,12 +88,11 @@ class GlobalPlanner(object):
         Publishes the waypoints to the local planner
         :param waypoints: an array of warpoints
         """
-        # message = GlobalWaypoints()
-        # message.poses = waypoints
+        message = GlobalWaypoints()
+        message.poses = waypoints
         # message.occupancyGrid = self.occupancy_grid.to_message()
-        # self.waypoints_publisher.publish(message)
-        #self.movement_status = MovementStatus.MOVING
-        pass
+        self.waypoints_publisher.publish(message)
+        self.movement_status = MovementStatus.MOVING
 
     def robot_within_threshold(self, goal):
         """
