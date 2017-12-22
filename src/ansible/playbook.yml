@@ -62,9 +62,15 @@
       args:
         executable: /bin/bash
 
+    - name: check if rosdep already initialized
+      stat: 
+        path: /etc/ros/rosdep/sources.list.d/20-default.list
+      register: depcheck
+
     - name: init rosdep
       become: yes
       command: /usr/bin/rosdep init
+      when: depcheck.stat.exists == False
 
     - name: update rosdep
       command: /usr/bin/rosdep update
