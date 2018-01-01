@@ -2,17 +2,49 @@
 #include <waypoint_controller/waypoint_controller_helper.h>
 #include <vector>
 #include <utility>
+#define _USE_MATH_DEFINES
+#include <cmath>
 
 #define APPROX(A, B, T) ((A > B - T && A < B + T) ? true : false)
-#define PI 3.1415926539f
 #define WAYPOINT2MANEUVERTOL .001
+
+TEST(WaypointControllerHelperTests, anglediffWorks1)
+{
+  float angle1, angle2, result;
+  angle1 = 2.0;
+  angle2 = -2.0;
+  result = -2.283;
+  EXPECT_NEAR(anglediff(angle1, angle2), result, WAYPOINT2MANEUVERTOL);
+}
+
+TEST(WaypointControllerHelperTests, anglediffWorks2)
+{
+  float angle1, angle2, result;
+  angle1 = 0;
+  angle2 = 4;
+  result = 2.283;
+  EXPECT_NEAR(anglediff(angle1, angle2), result, WAYPOINT2MANEUVERTOL);
+}
+
+TEST(WaypointControllerHelperTests, ableToReflectWaypoint1)
+{
+  pose waypoint = {.x = 0, .y = -1, .theta = M_PI / 3.0f };
+  pose robotpose = {.x = 0, .y = 0, .theta = 0 };
+  pose expectedPose = {.x = 0, .y = 1, .theta = -M_PI / 3.0f };
+  pose returnPose;
+  returnPose = reflectWaypointAroundRobot(waypoint, robotpose);
+
+  EXPECT_NEAR(returnPose.x, expectedPose.x, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(returnPose.y, expectedPose.y, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(returnPose.theta, expectedPose.theta, WAYPOINT2MANEUVERTOL);
+}
 
 TEST(WaypointControllerHelperTests, waypointWithManeuvers2PointsReturnsEnoughPoints)
 {
   maneuver myMan1 = {.radius = 100, .xc = .29289, .yc = 100, .distance = .5858f };
   maneuver myMan2 = {.radius = 3.4142, .xc = .5858, .yc = 3.4142, .distance = 2.6815 };
   pose initialPose = {.x = 0, .y = 0, .theta = 0 };
-  pose finalDestination = {.x = 3, .y = 1, .theta = PI / 4 };
+  pose finalDestination = {.x = 3, .y = 1, .theta = M_PI / 4 };
 
   std::vector<std::pair<float, float> > points;
   std::vector<maneuver> myMans;
@@ -98,30 +130,32 @@ TEST(WaypointControllerHelpterTests, findCPPtest2)
               APPROX(CPP.theta, ExpectedCPP.theta, .001))
       << "Expected " << CPP.x << " = " << ExpectedCPP.x << "\nand " << CPP.y << " = " << ExpectedCPP.y << "\nand "
       << CPP.theta << " = " << ExpectedCPP.theta << "\n";
-      *//*
+      */ /*
 }
 */
 
 TEST(WaypointControllerHelperTests, speedAndRadius2WheelVelsTests)
 {
-    std::pair<float, float> returnSpeeds;
-    std::pair<float, float> expectedSpeeds;
-    float AxelLen = .5f;
-    float maxSpeed = .5f;
-    float turnRadius = 1.0f;
-    float speed = .3f;
-    expectedSpeeds.first =.2250f;
-    expectedSpeeds.second = .3750f;
+  std::pair<float, float> returnSpeeds;
+  std::pair<float, float> expectedSpeeds;
+  float AxelLen = .5f;
+  float maxSpeed = .5f;
+  float turnRadius = 1.0f;
+  float speed = .3f;
+  expectedSpeeds.first = .2250f;
+  expectedSpeeds.second = .3750f;
 
-    returnSpeeds = speedAndRadius2WheelVels(speed, turnRadius, AxelLen, maxSpeed);
-    EXPECT_TRUE(APPROX(returnSpeeds.first, expectedSpeeds.first, .001) && APPROX(returnSpeeds.second, expectedSpeeds.second, .001))
-     << "Expected " << returnSpeeds.first<< " = " <<expectedSpeeds.first<< " and " << returnSpeeds.second << " = " << expectedSpeeds.second;
+  returnSpeeds = speedAndRadius2WheelVels(speed, turnRadius, AxelLen, maxSpeed);
+  EXPECT_TRUE(APPROX(returnSpeeds.first, expectedSpeeds.first, .001) &&
+              APPROX(returnSpeeds.second, expectedSpeeds.second, .001))
+      << "Expected " << returnSpeeds.first << " = " << expectedSpeeds.first << " and " << returnSpeeds.second << " = "
+      << expectedSpeeds.second;
 }
 
 TEST(WaypointControllerHelperTests, waypoint2maneuversTest1)
 {
   pose initialPose = {.x = 0, .y = 0, .theta = 0 };
-  pose finalDestination = {.x = 3, .y = 1, .theta = PI / 4 };
+  pose finalDestination = {.x = 3, .y = 1, .theta = M_PI / 4 };
   maneuver expected1 = {.radius = 1000, .xc = .58579 / 2, .yc = 1000, .distance = .58579 };
   maneuver expected2 = {.radius = 3.4142, .xc = .58579, .yc = 3.4142, .distance = 2.6815 };
   std::vector<maneuver> myMans;
@@ -150,7 +184,7 @@ TEST(WaypointControllerHelperTests, waypoint2maneuversTest1)
 TEST(WaypointControllerHelperTests, waypoint2maneuversTest2)
 {
   pose initialPose = {.x = 0, .y = 0, .theta = 0 };
-  pose finalDestination = {.x = 3, .y = -1, .theta = -PI / 4 };
+  pose finalDestination = {.x = 3, .y = -1, .theta = -M_PI / 4 };
   maneuver expected1 = {.radius = 1000, .xc = .58579 / 2, .yc = 1000, .distance = .58579 };
   maneuver expected2 = {.radius = -3.4142, .xc = .58579, .yc = -3.4142, .distance = 2.6815 };
   std::vector<maneuver> myMans;
@@ -176,11 +210,10 @@ TEST(WaypointControllerHelperTests, waypoint2maneuversTest2)
   ;
 }
 
-
 TEST(WaypointControllerHelperTests, oneturnTestSuite1)
 {
   pose initialPose = {.x = 0, .y = 0, .theta = 0 };
-  pose finalDestination = {.x = 3, .y = 1, .theta = PI / 3 };
+  pose finalDestination = {.x = 3, .y = 1, .theta = M_PI / 3 };
   maneuver expected1 = {.radius = 1000, .xc = 1.2679 / 2, .yc = 1000, .distance = 1.2679 };
   maneuver expected2 = {.radius = 2, .xc = 1.2679, .yc = 2, .distance = 2.0944 };
   std::vector<maneuver> myMans;

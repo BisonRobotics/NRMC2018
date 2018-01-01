@@ -16,7 +16,7 @@ using ::testing::Gt;
 TEST(LocalizerTests, GoesForward)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
-  Localizer loki(.5f,0,0,0, &flvesc, &frvesc, &brvesc, &blvesc);
+  Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(.5));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(.5));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(.5));
@@ -39,7 +39,7 @@ TEST(LocalizerTests, GoesForward)
 TEST(LocalizerTests, ForwardLeft)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
-  Localizer loki(.5f, 0,0,0,&flvesc, &frvesc, &brvesc, &blvesc);
+  Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(.3));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(.5));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(.5));
@@ -58,7 +58,7 @@ TEST(LocalizerTests, ForwardLeft)
 TEST(LocalizerTests, ForwardRight)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
-  Localizer loki(.5f,0,0,0, &flvesc, &frvesc, &brvesc, &blvesc);
+  Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(.5));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(.3));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(.3));
@@ -77,7 +77,7 @@ TEST(LocalizerTests, ForwardRight)
 TEST(LocalizerTests, GoesBackward)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
-  Localizer loki(.5f,0,0,0, &flvesc, &frvesc, &brvesc, &blvesc);
+  Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(-.5));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(-.5));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(-.5));
@@ -96,7 +96,7 @@ TEST(LocalizerTests, GoesBackward)
 TEST(LocalizerTests, BackwardRight)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
-  Localizer loki(.5f,0,0,0, &flvesc, &frvesc, &brvesc, &blvesc);
+  Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(-.5));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(-.3));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(-.3));
@@ -115,7 +115,7 @@ TEST(LocalizerTests, BackwardRight)
 TEST(LocalizerTests, BackwardLeft)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
-  Localizer loki(.5f,0,0,0, &flvesc, &frvesc, &brvesc, &blvesc);
+  Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(-.3));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(-.5));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(-.5));

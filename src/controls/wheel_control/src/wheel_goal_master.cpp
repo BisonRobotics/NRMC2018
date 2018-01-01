@@ -18,7 +18,8 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "wheel_controller");
   ros::NodeHandle n;
-  Localizer loc = Localizer(.5f,0,0,0, pos.front_left_wheel, pos.front_right_wheel, pos.back_right_wheel, pos.back_left_wheel);
+  Localizer loc =
+      Localizer(.5f, 0, 0, 0, pos.front_left_wheel, pos.front_right_wheel, pos.back_right_wheel, pos.back_left_wheel);
   Server server(n, "drive_a_distance", boost::bind(&execute, _1, &server), false);
   loc.updateStateVector(.1f);
   pos.update(loc.getStateVector().x_pos, loc.getStateVector().y_pos);

@@ -34,9 +34,9 @@ TEST(WaypointControllerTests, updateReturnsAStatus)
   WaypointController wc = WaypointController(.5f, .5f, wcInitial, &fl, &fr, &br, &bl);
   WaypointController::Status returnStatus = wc.update(wcInitial, .01);
 
-  EXPECT_TRUE(returnStatus == WaypointController::Status::ALLGOOD
-           || returnStatus == WaypointController::Status::GOALREACHED
-           || returnStatus == WaypointController::Status::ALLBAD);
+  EXPECT_TRUE(returnStatus == WaypointController::Status::ALLGOOD ||
+              returnStatus == WaypointController::Status::GOALREACHED ||
+              returnStatus == WaypointController::Status::ALLBAD);
 }
 
 // Run all the tests that were declared with TEST()

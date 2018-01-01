@@ -46,13 +46,13 @@ bool display_marker_id_;
 bool display_marker_edges_;
 bool display_marker_axes_;
 
-void GetMarkerTransformUsingOpenCV(const TagDetection& detection, Eigen::Matrix4d& transform, cv::Mat& rvec, cv::Mat& tvec);
+void GetMarkerTransformUsingOpenCV(const TagDetection& detection, Eigen::Matrix4d& transform, cv::Mat& rvec,
+                                   cv::Mat& tvec);
 
-void ArrowLine(cv::Mat& image, const cv::Point& pt1, const cv::Point& pt2, const cv::Scalar& color,
-               const int thickness, const int line_type, const int shift, const double tip_length);
-void DrawMarkerAxes(const cv::Matx33f& intrinsic_matrix, const cv::Vec4f& distortion_coeffs,
-                    const cv::Mat& rvec, const cv::Mat& tvec, const float length, const bool use_arrows,
-                    cv::Mat& image);
+void ArrowLine(cv::Mat& image, const cv::Point& pt1, const cv::Point& pt2, const cv::Scalar& color, const int thickness,
+               const int line_type, const int shift, const double tip_length);
+void DrawMarkerAxes(const cv::Matx33f& intrinsic_matrix, const cv::Vec4f& distortion_coeffs, const cv::Mat& rvec,
+                    const cv::Mat& tvec, const float length, const bool use_arrows, cv::Mat& image);
 void DrawMarkerOutline(const TagDetection& detection, const cv::Scalar outline_color, cv::Mat& image);
 void DrawMarkerEdges(const TagDetection& detection, cv::Mat& image);
 void DrawMarkerID(const TagDetection& detection, const cv::Scalar text_color, cv::Mat& image);

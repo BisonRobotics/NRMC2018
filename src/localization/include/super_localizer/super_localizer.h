@@ -14,15 +14,16 @@
 class SuperLocalizer : public LocalizerInterface::LocalizerInterface_c
 {
 public:
-  SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
-                 iVescAccess *backLeftVesc, ImuCanSensorInterface *centerIMU, PosCanSensorInterface *posSensor,
+  SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc,
+                 iVescAccess *backRightVesc, iVescAccess *backLeftVesc, ImuCanSensorInterface *centerIMU,
+                 PosCanSensorInterface *posSensor, LocalizerInterface::stateVector gains);
+  SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc,
+                 iVescAccess *backRightVesc, iVescAccess *backLeftVesc, PosCanSensorInterface *posSensor,
                  LocalizerInterface::stateVector gains);
-  SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc, iVescAccess *backRightVesc,
-                 iVescAccess *backLeftVesc, PosCanSensorInterface *posSensor, LocalizerInterface::stateVector gains);
   UpdateStatus updateStateVector(float dt);
   ~SuperLocalizer();
 
-  //static constexpr Localizer::stateVector_s default_gains;
+  // static constexpr Localizer::stateVector_s default_gains;
   LocalizerInterface::stateVector getStateVector();
   uint8_t getNumSensors();
   bool getHaveImu();
@@ -40,25 +41,25 @@ private:
   uint8_t num_sensors;
   bool have_imu;
   bool have_pos;
- // LocalizerInterface::stateVector initState ();
+  // LocalizerInterface::stateVector initState ();
   LocalizerInterface::stateVector residual;
   LocalizerInterface::stateVector measured;
   LocalizerInterface::stateVector gainVector;
 
   LocalizerInterface::stateVector state_vector;
 
-    LocalizerInterface::stateVector initState(float xi, float yi, float theta);
+  LocalizerInterface::stateVector initState(float xi, float yi, float theta);
 };
 
-//I couldn't figure out how to make this a static class member. I tried quite a few things...
-//apparently, the declaration is supposed to go in this header and an actual definition in the 
+// I couldn't figure out how to make this a static class member. I tried quite a few things...
+// apparently, the declaration is supposed to go in this header and an actual definition in the
 //.cpp file, but I couldn't find the right way to do that... so here it is instead.
-static constexpr LocalizerInterface::stateVector SuperLocalizer_default_gains =    {.x_pos = XRESGAIN,
-                                                             .y_pos = YRESGAIN,
-                                                             .theta = THETARESGAIN,
-                                                             .x_vel = DXRESGAIN,
-                                                             .y_vel = DYRESGAIN,
-                                                             .omega = OMEGARESGAIN,
-                                                             .x_accel = 0,
-                                                             .y_accel = 0,
-                                                             .alpha = 0 };
+static constexpr LocalizerInterface::stateVector SuperLocalizer_default_gains = {.x_pos = XRESGAIN,
+                                                                                 .y_pos = YRESGAIN,
+                                                                                 .theta = THETARESGAIN,
+                                                                                 .x_vel = DXRESGAIN,
+                                                                                 .y_vel = DYRESGAIN,
+                                                                                 .omega = OMEGARESGAIN,
+                                                                                 .x_accel = 0,
+                                                                                 .y_accel = 0,
+                                                                                 .alpha = 0 };

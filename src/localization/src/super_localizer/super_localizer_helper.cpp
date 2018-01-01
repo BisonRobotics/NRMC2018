@@ -33,12 +33,13 @@ LocalizerInterface::stateVector multiply(LocalizerInterface::stateVector lhs, Lo
   return ret;
 }
 
-LocalizerInterface::stateVector addfrommodel(LocalizerInterface::stateVector lhs, LocalizerInterface::stateVector rhs, float dt)
+LocalizerInterface::stateVector addfrommodel(LocalizerInterface::stateVector lhs, LocalizerInterface::stateVector rhs,
+                                             float dt)
 {
   LocalizerInterface::stateVector ret;
-  ret.x_pos = lhs.x_pos + rhs.x_vel *dt;
-  ret.y_pos = lhs.y_pos + rhs.y_vel *dt;
-  ret.theta = lhs.theta + rhs.omega *dt;
+  ret.x_pos = lhs.x_pos + rhs.x_vel * dt;
+  ret.y_pos = lhs.y_pos + rhs.y_vel * dt;
+  ret.theta = lhs.theta + rhs.omega * dt;
   ret.x_vel = rhs.x_vel;
   ret.y_vel = rhs.y_vel;
   ret.omega = rhs.omega;

@@ -6,11 +6,11 @@
 class ImuCanSensorInterface : public ReadableSensors
 {
 public:
-  virtual float getX()=0;
-  virtual float getY()=0;
-  virtual float getTheta()=0;
+  virtual float getX() = 0;
+  virtual float getY() = 0;
+  virtual float getTheta() = 0;
 
-  virtual ReadableSensors::ReadStatus receiveData() =0;
+  virtual ReadableSensors::ReadStatus receiveData() = 0;
 };
 
 #endif

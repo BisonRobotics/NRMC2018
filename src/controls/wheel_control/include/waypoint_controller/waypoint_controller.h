@@ -15,28 +15,33 @@
 class WaypointController
 {
 public:
-  enum Status {ALLGOOD, GOALREACHED, ALLBAD};
+  enum Status
+  {
+    ALLGOOD,
+    GOALREACHED,
+    ALLBAD
+  };
   WaypointController(float axelLength, float maxSafeSpeed, pose initialPose, iVescAccess *fl, iVescAccess *fr,
                      iVescAccess *br, iVescAccess *bl);
   std::vector<std::pair<float, float> > addWaypoint(pose waypoint, pose currRobotPose);
   Status update(pose robotPose, float dt);
-  std::vector<waypointWithManeuvers> getNavigationQueue(); //DEBUG
-  pose getCPP(); //DEBUG
-  unsigned int getCurrManeuverIndex(); //DEBUG
-  pose getManeuverEnd(); //DEBUG
-  float getETpEstimate(); //DEBUG
-  float getEPpEstimate(); //DEBUG
-  std::pair<float, float> getSetSpeeds(); //DEBUG
-
+  std::vector<waypointWithManeuvers> getNavigationQueue();  // DEBUG
+  pose getCPP();  // DEBUG
+  unsigned int getCurrManeuverIndex();  // DEBUG
+  pose getManeuverEnd();  // DEBUG
+  float getETpEstimate();  // DEBUG
+  float getEPpEstimate();  // DEBUG
+  std::pair<float, float> getSetSpeeds();  // DEBUG
 
   void haltAndAbort();
+
 private:
   std::vector<waypointWithManeuvers> navigationQueue;
   iVescAccess *front_left_wheel, *front_right_wheel, *back_right_wheel, *back_left_wheel;
   float axelLen, maxSpeed;
-  float EPpGain, EPdGain, ETpGain, ETdGain, EPpLowPassGain, ETpLowPassGain; //path and theta error gains
-  float EPpLowPass, EPpLowPassPrev,ETpLowPass,ETpLowPassPrev, EPpDerivFiltEst, ETpDerivFiltEst;
-  float EPpEst,ETpEst;
+  float EPpGain, EPdGain, ETpGain, ETdGain, EPpLowPassGain, ETpLowPassGain;  // path and theta error gains
+  float EPpLowPass, EPpLowPassPrev, ETpLowPass, ETpLowPassPrev, EPpDerivFiltEst, ETpDerivFiltEst;
+  float EPpEst, ETpEst;
   float WheelSpeedPGain;
   float LvelCmd, RvelCmd;
   float LeftWheelSetSpeed, RightWheelSetSpeed;

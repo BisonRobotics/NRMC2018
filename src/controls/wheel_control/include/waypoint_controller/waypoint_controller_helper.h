@@ -17,6 +17,8 @@ std::vector<std::pair<float, float> > waypointWithManeuvers2points(waypointWithM
 
 float anglediff(float x, float y);
 
+pose reflectWaypointAroundRobot(pose waypoint, pose robot);
+
 std::vector<maneuver> oneTurnSolution(pose robotPose, pose waypoint);
 
 #endif
