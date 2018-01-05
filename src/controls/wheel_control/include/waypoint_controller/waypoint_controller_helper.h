@@ -21,4 +21,10 @@ pose reflectWaypointAroundRobot(pose waypoint, pose robot);
 
 std::vector<maneuver> oneTurnSolution(pose robotPose, pose waypoint);
 
+std::vector<maneuver> inverseOneTurnSolution(pose robotPose, pose waypoint);
+
+std::vector<maneuver> twoTurnSolution(pose robotPose, pose waypoint);
+
+pose transformPoseToRobotCoord(pose robotPose, pose waypoint);
+
 #endif
