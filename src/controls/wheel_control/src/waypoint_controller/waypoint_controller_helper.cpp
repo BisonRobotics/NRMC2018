@@ -263,11 +263,15 @@ std::vector<maneuver> waypoint2maneuvers(pose robotPose, pose waypoint)
   wp = transformPoseToRobotCoord(robotPose, waypoint);
 
   float xintercept = -wp.y / tan(wp.theta) + wp.x;
+  //if (std::abs(xintercept) < .001) xintercept = 1; //only care about sign
   // if the waypoint were a line extended back,
   // this is where it would intersect on the robot's x axis
 
-  if (std::abs(wp.theta) < .001) wp.theta = .0001; //avoid division by zero
-
+  if (std::abs(wp.theta) < .001) 
+  {
+     wp.theta = .0001; //avoid division by zero, only care about sign of this value
+     waypoint.theta += .001; //avoid division by zero
+  }
   if (SIGN(wp.y) ==1)
   {
     if (SIGN(xintercept) != SIGN(wp.theta))

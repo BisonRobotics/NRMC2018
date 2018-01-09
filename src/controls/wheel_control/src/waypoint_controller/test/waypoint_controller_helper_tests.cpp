@@ -6,7 +6,7 @@
 #include <cmath>
 
 #define APPROX(A, B, T) ((A > B - T && A < B + T) ? true : false)
-#define WAYPOINT2MANEUVERTOL .001
+#define WAYPOINT2MANEUVERTOL .009
 
 TEST(WaypointControllerHelperTests, anglediffWorks1)
 {
@@ -59,80 +59,6 @@ TEST(WaypointControllerHelperTests, waypointWithManeuvers2PointsReturnsEnoughPoi
       << "Expected at least " << (myMan1.distance + myMan2.distance) * 10 << " points, but got "
       << points.size();  // point at least every 10cm
 }
-/*
-TEST(WaypointControllerHelpterTests, findCPPtest1)
-{
-  maneuver myMan1 = {.radius = 1, .xc = 1, .yc = 1, .distance = 1.0f };
-  pose initialPose = {.x = 1, .y = 0, .theta = 0 };
-  pose CPP;
-  CPP = findCPP(initialPose, myMan1);
-  EXPECT_TRUE(APPROX(CPP.x, initialPose.x, .001) && APPROX(CPP.y, initialPose.y, .001) &&
-              APPROX(CPP.theta, initialPose.theta, .001))
-      << "Expected " << CPP.x << " = " << initialPose.x << "\nand " << CPP.y << " = " << initialPose.y << "\nand "
-      << CPP.theta << " = " << initialPose.theta << "\n";
-
-  initialPose = {.x = 1.1f, .y = 0, .theta = 0 };
-  pose ExpectedCPP = {.x = 1.099, .y = .005, .theta = .099 };
-  CPP = findCPP(initialPose, myMan1);
-  EXPECT_TRUE(APPROX(CPP.x, ExpectedCPP.x, .001) && APPROX(CPP.y, ExpectedCPP.y, .001) &&
-              APPROX(CPP.theta, ExpectedCPP.theta, .001))
-      << "Expected " << CPP.x << " = " << ExpectedCPP.x << "\nand " << CPP.y << " = " << ExpectedCPP.y << "\nand "
-      << CPP.theta << " = " << ExpectedCPP.theta << "\n";
-
-  initialPose = {.x = 1.3f, .y = .2f, .theta = 0 };
-  ExpectedCPP = {.x = 1.351, .y = .0637, .theta = .359 };
-  CPP = findCPP(initialPose, myMan1);
-  EXPECT_TRUE(APPROX(CPP.x, ExpectedCPP.x, .001) && APPROX(CPP.y, ExpectedCPP.y, .001) &&
-              APPROX(CPP.theta, ExpectedCPP.theta, .001))
-      << "Expected " << CPP.x << " = " << ExpectedCPP.x << "\nand " << CPP.y << " = " << ExpectedCPP.y << "\nand "
-      << CPP.theta << " = " << ExpectedCPP.theta << "\n";
-
-  initialPose = {.x = .5f, .y = .2f, .theta = 0 };
-  ExpectedCPP = {.x = .470, .y = .152, .theta = -.5586 };
-  CPP = findCPP(initialPose, myMan1);
-  EXPECT_TRUE(APPROX(CPP.x, ExpectedCPP.x, .001) && APPROX(CPP.y, ExpectedCPP.y, .001) &&
-              APPROX(CPP.theta, ExpectedCPP.theta, .001))
-      << "Expected " << CPP.x << " = " << ExpectedCPP.x << "\nand " << CPP.y << " = " << ExpectedCPP.y << "\nand "
-      << CPP.theta << " = " << ExpectedCPP.theta << "\n";
-}
-
-TEST(WaypointControllerHelpterTests, findCPPtest2)
-{
-  maneuver myMan1 = {.radius = .6, .xc = .75, .yc = -.4, .distance = 1.0f };
-  pose initialPose = {.x = .75f, .y = -1.0f, .theta = 0 };
-  pose CPP;
-  CPP = findCPP(initialPose, myMan1);
-  EXPECT_TRUE(APPROX(CPP.x, initialPose.x, .001) && APPROX(CPP.y, initialPose.y, .001) &&
-              APPROX(CPP.theta, initialPose.theta, .001))
-      << "Expected " << CPP.x << " = " << initialPose.x << "\nand " << CPP.y << " = " << initialPose.y << "\nand "
-      << CPP.theta << " = " << initialPose.theta << "\n";
-
-  initialPose = {.x = .9f, .y = -1.0f, .theta = 0 };
-  pose ExpectedCPP = {.x = .8955f, .y = -.9821, .theta = .245 };
-  CPP = findCPP(initialPose, myMan1);
-  EXPECT_TRUE(APPROX(CPP.x, ExpectedCPP.x, .001) && APPROX(CPP.y, ExpectedCPP.y, .001) &&
-              APPROX(CPP.theta, ExpectedCPP.theta, .001))
-      << "Expected " << CPP.x << " = " << ExpectedCPP.x << "\nand " << CPP.y << " = " << ExpectedCPP.y << "\nand "
-      << CPP.theta << " = " << ExpectedCPP.theta << "\n";
-/*
-  initialPose = {.x = 1.3f, .y = .2f, .theta = 0 };
-  ExpectedCPP = {.x = 1.351, .y = .0637, .theta = .359 };
-  CPP = findCPP(initialPose, myMan1);
-  EXPECT_TRUE(APPROX(CPP.x, ExpectedCPP.x, .001) && APPROX(CPP.y, ExpectedCPP.y, .001) &&
-              APPROX(CPP.theta, ExpectedCPP.theta, .001))
-      << "Expected " << CPP.x << " = " << ExpectedCPP.x << "\nand " << CPP.y << " = " << ExpectedCPP.y << "\nand "
-      << CPP.theta << " = " << ExpectedCPP.theta << "\n";
-
-  initialPose = {.x = .5f, .y = .2f, .theta = 0 };
-  ExpectedCPP = {.x = .470, .y = .152, .theta = -.5586 };
-  CPP = findCPP(initialPose, myMan1);
-  EXPECT_TRUE(APPROX(CPP.x, ExpectedCPP.x, .001) && APPROX(CPP.y, ExpectedCPP.y, .001) &&
-              APPROX(CPP.theta, ExpectedCPP.theta, .001))
-      << "Expected " << CPP.x << " = " << ExpectedCPP.x << "\nand " << CPP.y << " = " << ExpectedCPP.y << "\nand "
-      << CPP.theta << " = " << ExpectedCPP.theta << "\n";
-      */ /*
-}
-*/
 
 TEST(WaypointControllerHelperTests, speedAndRadius2WheelVelsTests)
 {
@@ -152,6 +78,84 @@ TEST(WaypointControllerHelperTests, speedAndRadius2WheelVelsTests)
       << expectedSpeeds.second;
 }
 
+
+TEST(WaypointControllerHelperTests, waypoint2maneuversTest1)
+{
+
+  pose initialPose = {.x = 0, .y = 0, .theta = 0 };
+  pose finalDestination = {.x = 3, .y = 1, .theta = M_PI_4 };
+  maneuver expected1 = {.radius = 1000, .xc = .58579 / 2.0f, .yc = 1000, .distance = .58579 };
+  maneuver expected2 = {.radius = 3.4142, .xc = .58579, .yc = 3.4142, .distance = 2.6815 };
+  std::vector<maneuver> myMans;
+
+  myMans = waypoint2maneuvers(initialPose, finalDestination);
+
+  EXPECT_TRUE(myMans.size() ==2);
+  EXPECT_NEAR(myMans.at(0).distance, expected1.distance, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).distance, expected2.distance, WAYPOINT2MANEUVERTOL);
+  
+  EXPECT_NEAR(myMans.at(0).radius, expected1.radius, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).radius, expected2.radius, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).xc, expected1.xc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).xc, expected2.xc, WAYPOINT2MANEUVERTOL);
+  
+  EXPECT_NEAR(myMans.at(0).yc, expected1.yc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).yc, expected2.yc, WAYPOINT2MANEUVERTOL);
+}
+
+TEST(WaypointControllerHelperTests, waypoint2maneuversTest2)
+{
+  pose initialPose = {.x = 0.000000, .y = 0.000000, .theta = 0.000000 };
+  pose finalDestination = {.x = 3.000000, .y = 1.000000, .theta = 0.785400 };
+  maneuver expected1 = {.radius = 1000.000000, .xc = 0.292890, .yc = 1000.000000, .distance = 0.585790};
+  maneuver expected2 = {.radius = 3.414200, .xc = 0.585790, .yc = 3.414200, .distance = 2.681500};
+
+  std::vector<maneuver> myMans;
+
+  myMans = waypoint2maneuvers(initialPose, finalDestination);
+  EXPECT_TRUE(myMans.size() ==2);
+  EXPECT_NEAR(myMans.at(0).distance, expected1.distance, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).distance, expected2.distance, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).radius, expected1.radius, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).radius, expected2.radius, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).xc, expected1.xc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).xc, expected2.xc, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).yc, expected1.yc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).yc, expected2.yc, WAYPOINT2MANEUVERTOL);
+
+}
+
+TEST(WaypointControllerHelperTests, waypoint2maneuversTest3)
+{
+  pose initialPose = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
+  pose finalDestination = {.x = 1.000000, .y = 0.000000, .theta = 0.785400 };
+  maneuver expected1 = {.radius = -0.000009, .xc = 2.000000, .yc = 0.999990, .distance = -0.000007};
+  maneuver expected2 = {.radius = -1000.000000, .xc = -705.610000, .yc = 707.600000, .distance = -1.414200};
+
+  std::vector<maneuver> myMans;
+
+  myMans = waypoint2maneuvers(initialPose, finalDestination);
+  EXPECT_TRUE(myMans.size() ==2);
+  EXPECT_NEAR(myMans.at(0).distance, expected1.distance, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).distance, expected2.distance, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).radius, expected1.radius, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).radius, expected2.radius, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).xc, expected1.xc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).xc, expected2.xc, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).yc, expected1.yc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).yc, expected2.yc, WAYPOINT2MANEUVERTOL);
+
+}
+
+
+/*
 TEST(WaypointControllerHelperTests, waypoint2maneuversTest1)
 {
   pose initialPose = {.x = 0, .y = 0, .theta = 0 };
@@ -238,7 +242,7 @@ TEST(WaypointControllerHelperTests, oneturnTestSuite1)
                                                                            << " not " << expected2.yc << "\n";
   ;
 }
-
+*/
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {
