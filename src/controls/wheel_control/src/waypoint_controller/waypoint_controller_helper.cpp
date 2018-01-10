@@ -82,7 +82,7 @@ std::vector<maneuver> oneTurnSolution(pose robotPose, pose waypoint)
   if (distancetostartsq < distancetoendsq)  // intersection is closer to start ,turn is first maneuver
   {
     maneuver1.xc = 0;
-    maneuver1.yc = tan((M_PI - wp.theta) / 2) * xintercept;
+    maneuver1.yc = tan((M_PI - wp.theta) / 2.0f) * xintercept;
     maneuver1.radius = maneuver1.yc;
     maneuver1.distance = std::abs(wp.theta * maneuver1.radius);
 
@@ -101,9 +101,9 @@ std::vector<maneuver> oneTurnSolution(pose robotPose, pose waypoint)
     float xhalf = (wp.x + xtangent) / 2.0f;
     float yhalf = (wp.y + ytangent) / 2.0f;
     // this below could be correct
-    float M = -1 / tan(wp.theta);
+    float M = tan(wp.theta);
     maneuver2.xc = xhalf + sqrt(STRAIGHTRADIUS * STRAIGHTRADIUS / (M * M + 1));
-    maneuver2.yc = M * (maneuver2.xc - xhalf) + yhalf;
+    maneuver2.yc = (-1.0f/M) * (maneuver2.xc - xhalf) + yhalf;
   }
   else  // turn is second
   {
@@ -120,8 +120,7 @@ std::vector<maneuver> oneTurnSolution(pose robotPose, pose waypoint)
       potxcenter2a = (-B + sqrt(B * B - 4 * A * C)) / (2 * A);
       potxcenter2b = (-B - sqrt(B * B - 4 * A * C)) / (2 * A);
     }
-    // int a = 1,b=3;
-    // float breakall = a/(b-3);
+
     float xcenter2 = potxcenter2a < potxcenter2b ? potxcenter2a : potxcenter2b;  // pick smallest
 
     // first maneuver is going straight
