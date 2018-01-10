@@ -178,6 +178,311 @@ TEST(WaypointControllerHelperTests, waypoint2maneuversTest_OneTurn_FromOrigin_Tu
 
 }
 
+TEST(WaypointControllerHelperTests, waypoint2maneuversTest_OneTurn_TransPosY_StraightThenTurnLeft)
+{
+  pose initialPose = {.x = 2.000000, .y = 0.500000, .theta = 0.000000 };
+  pose finalDestination = {.x = 4.000000, .y = 1.000000, .theta = 0.700000 };
+  maneuver expected1 = {.radius = 1000.000000, .xc = 2.315100, .yc = 1000.500000, .distance = 0.630240};
+  maneuver expected2 = {.radius = 2.126200, .xc = 2.630200, .yc = 2.626200, .distance = 1.488400};
+
+  std::vector<maneuver> myMans;
+
+  myMans = waypoint2maneuvers(initialPose, finalDestination);
+  EXPECT_TRUE(myMans.size() ==2);
+  EXPECT_NEAR(myMans.at(0).distance, expected1.distance, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).distance, expected2.distance, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).radius, expected1.radius, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).radius, expected2.radius, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).xc, expected1.xc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).xc, expected2.xc, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).yc, expected1.yc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).yc, expected2.yc, WAYPOINT2MANEUVERTOL);
+
+}
+
+TEST(WaypointControllerHelperTests, waypoint2maneuversTest_OneTurn_TransPosY_StraightThenTurnRight)
+{
+  pose initialPose = {.x = 2.000000, .y = 0.500000, .theta = 0.000000 };
+  pose finalDestination = {.x = 4.000000, .y = 0.000000, .theta = -0.700000 };
+  maneuver expected1 = {.radius = 1000.000000, .xc = 2.315100, .yc = 1000.500000, .distance = 0.630240};
+  maneuver expected2 = {.radius = -2.126200, .xc = 2.630200, .yc = -1.626200, .distance = 1.488400};
+
+  std::vector<maneuver> myMans;
+
+  myMans = waypoint2maneuvers(initialPose, finalDestination);
+  EXPECT_TRUE(myMans.size() ==2);
+  EXPECT_NEAR(myMans.at(0).distance, expected1.distance, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).distance, expected2.distance, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).radius, expected1.radius, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).radius, expected2.radius, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).xc, expected1.xc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).xc, expected2.xc, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).yc, expected1.yc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).yc, expected2.yc, WAYPOINT2MANEUVERTOL);
+
+}
+
+TEST(WaypointControllerHelperTests, waypoint2maneuversTest_OneTurn_TransNegY_StraightThenTurnLeft)
+{
+  pose initialPose = {.x = 2.000000, .y = -0.500000, .theta = 0.000000 };
+  pose finalDestination = {.x = 4.000000, .y = 0.000000, .theta = 0.700000 };
+  maneuver expected1 = {.radius = 1000.000000, .xc = 2.315100, .yc = 999.500000, .distance = 0.630240};
+  maneuver expected2 = {.radius = 2.126200, .xc = 2.630200, .yc = 1.626200, .distance = 1.488400};
+
+  std::vector<maneuver> myMans;
+
+  myMans = waypoint2maneuvers(initialPose, finalDestination);
+  EXPECT_TRUE(myMans.size() ==2);
+  EXPECT_NEAR(myMans.at(0).distance, expected1.distance, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).distance, expected2.distance, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).radius, expected1.radius, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).radius, expected2.radius, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).xc, expected1.xc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).xc, expected2.xc, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).yc, expected1.yc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).yc, expected2.yc, WAYPOINT2MANEUVERTOL);
+
+}
+
+TEST(WaypointControllerHelperTests, waypoint2maneuversTest_OneTurn_TransNegY_StraightThenTurnRight)
+{
+  pose initialPose = {.x = 2.000000, .y = -0.500000, .theta = 0.000000 };
+  pose finalDestination = {.x = 4.000000, .y = -1.000000, .theta = -0.700000 };
+  maneuver expected1 = {.radius = 1000.000000, .xc = 2.315100, .yc = 999.500000, .distance = 0.630240};
+  maneuver expected2 = {.radius = -2.126200, .xc = 2.630200, .yc = -2.626200, .distance = 1.488400};
+
+  std::vector<maneuver> myMans;
+
+  myMans = waypoint2maneuvers(initialPose, finalDestination);
+  EXPECT_TRUE(myMans.size() ==2);
+  EXPECT_NEAR(myMans.at(0).distance, expected1.distance, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).distance, expected2.distance, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).radius, expected1.radius, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).radius, expected2.radius, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).xc, expected1.xc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).xc, expected2.xc, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).yc, expected1.yc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).yc, expected2.yc, WAYPOINT2MANEUVERTOL);
+
+}
+
+TEST(WaypointControllerHelperTests, waypoint2maneuversTest_OneTurn_TransPosYRot1stQuad_StraightThenTurnLeft)
+{
+  pose initialPose = {.x = 2.000000, .y = 0.500000, .theta = 0.200000 };
+  pose finalDestination = {.x = 4.000000, .y = 1.000000, .theta = 0.700000 };
+  maneuver expected1 = {.radius = 1000.000000, .xc = -195.840000, .yc = 980.740000, .distance = 1.696400};
+  maneuver expected2 = {.radius = 0.757200, .xc = 3.512200, .yc = 1.579100, .distance = 0.378600};
+
+  std::vector<maneuver> myMans;
+
+  myMans = waypoint2maneuvers(initialPose, finalDestination);
+  EXPECT_TRUE(myMans.size() ==2);
+  EXPECT_NEAR(myMans.at(0).distance, expected1.distance, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).distance, expected2.distance, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).radius, expected1.radius, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).radius, expected2.radius, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).xc, expected1.xc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).xc, expected2.xc, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).yc, expected1.yc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).yc, expected2.yc, WAYPOINT2MANEUVERTOL);
+
+}
+
+TEST(WaypointControllerHelperTests, waypoint2maneuversTest_OneTurn_TransPosYRotPI_2_StraightThenTurnLeft)
+{
+  pose initialPose = {.x = 2.000000, .y = 0.200000, .theta = M_PI_2 };
+  pose finalDestination = {.x = 1.500000, .y = 1.000000, .theta = 2.500000 };
+  maneuver expected1 = {.radius = 0.850950, .xc = 1.149100, .yc = 0.200000, .distance = 0.790700};
+  maneuver expected2 = {.radius = 1000.000000, .xc = 448.650000, .yc = 599.410000, .distance = 0.197620};
+
+  std::vector<maneuver> myMans;
+
+  myMans = waypoint2maneuvers(initialPose, finalDestination);
+  EXPECT_TRUE(myMans.size() ==2);
+  EXPECT_NEAR(myMans.at(0).distance, expected1.distance, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).distance, expected2.distance, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).radius, expected1.radius, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).radius, expected2.radius, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).xc, expected1.xc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).xc, expected2.xc, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).yc, expected1.yc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).yc, expected2.yc, WAYPOINT2MANEUVERTOL);
+
+}
+
+TEST(WaypointControllerHelperTests, waypoint2maneuversTest_OneTurn_TransPosYRot2ndQuad_StraightThenTurnLeft)
+{
+  pose initialPose = {.x = 2.000000, .y = 0.200000, .theta = 1.700000 };
+  pose finalDestination = {.x = 1.500000, .y = 0.800000, .theta = 2.500000 };
+  maneuver expected1 = {.radius = 0.598270, .xc = 1.406700, .yc = 0.122920, .distance = 0.478610};
+  maneuver expected2 = {.radius = 1000.000000, .xc = 582.880000, .yc = 778.780000, .distance = 0.330490};
+
+  std::vector<maneuver> myMans;
+
+  myMans = waypoint2maneuvers(initialPose, finalDestination);
+  EXPECT_TRUE(myMans.size() ==2);
+  EXPECT_NEAR(myMans.at(0).distance, expected1.distance, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).distance, expected2.distance, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).radius, expected1.radius, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).radius, expected2.radius, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).xc, expected1.xc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).xc, expected2.xc, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).yc, expected1.yc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).yc, expected2.yc, WAYPOINT2MANEUVERTOL);
+
+}
+
+TEST(WaypointControllerHelperTests, waypoint2maneuversTest_OneTurn_TransPosYRotPI_StraightThenTurnLeft)
+{
+  pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = M_PI };
+  pose finalDestination = {.x = 1.000000, .y = 0.200000, .theta = -2.100000 };
+  maneuver expected1 = {.radius = 1000.000000, .xc = 2.697300, .yc = -999.000000, .distance = 0.605350};
+  maneuver expected2 = {.radius = 1.615700, .xc = 2.394700, .yc = -0.615660, .distance = 1.682900};
+
+  std::vector<maneuver> myMans;
+
+  myMans = waypoint2maneuvers(initialPose, finalDestination);
+  EXPECT_TRUE(myMans.size() ==2);
+  EXPECT_NEAR(myMans.at(0).distance, expected1.distance, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).distance, expected2.distance, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).radius, expected1.radius, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).radius, expected2.radius, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).xc, expected1.xc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).xc, expected2.xc, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).yc, expected1.yc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).yc, expected2.yc, WAYPOINT2MANEUVERTOL);
+
+}
+
+TEST(WaypointControllerHelperTests, waypoint2maneuversTest_OneTurn_TransPosYRotNegPI_StraightThenTurnLeft)
+{
+  pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -M_PI };
+  pose finalDestination = {.x = 1.000000, .y = 0.200000, .theta = -2.100000 };
+  maneuver expected1 = {.radius = 1000.000000, .xc = 2.697300, .yc = -999.000000, .distance = 0.605350};
+  maneuver expected2 = {.radius = 1.615700, .xc = 2.394700, .yc = -0.615660, .distance = 1.682900};
+
+  std::vector<maneuver> myMans;
+
+  myMans = waypoint2maneuvers(initialPose, finalDestination);
+  EXPECT_TRUE(myMans.size() ==2);
+  EXPECT_NEAR(myMans.at(0).distance, expected1.distance, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).distance, expected2.distance, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).radius, expected1.radius, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).radius, expected2.radius, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).xc, expected1.xc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).xc, expected2.xc, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).yc, expected1.yc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).yc, expected2.yc, WAYPOINT2MANEUVERTOL);
+
+}
+
+TEST(WaypointControllerHelperTests, waypoint2maneuversTest_OneTurn_TransPosYRot3rdQuad_StraightThenTurnLeft)
+{
+  pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -2.900000 };
+  pose finalDestination = {.x = 1.000000, .y = 0.200000, .theta = -2.100000 };
+  maneuver expected1 = {.radius = 1000.000000, .xc = 241.560000, .yc = -970.130000, .distance = 1.427800};
+  maneuver expected2 = {.radius = 0.983430, .xc = 1.848900, .yc = -0.296480, .distance = 0.786740};
+
+  std::vector<maneuver> myMans;
+
+  myMans = waypoint2maneuvers(initialPose, finalDestination);
+  EXPECT_TRUE(myMans.size() ==2);
+  EXPECT_NEAR(myMans.at(0).distance, expected1.distance, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).distance, expected2.distance, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).radius, expected1.radius, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).radius, expected2.radius, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).xc, expected1.xc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).xc, expected2.xc, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).yc, expected1.yc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).yc, expected2.yc, WAYPOINT2MANEUVERTOL);
+
+}
+
+TEST(WaypointControllerHelperTests, waypoint2maneuversTest_OneTurn_TransPosYRotNegPi_2_StraightThenTurnLeft)
+{
+  pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -1.570800 };
+  pose finalDestination = {.x = 4.000000, .y = -0.500000, .theta = -0.800000 };
+  maneuver expected1 = {.radius = 1.159400, .xc = 4.159400, .yc = 1.000000, .distance = 0.893680};
+  maneuver expected2 = {.radius = 1000.000000, .xc = -734.950000, .yc = -717.510000, .distance = 0.964960};
+
+  std::vector<maneuver> myMans;
+
+  myMans = waypoint2maneuvers(initialPose, finalDestination);
+  EXPECT_TRUE(myMans.size() ==2);
+  EXPECT_NEAR(myMans.at(0).distance, expected1.distance, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).distance, expected2.distance, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).radius, expected1.radius, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).radius, expected2.radius, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).xc, expected1.xc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).xc, expected2.xc, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).yc, expected1.yc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).yc, expected2.yc, WAYPOINT2MANEUVERTOL);
+
+}
+
+TEST(WaypointControllerHelperTests, waypoint2maneuversTest_OneTurn_TransPosYRot4thQuad_StraightThenTurnLeft)
+{
+  pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -1.400000 };
+  pose finalDestination = {.x = 4.000000, .y = -0.500000, .theta = -0.400000 };
+  maneuver expected1 = {.radius = 1000.000000, .xc = 988.480000, .yc = 170.810000, .distance = 0.310970};
+  maneuver expected2 = {.radius = 1.589100, .xc = 4.618800, .yc = 0.963640, .distance = 1.589100};
+
+  std::vector<maneuver> myMans;
+
+  myMans = waypoint2maneuvers(initialPose, finalDestination);
+  EXPECT_TRUE(myMans.size() ==2);
+  EXPECT_NEAR(myMans.at(0).distance, expected1.distance, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).distance, expected2.distance, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).radius, expected1.radius, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).radius, expected2.radius, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).xc, expected1.xc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).xc, expected2.xc, WAYPOINT2MANEUVERTOL);
+
+  EXPECT_NEAR(myMans.at(0).yc, expected1.yc, WAYPOINT2MANEUVERTOL);
+  EXPECT_NEAR(myMans.at(1).yc, expected2.yc, WAYPOINT2MANEUVERTOL);
+
+}
+
+
+
+
+
+
 
 
 
