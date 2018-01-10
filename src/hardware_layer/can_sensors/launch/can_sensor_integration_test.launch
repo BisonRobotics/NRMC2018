@@ -1,0 +1,4 @@
+<launch>
+ <include file="$(find lpms_imu)/launch/imu_launch.launch"/>
+ <node name="lpms_sub" pkg="can_sensors" type="lpresearch_integration_test"/>
+</launch>

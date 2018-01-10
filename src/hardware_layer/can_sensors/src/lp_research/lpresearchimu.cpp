@@ -1,7 +1,7 @@
 #include "lp_research/lpresearchimu.h"
 
 
-LpResearchImu::LpResearchImu (std::string topic) : nh_("~"){
+LpResearchImu::LpResearchImu (std::string topic) : nh_(){
   this->sub = this->nh_.subscribe(topic, 100, &LpResearchImu::imu_callback, this);
   x_acc = 0.0f;
   y_acc = 0.0f;

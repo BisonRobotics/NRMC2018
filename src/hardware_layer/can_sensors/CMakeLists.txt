@@ -71,7 +71,8 @@ target_link_libraries(pos_sensors_integration_test
 
 add_library (lpresearch_imu src/lp_research/lpresearchimu.cpp)
 target_link_libraries (lpresearch_imu ${catkin_LIBRARIES})
-
+add_executable (lpresearch_integration_test tests/lpresearchtest.cpp)
+target_link_libraries (lpresearch_integration_test lpresearch_imu ${catkin_LIBRARIES})
 
 #add_dependencies(can_sensors_integration_test imu_can_sensor_lib)
 #target_link_libraries(can_sensors_integration_test
