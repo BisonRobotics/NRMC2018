@@ -5,7 +5,6 @@
 #define TWO 2.0f  //+/- range of sensor in g's
 
 IMUCanSensor::IMUCanSensor(int cID, char* interface) : CanSensor(cID, interface)
-
 {
 }
 
@@ -33,3 +32,18 @@ ReadableSensors::ReadStatus IMUCanSensor::receiveData()
 }
 
 // int IMUCanSensor::setRefreshRate(uint8_t Hz); //future feature
+
+float IMUCanSensor::getX()
+{
+  return imuData.x;
+}
+
+float IMUCanSensor::getY()
+{
+  return imuData.y;
+}
+
+float IMUCanSensor::getTheta()
+{
+  return imuData.z;
+}
