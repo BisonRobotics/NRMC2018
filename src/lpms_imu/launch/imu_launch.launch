@@ -1,0 +1,9 @@
+<launch>
+
+
+<node name="imu_node" pkg="lpms_imu" type ="lpms_imu_node"/>
+
+
+
+
+</launch>
