@@ -278,6 +278,14 @@ std::vector<maneuver> waypoint2maneuvers(pose robotPose, pose waypoint)
 
   if (std::abs(wp.theta) < .001) wp.theta = .0001; //avoid division by zero
 
+  if (std::abs(wp.y) < .001) //some fudging to allow straight line paths
+  {
+     wp.y = .0001;
+     waypoint.x += .0001 * cos(waypoint.theta + M_PI_2);
+     waypoint.y += .0001 * sin(waypoint.theta + M_PI_2);
+     if (std::abs(wp.theta < .001)) waypoint.theta += .0001;
+  }
+
   double xintercept = -wp.y / tan(wp.theta) + wp.x; //sign is set so SIGN(0) ==1
 
   // if the waypoint were a line extended back,
