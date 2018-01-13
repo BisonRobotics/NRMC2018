@@ -11,6 +11,15 @@
       become: yes
       apt_repository: repo='deb http://packages.ros.org/ros/ubuntu {{ ansible_distribution_release }} main' state=present
 
+		- name: Add ZR300 key
+			become: yes
+			apt_key: keyserver=keys.gnupg.net id=0xD6FB2970
+
+		- name: Add ZR300 repository
+			become: yes
+			apt_repository: repo='deb http://realsense-alm-public.s3.amazonaws.com/apt-repo {{ ansible_distribution_release }} main' state=present
+
+
     - name: add source command to bashrc
       lineinfile:
         dest=~/.bashrc
@@ -26,6 +35,7 @@
    #     update_cache: yes
    #     upgrade: safe
 
+
     - name: install other packages
       become: yes
       apt: pkg={{ item }} state=latest update_cache=true
@@ -38,6 +48,12 @@
         - sl   
         - clang-format-3.6
         - can-utils 
+				- ssh
+				- librealsense-object-recognition-dev
+				- librealsense-persontracking-dev
+				- librealsense-slam-dev
+				- libopencv-dev
+
 
     - name: install ros packages
       become: yes
@@ -47,6 +63,7 @@
         - catkin 
         - usb-cam
         - image-view
+				- tf2-geometry-msgs
 
     - name:  create gmock directory
       become: yes
