@@ -1,3 +1,9 @@
 [submodule "src/ros_vrep_plugin"]
 	path = src/ros_vrep_plugin
 	url = git@github.com:jacobhuesman/ros_vrep_plugin.git
+[submodule "src/lpms_imu"]
+	path = src/lpms_imu
+	url = git@github.com:BisonRobotics/lpms_imu.git
+[submodule "src/timesync"]
+	path = src/timesync
+	url = git@github.com:BisonRobotics/timesync.git
