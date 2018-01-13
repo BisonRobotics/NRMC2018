@@ -75,6 +75,17 @@
         - usb-cam
         - image-view
         - tf2-geometry-msgs
+    - name: add user to dialout
+      user: 
+        name: {{ ansible_user_id }}
+        append: yes
+        groups: dialout
+    
+    - name: remove modemmanager
+      apt:
+        name: modemmanager
+        state: absent
+            
 
     - name:  create gmock directory
       become: yes
