@@ -2,16 +2,16 @@
 #define __LP_RESEARCH_IMU__
 
 
-#include "can_sensors/imu_can_sensor_interface.h"
+#include "sensor_access/imu_sensor_interface.h"
 #include "sensor_msgs/Imu.h"
 #include "ros/ros.h"
 
-class LpResearchImu : public ImuCanSensorInterface{
+class LpResearchImu : public ImuSensorInterface{
   public:
   LpResearchImu (std::string topic_name);
   float getX();
   float getY();
-  float getTheta();
+  float getAlpha();
   ReadableSensors::ReadStatus receiveData();
   private:
   void imu_callback (const sensor_msgs::Imu::ConstPtr &msg);

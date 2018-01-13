@@ -6,7 +6,7 @@ int main (int argc, char **argv){
    LpResearchImu *lp = new LpResearchImu ("imu");
   ros::NodeHandle n;
   while (ros::ok ()){
-    ROS_INFO ("%f %f %f ", lp->getX(), lp->getY(), lp->getTheta() );
+    ROS_INFO ("%f %f %f ", lp->getX(), lp->getY(), lp->getAlpha() );
     ros::spinOnce ();
   }
 }

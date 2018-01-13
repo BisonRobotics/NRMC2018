@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(can_sensors)
+project(sensor_access)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
  add_compile_options(-std=c++11)
@@ -23,7 +23,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include/
-  LIBRARIES imu_can_sensor_lib pos_can_sensor_lib
+  LIBRARIES lpresearch_imu
 #  CATKIN_DEPENDS roscpp
 #  DEPENDS system_lib
 )
@@ -40,34 +40,6 @@ include_directories(
 )
 
 
-add_library(can_sensors_lib
-  src/can_sensors/can_sensors.cpp
-)
-
-add_library(imu_can_sensor_lib
-  src/can_sensors/imu_can_sensor.cpp
-)
-
-add_library(pos_can_sensor_lib
-  src/can_sensors/pos_can_sensor.cpp
-)
-
-target_link_libraries(imu_can_sensor_lib
-  can_sensors_lib
-)
-
-target_link_libraries(pos_can_sensor_lib
-  can_sensors_lib
-)
-
-#add_executable(can_sensors_integration_test tests/can_sensors_integration_test.cpp)
-
-add_executable(pos_sensors_integration_test tests/pos_sensors_integration_test.cpp)
-
-add_dependencies(pos_sensors_integration_test pos_can_sensor_lib)
-target_link_libraries(pos_sensors_integration_test
-  pos_can_sensor_lib
-)
 
 add_library (lpresearch_imu src/lp_research/lpresearchimu.cpp)
 target_link_libraries (lpresearch_imu ${catkin_LIBRARIES})
@@ -123,7 +95,7 @@ target_link_libraries (lpresearch_integration_test lpresearch_imu ${catkin_LIBRA
 # )
 
 ## Mark executables and/or libraries for installation
- install(TARGETS imu_can_sensor_lib
+ install(TARGETS lpresearch_imu
    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
