@@ -28,23 +28,7 @@ Localizer::Localizer(float axleLen, float xi, float yi, float thi, iVescAccess *
 
   axle_len = axleLen;
 }
-/*
-Localizer::UpdateStatus Localizer::updateStateVector()
-{
-  if (false)
-    return Localizer::UpdateStatus::UPDATE_FAILED_SENSOR_ERROR;
-  else
-  {
-    // take current time and subtract it from previous time to get dt
-    previous_time = current_time;
-    gettimeofday(&current_time, NULL);
-    dtms = timediffms(current_time, previous_time);
-    float dt = dtms / 1000.0f;
-    updateStateVector(dt);
-    return Localizer::UpdateStatus::UPDATE_SUCCESS;
-  }
-}
-*/
+
 Localizer::UpdateStatus Localizer::updateStateVector(float dt)
 {
   // get linear velocities of wheels
@@ -97,20 +81,7 @@ Localizer::UpdateStatus Localizer::updateStateVector(float dt)
   state_vector.omega = d_theta / dt;
   return Localizer::UpdateStatus::UPDATE_SUCCESS;
 }
-/*
-int Localizer::timediffms(struct timeval curr, struct timeval prev)
-{
-  // stolen from candump.c, pretty gross
-  struct timeval diff;
-  diff.tv_sec = curr.tv_sec - prev.tv_sec;
-  diff.tv_usec = curr.tv_usec - prev.tv_usec;
-  if (diff.tv_usec < 0)
-    diff.tv_sec--, diff.tv_usec += 1000000;
-  if (diff.tv_sec < 0)
-    diff.tv_sec = diff.tv_usec = 0;
-  return diff.tv_sec * 1000 + diff.tv_usec / 1000;
-}
-*/
+
 LocalizerInterface::stateVector Localizer::getStateVector()
 {
   return state_vector;
