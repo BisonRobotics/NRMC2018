@@ -42,6 +42,7 @@
         - librealsense-persontracking-dev
         - librealsense-slam-dev
         - libopencv-dev
+        - librealsense-utils
 
     - name: get imu runtime
       become: no
