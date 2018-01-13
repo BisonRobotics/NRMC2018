@@ -1,0 +1,4 @@
+The LpResearchImu object should initialize a ros subscriber that listens on a given topic
+The LpResearchImu object should have a constructor that accepts a topic string
+The LpResearchImu object should inherit from the ImuSensorInterface
+The LpResearchImu object should have a callback for an IMU sensor message  

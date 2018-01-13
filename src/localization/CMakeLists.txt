@@ -15,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
 find_package (catkin REQUIRED cmake_modules)
 find_package (Eigen3 REQUIRED)
 find_package (vesc_access REQUIRED)
-find_package (can_sensors REQUIRED)
+find_package (sensor_access REQUIRED)
 
 link_directories (
 /usr/src/gmock/build
@@ -34,7 +34,7 @@ catkin_package(
   INCLUDE_DIRS include/ 
   LIBRARIES localizer_lib
 #  CATKIN_DEPENDS nav_msgs roscpp
-   DEPENDS EIGEN3 vesc_access can_sensors
+   DEPENDS EIGEN3 vesc_access sensor_access
 )
 
 ###########
@@ -46,7 +46,7 @@ catkin_package(
 include_directories(
   ${catkin_INCLUDE_DIRS}
   ${vesc_access_INCLUDE_DIRS}
-  ${can_sensors_INCLUDE_DIRS}
+  ${sensor_access_INCLUDE_DIRS}
   include/
 )
 
@@ -59,11 +59,11 @@ add_library(localizer_lib
 	src/localizer/localizer.cpp
 )
 
-add_dependencies(localizer_lib vesc_access imu_can_sensor_lib )
+add_dependencies(localizer_lib vesc_access lpresearch_imu )
 
 target_link_libraries(localizer_lib
  vesc_access
- imu_can_sensor_lib
+ lpresearch_imu
 )
 
 ##Graveyard below##
