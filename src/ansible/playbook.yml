@@ -75,9 +75,10 @@
         - usb-cam
         - image-view
         - tf2-geometry-msgs
+    
     - name: add user to dialout
       user: 
-        name: {{ ansible_user_id }}
+        name: "{{ ansible_user_id }}"
         append: yes
         groups: dialout
     
@@ -110,6 +111,31 @@
       become: yes
       command: /usr/bin/rosdep init
       when: depcheck.stat.exists == False
+
+
+    - name: get git-lfs
+      get_url:
+        url: https://github.com/git-lfs/git-lfs/releases/download/v2.3.4/git-lfs-linux-amd64-2.3.4.tar.gz
+        dest: ./git-lfs.tar.gz
+    
+    - name: unpack git-lfs
+      unarchive:
+        src: git-lfs.tar.gz
+        dest: ./
+
+    - name: install git-lfs
+      become: yes
+      shell: |
+        pushd git-lfs-2.3.4
+        sudo ./install.sh
+        popd
+        git lfs install
+      args:
+        executable: /bin/bash
+
+    - name: remove git-lfs files
+      become: no
+      shell: rm -rf  ./git-lfs*
 
     - name: update rosdep
       command: /usr/bin/rosdep update
