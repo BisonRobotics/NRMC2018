@@ -137,5 +137,14 @@
       become: no
       shell: rm -rf  ./git-lfs*
 
+
     - name: update rosdep
       command: /usr/bin/rosdep update
+
+    - name: run rosdep
+      shell: |
+        pushd {{ playbook_dir }}/../..
+        rosdep install --from-paths . --ignore-src --rosdistro=kinetic --default-yes -r --os=ubuntu:xenial
+        popd
+      args:
+        executable: /bin/bash
