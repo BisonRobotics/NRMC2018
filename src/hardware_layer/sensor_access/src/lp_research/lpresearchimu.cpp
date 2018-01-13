@@ -19,7 +19,7 @@ float LpResearchImu::getY (void){
 }
 
 
-float LpResearchImu::getAlpha(void){
+float LpResearchImu::getOmega(void){
   return alpha;
 }
 

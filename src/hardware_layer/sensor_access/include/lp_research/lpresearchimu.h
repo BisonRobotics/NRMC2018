@@ -11,7 +11,7 @@ class LpResearchImu : public ImuSensorInterface{
   LpResearchImu (std::string topic_name);
   float getX();
   float getY();
-  float getAlpha();
+  float getOmega();
   ReadableSensors::ReadStatus receiveData();
   private:
   void imu_callback (const sensor_msgs::Imu::ConstPtr &msg);

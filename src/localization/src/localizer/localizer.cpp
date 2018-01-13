@@ -65,7 +65,7 @@ Localizer::UpdateStatus Localizer::updateStateVector(float dt)
 
   if (std::abs(average_right_velocity - average_left_velocity) > 0.01f)  // no dividing by zero
   {
-    turn_radius = axle_len / 2 * (average_right_velocity + average_left_velocity) /
+    turn_radius = (axle_len / 2.0f) * (average_right_velocity + average_left_velocity) /
                   (average_right_velocity - average_left_velocity);  // turn radius
     rot << cos(w * dt), -sin(w * dt), sin(w * dt), cos(w * dt);      // rotation matrix
     rotation_on_y << 0, -turn_radius;

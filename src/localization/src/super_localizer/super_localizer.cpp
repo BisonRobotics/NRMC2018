@@ -55,8 +55,8 @@ SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(float dt)
   {
     this->measured.x_vel += cIMU->getX() * dt;
     this->measured.y_vel += cIMU->getY() * dt;
-    this->measured.omega = deadReck->getStateVector().omega;
-    // unimplemented sensor, set to model value so residual stays 0
+    this->measured.omega = cIMU->getOmega();
+
   }
   else
   {
