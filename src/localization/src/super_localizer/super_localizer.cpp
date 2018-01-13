@@ -2,7 +2,7 @@
 
 SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc,
                                iVescAccess *frontRightVesc, iVescAccess *backRightVesc, iVescAccess *backLeftVesc,
-                               ImuCanSensorInterface *centerIMU, PosCanSensorInterface *posSensor,
+                               ImuSensorInterface *centerIMU, PosSensorInterface *posSensor,
                                LocalizerInterface::stateVector gains)
 {
   this->deadReck = new Localizer(axleLen, xi, yi, thi, frontLeftVesc, frontRightVesc, backRightVesc, backLeftVesc);
@@ -24,7 +24,7 @@ SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVe
 
 SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc,
                                iVescAccess *frontRightVesc, iVescAccess *backRightVesc, iVescAccess *backLeftVesc,
-                               PosCanSensorInterface *posSensor, LocalizerInterface::stateVector gains)
+                               PosSensorInterface *posSensor, LocalizerInterface::stateVector gains)
 {
   this->deadReck = new Localizer(axleLen, xi, yi, thi, frontLeftVesc, frontRightVesc, backRightVesc, backLeftVesc);
 

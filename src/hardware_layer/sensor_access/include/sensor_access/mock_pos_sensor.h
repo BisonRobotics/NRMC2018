@@ -1,10 +1,10 @@
-#ifndef MOCK_POS_SENSOR
-#define MOCK_POS_SENSOR
+#ifndef __MOCK_POS_SENSOR__
+#define __MOCK_POS_SENSOR__
 
-#include <can_sensors/pos_can_sensor_interface.h>
+#include <sensor_access/pos_sensor_interface.h>
 #include <gmock/gmock.h>
 
-class MockPosCanSensor : public PosCanSensorInterface
+class MockPosSensor : public PosSensorInterface
 {
 public:
   MOCK_METHOD0(getX, float());

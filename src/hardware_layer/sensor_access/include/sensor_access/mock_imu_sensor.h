@@ -1,15 +1,15 @@
-#ifndef MOCK_IMU_SENSOR
-#define MOCK_IMU_SENSOR
+#ifndef __MOCK_IMU_SENSOR__
+#define __MOCK_IMU_SENSOR__
 
-#include <can_sensors/imu_can_sensor_interface.h>
+#include <sensor_access/imu_sensor_interface.h>
 #include <gmock/gmock.h>
 
-class MockImuCanSensor : public ImuCanSensorInterface
+class MockImuSensor : public ImuSensorInterface
 {
 public:
   MOCK_METHOD0(getX, float(void));
   MOCK_METHOD0(getY, float(void));
-  MOCK_METHOD0(getTheta, float(void));
+  MOCK_METHOD0(getAlpha, float(void));
   MOCK_METHOD0(receiveData, ReadableSensors::ReadStatus());  // this is an "uninteresting function"
 };
 

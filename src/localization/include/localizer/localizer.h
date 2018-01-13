@@ -1,7 +1,9 @@
-#ifndef LOCALIZER_H
-#define LOCALIZER_H
+#ifndef __LOCALIZER_H__
+#define __LOCALIZER_H__
 
 #include <vesc_access/vesc_access.h>
+#include <sensor_access/imu_sensor_interface.h>
+#include <readable_sensors/readable_sensors.h>
 #include <sys/time.h>
 #include <localizer/localizer_interface.h>
 

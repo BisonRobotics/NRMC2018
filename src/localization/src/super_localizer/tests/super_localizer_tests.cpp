@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include <super_localizer/super_localizer.h>
 #include <vesc_access/mock_vesc_access.h>
-#include <can_sensors/mock_pos_can_sensor.h>
-#include <can_sensors/mock_imu_can_sensor.h>
+#include <sensor_access/mock_pos_sensor.h>
+#include <sensor_access/mock_imu_sensor.h>
 #include <gmock/gmock.h>
 
 #include <random>
@@ -21,7 +21,7 @@ using ::testing::NiceMock;
 TEST(SuperLocalizerTests, CanTurnInPlacecw)
 {
   NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
-  NiceMock<MockPosCanSensor> mockPos;
+  NiceMock<MockPosSensor> mockPos;
   Localizer posspoof(.5f, 10.0f, 10.0f, 0.0f, &flvesc, &frvesc, &brvesc, &blvesc);
 
   SuperLocalizer loki(.5f, 10.0f, 10.0f, 0.0f, &flvesc, &frvesc, &brvesc, &blvesc, &mockPos,
@@ -67,7 +67,7 @@ TEST(SuperLocalizerTests, CanTurnInPlacecw)
 TEST(SuperLocalizerTests, ForwardWithPosInit)
 {
   NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
-  NiceMock<MockPosCanSensor> mockPos;
+  NiceMock<MockPosSensor> mockPos;
   Localizer posspoof(.5f, 10.0f, 10.0f, 0.0f, &flvesc, &frvesc, &brvesc, &blvesc);
 
   SuperLocalizer loki(.5f, 10.0f, 10.0f, 0.0f, &flvesc, &frvesc, &brvesc, &blvesc, &mockPos,
@@ -112,7 +112,7 @@ TEST(SuperLocalizerTests, ForwardWithPosInit)
 TEST(SuperLocalizerTests, ForwardLeftWithPosInit)
 {
   NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
-  NiceMock<MockPosCanSensor> mockPos;
+  NiceMock<MockPosSensor> mockPos;
   Localizer posspoof(.5f, 10.0f, 10.0f, 0, &flvesc, &frvesc, &brvesc, &blvesc);
 
   SuperLocalizer loki(.5f, 10.0f, 10.0f, 0, &flvesc, &frvesc, &brvesc, &blvesc, &mockPos, SuperLocalizer_default_gains);
@@ -147,7 +147,7 @@ TEST(SuperLocalizerTests, ForwardLeftWithPosInit)
 TEST(SuperLocalizerTests, ForwardRightWithPosInit)
 {
   NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
-  NiceMock<MockPosCanSensor> mockPos;
+  NiceMock<MockPosSensor> mockPos;
   Localizer posspoof(.5f, 5.0f, 5.0f, 0, &flvesc, &frvesc, &brvesc, &blvesc);
 
   SuperLocalizer loki(.5f, 5.0f, 5.0f, 0, &flvesc, &frvesc, &brvesc, &blvesc, &mockPos, SuperLocalizer_default_gains);
@@ -182,7 +182,7 @@ TEST(SuperLocalizerTests, ForwardRightWithPosInit)
 TEST(SuperLocalizerTests, BackwardWithPosInit)
 {
   NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
-  NiceMock<MockPosCanSensor> mockPos;
+  NiceMock<MockPosSensor> mockPos;
   Localizer posspoof(.5f, 10.0f, 10.f, 0, &flvesc, &frvesc, &brvesc, &blvesc);
 
   SuperLocalizer loki(.5f, 10.0f, 10.0f, 0, &flvesc, &frvesc, &brvesc, &blvesc, &mockPos, SuperLocalizer_default_gains);
@@ -217,7 +217,7 @@ TEST(SuperLocalizerTests, BackwardWithPosInit)
 TEST(SuperLocalizerTests, BackwardLeftWithPosInit)
 {
   NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
-  NiceMock<MockPosCanSensor> mockPos;
+  NiceMock<MockPosSensor> mockPos;
   Localizer posspoof(.5f, 10.0f, 10.0f, 0, &flvesc, &frvesc, &brvesc, &blvesc);
 
   SuperLocalizer loki(.5f, 10.0f, 10.0f, 0, &flvesc, &frvesc, &brvesc, &blvesc, &mockPos, SuperLocalizer_default_gains);
@@ -252,7 +252,7 @@ TEST(SuperLocalizerTests, BackwardLeftWithPosInit)
 TEST(SuperLocalizerTests, BackwardRightWithPosInit)
 {
   NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
-  NiceMock<MockPosCanSensor> mockPos;
+  NiceMock<MockPosSensor> mockPos;
   Localizer posspoof(.5f, 10.0f, 10.0f, 0, &flvesc, &frvesc, &brvesc, &blvesc);
 
   SuperLocalizer loki(.5f, 10.0f, 10.0f, 0, &flvesc, &frvesc, &brvesc, &blvesc, &mockPos, SuperLocalizer_default_gains);
@@ -287,7 +287,7 @@ TEST(SuperLocalizerTests, BackwardRightWithPosInit)
 TEST(SuperLocalizerTests, ForwardWithPos)
 {
   NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
-  NiceMock<MockPosCanSensor> mockPos;
+  NiceMock<MockPosSensor> mockPos;
   Localizer posspoof(.5f, 0.0f, 0.0f, 0.0f, &flvesc, &frvesc, &brvesc, &blvesc);
 
   SuperLocalizer loki(.5f, 0.0f, 0.0f, 0.0f, &flvesc, &frvesc, &brvesc, &blvesc, &mockPos,
@@ -332,7 +332,7 @@ TEST(SuperLocalizerTests, ForwardWithPos)
 TEST(SuperLocalizerTests, ForwardLeftWithPos)
 {
   NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
-  NiceMock<MockPosCanSensor> mockPos;
+  NiceMock<MockPosSensor> mockPos;
   Localizer posspoof(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
 
   SuperLocalizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc, &mockPos, SuperLocalizer_default_gains);
@@ -367,7 +367,7 @@ TEST(SuperLocalizerTests, ForwardLeftWithPos)
 TEST(SuperLocalizerTests, ForwardRightWithPos)
 {
   NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
-  NiceMock<MockPosCanSensor> mockPos;
+  NiceMock<MockPosSensor> mockPos;
   Localizer posspoof(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
 
   SuperLocalizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc, &mockPos, SuperLocalizer_default_gains);
@@ -402,7 +402,7 @@ TEST(SuperLocalizerTests, ForwardRightWithPos)
 TEST(SuperLocalizerTests, BackwardWithPos)
 {
   NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
-  NiceMock<MockPosCanSensor> mockPos;
+  NiceMock<MockPosSensor> mockPos;
   Localizer posspoof(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
 
   SuperLocalizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc, &mockPos, SuperLocalizer_default_gains);
@@ -437,7 +437,7 @@ TEST(SuperLocalizerTests, BackwardWithPos)
 TEST(SuperLocalizerTests, BackwardLeftWithPos)
 {
   NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
-  NiceMock<MockPosCanSensor> mockPos;
+  NiceMock<MockPosSensor> mockPos;
   Localizer posspoof(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
 
   SuperLocalizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc, &mockPos, SuperLocalizer_default_gains);
@@ -472,7 +472,7 @@ TEST(SuperLocalizerTests, BackwardLeftWithPos)
 TEST(SuperLocalizerTests, BackwardRightWithPos)
 {
   NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
-  NiceMock<MockPosCanSensor> mockPos;
+  NiceMock<MockPosSensor> mockPos;
   Localizer posspoof(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
 
   SuperLocalizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc, &mockPos, SuperLocalizer_default_gains);

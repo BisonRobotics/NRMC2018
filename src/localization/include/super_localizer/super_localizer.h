@@ -1,6 +1,6 @@
 #include <localizer/localizer.h>
-#include <can_sensors/imu_can_sensor_interface.h>
-#include <can_sensors/pos_can_sensor_interface.h>
+#include <sensor_access/imu_sensor_interface.h>
+#include <sensor_access/pos_sensor_interface.h>
 #include <readable_sensors/readable_sensors.h>
 #include <super_localizer/super_localizer_helper.h>
 
@@ -15,10 +15,10 @@ class SuperLocalizer : public LocalizerInterface::LocalizerInterface_c
 {
 public:
   SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc,
-                 iVescAccess *backRightVesc, iVescAccess *backLeftVesc, ImuCanSensorInterface *centerIMU,
-                 PosCanSensorInterface *posSensor, LocalizerInterface::stateVector gains);
+                 iVescAccess *backRightVesc, iVescAccess *backLeftVesc, ImuSensorInterface *centerIMU,
+                 PosSensorInterface *posSensor, LocalizerInterface::stateVector gains);
   SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc,
-                 iVescAccess *backRightVesc, iVescAccess *backLeftVesc, PosCanSensorInterface *posSensor,
+                 iVescAccess *backRightVesc, iVescAccess *backLeftVesc, PosSensorInterface *posSensor,
                  LocalizerInterface::stateVector gains);
   UpdateStatus updateStateVector(float dt);
   ~SuperLocalizer();
@@ -34,9 +34,8 @@ public:
 
 private:
   Localizer *deadReck;
-
-  ImuCanSensorInterface *cIMU;
-  PosCanSensorInterface *pSensor;
+  ImuSensorInterface *cIMU;
+  PosSensorInterface *pSensor;
   ReadableSensors *sensors[2];
   uint8_t num_sensors;
   bool have_imu;

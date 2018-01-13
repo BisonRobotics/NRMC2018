@@ -1,9 +1,9 @@
-#ifndef POS_CAN_SENSOR_INTERFACE
-#define POS_CAN_SENSOR_INTERFACE
+#ifndef __POS_SENSOR_INTERFACE__
+#define __POS_SENSOR_INTERFACE__
 
 #include <readable_sensors/readable_sensors.h>
 
-class PosCanSensorInterface : public ReadableSensors
+class PosSensorInterface : public ReadableSensors
 {
 public:
   virtual float getX() = 0;
