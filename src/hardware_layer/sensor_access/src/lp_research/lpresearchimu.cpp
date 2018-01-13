@@ -25,9 +25,9 @@ float LpResearchImu::getAlpha(void){
 
 ReadableSensors::ReadStatus LpResearchImu::receiveData(){
   if (is_data_valid){
-    return ReadableSensors::ReadStatus::READ_FAILED;
-  } else {
     return ReadableSensors::ReadStatus::READ_SUCCESS;
+  } else {
+    return ReadableSensors::ReadStatus::READ_FAILED;
   }
 }
 

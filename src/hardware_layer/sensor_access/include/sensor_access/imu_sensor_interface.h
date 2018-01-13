@@ -1,5 +1,5 @@
-#ifndef IMU_SENSOR_INTERFACE
-#define IMU_SENSOR_INTERFACE
+#ifndef __IMU_SENSOR_INTERFACE__
+#define __IMU_SENSOR_INTERFACE__
 
 #include <readable_sensors/readable_sensors.h>
 
