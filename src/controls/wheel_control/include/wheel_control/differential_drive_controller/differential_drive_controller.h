@@ -14,7 +14,7 @@ public:
   void setVelocity(double lin_vel, double ang_vel) override;
 
   // This controller doesn't rely upon the current state of the wheels, so it doesn't need to update every cycle
-  void updateDesiredState() {};
+  void updateDesiredState(){};
 };
 }
 

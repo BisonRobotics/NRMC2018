@@ -10,10 +10,10 @@ TEST(InterfaceTests, loadInterface)
   TestWheels wheels;
   test.load(&wheels);
 
-  ASSERT_STREQ("wheel_front_left",  test.wheels->name[FLI].c_str());
+  ASSERT_STREQ("wheel_front_left", test.wheels->name[FLI].c_str());
   ASSERT_STREQ("wheel_front_right", test.wheels->name[FRI].c_str());
-  ASSERT_STREQ("wheel_back_left",   test.wheels->name[BLI].c_str());
-  ASSERT_STREQ("wheel_back_right",  test.wheels->name[BRI].c_str());
+  ASSERT_STREQ("wheel_back_left", test.wheels->name[BLI].c_str());
+  ASSERT_STREQ("wheel_back_right", test.wheels->name[BRI].c_str());
 }
 
 TEST(InterfaceTests, updateCurrentState)

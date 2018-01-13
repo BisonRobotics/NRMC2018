@@ -1,5 +1,5 @@
-#ifndef READABLE_SENSORS_H
-#define READABLE_SENSORS_H
+#ifndef __READABLE_SENSORS_H__
+#define __READABLE_SENSORS_H__
 
 class ReadableSensors
 {
