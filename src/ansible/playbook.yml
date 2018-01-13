@@ -144,7 +144,7 @@
     - name: run rosdep
       shell: |
         pushd {{ playbook_dir }}/../..
-        rosdep install --from-paths . --ignore-src --rosdistro=kinetic --default-yes -r --os=ubuntu:xenial
+        rosdep install --from-paths . --ignore-src --rosdistro=kinetic --default-yes -r --os=ubuntu:{{ ansible_distribution_release }}
         popd
       args:
         executable: /bin/bash
