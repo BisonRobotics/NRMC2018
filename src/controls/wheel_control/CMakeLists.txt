@@ -77,9 +77,19 @@ target_link_libraries (waypoint_master way_control ${catkin_LIBRARIES} )
 add_dependencies (wheel_goal_master localizer_lib)
 add_dependencies (waypoint_master ${PROJECT_NAME}_gencpp)
 ## Tests
+
 catkin_add_gtest(test_WaypointControllerHelper include/waypoint_controller/waypoint_controller_helper.h src/waypoint_controller/test/waypoint_controller_helper_tests.cpp)
 if(TARGET test_WaypointControllerHelper)
   target_link_libraries(test_WaypointControllerHelper
+    ${catkin_LIBRARIES}
+    gmock_main
+	way_control_helper
+  )
+endif()
+
+catkin_add_gtest(test_WaypointControllerHelper2 include/waypoint_controller/waypoint_controller_helper.h src/waypoint_controller/test/waypoint_controller_helper_tests2.cpp)
+if(TARGET test_WaypointControllerHelper2)
+  target_link_libraries(test_WaypointControllerHelper2
     ${catkin_LIBRARIES}
     gmock_main
 	way_control_helper

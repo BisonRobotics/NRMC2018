@@ -3,7 +3,7 @@
 #include <cmath>
 #define CMPERPOINT 5
 #define METERPERCM .01f
-#define SIGN(A) (A > 0 ? 1 : -1)
+#define SIGN(A) (A >= 0 ? 1 : -1)
 #define STRAIGHTRADIUS 1000
 #define CUTOFFDIST4DOUBLEARC .01
 #define CPPEQUALTOL .05
@@ -113,26 +113,37 @@ std::vector<maneuver> oneTurnSolution(pose robotPose, pose waypoint)
     float potxcenter2a, potxcenter2b;
     if (B * B - 4 * A * C < 0)
     {
-      // gaahh
+      // gaahh //this solution should not have been called if we get to here
+      maneuver1.distance = 0;
+      maneuver1.radius = 0;
+      maneuver1.xc = 0;
+      maneuver1.yc = 0;
+      // set everything to zero
+      maneuver2.xc = 0;
+      maneuver2.radius = 0;
+      maneuver2.yc = 0;
+      maneuver2.distance = 0;
     }
     else
     {
       potxcenter2a = (-B + sqrt(B * B - 4 * A * C)) / (2 * A);
       potxcenter2b = (-B - sqrt(B * B - 4 * A * C)) / (2 * A);
+      
+      float xcenter2 = potxcenter2a < potxcenter2b ? potxcenter2a : potxcenter2b;  // pick smallest
+
+      // first maneuver is going straight
+      maneuver1.distance = xcenter2;
+      maneuver1.radius = STRAIGHTRADIUS;
+      maneuver1.xc = xcenter2 / 2.0f;
+      maneuver1.yc = STRAIGHTRADIUS;
+      // second is the turn
+      maneuver2.xc = xcenter2;
+      maneuver2.radius = -1.0f / tan(wp.theta) * (maneuver2.xc - wp.x) + wp.y;
+      maneuver2.yc = maneuver2.radius;
+      maneuver2.distance = std::abs(wp.theta * maneuver2.radius);
     }
 
-    float xcenter2 = potxcenter2a < potxcenter2b ? potxcenter2a : potxcenter2b;  // pick smallest
 
-    // first maneuver is going straight
-    maneuver1.distance = xcenter2;
-    maneuver1.radius = STRAIGHTRADIUS;
-    maneuver1.xc = xcenter2 / 2.0f;
-    maneuver1.yc = STRAIGHTRADIUS;
-    // need to check this
-    maneuver2.xc = xcenter2;
-    maneuver2.radius = -1.0f / tan(wp.theta) * (maneuver2.xc - wp.x) + wp.y;
-    maneuver2.yc = maneuver2.radius;
-    maneuver2.distance = std::abs(wp.theta * maneuver2.radius);
   }
   // dont forget to transform back!!
   m1UT = transformManeuverToWorldCoord(robotPose, maneuver1);
@@ -170,41 +181,44 @@ std::vector<maneuver> twoTurnSolution(pose robotPose, pose waypoint)
  //entire time. Under certain circumstances one solution is better than the other. So the 
  //solving code is fed the problem such that it will yield the desired resultant maneuver.
 
-
+//there is either a bug in the flipping or in the distance calculation
 //this conditional is a little paranoid. Possible redundant cases in there.
-   if (std::abs(robotPose.theta) <= M_PI_2)
-    {
-       if (std::tan(robotPose.theta) * (waypoint.x - robotPose.x) + robotPose.y > waypoint.y)
-       { 
-            wp = reflectWaypointAroundRobot(waypoint, robotPose);
-            beenFlipped = true;
-       }
+
+
+  if (std::abs(robotPose.theta) <= M_PI_2)
+  {
+    if (std::tan(robotPose.theta) * (waypoint.x - robotPose.x) + robotPose.y > waypoint.y)
+    { 
+      wp = reflectWaypointAroundRobot(waypoint, robotPose);
+      beenFlipped = true;
     }
-   else
+  }
+  else
+  {
+    if (std::tan(robotPose.theta) * (waypoint.x - robotPose.x) + robotPose.y < waypoint.y)
     {
-       if (std::tan(robotPose.theta) * (waypoint.x - robotPose.x) + robotPose.y < waypoint.y)
-       {
-            wp = reflectWaypointAroundRobot(waypoint, robotPose);
-            beenFlipped = true;
-       }
+      wp = reflectWaypointAroundRobot(waypoint, robotPose);
+      beenFlipped = true;
     }
+  }
 
 //Now the solver begins, using wp which may or may not have been refelcted/flipped
-   wp = transformPoseToRobotCoord(robotPose, waypoint);
-  float cosanglearg = -wp.theta - M_PI_2;
-  float sinanglearg = -wp.theta + M_PI_2;
+  wp = transformPoseToRobotCoord(robotPose, beenFlipped ? wp : waypoint);
+  double cosanglearg = -wp.theta - M_PI_2;
+  double sinanglearg = -wp.theta + M_PI_2;
 
-  float A = std::cos(cosanglearg)*std::cos(cosanglearg) + std::sin(sinanglearg) * std::sin(sinanglearg) - 4;
-  float B = -2*wp.x*std::cos(cosanglearg) - 2*wp.y*(1+sin(sinanglearg));
-  float C = wp.x*wp.x + wp.y*wp.y;
+  double A = std::cos(cosanglearg)*std::cos(cosanglearg) 
+                   + (1+std::sin(sinanglearg)) * (1+std::sin(sinanglearg)) - 4;
+  double B = -2*wp.x*std::cos(cosanglearg) - 2*wp.y*(1+sin(sinanglearg));
+  double C = wp.x*wp.x + wp.y*wp.y;
  
-  float d;
+  double d;
   if (A < .0001 && A > -.0001) d = -C/B;
   else
   {
-    float da = (-B + std::sqrt(B*B - 4*A*C))/(2*A);
-    float db = (-B - std::sqrt(B*B - 4*A*C))/(2*A);
-    d  = da > db ? da : db; //max of da and db (for those that can't read a ternary)
+    double da = (-B + std::sqrt(B*B - 4.0f*A*C))/(2.0f*A);
+    double db = (-B - std::sqrt(B*B - 4.0f*A*C))/(2.0f*A);
+    d  = da > db ? da : db; //max of da and db
   }
 
   maneuver man1, man2;
@@ -216,8 +230,8 @@ std::vector<maneuver> twoTurnSolution(pose robotPose, pose waypoint)
   man2.yc = wp.y - d*std::sin(sinanglearg);
   man2.radius = -d;
 
-  float xintermediate = (man1.xc + man2.xc) / 2.0f;
-  float yintermediate = (man1.yc + man2.yc) / 2.0f;
+  double xintermediate = (man1.xc + man2.xc) / 2.0f;
+  double yintermediate = (man1.yc + man2.yc) / 2.0f;
 
   float theta1 = std::atan2(xintermediate, d - yintermediate);
  
@@ -228,6 +242,7 @@ std::vector<maneuver> twoTurnSolution(pose robotPose, pose waypoint)
   maneuver man1UT = transformManeuverToWorldCoord(robotPose, man1);
   maneuver man2UT = transformManeuverToWorldCoord(robotPose, man2);
 //After solving, if the waypoint was flipped to begin with, some care must be taken
+
   if (beenFlipped)
   {
      man1UT.radius = -man1UT.radius;
@@ -261,16 +276,19 @@ std::vector<maneuver> waypoint2maneuvers(pose robotPose, pose waypoint)
   pose wp;  // waypoint in robot coordinates, by inverse transform
   wp = transformPoseToRobotCoord(robotPose, waypoint);
 
-  float xintercept = -wp.y / tan(wp.theta) + wp.x;
-  //if (std::abs(xintercept) < .001) xintercept = 1; //only care about sign
+  if (std::abs(wp.theta) < .001) wp.theta = .0001; //avoid division by zero
+
+  double xintercept = -wp.y / tan(wp.theta) + wp.x; //sign is set so SIGN(0) ==1
+
   // if the waypoint were a line extended back,
   // this is where it would intersect on the robot's x axis
-
+/*
   if (std::abs(wp.theta) < .001) 
   {
      wp.theta = .0001; //avoid division by zero, only care about sign of this value
      waypoint.theta += .001; //avoid division by zero
   }
+*/
   if (SIGN(wp.y) ==1)
   {
     if (SIGN(xintercept) != SIGN(wp.theta))

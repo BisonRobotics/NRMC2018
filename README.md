@@ -86,6 +86,20 @@ roscore
 vrep
 
 ```
+## Useful unit test commands for debugging
+# Build and run single test suite
+Tab complete is your friend here
+
+catkin_make run_tests_wheel_control_gtest_test_WaypointControllerHelper2
+```
+# Build test for debugging 
+catkin_make -DCMAKE_BUILD_TYPE=Debug test_WaypointControllerHelper2
+```
+# Debug the unit test
+gdb ./devel/lib/wheel_control/test_WaypointControllerHelper2
+```
+
+
 ## Known Issues/Bugs in "Not-Our-Stuff"
 # CANables
 You may not be able to enumerate two CANables on the same computer easily and as you would imagine. There is a bug in the CANable firmware which makes one CANable enumerate as two. So, to work around this issue: make one of them can1 and the other can2. Forget about can0. Less than nothing, it decieved you, and so should be scorned.
