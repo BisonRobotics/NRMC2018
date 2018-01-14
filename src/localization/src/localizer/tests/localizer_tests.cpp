@@ -9,11 +9,14 @@ using ::testing::_;
 using ::testing::AnyNumber;
 using ::testing::Gt;
 
+#define POSTOL .03f
+#define RADTOL .05f
+
 // Declare a test
 TEST(LocalizerTests, GoesForward)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
-  Localizer loki(&flvesc, &frvesc, &brvesc, &blvesc);
+  Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(.5));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(.5));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(.5));
@@ -24,15 +27,19 @@ TEST(LocalizerTests, GoesForward)
   EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
-  EXPECT_TRUE(loki.state_vector.x_pos >= .0049 && loki.state_vector.x_pos <= .0051);
-  EXPECT_TRUE(loki.state_vector.y_pos >= -.0001 && loki.state_vector.y_pos <= .0001);
-  EXPECT_TRUE(loki.state_vector.theta >= -.0001 && loki.state_vector.theta <= .0001);
+  EXPECT_NEAR(loki.getStateVector().x_pos, .005,.0001);
+  EXPECT_NEAR(loki.getStateVector().y_pos, 0,.0001);
+  EXPECT_NEAR(loki.getStateVector().theta,0, .0001);
+
+  ASSERT_NEAR(loki.getStateVector().x_vel, .5f, POSTOL);
+  ASSERT_NEAR(loki.getStateVector().y_vel, .0f, POSTOL);
+  ASSERT_NEAR(loki.getStateVector().omega, .0f, RADTOL);
 }
 
 TEST(LocalizerTests, ForwardLeft)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
-  Localizer loki(&flvesc, &frvesc, &brvesc, &blvesc);
+  Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(.3));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(.5));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(.5));
@@ -43,15 +50,15 @@ TEST(LocalizerTests, ForwardLeft)
   EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
-  EXPECT_TRUE(loki.state_vector.x_pos >= .0039 && loki.state_vector.x_pos <= .0041);
-  EXPECT_TRUE(loki.state_vector.y_pos >= .0000079 && loki.state_vector.y_pos <= .0000081);
-  EXPECT_TRUE(loki.state_vector.theta >= .0039 && loki.state_vector.theta <= .0041);
+  EXPECT_NEAR(loki.getStateVector().x_pos, .004, .0001);
+  EXPECT_NEAR(loki.getStateVector().y_pos, .000008, .0000001);
+  EXPECT_NEAR(loki.getStateVector().theta, .004, .0001);
 }
 
 TEST(LocalizerTests, ForwardRight)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
-  Localizer loki(&flvesc, &frvesc, &brvesc, &blvesc);
+  Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(.5));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(.3));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(.3));
@@ -62,15 +69,15 @@ TEST(LocalizerTests, ForwardRight)
   EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
-  EXPECT_TRUE(loki.state_vector.x_pos >= .0039 && loki.state_vector.x_pos <= .0041);
-  EXPECT_TRUE(loki.state_vector.y_pos >= -.0000081 && loki.state_vector.y_pos <= -.0000079);
-  EXPECT_TRUE(loki.state_vector.theta >= -.0041 && loki.state_vector.theta <= -.0039);
+  EXPECT_NEAR(loki.getStateVector().x_pos, .004, .0001);
+  EXPECT_NEAR (loki.getStateVector().y_pos, .000008, .0000001);
+  EXPECT_NEAR(loki.getStateVector().theta, -.004, .0001);
 }
 
 TEST(LocalizerTests, GoesBackward)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
-  Localizer loki(&flvesc, &frvesc, &brvesc, &blvesc);
+  Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(-.5));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(-.5));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(-.5));
@@ -81,15 +88,15 @@ TEST(LocalizerTests, GoesBackward)
   EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
-  EXPECT_TRUE(loki.state_vector.x_pos >= -.0051 && loki.state_vector.x_pos <= -.0049);
-  EXPECT_TRUE(loki.state_vector.y_pos >= -.0001 && loki.state_vector.y_pos <= .0001);
-  EXPECT_TRUE(loki.state_vector.theta >= -.0001 && loki.state_vector.theta <= .0001);
+  EXPECT_TRUE(loki.getStateVector().x_pos >= -.0051 && loki.getStateVector().x_pos <= -.0049);
+  EXPECT_TRUE(loki.getStateVector().y_pos >= -.0001 && loki.getStateVector().y_pos <= .0001);
+  EXPECT_TRUE(loki.getStateVector().theta >= -.0001 && loki.getStateVector().theta <= .0001);
 }
 
 TEST(LocalizerTests, BackwardRight)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
-  Localizer loki(&flvesc, &frvesc, &brvesc, &blvesc);
+  Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(-.5));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(-.3));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(-.3));
@@ -100,15 +107,15 @@ TEST(LocalizerTests, BackwardRight)
   EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
-  EXPECT_TRUE(loki.state_vector.x_pos >= -.0041 && loki.state_vector.x_pos <= -.0039);
-  EXPECT_TRUE(loki.state_vector.y_pos >= -.0000081 && loki.state_vector.y_pos <= -.0000079);
-  EXPECT_TRUE(loki.state_vector.theta >= .0039 && loki.state_vector.theta <= .0041);
+  EXPECT_TRUE(loki.getStateVector().x_pos >= -.0041 && loki.getStateVector().x_pos <= -.0039);
+  EXPECT_TRUE(loki.getStateVector().y_pos >= -.0000081 && loki.getStateVector().y_pos <= -.0000079);
+  EXPECT_TRUE(loki.getStateVector().theta >= .0039 && loki.getStateVector().theta <= .0041);
 }
 
 TEST(LocalizerTests, BackwardLeft)
 {
   MockVescAccess flvesc, frvesc, brvesc, blvesc;
-  Localizer loki(&flvesc, &frvesc, &brvesc, &blvesc);
+  Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(-.3));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(-.5));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(-.5));
@@ -119,9 +126,9 @@ TEST(LocalizerTests, BackwardLeft)
   EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
-  EXPECT_TRUE(loki.state_vector.x_pos >= -.0041 && loki.state_vector.x_pos <= -.0039);
-  EXPECT_TRUE(loki.state_vector.y_pos >= .0000079 && loki.state_vector.y_pos <= .0000081);
-  EXPECT_TRUE(loki.state_vector.theta >= -.0041 && loki.state_vector.theta <= -.0039);
+  EXPECT_NEAR(loki.getStateVector().x_pos, -.004 ,.0001);
+  EXPECT_NEAR(loki.getStateVector().y_pos, .000008, .0000001);
+  EXPECT_NEAR(loki.getStateVector().theta, -.004, .0001);
 }
 
 // Run all the tests that were declared with TEST()
