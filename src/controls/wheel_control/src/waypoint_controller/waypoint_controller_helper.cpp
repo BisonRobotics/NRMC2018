@@ -276,27 +276,40 @@ std::vector<maneuver> waypoint2maneuvers(pose robotPose, pose waypoint)
   pose wp;  // waypoint in robot coordinates, by inverse transform
   wp = transformPoseToRobotCoord(robotPose, waypoint);
 
-  if (std::abs(wp.theta) < .001) wp.theta = .0001; //avoid division by zero
+  if (std::abs(wp.theta) < .001) wp.theta = .0001; //avoid division by zero and set sign
 
-  if (std::abs(wp.y) < .001) //some fudging to allow straight line paths
-  {
-     wp.y = .0001;
-     waypoint.x += .0001 * cos(waypoint.theta + M_PI_2);
-     waypoint.y += .0001 * sin(waypoint.theta + M_PI_2);
-     if (std::abs(wp.theta < .001)) waypoint.theta += .0001;
+  bool fudged = false;
+  if (std::abs(wp.y) < .01) //some fudging to allow straight line paths
+  { //fudge 1
+     //wp.y = .0001;
+     fudged = true;
+     waypoint.x += .0001 * sin(waypoint.theta + M_PI_2); // add orthogonal to angle
+     waypoint.y += .0001 * cos(waypoint.theta + M_PI_2);
+     wp = transformPoseToRobotCoord(robotPose, waypoint);
+     if (std::abs(wp.theta < .001)) waypoint.theta += .001;
   }
 
-  double xintercept = -wp.y / tan(wp.theta) + wp.x; //sign is set so SIGN(0) ==1
+  if (std::abs(angleDiff(M_PI, wp.theta)) < .001 && fudged == false)
+  { //fudge 2
+    fudged = true;
+    wp.theta = angleDiff(wpth, -.0001);
+    waypoint.theta = angleDiff(waypoint.theta, -.0001);
+  }
+
+  if ((std::abs(angleDiff(M_PI_2, wp.theta)) < .001) || (std::abs(angleDiff(-M_PI_2, wp.theta)) < .001))
+  {
+    //caramel1
+    wp.theta = angleDiff(wpth, -.0001);
+    waypoint.theta = angleDiff(waypoint.theta, -.0001);
+  }
+
+  if (std::abs(robotPose.theta) < .001) robotPose.theta = -.0001;
 
   // if the waypoint were a line extended back,
   // this is where it would intersect on the robot's x axis
-/*
-  if (std::abs(wp.theta) < .001) 
-  {
-     wp.theta = .0001; //avoid division by zero, only care about sign of this value
-     waypoint.theta += .001; //avoid division by zero
-  }
-*/
+
+  double xintercept = -wp.y / tan(wp.theta) + wp.x; //sign is set so SIGN(0) ==1
+
   if (SIGN(wp.y) ==1)
   {
     if (SIGN(xintercept) != SIGN(wp.theta))
