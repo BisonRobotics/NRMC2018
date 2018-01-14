@@ -15,9 +15,9 @@ class LpResearchImu : public ImuSensorInterface{
   ReadableSensors::ReadStatus receiveData();
   private:
   void imu_callback (const sensor_msgs::Imu::ConstPtr &msg);
-  double x_acc;
-  double y_acc;
-  double alpha;
+  float x_acc;
+  float y_acc;
+  float omega;
   bool is_data_valid;
   ros::Subscriber sub;
   ros::NodeHandle nh_;
