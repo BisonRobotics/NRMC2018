@@ -18,18 +18,19 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "wheel_controller");
   ros::NodeHandle n;
-  Localizer loc = Localizer(pos.front_left_wheel, pos.front_right_wheel, pos.back_right_wheel, pos.back_left_wheel);
+  Localizer loc =
+      Localizer(.5f, 0, 0, 0, pos.front_left_wheel, pos.front_right_wheel, pos.back_right_wheel, pos.back_left_wheel);
   Server server(n, "drive_a_distance", boost::bind(&execute, _1, &server), false);
-  loc.updateStateVector();
-  pos.update(loc.state_vector.x_pos, loc.state_vector.y_pos);
+  loc.updateStateVector(.1f);
+  pos.update(loc.getStateVector().x_pos, loc.getStateVector().y_pos);
   server.start();
-  ros::Rate r(100);
+  ros::Rate r(10);
   wheel_control::distanceFeedback feedback;
   wheel_control::distanceResult result;
   while (ros::ok())
   {
-    loc.updateStateVector();
-    pos.update(loc.state_vector.x_pos, loc.state_vector.y_pos);
+    loc.updateStateVector(.1f);
+    pos.update(loc.getStateVector().x_pos, loc.getStateVector().y_pos);
     if (server.isActive())
     {
       if (!pos.isMoving())

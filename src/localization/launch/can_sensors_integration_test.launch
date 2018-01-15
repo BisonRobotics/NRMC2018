@@ -1,4 +1,0 @@
-<launch>
-  <node name="can_sensors_integration_test_node" type="can_sensors_integration_test" pkg="localization" output="screen" >
-  </node>
-</launch>

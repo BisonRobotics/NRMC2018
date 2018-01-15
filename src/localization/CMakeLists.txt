@@ -15,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
 find_package (catkin REQUIRED cmake_modules)
 find_package (Eigen3 REQUIRED)
 find_package (vesc_access REQUIRED)
-find_package (can_sensors REQUIRED)
+find_package (sensor_access REQUIRED)
 
 link_directories (
 /usr/src/gmock/build
@@ -32,9 +32,9 @@ link_directories (
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include/ 
-  LIBRARIES localizer_lib
+  LIBRARIES localizer_lib super_localizer_lib
 #  CATKIN_DEPENDS nav_msgs roscpp
-   DEPENDS EIGEN3 vesc_access can_sensors
+   DEPENDS EIGEN3 vesc_access sensor_access
 )
 
 ###########
@@ -46,7 +46,7 @@ catkin_package(
 include_directories(
   ${catkin_INCLUDE_DIRS}
   ${vesc_access_INCLUDE_DIRS}
-  ${can_sensors_INCLUDE_DIRS}
+  ${sensor_access_INCLUDE_DIRS}
   include/
 )
 
@@ -59,39 +59,37 @@ add_library(localizer_lib
 	src/localizer/localizer.cpp
 )
 
-add_dependencies(localizer_lib vesc_access imu_can_sensor_lib )
+
+add_library(super_localizer_helper_lib
+    src/super_localizer/super_localizer_helper.cpp
+)
+
+add_library(super_localizer_lib
+	src/super_localizer/super_localizer.cpp
+		)
+add_dependencies(localizer_lib vesc_access lpresearch_imu )
 
 target_link_libraries(localizer_lib
  vesc_access
- imu_can_sensor_lib
+ lpresearch_imu
 )
 
-##Graveyard below##
 
-## Add cmake target dependencies of the library
-## as an example, code may need to be generated before libraries
-## either from message generation or dynamic reconfigure
-# add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-## Declare a C++ executable
-## With catkin_make all packages are built within a single CMake context
-## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/localization_node.cpp)
+add_dependencies(super_localizer_lib localizer_lib)
 
-## Rename C++ executable without prefix
-## The above recommended prefix causes long target names, the following renames the
-## target back to the shorter version for ease of user use
-## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
-# set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
+add_dependencies(super_localizer_helper_lib localizer_lib)
 
-## Add cmake target dependencies of the executable
-## same as for the library above
-# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-## Specify libraries to link a library or executable target against
-# target_link_libraries(${PROJECT_NAME}_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(super_localizer_helper_lib 
+ localizer_lib
+)
+
+target_link_libraries(super_localizer_lib
+ localizer_lib
+ super_localizer_helper_lib
+
+)
 
 #############
 ## Install ##
@@ -146,7 +144,30 @@ if(TARGET test_localization)
     localizer_lib
     gmock_main
   )
-  add_dependencies(test_localization vesc_access)
+  add_dependencies(test_localization vesc_access localizer_lib)
+endif()
+
+catkin_add_gtest(test_super_localization src/super_localizer/tests/super_localizer_tests.cpp)
+if(TARGET test_super_localization)
+  target_link_libraries(
+    test_super_localization
+    ${catkin_LIBRARIES}
+    super_localizer_lib
+    gmock_main
+  )
+  add_dependencies(test_super_localization vesc_access super_localizer_lib)
+endif()
+
+catkin_add_gtest(test_super_localization_helper src/super_localizer/tests/super_localizer_helper_tests.cpp)
+if(TARGET test_super_localization_helper)
+  target_link_libraries(
+    test_super_localization_helper
+    ${catkin_LIBRARIES}
+    localizer_lib
+    gmock_main
+    super_localizer_helper_lib
+  )
+  add_dependencies(test_super_localization_helper localizer_lib)
 endif()
 
 ## Add folders to be run by python nosetests

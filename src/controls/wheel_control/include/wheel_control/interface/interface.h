@@ -15,12 +15,11 @@ const int eff_t = 2;
 class Interface
 {
 public:
-
   int type = -1;
   Wheels *wheels;
 
   virtual void updateDesiredState() = 0;
-  
+
   void load(Wheels *wheels)
   {
     this->wheels = wheels;

@@ -1,0 +1,4 @@
+scenes/arena.ttt filter=lfs diff=lfs merge=lfs -text
+scenes/arena_export.ttt filter=lfs diff=lfs merge=lfs -text
+scenes/arena_with_vision_sensor.ttt filter=lfs diff=lfs merge=lfs -text
+scenes/emydidae.ttt filter=lfs diff=lfs merge=lfs -text

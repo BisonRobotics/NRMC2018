@@ -7,3 +7,7 @@
 [submodule "src/timesync"]
 	path = src/timesync
 	url = git@github.com:BisonRobotics/timesync.git
+[submodule "src/realsense_samples_ros"]
+	path = src/realsense_samples_ros
+	url = git@github.com:BisonRobotics/realsense_samples_ros.git
+
