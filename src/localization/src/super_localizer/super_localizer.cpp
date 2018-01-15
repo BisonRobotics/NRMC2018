@@ -1,6 +1,6 @@
 #include <super_localizer/super_localizer.h>
 
-SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc,
+SuperLocalizer::SuperLocalizer(double axleLen, double xi, double yi, double thi, iVescAccess *frontLeftVesc,
                                iVescAccess *frontRightVesc, iVescAccess *backRightVesc, iVescAccess *backLeftVesc,
                                ImuSensorInterface *centerIMU, PosSensorInterface *posSensor,
                                LocalizerInterface::stateVector gains)
@@ -22,7 +22,7 @@ SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVe
   this->gainVector = gains;
 }
 
-SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc,
+SuperLocalizer::SuperLocalizer(double axleLen, double xi, double yi, double thi, iVescAccess *frontLeftVesc,
                                iVescAccess *frontRightVesc, iVescAccess *backRightVesc, iVescAccess *backLeftVesc,
                                PosSensorInterface *posSensor, LocalizerInterface::stateVector gains)
 {
@@ -42,7 +42,7 @@ SuperLocalizer::SuperLocalizer(float axleLen, float xi, float yi, float thi, iVe
   this->gainVector = gains;
 }
 
-SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(float dt)
+SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(double dt)
 {
   // do dead reckoning calculation, this uses information from the vescs
   this->deadReck->updateStateVector(dt);

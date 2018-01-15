@@ -6,9 +6,9 @@
 class PosSensorInterface : public ReadableSensors
 {
 public:
-  virtual float getX() = 0;
-  virtual float getY() = 0;
-  virtual float getTheta() = 0;
+  virtual double getX() = 0;
+  virtual double getY() = 0;
+  virtual double getTheta() = 0;
   virtual ReadableSensors::ReadStatus receiveData() = 0;
 };
 

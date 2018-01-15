@@ -6,9 +6,9 @@
 class ImuSensorInterface : public ReadableSensors
 {
 public:
-  virtual float getX() = 0;
-  virtual float getY() = 0;
-  virtual float getOmega() = 0;
+  virtual double getX() = 0;
+  virtual double getY() = 0;
+  virtual double getOmega() = 0;
 
   virtual ReadableSensors::ReadStatus receiveData() = 0;
 };
