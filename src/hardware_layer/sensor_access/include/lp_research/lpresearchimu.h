@@ -9,15 +9,15 @@
 class LpResearchImu : public ImuSensorInterface{
   public:
   LpResearchImu (std::string topic_name);
-  float getX();
-  float getY();
-  float getOmega();
+  double getX();
+  double getY();
+  double getOmega();
   ReadableSensors::ReadStatus receiveData();
   private:
   void imu_callback (const sensor_msgs::Imu::ConstPtr &msg);
-  float x_acc;
-  float y_acc;
-  float omega;
+  double x_acc;
+  double y_acc;
+  double omega;
   bool is_data_valid;
   ros::Subscriber sub;
   ros::NodeHandle nh_;

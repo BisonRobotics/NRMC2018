@@ -10,16 +10,16 @@ LpResearchImu::LpResearchImu (std::string topic) : nh_(){
 }
 
 
-float LpResearchImu::getX (void){
+double LpResearchImu::getX (void){
   return x_acc;
 }
 
-float LpResearchImu::getY (void){
+double LpResearchImu::getY (void){
   return y_acc;
 }
 
 
-float LpResearchImu::getOmega(void){
+double LpResearchImu::getOmega(void){
   return omega;
 }
 
@@ -32,8 +32,8 @@ ReadableSensors::ReadStatus LpResearchImu::receiveData(){
 }
 
 void LpResearchImu::imu_callback (const sensor_msgs::Imu::ConstPtr &msg){
-  x_acc =(float) msg->linear_acceleration.x;
-  y_acc = (float) msg->linear_acceleration.y;
-  omega = (float) msg->angular_velocity.z;
+  x_acc =(double) msg->linear_acceleration.x;
+  y_acc = (double) msg->linear_acceleration.y;
+  omega = (double) msg->angular_velocity.z;
   is_data_valid = true;
 }

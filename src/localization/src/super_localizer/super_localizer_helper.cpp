@@ -35,7 +35,7 @@ LocalizerInterface::stateVector multiply(LocalizerInterface::stateVector lhs, Lo
 }
 
 LocalizerInterface::stateVector addFromModel(LocalizerInterface::stateVector lhs, LocalizerInterface::stateVector rhs,
-                                             float dt, bool imu)
+                                             double dt, bool imu)
 {
   LocalizerInterface::stateVector ret;
   ret.x_pos = lhs.x_pos + rhs.x_vel * dt;
@@ -62,7 +62,7 @@ LocalizerInterface::stateVector addFromModel(LocalizerInterface::stateVector lhs
   return ret;
 }
 
-LocalizerInterface::stateVector initState(float xi, float yi, float theta)
+LocalizerInterface::stateVector initState(double xi, double yi, double theta)
 {
   LocalizerInterface::stateVector ret;
   ret.x_pos = xi;
