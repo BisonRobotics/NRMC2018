@@ -44,27 +44,18 @@
         - libopencv-dev
         - librealsense-utils
 
-    - name: get imu runtime
-      become: no
-      get_url:
-        url: https://bitbucket.org/lpresearch/openmat/downloads/LpSensor-1.3.5-Linux-x86-64.tar.gz
-        dest: ./LpSensor-1.3.5.tar.gz
-    
-    - name: unpack imu runtime
+    - name: get and unpack imu runtime
       become: no
       unarchive:
-        src: LpSensor-1.3.5.tar.gz
+        src: https://bitbucket.org/lpresearch/openmat/downloads/LpSensor-1.3.5-Linux-x86-64.tar.gz
         dest: ./
-        remote_src: yes
+        #remote_src: yes # for ansible version >= 2.2
+        copy: no # for ansible version < 2.2
 
     - name: install imu runtime
       become: yes
       apt:
         deb: ./LpSensor-1.3.5-Linux-x86-64/liblpsensor-1.3.5-Linux.deb
-
-    - name: cleanup imu
-      become: no
-      shell: /bin/rm -rf ./Lp*
       
     - name: install ros packages
       become: yes
@@ -77,6 +68,7 @@
         - tf2-geometry-msgs
     
     - name: add user to dialout
+      become: yes
       user: 
         name: "{{ ansible_user_id }}"
         append: yes
@@ -87,7 +79,6 @@
         name: modemmanager
         state: absent
             
-
     - name:  create gmock directory
       become: yes
       file: path=/usr/src/gmock/build state=directory
@@ -111,17 +102,12 @@
       become: yes
       command: /usr/bin/rosdep init
       when: depcheck.stat.exists == False
-
-
-    - name: get git-lfs
-      get_url:
-        url: https://github.com/git-lfs/git-lfs/releases/download/v2.3.4/git-lfs-linux-amd64-2.3.4.tar.gz
-        dest: ./git-lfs.tar.gz
     
-    - name: unpack git-lfs
+    - name: get and unpack git-lfs
       unarchive:
-        src: git-lfs.tar.gz
+        src: https://github.com/git-lfs/git-lfs/releases/download/v2.3.4/git-lfs-linux-amd64-2.3.4.tar.gz
         dest: ./
+        copy: no
 
     - name: install git-lfs
       become: yes
@@ -133,18 +119,22 @@
       args:
         executable: /bin/bash
 
-    - name: remove git-lfs files
-      become: no
-      shell: rm -rf  ./git-lfs*
-
-
     - name: update rosdep
       command: /usr/bin/rosdep update
 
-    - name: run rosdep
+    - name: run rosdep # this does not run cleanly, will report error on custom packages. Also doesn't seem to install anything, all dependencies seem to be installed by previous steps
       shell: |
         pushd {{ playbook_dir }}/../..
         rosdep install --from-paths . --ignore-src --rosdistro=kinetic --default-yes -r --os=ubuntu:{{ ansible_distribution_release }}
         popd
       args:
         executable: /bin/bash
+
+# clear the downloaded package files, do this at the end in case previous step fails
+    - name: cleanup imu
+      become: no
+      shell: /bin/rm -rf ./Lp*
+
+    - name: remove git-lfs files
+      become: no
+      shell: rm -rf  ./git-lfs*
