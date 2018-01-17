@@ -65,13 +65,14 @@ add_library(super_localizer_helper_lib
 )
 
 add_library(super_localizer_lib
-	src/super_localizer/super_localizer.cpp
-		)
+  src/super_localizer/super_localizer.cpp
+)
 add_dependencies(localizer_lib vesc_access lpresearch_imu )
 
 target_link_libraries(localizer_lib
- vesc_access
- lpresearch_imu
+  vesc_access
+  lpresearch_imu
+  apriltag_tracker_interface
 )
 
 
@@ -82,13 +83,12 @@ add_dependencies(super_localizer_helper_lib localizer_lib)
 
 
 target_link_libraries(super_localizer_helper_lib 
- localizer_lib
+  localizer_lib
 )
 
 target_link_libraries(super_localizer_lib
- localizer_lib
- super_localizer_helper_lib
-
+  localizer_lib
+  super_localizer_helper_lib
 )
 
 #############

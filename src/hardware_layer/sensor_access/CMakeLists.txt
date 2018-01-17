@@ -23,7 +23,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include/
-  LIBRARIES lpresearch_imu
+  LIBRARIES lpresearch_imu apriltag_tracker_interface
 #  CATKIN_DEPENDS roscpp
 #  DEPENDS system_lib
 )
@@ -45,6 +45,9 @@ add_library (lpresearch_imu src/lp_research/lpresearchimu.cpp)
 target_link_libraries (lpresearch_imu ${catkin_LIBRARIES})
 add_executable (lpresearch_integration_test tests/lpresearchtest.cpp)
 target_link_libraries (lpresearch_integration_test lpresearch_imu ${catkin_LIBRARIES})
+
+add_library (apriltag_tracker_interface src/apriltag_tracker_interface/apriltag_tracker_interface.cpp)
+target_link_libraries (apriltag_tracker_interface ${catkin_LIBRARIES})
 
 #add_dependencies(can_sensors_integration_test imu_can_sensor_lib)
 #target_link_libraries(can_sensors_integration_test
