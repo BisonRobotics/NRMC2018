@@ -124,7 +124,6 @@ class ImperioControl(object):
     def runningOutOfTime(self):
         """
         What the robot should do when it's running out of time
-        :return: None 
         """
         if self.robot.state == RobotState.DIG:
             self.robot.change_state(RobotState.INBOUND)

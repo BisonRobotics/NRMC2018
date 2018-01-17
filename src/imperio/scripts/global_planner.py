@@ -10,12 +10,14 @@ Version: 2
 import math
 import rospy
 import astar as path_finder
+import map_utils
 
 from robot import *
 
 # TODO : Currently an issue trying to import a custom message, no module named .msg
 from imperio.msg import GlobalWaypoints
 from imperio.msg import DriveStatus
+from nav_msgs.msg import OccupancyGrid
 
 class MovementStatus(Enum):
     """
@@ -39,9 +41,14 @@ class GlobalPlanner(object):
         """
         self.waypoints_publisher = rospy.Publisher('/global_planner_goal', GlobalWaypoints, queue_size=1)
         rospy.Subscriber('/drive_controller_status', DriveStatus, self.drive_status_callback)
+        rospy.Subscriber('/vrep/map', OccupancyGrid, self.map_callback)
         self.robot = robot
         self.occupancy_grid = None
         self.movement_status = MovementStatus.HAS_REACHED_GOAL
+
+    def map_callback(self, map_message):
+        args = [map_message]
+        #self.occupancy_grid = map_utils.Map(map_message, None)
 
     def drive_status_callback(self, status_message):
         """
@@ -69,8 +76,12 @@ class GlobalPlanner(object):
         if self.movement_status == MovementStatus.HAS_REACHED_GOAL and self.robot_within_threshold(goal):
             return True
 
-        waypoints = self.find_waypoints(goal)
-        self.publish_waypoints(waypoints)
+        #waypoints = self.find_waypoints(goal)
+        # currently debugging the A* implementation.
+        waypoints = [[0,1], [1,0]]
+        oriented_waypoints = self.calculate_orientation(waypoints)
+
+        self.publish_waypoints(oriented_waypoints)
         return False
 
     def find_waypoints(self, goal):
@@ -79,9 +90,16 @@ class GlobalPlanner(object):
         :param goal: the final goal as (x,y)
         :return: an array of waypoints
         """
+        #while self.occupancy_grid == None:
+         #   print("Occupancy grid has not been initialized yet")
         (location, pose) = self.robot.localize()
-        path_finder.aStar(location, goal, self.occupancy_grid)
-        pass
+        if location == None:
+            location = [0,0]
+        results = path_finder.aStar(location, goal, self.occupancy_grid)
+        print("Path finder has returned")
+        print(results)
+        #path_finder.bullshit_it(location, goal, self.occupancy_grid)
+
 
     def publish_waypoints(self, waypoints):
         """
@@ -126,3 +144,51 @@ class GlobalPlanner(object):
         #will need to empty the list of poses/goals to the local planner
         #will need to tell the planner to stop moving
         pass
+
+    def calculate_orientation(self, waypoints):
+        """
+        Calcularets the orientation for each waypoint, will just point straight to the next waypoint
+        :param waypoints: array of waypoints
+        :return: array of waypoints with orientation
+        """
+        oriented_waypoints = []
+
+        for i in range(1, len(waypoints)):
+            waypoint1 = waypoints[i -1]
+            waypoint2 = waypoints[i]
+            x1 = waypoint1[0]
+            y1 = waypoint1[1]
+            x2 = waypoint2[0]
+            y2 = waypoint2[1]
+
+            orientation = 0
+            #moving to the right
+            if x2 > x1:
+                orientation = 90
+
+            #moving the the left
+            if x1 > x2:
+                orientation = 270
+
+            #moving up the map
+            if y2 > y1:
+                orientation = 0
+
+            #moving down the map
+            if y1 > y2:
+                orientation = 180
+
+            single = [x1, y1, orientation]
+            oriented_waypoints.append(single)
+
+        #still need to add the last waypoint
+        final_waypoint = waypoints[len(waypoints) - 1]
+        final_orientation = 180
+        single = [final_waypoint[0], final_waypoint[1], final_orientation]
+        oriented_waypoints.append(single)
+
+        return oriented_waypoints
+
+
+
+

@@ -8,23 +8,61 @@ Version: 1
 """
 
 class Node:
-    def __init__(self,value,point):
+    def __init__(self,value, x, y):
         self.value = value
-        self.point = point
+        self.x = x
+        self.y = y
         self.parent = None
         self.H = 0
         self.G = 0
     def move_cost(self,other):
         return other.value
 
+#determines if the index is in the occupancy grid
+def index_valid(x, y, grid):
+    if x < 0 or y < 0:
+        return False
+    return True
+
+
 #Returns the Children as Nodes (Up, Down, Left, Right)
 def children(point,grid):
-    x,y = point.point
-    links = [Node(grid[d[0]][d[1], (d[0],d[1]))] for d in [(x-1, y),(x,y - 1),(x,y + 1),(x+1,y)]]
+    x = point.x
+    y = point.y
+    print("X then Y")
+    print(x)
+    print(y)
+
+    print(grid)
+    print(grid[0])
+
+
+    links = []
+
+    if index_valid(x, y-1, grid):
+        node = Node(grid[x][y-1], x, y-1)
+        links.append(node)
+
+    if index_valid(x, y+1, grid):
+        node = Node(grid[x][y+1], x, y+1)
+        links.append(node)
+
+    if index_valid(x - 1, y, grid):
+        node = Node(grid[x - 1][y], x - 1, y)
+        links.append(node)
+
+    if index_valid(x, y-1, grid):
+        node = Node(grid[x + 1][y], x + 1, y)
+        links.append(node)
+
+    print("done")
+    print(links)
+
+    links = [Node(grid[d[0]][d[1]], d[0], d[1]) for d in [(x-1, y),(x,y - 1),(x,y + 1),(x+1,y)]]
     return [link for link in links if link.value <= .5]#Change this if needed to change the threshold
     
 def heuristic(point,point2):
-    return abs(point.point[0] - point2.point[0]) + abs(point.point[1]-point2.point[0])
+    return abs(point.x - point2.x) + abs(point.y - point2.y)
 
 #Returns the path as points
 def aStar(start, goal, grid):
@@ -32,8 +70,8 @@ def aStar(start, goal, grid):
     openset = set()
     closedset = set()
     #Current point is the starting point (Change it to a Node from a point)
-    current = Node(0,start)
-    end = Node(0,goal)
+    current = Node(0,start[0], start[1])
+    end = Node(0,goal[0], goal[1])
     #Add the starting point to the open set
     openset.add(current)
     #While the open set is not empty
@@ -75,3 +113,4 @@ def aStar(start, goal, grid):
                 openset.add(node)
     #Throw an exception if there is no path
     raise ValueError('No Path Found')
+
