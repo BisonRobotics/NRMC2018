@@ -8,10 +8,10 @@ public:
   float getVelocity();
   void update(float left_vel, float right_vel);
   ~TeleopInterface();
-
+  iVescAccess *fl, *fr, *br, *bl;
 private:
   float velocity_scale;
-  iVescAccess *fl, *fr, *br, *bl;
+
   void setVelocity(float velocity);
   void stopMotors();
   void initializeVars(float velocity);
