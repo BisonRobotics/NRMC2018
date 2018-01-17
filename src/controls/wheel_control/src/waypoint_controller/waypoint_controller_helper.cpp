@@ -8,6 +8,80 @@
 #define CUTOFFDIST4DOUBLEARC .01
 #define CPPEQUALTOL .05
 
+std::pair<pose, pose> inputCleaner(pose robotPose, pose waypoint)
+{
+    std::pair<pose, pose> newPair;
+    newPair.first = robotPose;
+    newPair.second = waypoint;
+
+    pose Twp = transformPoseToRobotCoord(robotPose, waypoint);
+
+    //if waypoint and robot are exactly in line with each other
+    //bump the robot a bit
+    if (std::abs(Twp.y) < .01)
+    {
+         newPair.first.x += .02 * cos(robotPose.theta + M_PI_2);
+         newPair.first.y += .02 * sin(robotPose.theta + M_PI_2);        
+
+         if (std::abs(Twp.theta) < .01)
+         {
+              newPair.first.theta - .01;
+              newPair.second.theta + .01;
+         }
+         return newPair;
+    }
+
+    //if the xintercept would be zero
+    //make that not by sliding the robot fwd or sideways a bit
+    if (tan(Twp.theta) != 0)
+    {
+         double xintercept = -Twp.y / tan(Twp.theta) + Twp.x;
+         if (std::abs(xintercept) < .01)
+         {
+              newPair.first.x += .02 * cos(robotPose.theta + M_PI_2);
+              newPair.first.y += .02 * sin(robotPose.theta + M_PI_2);
+              //check xintercept again
+              Twp = transformPoseToRobotCoord(robotPose, waypoint);
+              if (tan(Twp.theta) !=0)
+              {
+                   newPair.first.x += .02 * cos(robotPose.theta) - .02 * cos(robotPose.theta + M_PI_2);
+                   newPair.first.y += .02 * sin(robotPose.theta) - .02 * sin(robotPose.theta + M_PI_2);
+              }
+         return newPair; //return if a correction was made
+         }
+
+    }
+
+    //if the waypoint is pointing exactly up or down
+    //make sure its not doing that
+    if ((std::abs(anglediff(M_PI_2, Twp.theta)) < .01) || (std::abs(anglediff(-M_PI_2, Twp.theta)) < .01))
+    {
+         newPair.second.theta = anglediff(waypoint.theta, -.01);
+
+         return newPair;
+    }
+
+    //if the waypoint and robot are parallel but opposite facing exactly
+    //make them not do that
+    if (std::abs(Twp.theta) > (M_PI - .01))
+    {
+         newPair.second.theta = anglediff(waypoint.theta, -.01);
+         return newPair;
+    }
+
+    //if the waypoint and robot are parralel and facing the same way
+    //fix that too
+    if (std::abs(Twp.theta) < .01)
+    {
+         newPair.first.theta = anglediff(robotPose.theta, -.01);
+         return newPair;
+    }
+
+    //if there were no problems, return normally
+    return newPair;
+}
+
+
 float anglediff(float x, float y)
 {
   return atan2(sin(x - y), cos(x - y));
@@ -273,37 +347,15 @@ std::vector<maneuver> waypoint2maneuvers(pose robotPose, pose waypoint)
   std::vector<maneuver> myMan;
   // couple different scenarios, credit to Sam Fehringer and Austin Oltmanns
 
+  //clean the input
+  std::pair<pose, pose> newPair;
+  newPair = inputCleaner(robotPose, waypoint);
+  robotPose = newPair.first;
+  waypoint = newPair.second;
+  
+  //check xintercept to help determine which solution to use
   pose wp;  // waypoint in robot coordinates, by inverse transform
   wp = transformPoseToRobotCoord(robotPose, waypoint);
-
-  if (std::abs(wp.theta) < .001) wp.theta = .0001; //avoid division by zero and set sign
-
-  bool fudged = false;
-  if (std::abs(wp.y) < .01) //some fudging to allow straight line paths
-  { //fudge 1
-     //wp.y = .0001;
-     fudged = true;
-     waypoint.x += .0001 * sin(waypoint.theta + M_PI_2); // add orthogonal to angle
-     waypoint.y += .0001 * cos(waypoint.theta + M_PI_2);
-     wp = transformPoseToRobotCoord(robotPose, waypoint);
-     if (std::abs(wp.theta < .001)) waypoint.theta += .001;
-  }
-
-  if (std::abs(angleDiff(M_PI, wp.theta)) < .001 && fudged == false)
-  { //fudge 2
-    fudged = true;
-    wp.theta = angleDiff(wpth, -.0001);
-    waypoint.theta = angleDiff(waypoint.theta, -.0001);
-  }
-
-  if ((std::abs(angleDiff(M_PI_2, wp.theta)) < .001) || (std::abs(angleDiff(-M_PI_2, wp.theta)) < .001))
-  {
-    //caramel1
-    wp.theta = angleDiff(wpth, -.0001);
-    waypoint.theta = angleDiff(waypoint.theta, -.0001);
-  }
-
-  if (std::abs(robotPose.theta) < .001) robotPose.theta = -.0001;
 
   // if the waypoint were a line extended back,
   // this is where it would intersect on the robot's x axis

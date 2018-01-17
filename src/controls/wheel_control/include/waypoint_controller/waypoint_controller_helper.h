@@ -27,4 +27,6 @@ std::vector<maneuver> twoTurnSolution(pose robotPose, pose waypoint);
 
 pose transformPoseToRobotCoord(pose robotPose, pose waypoint);
 
+std::pair<pose, pose> inputCleaner(pose robotPose, pose waypoint);
+
 #endif
