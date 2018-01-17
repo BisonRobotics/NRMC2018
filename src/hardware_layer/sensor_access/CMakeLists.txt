@@ -10,6 +10,12 @@ project(sensor_access)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   sensor_msgs
+  tf2
+  tf2_geometry_msgs
+  geometry_msgs
+  tf2_ros
+  tf2_sensor_msgs
+  tf2_geometry_msgs
 )
 
 ###################################
@@ -24,8 +30,8 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include/
   LIBRARIES lpresearch_imu apriltag_tracker_interface
-#  CATKIN_DEPENDS roscpp
-#  DEPENDS system_lib
+#  CATKIN_DEPENDS roscpp tf2_geometry_msgs tf2 tf2_ros
+  DEPENDS
 )
 
 ###########
@@ -35,8 +41,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
- include
-  ${catkin_INCLUDE_DIRS}
+ include ${catkin_INCLUDE_DIRS}
 )
 
 
@@ -48,6 +53,11 @@ target_link_libraries (lpresearch_integration_test lpresearch_imu ${catkin_LIBRA
 
 add_library (apriltag_tracker_interface src/apriltag_tracker_interface/apriltag_tracker_interface.cpp)
 target_link_libraries (apriltag_tracker_interface ${catkin_LIBRARIES})
+
+
+add_executable(apriltag_integration_test tests/apriltag_integration.cpp)
+target_link_libraries(apriltag_integration_test apriltag_tracker_interface ${catkin_LIBRARIES})
+
 
 #add_dependencies(can_sensors_integration_test imu_can_sensor_lib)
 #target_link_libraries(can_sensors_integration_test
@@ -98,14 +108,14 @@ target_link_libraries (apriltag_tracker_interface ${catkin_LIBRARIES})
 # )
 
 ## Mark executables and/or libraries for installation
- install(TARGETS lpresearch_imu
+ install(TARGETS lpresearch_imu apriltag_tracker_interface
    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 
 ## Mark cpp header files for installation
- install(DIRECTORY include/can_sensors/
+ install(DIRECTORY include/lp_research/ include/apriltag_tracker_interface include/sensor_access
    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
    FILES_MATCHING PATTERN "*.h"
    PATTERN ".svn" EXCLUDE

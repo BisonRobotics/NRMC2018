@@ -4,16 +4,17 @@
 #include <sensor_access/pos_sensor_interface.h>
 #include <tf2/LinearMath/Transform.h>
 #include <tf2_ros/transform_listener.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 class AprilTagTrackerInterface : public PosSensorInterface
 {
 public:
-  AprilTagTrackerInterface();
+  AprilTagTrackerInterface(void);
   ~AprilTagTrackerInterface();
-  double getX() override;
-  double getY() override;
-  double getTheta() override ;
-  ReadableSensors::ReadStatus receiveData() override;
+  double getX();
+  double getY();
+  double getTheta();
+  ReadableSensors::ReadStatus receiveData();
 
 private:
   tf2_ros::Buffer tfBuffer;
