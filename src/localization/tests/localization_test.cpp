@@ -24,10 +24,29 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
 }
 
 
+geometry_msgs::TransformStamped create_tf(double x, double y, double theta){
+
+    geometry_msgs::TransformStamped tfStamp;
+    tfStamp.header.stamp = ros::Time::now ();
+    tfStamp.header.frame_id = "map";
+    tfStamp.child_frame_id ="base_link";
+    tfStamp.transform.translation.x =x;
+    tfStamp.transform.translation.y =y;
+    tfStamp.transform.translation.z = 0.0;
+    tf2::Quaternion q;
+    q.setRPY(0,0,theta);
+    tfStamp.transform.rotation.x= q.x();
+    tfStamp.transform.rotation.y=q.y();
+    tfStamp.transform.rotation.z=q.z();
+    tfStamp.transform.rotation.w = q.w();
+    return tfStamp;
+}
+
 int main (int argc, char **argv){
     ros::init (argc, argv, "localization_tester");
     ros::NodeHandle n;
     ros::Rate r (100);
+    tf2_ros::TransformBroadcaster br;
     ros::Subscriber sub = n.subscribe("joy", 30, callback);
     TeleopInterface teleopInterface (.5f);
     AprilTagTrackerInterface *aprilTags = new AprilTagTrackerInterface();
@@ -44,6 +63,7 @@ int main (int argc, char **argv){
         ROS_INFO ("Position: %f %f %f Velocity %f %f %f Acceleration %f %f %f", stateVector.x_pos
         , stateVector.y_pos, stateVector.theta, stateVector.x_vel, stateVector.y_vel, stateVector.omega,
         stateVector.x_accel, stateVector.y_accel, stateVector.alpha);
+        br.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
         r.sleep ();
         last_time = ros::Time::now ();
     }
