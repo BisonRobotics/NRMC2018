@@ -59,13 +59,14 @@ int main (int argc, char **argv){
     while (ros::ok()){
         teleopInterface.update (velocity_left, velocity_right);
         superLocalizer.updateStateVector((ros::Time::now() - last_time).toSec ());
+        last_time = ros::Time::now ();
         stateVector = superLocalizer.getStateVector();
         ROS_INFO ("Position: %f %f %f Velocity %f %f %f Acceleration %f %f %f", stateVector.x_pos
         , stateVector.y_pos, stateVector.theta, stateVector.x_vel, stateVector.y_vel, stateVector.omega,
         stateVector.x_accel, stateVector.y_accel, stateVector.alpha);
         br.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
         r.sleep ();
-        last_time = ros::Time::now ();
+
     }
 
 }
