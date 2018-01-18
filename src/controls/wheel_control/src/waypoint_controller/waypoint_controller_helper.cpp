@@ -22,11 +22,19 @@ std::pair<pose, pose> inputCleaner(pose robotPose, pose waypoint)
     {
          newPair.first.x += .02 * cos(robotPose.theta + M_PI_2);
          newPair.first.y += .02 * sin(robotPose.theta + M_PI_2);        
-
+ 
+         //if they were in a line and pointing the same way
          if (std::abs(Twp.theta) < .01)
          {
-              newPair.first.theta - .01;
-              newPair.second.theta + .01;
+              newPair.first.theta = anglediff(newPair.first.theta,.01);
+              newPair.second.theta = anglediff(newPair.second.theta, -.01);
+         }
+
+         //if they were in a line and facing the opposite way
+         if (std::abs(Twp.theta) > M_PI - .01)
+         {
+              newPair.first.theta = anglediff(newPair.first.theta,.01);
+              newPair.second.theta = anglediff(newPair.second.theta, -.01);
          }
          return newPair;
     }
@@ -486,7 +494,7 @@ pose endOfManeuver(pose robotPose, maneuver myMan)  // finds the conclusion of a
 
   endPose.x = cos(robotPose.theta) * endPoseUT.x - sin(robotPose.theta) * endPoseUT.y + robotPose.x;
   endPose.y = sin(robotPose.theta) * endPoseUT.x + cos(robotPose.theta) * endPoseUT.y + robotPose.y;
-  endPose.theta = robotPose.theta + NAD;  // TODO:: should check to make sure nothing went out of [-pi,pi]
+  endPose.theta = anglediff(robotPose.theta,- NAD);
 
   return endPose;
 }
