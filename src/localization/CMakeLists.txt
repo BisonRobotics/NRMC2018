@@ -10,13 +10,22 @@ add_compile_options(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
   nav_msgs
   roscpp
+  sensor_msgs
+  tf2
+  tf2_geometry_msgs
+  geometry_msgs
+  tf2_ros
+        tf
 )
 
-find_package (catkin REQUIRED cmake_modules)
+
 find_package (Eigen3 REQUIRED)
 find_package (vesc_access REQUIRED)
-find_package (can_sensors REQUIRED)
-
+find_package (sensor_access REQUIRED)
+find_package (teleop_skid_steer REQUIRED)
+#find_package (tf2 REQUIRED)
+#find_package (tf2_geometry_msgs REQUIRED)
+#find_package (tf2_ros REQUIRED)
 link_directories (
 /usr/src/gmock/build
 )
@@ -34,7 +43,7 @@ catkin_package(
   INCLUDE_DIRS include/ 
   LIBRARIES localizer_lib super_localizer_lib
 #  CATKIN_DEPENDS nav_msgs roscpp
-   DEPENDS EIGEN3 vesc_access can_sensors
+  DEPENDS EIGEN3 vesc_access sensor_access
 )
 
 ###########
@@ -46,8 +55,9 @@ catkin_package(
 include_directories(
   ${catkin_INCLUDE_DIRS}
   ${vesc_access_INCLUDE_DIRS}
-  ${can_sensors_INCLUDE_DIRS}
+  ${sensor_access_INCLUDE_DIRS}
   include/
+  ${teleop_skid_steer_INCLUDE_DIRS}
 )
 
 
@@ -59,35 +69,48 @@ add_library(localizer_lib
 	src/localizer/localizer.cpp
 )
 
+
 add_library(super_localizer_helper_lib
     src/super_localizer/super_localizer_helper.cpp
 )
 
 add_library(super_localizer_lib
-	src/super_localizer/super_localizer.cpp
+  src/super_localizer/super_localizer.cpp
 )
-
-add_dependencies(localizer_lib vesc_access imu_can_sensor_lib )
-
-add_dependencies(super_localizer_lib localizer_lib)
-
-add_dependencies(super_localizer_helper_lib localizer_lib)
+add_dependencies(localizer_lib vesc_access lpresearch_imu )
 
 target_link_libraries(localizer_lib
- vesc_access
+  vesc_access
+  lpresearch_imu
+  apriltag_tracker_interface
 )
 
+
+
+add_dependencies(super_localizer_lib localizer_lib apriltag_tracker_interface)
+
+add_dependencies(super_localizer_helper_lib localizer_lib apriltag_tracker_interface)
+
+
 target_link_libraries(super_localizer_helper_lib 
- localizer_lib
+  localizer_lib
 )
 
 target_link_libraries(super_localizer_lib
- localizer_lib
- super_localizer_helper_lib
- imu_can_sensor_lib
- pos_can_sensor_lib
+  localizer_lib
+  super_localizer_helper_lib
 )
 
+
+add_executable(localizer_teleop_test tests/localization_test.cpp)
+add_dependencies(localizer_teleop_test apriltag_tracker_interface)
+#target_link_libraries (apriltag_tracker_interface ${catkin_LIBRARIES})
+target_link_libraries(localizer_teleop_test 
+      ${catkin_LIBRARIES} lpresearch_imu
+      apriltag_tracker_interface 
+      super_localizer_lib 
+      teleop_interface
+      )
 #############
 ## Install ##
 #############

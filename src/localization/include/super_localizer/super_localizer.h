@@ -1,6 +1,6 @@
 #include <localizer/localizer.h>
-#include <can_sensors/imu_can_sensor_interface.h>
-#include <can_sensors/pos_can_sensor_interface.h>
+#include <sensor_access/imu_sensor_interface.h>
+#include <sensor_access/pos_sensor_interface.h>
 #include <readable_sensors/readable_sensors.h>
 #include <super_localizer/super_localizer_helper.h>
 
@@ -14,13 +14,14 @@
 class SuperLocalizer : public LocalizerInterface::LocalizerInterface_c
 {
 public:
-  SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc,
-                 iVescAccess *backRightVesc, iVescAccess *backLeftVesc, ImuCanSensorInterface *centerIMU,
-                 PosCanSensorInterface *posSensor, LocalizerInterface::stateVector gains);
-  SuperLocalizer(float axleLen, float xi, float yi, float thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc,
-                 iVescAccess *backRightVesc, iVescAccess *backLeftVesc, PosCanSensorInterface *posSensor,
+  SuperLocalizer(double axleLen, double xi, double yi, double thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc,
+                 iVescAccess *backRightVesc, iVescAccess *backLeftVesc, ImuSensorInterface *centerIMU,
+                 PosSensorInterface *posSensor, LocalizerInterface::stateVector gains);
+  SuperLocalizer(double axleLen, double xi, double yi, double thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc,
+                 iVescAccess *backRightVesc, iVescAccess *backLeftVesc, PosSensorInterface *posSensor,
                  LocalizerInterface::stateVector gains);
-  UpdateStatus updateStateVector(float dt);
+  UpdateStatus updateStateVector(double dt);
+
   ~SuperLocalizer();
 
   // static constexpr Localizer::stateVector_s default_gains;
@@ -34,9 +35,8 @@ public:
 
 private:
   Localizer *deadReck;
-
-  ImuCanSensorInterface *cIMU;
-  PosCanSensorInterface *pSensor;
+  ImuSensorInterface *cIMU;
+  PosSensorInterface *pSensor;
   ReadableSensors *sensors[2];
   uint8_t num_sensors;
   bool have_imu;
@@ -48,7 +48,11 @@ private:
 
   LocalizerInterface::stateVector state_vector;
 
+<<<<<<< HEAD
   LocalizerInterface::stateVector initState(float xi, float yi, float theta);
+=======
+  LocalizerInterface::stateVector initState(double xi, double yi, double theta);
+>>>>>>> origin/master
 };
 
 // I couldn't figure out how to make this a static class member. I tried quite a few things...

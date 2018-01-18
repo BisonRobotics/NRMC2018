@@ -1,4 +1,0 @@
-<launch>
-  <node name="pos_sensors_integration_test_node" type="pos_sensors_integration_test" pkg="can_sensors" output="screen" >
-  </node>
-</launch>

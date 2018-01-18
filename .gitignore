@@ -21,7 +21,7 @@ config.rviz
 *.bag.tar.gz
 *.bag.zip
 .catkin_workspace
-cmake-build-debug/
+cmake-build-*/
 *.pyc
 tmp/
 *.DS_Store
