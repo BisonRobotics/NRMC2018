@@ -1,11 +1,10 @@
-//this is the waypoint master, right now it:
+// this is the waypoint master, right now it:
 // gets the current robot position from the tf from map to base_link
 // gets waypoints from /global_planner_goal
 
-//soon it will
+// soon it will
 // update status at /drive_controller_status
 // take input from the costmap about where the path should not go
-
 
 #include <ros/ros.h>
 #include <tf/transform_listener.h>
@@ -25,13 +24,12 @@ pose newWaypoint;
 
 void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 {
-  //should add the waypoint to the queue of waypoints
-  //first it shall just print it out
+  // should add the waypoint to the queue of waypoints
+  // first it shall just print it out
   newWaypoint.x = msg->x;
   newWaypoint.y = msg->y;
   newWaypoint.theta = msg->theta;
   newWaypointHere = true;
-  
 }
 
 int main(int argc, char **argv)
@@ -77,7 +75,7 @@ int main(int argc, char **argv)
   ros::Rate rate(50.0);
   while (node.ok())
   {
-    try //get position
+    try  // get position
     {
       listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10));
       listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
@@ -94,17 +92,17 @@ int main(int argc, char **argv)
 
     if (newWaypointHere)
     {
-        wc.addWaypoint(newWaypoint, currPose);
+      wc.addWaypoint(newWaypoint, currPose);
     }
 
-    //update controller
+    // update controller
     ROS_INFO("GOING TO UPDATE");
     curr = ros::Time::now();
     delta = curr - last;
     wcStat = wc.update(currPose, (float)delta.toSec());  // need to get actual time
     last = curr;
 
-    //print status
+    // print status
     if (wcStat == WaypointController::Status::ALLBAD)
       ROS_INFO("CONTROLLER SAYS BAD");
     else if (wcStat == WaypointController::Status::ALLGOOD)
@@ -112,15 +110,14 @@ int main(int argc, char **argv)
     else if (wcStat == WaypointController::Status::GOALREACHED)
     {
       ROS_INFO("GOOOOOAAAAALLLLL!!");
-      //if (isRunning)
-     // {
-     //   isRunning = false;
-     //   ros::shutdown();
-     // }
+      // if (isRunning)
+      // {
+      //   isRunning = false;
+      //   ros::shutdown();
+      // }
     }
 
-
-    //print some info
+    // print some info
     navigationQueue = wc.getNavigationQueue();
     theCPP = wc.getCPP();
 
@@ -148,18 +145,8 @@ int main(int argc, char **argv)
                navigationQueue.at(0).terminalPose.y, navigationQueue.at(0).terminalPose.theta);
     }
 
-    //ros end stuff
+    // ros end stuff
     ros::spinOnce();
     rate.sleep();
   }
-
 }
-
-
-
-
-
-
-
-
-

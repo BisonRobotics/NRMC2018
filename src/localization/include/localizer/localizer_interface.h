@@ -31,7 +31,6 @@ public:
   };
 
   virtual UpdateStatus updateStateVector(double dt) = 0;
-
 };
 }
 
