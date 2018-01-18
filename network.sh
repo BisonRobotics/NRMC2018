@@ -9,7 +9,7 @@
 # source network.sh $IP_OF_NUC
 # 
 
-ipv4_address=`ifconfig | grep -E 'inet addr:10|inet addr:192' | ~/NRMC2018/src/util/scripts/parse_ifconfig.py`
+ipv4_address=`ifconfig | grep -E 'inet addr:10|inet addr:192' | ~/NRMC2018/src/util/parse_ifconfig.py`
 export ROS_IP=$ipv4_address
 export ROS_MASTER_URI=http://$ipv4_address:1234
 if [ "$1" != "" ]

@@ -1,4 +1,4 @@
 <launch>
   <node name="imu_integration_test" pkg="sensor_access" type="lpresearch_integration_test"/>
-  <!-- we need to add an include for the publisher of the imu messages once that's merged in-->
+  <include file="$(find lpms_imu)/launch/imu_node.launch"/>
 </launch>

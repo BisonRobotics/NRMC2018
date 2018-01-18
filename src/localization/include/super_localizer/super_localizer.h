@@ -33,6 +33,7 @@ public:
   LocalizerInterface::stateVector getGainVector();
 
 private:
+  bool data_is_good;
   Localizer *deadReck;
   ImuSensorInterface *cIMU;
   PosSensorInterface *pSensor;
