@@ -1,4 +1,4 @@
 <launch>
     <node name="localizer_teleop_test" pkg="localization" type="localizer_teleop_test" />
-    <include file="$(find lpms-imu)/launch/imu_node.launch"/>
+    <include file="$(find lpms_imu)/launch/imu_node.launch"/>
 </launch>

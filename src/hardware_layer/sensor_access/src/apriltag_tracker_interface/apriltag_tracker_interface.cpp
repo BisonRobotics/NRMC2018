@@ -6,6 +6,9 @@
 AprilTagTrackerInterface::AprilTagTrackerInterface()
 {
   tfListener = new tf2_ros::TransformListener(tfBuffer);
+  x = 0.0;
+  y = 0.0;
+  theta = 0.0;
 }
 
 AprilTagTrackerInterface::~AprilTagTrackerInterface()
