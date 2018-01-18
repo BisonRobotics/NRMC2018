@@ -10,85 +10,83 @@
 
 std::pair<pose, pose> inputCleaner(pose robotPose, pose waypoint)
 {
-    std::pair<pose, pose> newPair;
-    newPair.first = robotPose;
-    newPair.second = waypoint;
+  std::pair<pose, pose> newPair;
+  newPair.first = robotPose;
+  newPair.second = waypoint;
 
-    pose Twp = transformPoseToRobotCoord(robotPose, waypoint);
+  pose Twp = transformPoseToRobotCoord(robotPose, waypoint);
 
-    //if waypoint and robot are exactly in line with each other
-    //bump the robot a bit
-    if (std::abs(Twp.y) < .01)
-    {
-         newPair.first.x += .02 * cos(robotPose.theta + M_PI_2);
-         newPair.first.y += .02 * sin(robotPose.theta + M_PI_2);        
- 
-         //if they were in a line and pointing the same way
-         if (std::abs(Twp.theta) < .01)
-         {
-              newPair.first.theta = anglediff(newPair.first.theta,.01);
-              newPair.second.theta = anglediff(newPair.second.theta, -.01);
-         }
+  // if waypoint and robot are exactly in line with each other
+  // bump the robot a bit
+  if (std::abs(Twp.y) < .01)
+  {
+    newPair.first.x += .02 * cos(robotPose.theta + M_PI_2);
+    newPair.first.y += .02 * sin(robotPose.theta + M_PI_2);
 
-         //if they were in a line and facing the opposite way
-         if (std::abs(Twp.theta) > M_PI - .01)
-         {
-              newPair.first.theta = anglediff(newPair.first.theta,.01);
-              newPair.second.theta = anglediff(newPair.second.theta, -.01);
-         }
-         return newPair;
-    }
-
-    //if the xintercept would be zero
-    //make that not by sliding the robot fwd or sideways a bit
-    if (tan(Twp.theta) != 0)
-    {
-         double xintercept = -Twp.y / tan(Twp.theta) + Twp.x;
-         if (std::abs(xintercept) < .01)
-         {
-              newPair.first.x += .02 * cos(robotPose.theta + M_PI_2);
-              newPair.first.y += .02 * sin(robotPose.theta + M_PI_2);
-              //check xintercept again
-              Twp = transformPoseToRobotCoord(robotPose, waypoint);
-              if (tan(Twp.theta) !=0)
-              {
-                   newPair.first.x += .02 * cos(robotPose.theta) - .02 * cos(robotPose.theta + M_PI_2);
-                   newPair.first.y += .02 * sin(robotPose.theta) - .02 * sin(robotPose.theta + M_PI_2);
-              }
-         return newPair; //return if a correction was made
-         }
-
-    }
-
-    //if the waypoint is pointing exactly up or down
-    //make sure its not doing that
-    if ((std::abs(anglediff(M_PI_2, Twp.theta)) < .01) || (std::abs(anglediff(-M_PI_2, Twp.theta)) < .01))
-    {
-         newPair.second.theta = anglediff(waypoint.theta, -.01);
-
-         return newPair;
-    }
-
-    //if the waypoint and robot are parallel but opposite facing exactly
-    //make them not do that
-    if (std::abs(Twp.theta) > (M_PI - .01))
-    {
-         newPair.second.theta = anglediff(waypoint.theta, -.01);
-         return newPair;
-    }
-
-    //if the waypoint and robot are parralel and facing the same way
-    //fix that too
+    // if they were in a line and pointing the same way
     if (std::abs(Twp.theta) < .01)
     {
-         newPair.first.theta = anglediff(robotPose.theta, -.01);
-         return newPair;
+      newPair.first.theta = anglediff(newPair.first.theta, .01);
+      newPair.second.theta = anglediff(newPair.second.theta, -.01);
     }
 
-    //if there were no problems, return normally
+    // if they were in a line and facing the opposite way
+    if (std::abs(Twp.theta) > M_PI - .01)
+    {
+      newPair.first.theta = anglediff(newPair.first.theta, .01);
+      newPair.second.theta = anglediff(newPair.second.theta, -.01);
+    }
     return newPair;
-}
+  }
 
+  // if the xintercept would be zero
+  // make that not by sliding the robot fwd or sideways a bit
+  if (tan(Twp.theta) != 0)
+  {
+    double xintercept = -Twp.y / tan(Twp.theta) + Twp.x;
+    if (std::abs(xintercept) < .01)
+    {
+      newPair.first.x += .02 * cos(robotPose.theta + M_PI_2);
+      newPair.first.y += .02 * sin(robotPose.theta + M_PI_2);
+      // check xintercept again
+      Twp = transformPoseToRobotCoord(robotPose, waypoint);
+      if (tan(Twp.theta) != 0)
+      {
+        newPair.first.x += .02 * cos(robotPose.theta) - .02 * cos(robotPose.theta + M_PI_2);
+        newPair.first.y += .02 * sin(robotPose.theta) - .02 * sin(robotPose.theta + M_PI_2);
+      }
+      return newPair;  // return if a correction was made
+    }
+  }
+
+  // if the waypoint is pointing exactly up or down
+  // make sure its not doing that
+  if ((std::abs(anglediff(M_PI_2, Twp.theta)) < .01) || (std::abs(anglediff(-M_PI_2, Twp.theta)) < .01))
+  {
+    newPair.second.theta = anglediff(waypoint.theta, -.01);
+
+    return newPair;
+  }
+
+  // if the waypoint and robot are parallel but opposite facing exactly
+  // make them not do that
+  if (std::abs(Twp.theta) > (M_PI - .01))
+  {
+    newPair.second.theta = anglediff(waypoint.theta, -.01);
+    return newPair;
+  }
+
+  // if the waypoint and robot are parralel and facing the same way
+  // fix that too
+  if (std::abs(Twp.theta) < .01)
+  {
+    newPair.first.theta = anglediff(robotPose.theta, -.01);
+    return newPair;
+  }
+
+  // if there were no problems, return normally
+  return newPair;
+}
 
 float anglediff(float x, float y)
 {
@@ -185,7 +183,7 @@ std::vector<maneuver> oneTurnSolution(pose robotPose, pose waypoint)
     // this below could be correct
     float M = tan(wp.theta);
     maneuver2.xc = xhalf + sqrt(STRAIGHTRADIUS * STRAIGHTRADIUS / (M * M + 1));
-    maneuver2.yc = (-1.0f/M) * (maneuver2.xc - xhalf) + yhalf;
+    maneuver2.yc = (-1.0f / M) * (maneuver2.xc - xhalf) + yhalf;
   }
   else  // turn is second
   {
@@ -210,7 +208,7 @@ std::vector<maneuver> oneTurnSolution(pose robotPose, pose waypoint)
     {
       potxcenter2a = (-B + sqrt(B * B - 4 * A * C)) / (2 * A);
       potxcenter2b = (-B - sqrt(B * B - 4 * A * C)) / (2 * A);
-      
+
       float xcenter2 = potxcenter2a < potxcenter2b ? potxcenter2a : potxcenter2b;  // pick smallest
 
       // first maneuver is going straight
@@ -224,8 +222,6 @@ std::vector<maneuver> oneTurnSolution(pose robotPose, pose waypoint)
       maneuver2.yc = maneuver2.radius;
       maneuver2.distance = std::abs(wp.theta * maneuver2.radius);
     }
-
-
   }
   // dont forget to transform back!!
   m1UT = transformManeuverToWorldCoord(robotPose, maneuver1);
@@ -237,40 +233,40 @@ std::vector<maneuver> oneTurnSolution(pose robotPose, pose waypoint)
 
 std::vector<maneuver> inverseOneTurnSolution(pose robotPose, pose waypoint)
 {
-   pose internalwaypoint = {.x = 2*robotPose.x - waypoint.x, .y = 2*robotPose.y - waypoint.y, .theta = waypoint.theta};
-   std::vector<maneuver> intermediateSolution = oneTurnSolution(robotPose, internalwaypoint);
+  pose internalwaypoint = {.x = 2 * robotPose.x - waypoint.x,
+                           .y = 2 * robotPose.y - waypoint.y,
+                           .theta = waypoint.theta };
+  std::vector<maneuver> intermediateSolution = oneTurnSolution(robotPose, internalwaypoint);
 
-   intermediateSolution.at(0).distance = -intermediateSolution.at(0).distance;
-   intermediateSolution.at(0).radius   = -intermediateSolution.at(0).radius;
-   intermediateSolution.at(0).xc       = 2*robotPose.x - intermediateSolution.at(0).xc;
-   intermediateSolution.at(0).yc       = 2*robotPose.y - intermediateSolution.at(0).yc;
+  intermediateSolution.at(0).distance = -intermediateSolution.at(0).distance;
+  intermediateSolution.at(0).radius = -intermediateSolution.at(0).radius;
+  intermediateSolution.at(0).xc = 2 * robotPose.x - intermediateSolution.at(0).xc;
+  intermediateSolution.at(0).yc = 2 * robotPose.y - intermediateSolution.at(0).yc;
 
-   intermediateSolution.at(1).distance = -intermediateSolution.at(1).distance;
-   intermediateSolution.at(1).radius   = -intermediateSolution.at(1).radius;
-   intermediateSolution.at(1).xc       = 2*robotPose.x - intermediateSolution.at(1).xc;
-   intermediateSolution.at(1).yc       = 2*robotPose.y - intermediateSolution.at(1).yc;
+  intermediateSolution.at(1).distance = -intermediateSolution.at(1).distance;
+  intermediateSolution.at(1).radius = -intermediateSolution.at(1).radius;
+  intermediateSolution.at(1).xc = 2 * robotPose.x - intermediateSolution.at(1).xc;
+  intermediateSolution.at(1).yc = 2 * robotPose.y - intermediateSolution.at(1).yc;
 
-   return intermediateSolution;
+  return intermediateSolution;
 }
 
 std::vector<maneuver> twoTurnSolution(pose robotPose, pose waypoint)
 {
-  
   bool beenFlipped = false;
   pose wp;
- //The two turn solver can give two solutions for a given waypoint, one where the robot changes
- //direction throughout the manuever or one where the robot stays going the same direction the 
- //entire time. Under certain circumstances one solution is better than the other. So the 
- //solving code is fed the problem such that it will yield the desired resultant maneuver.
+  // The two turn solver can give two solutions for a given waypoint, one where the robot changes
+  // direction throughout the manuever or one where the robot stays going the same direction the
+  // entire time. Under certain circumstances one solution is better than the other. So the
+  // solving code is fed the problem such that it will yield the desired resultant maneuver.
 
-//there is either a bug in the flipping or in the distance calculation
-//this conditional is a little paranoid. Possible redundant cases in there.
-
+  // there is either a bug in the flipping or in the distance calculation
+  // this conditional is a little paranoid. Possible redundant cases in there.
 
   if (std::abs(robotPose.theta) <= M_PI_2)
   {
     if (std::tan(robotPose.theta) * (waypoint.x - robotPose.x) + robotPose.y > waypoint.y)
-    { 
+    {
       wp = reflectWaypointAroundRobot(waypoint, robotPose);
       beenFlipped = true;
     }
@@ -284,109 +280,108 @@ std::vector<maneuver> twoTurnSolution(pose robotPose, pose waypoint)
     }
   }
 
-//Now the solver begins, using wp which may or may not have been refelcted/flipped
+  // Now the solver begins, using wp which may or may not have been refelcted/flipped
   wp = transformPoseToRobotCoord(robotPose, beenFlipped ? wp : waypoint);
   double cosanglearg = -wp.theta - M_PI_2;
   double sinanglearg = -wp.theta + M_PI_2;
 
-  double A = std::cos(cosanglearg)*std::cos(cosanglearg) 
-                   + (1+std::sin(sinanglearg)) * (1+std::sin(sinanglearg)) - 4;
-  double B = -2*wp.x*std::cos(cosanglearg) - 2*wp.y*(1+sin(sinanglearg));
-  double C = wp.x*wp.x + wp.y*wp.y;
- 
+  double A =
+      std::cos(cosanglearg) * std::cos(cosanglearg) + (1 + std::sin(sinanglearg)) * (1 + std::sin(sinanglearg)) - 4;
+  double B = -2 * wp.x * std::cos(cosanglearg) - 2 * wp.y * (1 + sin(sinanglearg));
+  double C = wp.x * wp.x + wp.y * wp.y;
+
   double d;
-  if (A < .0001 && A > -.0001) d = -C/B;
+  if (A < .0001 && A > -.0001)
+    d = -C / B;
   else
   {
-    double da = (-B + std::sqrt(B*B - 4.0f*A*C))/(2.0f*A);
-    double db = (-B - std::sqrt(B*B - 4.0f*A*C))/(2.0f*A);
-    d  = da > db ? da : db; //max of da and db
+    double da = (-B + std::sqrt(B * B - 4.0f * A * C)) / (2.0f * A);
+    double db = (-B - std::sqrt(B * B - 4.0f * A * C)) / (2.0f * A);
+    d = da > db ? da : db;  // max of da and db
   }
 
   maneuver man1, man2;
   man1.xc = 0;
   man1.yc = d;
   man1.radius = d;
-  
-  man2.xc = wp.x - d*std::cos(cosanglearg);
-  man2.yc = wp.y - d*std::sin(sinanglearg);
+
+  man2.xc = wp.x - d * std::cos(cosanglearg);
+  man2.yc = wp.y - d * std::sin(sinanglearg);
   man2.radius = -d;
 
   double xintermediate = (man1.xc + man2.xc) / 2.0f;
   double yintermediate = (man1.yc + man2.yc) / 2.0f;
 
   float theta1 = std::atan2(xintermediate, d - yintermediate);
- 
-  man1.distance = d*theta1;
-  man2.distance = d*(theta1 - wp.theta); //should this be an anglediff?
 
-  //DONT FORGET TO UNTRANSFORM
+  man1.distance = d * theta1;
+  man2.distance = d * (theta1 - wp.theta);  // should this be an anglediff?
+
+  // DONT FORGET TO UNTRANSFORM
   maneuver man1UT = transformManeuverToWorldCoord(robotPose, man1);
   maneuver man2UT = transformManeuverToWorldCoord(robotPose, man2);
-//After solving, if the waypoint was flipped to begin with, some care must be taken
+  // After solving, if the waypoint was flipped to begin with, some care must be taken
 
   if (beenFlipped)
   {
-     man1UT.radius = -man1UT.radius;
-     man2UT.radius = -man2UT.radius;
+    man1UT.radius = -man1UT.radius;
+    man2UT.radius = -man2UT.radius;
 
-     pose tempCenter = {.x = man1UT.xc, .y = man1UT.yc, .theta =0};
-     tempCenter = reflectWaypointAroundRobot(tempCenter, robotPose);
-     man1UT.xc = tempCenter.x;
-     man1UT.yc = tempCenter.y;
+    pose tempCenter = {.x = man1UT.xc, .y = man1UT.yc, .theta = 0 };
+    tempCenter = reflectWaypointAroundRobot(tempCenter, robotPose);
+    man1UT.xc = tempCenter.x;
+    man1UT.yc = tempCenter.y;
 
-     tempCenter.x = man2UT.xc; tempCenter.y = man2UT.yc;
-     tempCenter = reflectWaypointAroundRobot(tempCenter, robotPose);
-     man2UT.xc = tempCenter.x;
-     man2UT.yc = tempCenter.y;
+    tempCenter.x = man2UT.xc;
+    tempCenter.y = man2UT.yc;
+    tempCenter = reflectWaypointAroundRobot(tempCenter, robotPose);
+    man2UT.xc = tempCenter.x;
+    man2UT.yc = tempCenter.y;
   }
 
   std::vector<maneuver> returnVector;
   returnVector.push_back(man1UT);
   returnVector.push_back(man2UT);
   return returnVector;
-
-
 }
-
 
 std::vector<maneuver> waypoint2maneuvers(pose robotPose, pose waypoint)
 {
   std::vector<maneuver> myMan;
   // couple different scenarios, credit to Sam Fehringer and Austin Oltmanns
 
-  //clean the input
+  // clean the input
   std::pair<pose, pose> newPair;
   newPair = inputCleaner(robotPose, waypoint);
   robotPose = newPair.first;
   waypoint = newPair.second;
-  
-  //check xintercept to help determine which solution to use
+
+  // check xintercept to help determine which solution to use
   pose wp;  // waypoint in robot coordinates, by inverse transform
   wp = transformPoseToRobotCoord(robotPose, waypoint);
 
   // if the waypoint were a line extended back,
   // this is where it would intersect on the robot's x axis
 
-  double xintercept = -wp.y / tan(wp.theta) + wp.x; //sign is set so SIGN(0) ==1
+  double xintercept = -wp.y / tan(wp.theta) + wp.x;  // sign is set so SIGN(0) ==1
 
-  if (SIGN(wp.y) ==1)
+  if (SIGN(wp.y) == 1)
   {
     if (SIGN(xintercept) != SIGN(wp.theta))
-         myMan = twoTurnSolution(robotPose, waypoint);
-    else if (SIGN(xintercept) ==1 && SIGN(wp.theta) ==1)
-         myMan = oneTurnSolution(robotPose, waypoint);
-    else if (SIGN(xintercept) == -1 && SIGN(wp.theta) ==-1)
-         myMan = inverseOneTurnSolution(robotPose, waypoint);
+      myMan = twoTurnSolution(robotPose, waypoint);
+    else if (SIGN(xintercept) == 1 && SIGN(wp.theta) == 1)
+      myMan = oneTurnSolution(robotPose, waypoint);
+    else if (SIGN(xintercept) == -1 && SIGN(wp.theta) == -1)
+      myMan = inverseOneTurnSolution(robotPose, waypoint);
   }
-  else 
-  { 
+  else
+  {
     if (SIGN(xintercept) == SIGN(wp.theta))
-         myMan = twoTurnSolution(robotPose, waypoint);
+      myMan = twoTurnSolution(robotPose, waypoint);
     else if (SIGN(xintercept) == 1 && SIGN(wp.theta) == -1)
-         myMan = oneTurnSolution(robotPose, waypoint);
-    else if (SIGN(xintercept) == -1 && SIGN(wp.theta) ==1)
-         myMan = inverseOneTurnSolution(robotPose, waypoint);
+      myMan = oneTurnSolution(robotPose, waypoint);
+    else if (SIGN(xintercept) == -1 && SIGN(wp.theta) == 1)
+      myMan = inverseOneTurnSolution(robotPose, waypoint);
   }
 
   return myMan;
@@ -494,7 +489,7 @@ pose endOfManeuver(pose robotPose, maneuver myMan)  // finds the conclusion of a
 
   endPose.x = cos(robotPose.theta) * endPoseUT.x - sin(robotPose.theta) * endPoseUT.y + robotPose.x;
   endPose.y = sin(robotPose.theta) * endPoseUT.x + cos(robotPose.theta) * endPoseUT.y + robotPose.y;
-  endPose.theta = anglediff(robotPose.theta,- NAD);
+  endPose.theta = anglediff(robotPose.theta, -NAD);
 
   return endPose;
 }
@@ -510,7 +505,7 @@ std::pair<float, float> speedAndRadius2WheelVels(float speed, float radius, floa
   {
     // Vels.first = (1 + (AxelLen/2 + radius)/(radius - AxelLen/2))/(2*speed);
     Vels.first = (4 * radius * speed / (AxelLen)-2 * speed) * AxelLen / (radius * 4);
-    Sfactor = 1;  // comment out these two lines and watch the magic!
+    Sfactor = 1;   // comment out these two lines and watch the magic!
     S2factor = 1;  // is it some crazy scope thing?
     if (std::abs(Vels.first) > maxSpeed)
     {

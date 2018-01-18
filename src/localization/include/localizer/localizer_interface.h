@@ -5,7 +5,6 @@ namespace LocalizerInterface
 {
 typedef struct stateVector_s
 {
-
   double x_pos;  // in world coordinates
   double y_pos;  // in world coordinates
   double theta;  // robot rotation about its own center with reference to the

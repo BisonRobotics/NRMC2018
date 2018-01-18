@@ -27,9 +27,9 @@ TEST(LocalizerTests, GoesForward)
   EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
-  EXPECT_NEAR(loki.getStateVector().x_pos, .005,.0001);
-  EXPECT_NEAR(loki.getStateVector().y_pos, 0,.0001);
-  EXPECT_NEAR(loki.getStateVector().theta,0, .0001);
+  EXPECT_NEAR(loki.getStateVector().x_pos, .005, .0001);
+  EXPECT_NEAR(loki.getStateVector().y_pos, 0, .0001);
+  EXPECT_NEAR(loki.getStateVector().theta, 0, .0001);
 
   ASSERT_NEAR(loki.getStateVector().x_vel, .5f, POSTOL);
   ASSERT_NEAR(loki.getStateVector().y_vel, .0f, POSTOL);
@@ -70,7 +70,7 @@ TEST(LocalizerTests, ForwardRight)
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
   EXPECT_NEAR(loki.getStateVector().x_pos, .004, .0001);
-  EXPECT_NEAR (loki.getStateVector().y_pos, .000008, .0000001);
+  EXPECT_NEAR(loki.getStateVector().y_pos, .000008, .0000001);
   EXPECT_NEAR(loki.getStateVector().theta, -.004, .0001);
 }
 
@@ -107,7 +107,7 @@ TEST(LocalizerTests, BackwardRight)
   EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
-  EXPECT_NEAR(loki.getStateVector().x_pos, -.004,.0001);
+  EXPECT_NEAR(loki.getStateVector().x_pos, -.004, .0001);
   EXPECT_NEAR(loki.getStateVector().y_pos, .000008, .0000001);
   EXPECT_NEAR(loki.getStateVector().theta, .004, .0001);
 }
@@ -126,7 +126,7 @@ TEST(LocalizerTests, BackwardLeft)
   EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
-  EXPECT_NEAR(loki.getStateVector().x_pos, -.004 ,.0001);
+  EXPECT_NEAR(loki.getStateVector().x_pos, -.004, .0001);
   EXPECT_NEAR(loki.getStateVector().y_pos, .000008, .0000001);
   EXPECT_NEAR(loki.getStateVector().theta, -.004, .0001);
 }

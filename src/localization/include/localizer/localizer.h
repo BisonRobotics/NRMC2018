@@ -13,7 +13,6 @@ public:
   LocalizerInterface::stateVector getStateVector();
   UpdateStatus updateStateVector(double dt);
 
-
   Localizer(double axelLen, double xi, double yi, double thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc,
             iVescAccess *backRightVesc,
             iVescAccess *backLeftVesc);  // pass wheel linear vel sensors in as FL, FR, BR, BL

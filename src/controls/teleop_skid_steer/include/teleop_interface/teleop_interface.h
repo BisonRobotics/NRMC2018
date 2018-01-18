@@ -9,6 +9,7 @@ public:
   void update(float left_vel, float right_vel);
   ~TeleopInterface();
   iVescAccess *fl, *fr, *br, *bl;
+
 private:
   float velocity_scale;
 

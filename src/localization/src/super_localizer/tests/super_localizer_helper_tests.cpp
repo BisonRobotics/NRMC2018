@@ -25,7 +25,6 @@ TEST(LocalizerHelperTests, CanSub)
 
   LocalizerInterface::stateVector v3 = LocalizerInterface::diff(v2, v1);
 
-
   EXPECT_NEAR(v3.x_pos, 1.0, .01);
   EXPECT_NEAR(v3.y_pos, 1.0, .01);
   EXPECT_NEAR(v3.theta, 1.0, .01);

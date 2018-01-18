@@ -26,12 +26,12 @@ public:
   std::vector<std::pair<float, float> > addWaypoint(pose waypoint, pose currRobotPose);
   Status update(pose robotPose, float dt);
   std::vector<waypointWithManeuvers> getNavigationQueue();  // DEBUG
-  pose getCPP();  // DEBUG
-  unsigned int getCurrManeuverIndex();  // DEBUG
-  pose getManeuverEnd();  // DEBUG
-  float getETpEstimate();  // DEBUG
-  float getEPpEstimate();  // DEBUG
-  std::pair<float, float> getSetSpeeds();  // DEBUG
+  pose getCPP();                                            // DEBUG
+  unsigned int getCurrManeuverIndex();                      // DEBUG
+  pose getManeuverEnd();                                    // DEBUG
+  float getETpEstimate();                                   // DEBUG
+  float getEPpEstimate();                                   // DEBUG
+  std::pair<float, float> getSetSpeeds();                   // DEBUG
 
   void haltAndAbort();
 

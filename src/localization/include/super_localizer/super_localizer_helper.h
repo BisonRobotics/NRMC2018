@@ -8,4 +8,3 @@ LocalizerInterface::stateVector addFromModel(LocalizerInterface::stateVector lhs
                                              double dt, bool imu);
 LocalizerInterface::stateVector initState(double xi, double yi, double theta);
 }
-
