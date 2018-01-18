@@ -11,10 +11,10 @@ class AprilTagTrackerInterface : public PosSensorInterface
 public:
   AprilTagTrackerInterface(void);
   ~AprilTagTrackerInterface();
-  double getX();
-  double getY();
-  double getTheta();
-  ReadableSensors::ReadStatus receiveData();
+  double getX() override;
+  double getY() override;
+  double getTheta() override;
+  ReadableSensors::ReadStatus receiveData() override;
 
 private:
   tf2_ros::Buffer tfBuffer;
