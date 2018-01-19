@@ -27,7 +27,7 @@ tmp/
 *.DS_Store
 
 *.old
-
+emptytests
 # Ignore list for Latex
 ## Core latex/pdflatex auxiliary files:
 *.aux
