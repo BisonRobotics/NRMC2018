@@ -26,6 +26,7 @@ cmake-build-*/
 tmp/
 *.DS_Store
 
+*.old
 
 # Ignore list for Latex
 ## Core latex/pdflatex auxiliary files:

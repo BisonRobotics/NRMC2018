@@ -1,13 +1,20 @@
 #include <waypoint_controller/waypoint_controller.h>
 #include <waypoint_controller/waypoint_controller_helper.h>
 #include <cmath>
-#define PI 3.1415926539f
-#define APPROX(A, B, T) ((A > B - T && A < B + T) ? true : false)
-#define DIST(A, B, C, D) sqrt((A - C) * (A - C) + (B - D) * (B - D))
-#define CLIP(A, B) (A = A > B ? B : A < -B ? -B : A)
+
 #define POSITIONTOL .30f
 #define ANGLETOL .2f
 #define BADLINE .3f
+
+bool APPROX(double A, double B, double T)
+{
+  return ((A > B - T && A < B + T) ? true : false);
+}
+
+double DIST(double A, double B, double C, double D)
+{
+  return sqrt((A - C) * (A - C) + (B - D) * (B - D));
+}
 
 WaypointController::WaypointController(float axelLength, float maxSafeSpeed, pose initialPose, iVescAccess *fl,
                                        iVescAccess *fr, iVescAccess *br, iVescAccess *bl)
@@ -186,10 +193,6 @@ WaypointController::Status WaypointController::update(pose robotPose, float dt)
     EPpDerivFiltEst = (EPpLowPass - EPpLowPassPrev) / dt;
     ETpDerivFiltEst = (ETpLowPass - ETpLowPassPrev) / dt;
 
-    // clip error to limit correction if needed (should not happen)
-    // CLIP(EPpEst,.2);
-    // CLIP(ETpEst,PI/2.0f);
-
     LvelCmd = LvelCmd + (EPpGain * EPpEst + EPdGain * EPpDerivFiltEst) -
               (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) - WheelSpeedPGain * (LvelCmd - LeftWheelSetSpeed);
     RvelCmd = RvelCmd - (EPpGain * EPpEst + EPdGain * EPpDerivFiltEst) +
@@ -204,10 +207,7 @@ WaypointController::Status WaypointController::update(pose robotPose, float dt)
   else
   {
     // remember to stop
-    front_left_wheel->setLinearVelocity(0);
-    back_left_wheel->setLinearVelocity(0);
-    front_right_wheel->setLinearVelocity(0);
-    back_right_wheel->setLinearVelocity(0);
+    this->haltAndAbort();
     return Status::GOALREACHED;  // gotta get out of here
   }
 }

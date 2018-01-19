@@ -5,7 +5,6 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
-#define APPROX(A, B, T) ((A > B - T && A < B + T) ? true : false)
 #define WAYPOINT2MANEUVERTOL .05
 #define SPEEDNRADIUSTOL .001
 
@@ -73,10 +72,7 @@ TEST(WaypointControllerHelperTests, speedAndRadius2WheelVelsTests)
   expectedSpeeds.second = .3750f;
 
   returnSpeeds = speedAndRadius2WheelVels(speed, turnRadius, AxelLen, maxSpeed);
-  // EXPECT_TRUE(APPROX(returnSpeeds.first, expectedSpeeds.first, .001) &&
-  //           APPROX(returnSpeeds.second, expectedSpeeds.second, .001))
-  //  << "Expected " << returnSpeeds.first << " = " << expectedSpeeds.first << " and " << returnSpeeds.second << " = "
-  // << expectedSpeeds.second;
+
   EXPECT_NEAR(returnSpeeds.first, expectedSpeeds.first, SPEEDNRADIUSTOL);
   EXPECT_NEAR(returnSpeeds.second, expectedSpeeds.second, SPEEDNRADIUSTOL);
 }

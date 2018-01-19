@@ -48,11 +48,7 @@ private:
 
   LocalizerInterface::stateVector state_vector;
 
-<<<<<<< HEAD
-  LocalizerInterface::stateVector initState(float xi, float yi, float theta);
-=======
   LocalizerInterface::stateVector initState(double xi, double yi, double theta);
->>>>>>> origin/master
 };
 
 // I couldn't figure out how to make this a static class member. I tried quite a few things...

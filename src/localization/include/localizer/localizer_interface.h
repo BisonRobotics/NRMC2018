@@ -30,11 +30,7 @@ public:
     UPDATE_SUCCESS
   };
 
-<<<<<<< HEAD
-  virtual UpdateStatus updateStateVector(float dt) = 0;
-=======
   virtual UpdateStatus updateStateVector(double dt) = 0;
->>>>>>> origin/master
 };
 }
 

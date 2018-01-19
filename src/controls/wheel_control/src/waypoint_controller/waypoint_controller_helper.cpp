@@ -3,10 +3,14 @@
 #include <cmath>
 #define CMPERPOINT 5
 #define METERPERCM .01f
-#define SIGN(A) (A >= 0 ? 1 : -1)
 #define STRAIGHTRADIUS 1000
 #define CUTOFFDIST4DOUBLEARC .01
 #define CPPEQUALTOL .05
+
+int SIGN(double A)
+{
+  return (A >= 0 ? 1 : -1);
+}
 
 std::pair<pose, pose> inputCleaner(pose robotPose, pose waypoint)
 {
@@ -193,7 +197,7 @@ std::vector<maneuver> oneTurnSolution(pose robotPose, pose waypoint)
     float potxcenter2a, potxcenter2b;
     if (B * B - 4 * A * C < 0)
     {
-      // gaahh //this solution should not have been called if we get to here
+      //this solution should not have been called if we get to here
       maneuver1.distance = 0;
       maneuver1.radius = 0;
       maneuver1.xc = 0;
@@ -203,6 +207,7 @@ std::vector<maneuver> oneTurnSolution(pose robotPose, pose waypoint)
       maneuver2.radius = 0;
       maneuver2.yc = 0;
       maneuver2.distance = 0;
+      //this will be checked in waypoint master but should never happen
     }
     else
     {
@@ -297,7 +302,7 @@ std::vector<maneuver> twoTurnSolution(pose robotPose, pose waypoint)
   {
     double da = (-B + std::sqrt(B * B - 4.0f * A * C)) / (2.0f * A);
     double db = (-B - std::sqrt(B * B - 4.0f * A * C)) / (2.0f * A);
-    d = da > db ? da : db;  // max of da and db
+    d = std::max(da, db);  // max of da and db
   }
 
   maneuver man1, man2;
@@ -407,6 +412,16 @@ pose findCPP(pose robotPose, maneuver curManeuver)
   {
     M = (curManeuver.yc - robotPose.y) / (curManeuver.xc - robotPose.x);
     // this is a shitfest
+
+    double A,B,C;
+    A = (1 + M * M);
+    B = (-2 * curManeuver.xc - 2 * M * M * curManeuver.xc);
+    C = (curManeuver.xc * curManeuver.xc - curManeuver.radius * curManeuver.radius + M * M * curManeuver.xc * curManeuver.xc);
+
+    Xpa = (-B + sqrt(B*B - 4*A*C)) / (2.0 * A);
+    Xpb = (-B - sqrt(B*B - 4*A*C)) / (2.0 * A);
+
+    /*
     Xpa =
         (-(-2 * curManeuver.xc - 2 * M * M * curManeuver.xc) +
          sqrt((-2 * curManeuver.xc - 2 * M * M * curManeuver.xc) * (-2 * curManeuver.xc - 2 * M * M * curManeuver.xc) -
@@ -420,11 +435,13 @@ pose findCPP(pose robotPose, maneuver curManeuver)
               4 * (1 + M * M) * (curManeuver.xc * curManeuver.xc - curManeuver.radius * curManeuver.radius +
                                  M * M * curManeuver.xc * curManeuver.xc))) /
         (2 * (1 + M * M));
+    */
 
     if (std::abs(robotPose.x - Xpa) < std::abs(robotPose.x - Xpb))
       Xp = Xpa;
     else
       Xp = Xpb;
+
     Yp = M * (Xp - curManeuver.xc) + curManeuver.yc;
   }
 
@@ -500,13 +517,11 @@ std::pair<float, float> speedAndRadius2WheelVels(float speed, float radius, floa
   // speed is average of wheel velocities: TotalVel = .5*(LeftVel + RightVel)
   // Turn Radius = AxelLen/2 * (LeftVel+RightVel)/(RightVel - LeftVel)
   std::pair<float, float> Vels;
-  float Sfactor, S2factor;
+  float Sfactor=1, S2factor=1;
   if (radius != 0)
   {
-    // Vels.first = (1 + (AxelLen/2 + radius)/(radius - AxelLen/2))/(2*speed);
     Vels.first = (4 * radius * speed / (AxelLen)-2 * speed) * AxelLen / (radius * 4);
-    Sfactor = 1;   // comment out these two lines and watch the magic!
-    S2factor = 1;  // is it some crazy scope thing?
+
     if (std::abs(Vels.first) > maxSpeed)
     {
       Sfactor = Vels.first / maxSpeed;
