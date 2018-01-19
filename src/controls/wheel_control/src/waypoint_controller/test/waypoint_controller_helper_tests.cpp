@@ -8,6 +8,8 @@
 #define WAYPOINT2MANEUVERTOL .05
 #define SPEEDNRADIUSTOL .001
 
+using namespace WaypointControllerHelper;
+
 TEST(WaypointControllerHelperTests, anglediffWorks1)
 {
   float angle1, angle2, result;

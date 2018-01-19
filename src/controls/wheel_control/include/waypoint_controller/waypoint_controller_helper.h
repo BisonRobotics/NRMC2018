@@ -5,28 +5,35 @@
 #include <waypoint_controller/waypointWithManeuvers.h>
 #include <vector>
 
-std::vector<maneuver> waypoint2maneuvers(pose robotPose, pose waypoint);
+namespace WaypointControllerHelper
+{
 
-pose findCPP(pose robotPose, maneuver curManeuver);
+	std::vector<maneuver> waypoint2maneuvers(pose robotPose, pose waypoint);
 
-pose endOfManeuver(pose robotPose, maneuver myMan);
+	pose findCPP(pose robotPose, maneuver curManeuver);
 
-std::pair<float, float> speedAndRadius2WheelVels(float speed, float radius, float AxelLen, float maxSpeed);
+	pose endOfManeuver(pose robotPose, maneuver myMan);
 
-std::vector<std::pair<float, float> > waypointWithManeuvers2points(waypointWithManeuvers myMan);
+	std::pair<float, float> speedAndRadius2WheelVels(float speed, float radius, float AxelLen, float maxSpeed);
 
-float anglediff(float x, float y);
+	std::vector<std::pair<float, float> > waypointWithManeuvers2points(waypointWithManeuvers myMan);
 
-pose reflectWaypointAroundRobot(pose waypoint, pose robot);
+	float anglediff(float x, float y);
 
-std::vector<maneuver> oneTurnSolution(pose robotPose, pose waypoint);
+	pose reflectWaypointAroundRobot(pose waypoint, pose robot);
 
-std::vector<maneuver> inverseOneTurnSolution(pose robotPose, pose waypoint);
+	std::vector<maneuver> oneTurnSolution(pose robotPose, pose waypoint);
 
-std::vector<maneuver> twoTurnSolution(pose robotPose, pose waypoint);
+	std::vector<maneuver> inverseOneTurnSolution(pose robotPose, pose waypoint);
 
-pose transformPoseToRobotCoord(pose robotPose, pose waypoint);
+	std::vector<maneuver> twoTurnSolution(pose robotPose, pose waypoint);
 
-std::pair<pose, pose> inputCleaner(pose robotPose, pose waypoint);
+	pose transformPoseToRobotCoord(pose robotPose, pose waypoint);
+
+	std::pair<pose, pose> inputCleaner(pose robotPose, pose waypoint);
+
+    maneuver transformManeuverToWorldCoord(pose robotPose, maneuver myMan);
+
+}
 
 #endif

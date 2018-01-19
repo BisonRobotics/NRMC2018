@@ -7,6 +7,8 @@
 
 #define WAYPOINT2MANEUVERTOL .05
 
+using namespace WaypointControllerHelper;
+
 TEST(WaypointControllerHelperTests, waypointGenerationTest1)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };

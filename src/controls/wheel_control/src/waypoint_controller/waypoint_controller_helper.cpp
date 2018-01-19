@@ -12,13 +12,13 @@ int SIGN(double A)
   return (A >= 0 ? 1 : -1);
 }
 
-std::pair<pose, pose> inputCleaner(pose robotPose, pose waypoint)
+std::pair<pose, pose> WaypointControllerHelper::inputCleaner(pose robotPose, pose waypoint)
 {
   std::pair<pose, pose> newPair;
   newPair.first = robotPose;
   newPair.second = waypoint;
 
-  pose Twp = transformPoseToRobotCoord(robotPose, waypoint);
+  pose Twp = WaypointControllerHelper::transformPoseToRobotCoord(robotPose, waypoint);
 
   // if waypoint and robot are exactly in line with each other
   // bump the robot a bit
@@ -30,15 +30,15 @@ std::pair<pose, pose> inputCleaner(pose robotPose, pose waypoint)
     // if they were in a line and pointing the same way
     if (std::abs(Twp.theta) < .01)
     {
-      newPair.first.theta = anglediff(newPair.first.theta, .01);
-      newPair.second.theta = anglediff(newPair.second.theta, -.01);
+      newPair.first.theta = WaypointControllerHelper::anglediff(newPair.first.theta, .01);
+      newPair.second.theta = WaypointControllerHelper::anglediff(newPair.second.theta, -.01);
     }
 
     // if they were in a line and facing the opposite way
     if (std::abs(Twp.theta) > M_PI - .01)
     {
-      newPair.first.theta = anglediff(newPair.first.theta, .01);
-      newPair.second.theta = anglediff(newPair.second.theta, -.01);
+      newPair.first.theta = WaypointControllerHelper::anglediff(newPair.first.theta, .01);
+      newPair.second.theta = WaypointControllerHelper::anglediff(newPair.second.theta, -.01);
     }
     return newPair;
   }
@@ -53,7 +53,7 @@ std::pair<pose, pose> inputCleaner(pose robotPose, pose waypoint)
       newPair.first.x += .02 * cos(robotPose.theta + M_PI_2);
       newPair.first.y += .02 * sin(robotPose.theta + M_PI_2);
       // check xintercept again
-      Twp = transformPoseToRobotCoord(robotPose, waypoint);
+      Twp = WaypointControllerHelper::transformPoseToRobotCoord(robotPose, waypoint);
       if (tan(Twp.theta) != 0)
       {
         newPair.first.x += .02 * cos(robotPose.theta) - .02 * cos(robotPose.theta + M_PI_2);
@@ -65,9 +65,9 @@ std::pair<pose, pose> inputCleaner(pose robotPose, pose waypoint)
 
   // if the waypoint is pointing exactly up or down
   // make sure its not doing that
-  if ((std::abs(anglediff(M_PI_2, Twp.theta)) < .01) || (std::abs(anglediff(-M_PI_2, Twp.theta)) < .01))
+  if ((std::abs(WaypointControllerHelper::anglediff(M_PI_2, Twp.theta)) < .01) || (std::abs(WaypointControllerHelper::anglediff(-M_PI_2, Twp.theta)) < .01))
   {
-    newPair.second.theta = anglediff(waypoint.theta, -.01);
+    newPair.second.theta = WaypointControllerHelper::anglediff(waypoint.theta, -.01);
 
     return newPair;
   }
@@ -76,7 +76,7 @@ std::pair<pose, pose> inputCleaner(pose robotPose, pose waypoint)
   // make them not do that
   if (std::abs(Twp.theta) > (M_PI - .01))
   {
-    newPair.second.theta = anglediff(waypoint.theta, -.01);
+    newPair.second.theta = WaypointControllerHelper::anglediff(waypoint.theta, -.01);
     return newPair;
   }
 
@@ -84,7 +84,7 @@ std::pair<pose, pose> inputCleaner(pose robotPose, pose waypoint)
   // fix that too
   if (std::abs(Twp.theta) < .01)
   {
-    newPair.first.theta = anglediff(robotPose.theta, -.01);
+    newPair.first.theta = WaypointControllerHelper::anglediff(robotPose.theta, -.01);
     return newPair;
   }
 
@@ -92,12 +92,12 @@ std::pair<pose, pose> inputCleaner(pose robotPose, pose waypoint)
   return newPair;
 }
 
-float anglediff(float x, float y)
+float WaypointControllerHelper::anglediff(float x, float y)
 {
   return atan2(sin(x - y), cos(x - y));
 }
 
-pose transformPoseToRobotCoord(pose robotPose, pose worldPose)
+pose WaypointControllerHelper::transformPoseToRobotCoord(pose robotPose, pose worldPose)
 {
   // takes a pose which is in world coordinates and transforms it to robot coords
   // this is used primarily for waypoints
@@ -106,14 +106,14 @@ pose transformPoseToRobotCoord(pose robotPose, pose worldPose)
       cos(robotPose.theta) * (worldPose.x - robotPose.x) + sin(robotPose.theta) * (worldPose.y - robotPose.y);
   returnPose.y =
       -sin(robotPose.theta) * (worldPose.x - robotPose.x) + cos(robotPose.theta) * (worldPose.y - robotPose.y);
-  returnPose.theta = anglediff(worldPose.theta, robotPose.theta);
+  returnPose.theta = WaypointControllerHelper::anglediff(worldPose.theta, robotPose.theta);
   return returnPose;
 }
 
-pose reflectWaypointAroundRobot(pose waypoint, pose robot)
+pose WaypointControllerHelper::reflectWaypointAroundRobot(pose waypoint, pose robot)
 {
   pose returnPose;
-  returnPose.theta = anglediff(robot.theta, anglediff(waypoint.theta, robot.theta));
+  returnPose.theta = WaypointControllerHelper::anglediff(robot.theta, WaypointControllerHelper::anglediff(waypoint.theta, robot.theta));
 
   float m = tan(robot.theta);  // need corner case for if robot angle is +/- 90 deg
 
@@ -126,7 +126,7 @@ pose reflectWaypointAroundRobot(pose waypoint, pose robot)
   return returnPose;
 }
 
-maneuver transformManeuverToWorldCoord(pose robotPose, maneuver myMan)
+maneuver WaypointControllerHelper::transformManeuverToWorldCoord(pose robotPose, maneuver myMan)
 {
   // takes a pose which is in robot coordinates and transforms it to world coords
   maneuver returnManeuver;
@@ -137,14 +137,14 @@ maneuver transformManeuverToWorldCoord(pose robotPose, maneuver myMan)
   return returnManeuver;
 }
 
-std::vector<maneuver> oneTurnSolution(pose robotPose, pose waypoint)
+std::vector<maneuver> WaypointControllerHelper::oneTurnSolution(pose robotPose, pose waypoint)
 {
   maneuver maneuver1, m1UT;  // maneuver and untransformed buddy
   maneuver maneuver2, m2UT;
   std::vector<maneuver> returnVector;
 
   pose wp;  // waypoint in robot coord, by inverse transform
-  wp = transformPoseToRobotCoord(robotPose, waypoint);
+  wp = WaypointControllerHelper::transformPoseToRobotCoord(robotPose, waypoint);
 
   float xintercept = -wp.y / tan(wp.theta) + wp.x;
   // if the waypoint were a line extended back,
@@ -236,7 +236,7 @@ std::vector<maneuver> oneTurnSolution(pose robotPose, pose waypoint)
   return returnVector;
 }
 
-std::vector<maneuver> inverseOneTurnSolution(pose robotPose, pose waypoint)
+std::vector<maneuver> WaypointControllerHelper::inverseOneTurnSolution(pose robotPose, pose waypoint)
 {
   pose internalwaypoint = {.x = 2 * robotPose.x - waypoint.x,
                            .y = 2 * robotPose.y - waypoint.y,
@@ -256,7 +256,7 @@ std::vector<maneuver> inverseOneTurnSolution(pose robotPose, pose waypoint)
   return intermediateSolution;
 }
 
-std::vector<maneuver> twoTurnSolution(pose robotPose, pose waypoint)
+std::vector<maneuver> WaypointControllerHelper::twoTurnSolution(pose robotPose, pose waypoint)
 {
   bool beenFlipped = false;
   pose wp;
@@ -286,7 +286,7 @@ std::vector<maneuver> twoTurnSolution(pose robotPose, pose waypoint)
   }
 
   // Now the solver begins, using wp which may or may not have been refelcted/flipped
-  wp = transformPoseToRobotCoord(robotPose, beenFlipped ? wp : waypoint);
+  wp = WaypointControllerHelper::transformPoseToRobotCoord(robotPose, beenFlipped ? wp : waypoint);
   double cosanglearg = -wp.theta - M_PI_2;
   double sinanglearg = -wp.theta + M_PI_2;
 
@@ -320,7 +320,7 @@ std::vector<maneuver> twoTurnSolution(pose robotPose, pose waypoint)
   float theta1 = std::atan2(xintermediate, d - yintermediate);
 
   man1.distance = d * theta1;
-  man2.distance = d * (theta1 - wp.theta);  // should this be an anglediff?
+  man2.distance = d * (theta1 - wp.theta);  // should this be an WaypointControllerHelper::anglediff?
 
   // DONT FORGET TO UNTRANSFORM
   maneuver man1UT = transformManeuverToWorldCoord(robotPose, man1);
@@ -350,7 +350,7 @@ std::vector<maneuver> twoTurnSolution(pose robotPose, pose waypoint)
   return returnVector;
 }
 
-std::vector<maneuver> waypoint2maneuvers(pose robotPose, pose waypoint)
+std::vector<maneuver> WaypointControllerHelper::waypoint2maneuvers(pose robotPose, pose waypoint)
 {
   std::vector<maneuver> myMan;
   // couple different scenarios, credit to Sam Fehringer and Austin Oltmanns
@@ -363,7 +363,7 @@ std::vector<maneuver> waypoint2maneuvers(pose robotPose, pose waypoint)
 
   // check xintercept to help determine which solution to use
   pose wp;  // waypoint in robot coordinates, by inverse transform
-  wp = transformPoseToRobotCoord(robotPose, waypoint);
+  wp = WaypointControllerHelper::transformPoseToRobotCoord(robotPose, waypoint);
 
   // if the waypoint were a line extended back,
   // this is where it would intersect on the robot's x axis
@@ -392,7 +392,7 @@ std::vector<maneuver> waypoint2maneuvers(pose robotPose, pose waypoint)
   return myMan;
 }
 
-pose findCPP(pose robotPose, maneuver curManeuver)
+pose WaypointControllerHelper::findCPP(pose robotPose, maneuver curManeuver)
 {
   // find nearest point on path of maneuver to robot as well as theta of path at that point
   float Xp, Xpa, Xpb, Yp, Ypa, Ypb, M;
@@ -447,11 +447,11 @@ pose findCPP(pose robotPose, maneuver curManeuver)
 
   CPP.x = Xp;
   CPP.y = Yp;
-  CPP.theta = anglediff(atan2(Yp - curManeuver.yc, Xp - curManeuver.xc), M_PI / 2);  // this needs fixed
+  CPP.theta = WaypointControllerHelper::anglediff(atan2(Yp - curManeuver.yc, Xp - curManeuver.xc), M_PI / 2);  // this needs fixed
   return CPP;
 }
 
-std::vector<std::pair<float, float> > waypointWithManeuvers2points(waypointWithManeuvers myMan)
+std::vector<std::pair<float, float> > WaypointControllerHelper::waypointWithManeuvers2points(waypointWithManeuvers myMan)
 {
   // get points from initial point to terminal point by
   // starting with initial point and solving through first maneuver
@@ -495,7 +495,7 @@ std::vector<std::pair<float, float> > waypointWithManeuvers2points(waypointWithM
   return allPoints;
 }
 
-pose endOfManeuver(pose robotPose, maneuver myMan)  // finds the conclusion of a maneuver which starts at a pose
+pose WaypointControllerHelper::endOfManeuver(pose robotPose, maneuver myMan)  // finds the conclusion of a maneuver which starts at a pose
 {
   pose endPoseUT, endPose;
   float NAD = myMan.distance / myMan.radius;
@@ -506,12 +506,12 @@ pose endOfManeuver(pose robotPose, maneuver myMan)  // finds the conclusion of a
 
   endPose.x = cos(robotPose.theta) * endPoseUT.x - sin(robotPose.theta) * endPoseUT.y + robotPose.x;
   endPose.y = sin(robotPose.theta) * endPoseUT.x + cos(robotPose.theta) * endPoseUT.y + robotPose.y;
-  endPose.theta = anglediff(robotPose.theta, -NAD);
+  endPose.theta = WaypointControllerHelper::anglediff(robotPose.theta, -NAD);
 
   return endPose;
 }
 
-std::pair<float, float> speedAndRadius2WheelVels(float speed, float radius, float AxelLen, float maxSpeed)
+std::pair<float, float> WaypointControllerHelper::speedAndRadius2WheelVels(float speed, float radius, float AxelLen, float maxSpeed)
 {
   // positive radius is CCW, first vel is left wheel, second is right
   // speed is average of wheel velocities: TotalVel = .5*(LeftVel + RightVel)
