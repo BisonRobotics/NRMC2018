@@ -8,6 +8,7 @@ using ::testing::Return;
 using ::testing::_;
 using ::testing::AnyNumber;
 using ::testing::Gt;
+using ::testing::NiceMock;
 
 #define POSTOL .03f
 #define RADTOL .05f
@@ -15,16 +16,12 @@ using ::testing::Gt;
 // Declare a test
 TEST(LocalizerTests, GoesForward)
 {
-  MockVescAccess flvesc, frvesc, brvesc, blvesc;
+  NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
   Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(.5));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(.5));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(.5));
   ON_CALL(blvesc, getLinearVelocity()).WillByDefault(Return(.5));
-  EXPECT_CALL(flvesc, getLinearVelocity());
-  EXPECT_CALL(frvesc, getLinearVelocity());
-  EXPECT_CALL(brvesc, getLinearVelocity());
-  EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
   EXPECT_NEAR(loki.getStateVector().x_pos, .005, .0001);
@@ -38,16 +35,12 @@ TEST(LocalizerTests, GoesForward)
 
 TEST(LocalizerTests, ForwardLeft)
 {
-  MockVescAccess flvesc, frvesc, brvesc, blvesc;
+  NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
   Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(.3));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(.5));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(.5));
   ON_CALL(blvesc, getLinearVelocity()).WillByDefault(Return(.3));
-  EXPECT_CALL(flvesc, getLinearVelocity());
-  EXPECT_CALL(frvesc, getLinearVelocity());
-  EXPECT_CALL(brvesc, getLinearVelocity());
-  EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
   EXPECT_NEAR(loki.getStateVector().x_pos, .004, .0001);
@@ -57,35 +50,27 @@ TEST(LocalizerTests, ForwardLeft)
 
 TEST(LocalizerTests, ForwardRight)
 {
-  MockVescAccess flvesc, frvesc, brvesc, blvesc;
+  NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
   Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(.5));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(.3));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(.3));
   ON_CALL(blvesc, getLinearVelocity()).WillByDefault(Return(.5));
-  EXPECT_CALL(flvesc, getLinearVelocity());
-  EXPECT_CALL(frvesc, getLinearVelocity());
-  EXPECT_CALL(brvesc, getLinearVelocity());
-  EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
   EXPECT_NEAR(loki.getStateVector().x_pos, .004, .0001);
-  EXPECT_NEAR(loki.getStateVector().y_pos, .000008, .0000001);
+  EXPECT_NEAR (loki.getStateVector().y_pos, -.000008, .0000001);
   EXPECT_NEAR(loki.getStateVector().theta, -.004, .0001);
 }
 
 TEST(LocalizerTests, GoesBackward)
 {
-  MockVescAccess flvesc, frvesc, brvesc, blvesc;
+  NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
   Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(-.5));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(-.5));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(-.5));
   ON_CALL(blvesc, getLinearVelocity()).WillByDefault(Return(-.5));
-  EXPECT_CALL(flvesc, getLinearVelocity());
-  EXPECT_CALL(frvesc, getLinearVelocity());
-  EXPECT_CALL(brvesc, getLinearVelocity());
-  EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
   EXPECT_NEAR(loki.getStateVector().x_pos, -.005, .0001);
@@ -95,35 +80,27 @@ TEST(LocalizerTests, GoesBackward)
 
 TEST(LocalizerTests, BackwardRight)
 {
-  MockVescAccess flvesc, frvesc, brvesc, blvesc;
+  NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
   Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(-.5));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(-.3));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(-.3));
   ON_CALL(blvesc, getLinearVelocity()).WillByDefault(Return(-.5));
-  EXPECT_CALL(flvesc, getLinearVelocity());
-  EXPECT_CALL(frvesc, getLinearVelocity());
-  EXPECT_CALL(brvesc, getLinearVelocity());
-  EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
-  EXPECT_NEAR(loki.getStateVector().x_pos, -.004, .0001);
-  EXPECT_NEAR(loki.getStateVector().y_pos, .000008, .0000001);
+  EXPECT_NEAR(loki.getStateVector().x_pos, -.004,.0001);
+  EXPECT_NEAR(loki.getStateVector().y_pos, -.000008, .0000001);
   EXPECT_NEAR(loki.getStateVector().theta, .004, .0001);
 }
 
 TEST(LocalizerTests, BackwardLeft)
 {
-  MockVescAccess flvesc, frvesc, brvesc, blvesc;
+  NiceMock<MockVescAccess> flvesc, frvesc, brvesc, blvesc;
   Localizer loki(.5f, 0, 0, 0, &flvesc, &frvesc, &brvesc, &blvesc);
   ON_CALL(flvesc, getLinearVelocity()).WillByDefault(Return(-.3));
   ON_CALL(frvesc, getLinearVelocity()).WillByDefault(Return(-.5));
   ON_CALL(brvesc, getLinearVelocity()).WillByDefault(Return(-.5));
   ON_CALL(blvesc, getLinearVelocity()).WillByDefault(Return(-.3));
-  EXPECT_CALL(flvesc, getLinearVelocity());
-  EXPECT_CALL(frvesc, getLinearVelocity());
-  EXPECT_CALL(brvesc, getLinearVelocity());
-  EXPECT_CALL(blvesc, getLinearVelocity());
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
   EXPECT_NEAR(loki.getStateVector().x_pos, -.004, .0001);
