@@ -5,6 +5,8 @@
 #include <waypoint_controller/waypointWithManeuvers.h>
 #include <vector>
 
+namespace WaypointControllerHelper
+{
 std::vector<maneuver> waypoint2maneuvers(pose robotPose, pose waypoint);
 
 pose findCPP(pose robotPose, maneuver curManeuver);
@@ -28,5 +30,8 @@ std::vector<maneuver> twoTurnSolution(pose robotPose, pose waypoint);
 pose transformPoseToRobotCoord(pose robotPose, pose waypoint);
 
 std::pair<pose, pose> inputCleaner(pose robotPose, pose waypoint);
+
+maneuver transformManeuverToWorldCoord(pose robotPose, maneuver myMan);
+}
 
 #endif

@@ -1,13 +1,20 @@
 #include <waypoint_controller/waypoint_controller.h>
 #include <waypoint_controller/waypoint_controller_helper.h>
 #include <cmath>
-#define PI 3.1415926539f
-#define APPROX(A, B, T) ((A > B - T && A < B + T) ? true : false)
-#define DIST(A, B, C, D) sqrt((A - C) * (A - C) + (B - D) * (B - D))
-#define CLIP(A, B) (A = A > B ? B : A < -B ? -B : A)
+
 #define POSITIONTOL .30f
 #define ANGLETOL .2f
 #define BADLINE .3f
+
+bool APPROX(double A, double B, double T)
+{
+  return ((A > B - T && A < B + T) ? true : false);
+}
+
+double DIST(double A, double B, double C, double D)
+{
+  return sqrt((A - C) * (A - C) + (B - D) * (B - D));
+}
 
 WaypointController::WaypointController(float axelLength, float maxSafeSpeed, pose initialPose, iVescAccess *fl,
                                        iVescAccess *fr, iVescAccess *br, iVescAccess *bl)
@@ -95,14 +102,14 @@ std::vector<std::pair<float, float> > WaypointController::addWaypoint(pose waypo
   {
     newWaypoint.initialPose = currRobotPose;
     newWaypoint.terminalPose = waypoint;
-    newWaypoint.mans = waypoint2maneuvers(currRobotPose, waypoint);
+    newWaypoint.mans = WaypointControllerHelper::waypoint2maneuvers(currRobotPose, waypoint);
     // so plan from where the robot is to there
   }
   else
   {
     newWaypoint.initialPose = navigationQueue.back().terminalPose;
     newWaypoint.terminalPose = waypoint;
-    newWaypoint.mans = waypoint2maneuvers(navigationQueue.back().terminalPose, waypoint);
+    newWaypoint.mans = WaypointControllerHelper::waypoint2maneuvers(navigationQueue.back().terminalPose, waypoint);
     // plan from last point to this new one
   }
   navigationQueue.push_back(newWaypoint);  // append calculated maneuvers to queue
@@ -110,7 +117,7 @@ std::vector<std::pair<float, float> > WaypointController::addWaypoint(pose waypo
   // calculate points that will be covered by the new maneuver
   std::vector<std::pair<float, float> > myVector;
 
-  myVector = waypointWithManeuvers2points(newWaypoint);
+  myVector = WaypointControllerHelper::waypointWithManeuvers2points(newWaypoint);
   // if returned vector is empty, we were unable to plan a path
 
   return myVector;
@@ -141,13 +148,15 @@ WaypointController::Status WaypointController::update(pose robotPose, float dt)
       currMan = navigationQueue.at(0).mans.at(currManeuverIndex);  // set current maneuver
 
       if (currManeuverIndex == 0)  // if this is the first maneuver on the stack for this waypoint
-        maneuverEnd = endOfManeuver(navigationQueue.at(0).initialPose,
-                                    currMan);  // the end pose is the extension from the initial pose
+        maneuverEnd =
+            WaypointControllerHelper::endOfManeuver(navigationQueue.at(0).initialPose,
+                                                    currMan);  // the end pose is the extension from the initial pose
       else
-        maneuverEnd = endOfManeuver(maneuverEnd, currMan);
+        maneuverEnd = WaypointControllerHelper::endOfManeuver(maneuverEnd, currMan);
       // else the end pose is from the last maneuverEnd through the current maneuver
 
-      std::pair<float, float> myPair = speedAndRadius2WheelVels(.6f * maxSpeed, currMan.radius, axelLen, maxSpeed);
+      std::pair<float, float> myPair =
+          WaypointControllerHelper::speedAndRadius2WheelVels(.6f * maxSpeed, currMan.radius, axelLen, maxSpeed);
       LeftWheelSetSpeed = myPair.first;
       RightWheelSetSpeed = myPair.second;
       doingManeuver = true;
@@ -161,7 +170,7 @@ WaypointController::Status WaypointController::update(pose robotPose, float dt)
         return Status::ALLGOOD;  // next time function is called, maneuver will update
       }
     }
-    theCPP = findCPP(robotPose, currMan);  // closest pose on path
+    theCPP = WaypointControllerHelper::findCPP(robotPose, currMan);  // closest pose on path
 
     // figure out if we are in tolerance or not
     Status returnStatus;
@@ -176,7 +185,7 @@ WaypointController::Status WaypointController::update(pose robotPose, float dt)
     else
       EPpEst = currMan.radius + DIST(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
 
-    ETpEst = anglediff(theCPP.theta, robotPose.theta);  // positive error means turn left
+    ETpEst = WaypointControllerHelper::anglediff(theCPP.theta, robotPose.theta);  // positive error means turn left
 
     EPpLowPassPrev = EPpLowPass;
     EPpLowPass = EPpLowPassGain * EPpEst + (1 - EPpLowPassGain) * EPpLowPassPrev;
@@ -185,10 +194,6 @@ WaypointController::Status WaypointController::update(pose robotPose, float dt)
 
     EPpDerivFiltEst = (EPpLowPass - EPpLowPassPrev) / dt;
     ETpDerivFiltEst = (ETpLowPass - ETpLowPassPrev) / dt;
-
-    // clip error to limit correction if needed (should not happen)
-    // CLIP(EPpEst,.2);
-    // CLIP(ETpEst,PI/2.0f);
 
     LvelCmd = LvelCmd + (EPpGain * EPpEst + EPdGain * EPpDerivFiltEst) -
               (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) - WheelSpeedPGain * (LvelCmd - LeftWheelSetSpeed);
@@ -204,10 +209,7 @@ WaypointController::Status WaypointController::update(pose robotPose, float dt)
   else
   {
     // remember to stop
-    front_left_wheel->setLinearVelocity(0);
-    back_left_wheel->setLinearVelocity(0);
-    front_right_wheel->setLinearVelocity(0);
-    back_right_wheel->setLinearVelocity(0);
+    this->haltAndAbort();
     return Status::GOALREACHED;  // gotta get out of here
   }
 }

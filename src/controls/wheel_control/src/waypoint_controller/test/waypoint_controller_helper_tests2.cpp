@@ -7,7 +7,9 @@
 
 #define WAYPOINT2MANEUVERTOL .05
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint1)
+using namespace WaypointControllerHelper;
+
+TEST(WaypointControllerHelperTests, waypointGenerationTest1)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.000000 };
@@ -24,7 +26,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint1)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint2)
+TEST(WaypointControllerHelperTests, waypointGenerationTest2)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.785398 };
@@ -41,7 +43,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint2)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint3)
+TEST(WaypointControllerHelperTests, waypointGenerationTest3)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 1.570796 };
@@ -58,7 +60,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint3)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint4)
+TEST(WaypointControllerHelperTests, waypointGenerationTest4)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 2.356194 };
@@ -75,7 +77,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint4)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint5)
+TEST(WaypointControllerHelperTests, waypointGenerationTest5)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 3.141593 };
@@ -92,7 +94,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint5)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint6)
+TEST(WaypointControllerHelperTests, waypointGenerationTest6)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -3.141593 };
@@ -109,7 +111,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint6)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint7)
+TEST(WaypointControllerHelperTests, waypointGenerationTest7)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -2.356194 };
@@ -126,7 +128,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint7)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint8)
+TEST(WaypointControllerHelperTests, waypointGenerationTest8)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -1.570796 };
@@ -143,7 +145,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint8)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint9)
+TEST(WaypointControllerHelperTests, waypointGenerationTest9)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -0.785398 };
@@ -160,7 +162,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint9)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint10)
+TEST(WaypointControllerHelperTests, waypointGenerationTest10)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.000000 };
@@ -177,7 +179,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint10)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint11)
+TEST(WaypointControllerHelperTests, waypointGenerationTest11)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.785398 };
@@ -194,7 +196,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint11)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint12)
+TEST(WaypointControllerHelperTests, waypointGenerationTest12)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 1.570796 };
@@ -211,7 +213,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint12)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint13)
+TEST(WaypointControllerHelperTests, waypointGenerationTest13)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 2.356194 };
@@ -228,7 +230,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint13)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint14)
+TEST(WaypointControllerHelperTests, waypointGenerationTest14)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 3.141593 };
@@ -245,7 +247,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint14)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint15)
+TEST(WaypointControllerHelperTests, waypointGenerationTest15)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -3.141593 };
@@ -262,7 +264,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint15)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint16)
+TEST(WaypointControllerHelperTests, waypointGenerationTest16)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -2.356194 };
@@ -279,7 +281,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint16)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint17)
+TEST(WaypointControllerHelperTests, waypointGenerationTest17)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -1.570796 };
@@ -296,7 +298,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint17)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint18)
+TEST(WaypointControllerHelperTests, waypointGenerationTest18)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -0.785398 };
@@ -313,7 +315,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint18)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint19)
+TEST(WaypointControllerHelperTests, waypointGenerationTest19)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.000000 };
@@ -330,7 +332,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint19)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint20)
+TEST(WaypointControllerHelperTests, waypointGenerationTest20)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.785398 };
@@ -347,7 +349,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint20)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint21)
+TEST(WaypointControllerHelperTests, waypointGenerationTest21)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 1.570796 };
@@ -364,7 +366,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint21)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint22)
+TEST(WaypointControllerHelperTests, waypointGenerationTest22)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 2.356194 };
@@ -381,7 +383,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint22)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint23)
+TEST(WaypointControllerHelperTests, waypointGenerationTest23)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 3.141593 };
@@ -398,7 +400,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint23)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint24)
+TEST(WaypointControllerHelperTests, waypointGenerationTest24)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -3.141593 };
@@ -415,7 +417,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint24)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint25)
+TEST(WaypointControllerHelperTests, waypointGenerationTest25)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -2.356194 };
@@ -432,7 +434,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint25)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint26)
+TEST(WaypointControllerHelperTests, waypointGenerationTest26)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -1.570796 };
@@ -449,7 +451,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint26)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint27)
+TEST(WaypointControllerHelperTests, waypointGenerationTest27)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -0.785398 };
@@ -466,7 +468,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint27)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint28)
+TEST(WaypointControllerHelperTests, waypointGenerationTest28)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.000000 };
@@ -483,7 +485,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint28)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint29)
+TEST(WaypointControllerHelperTests, waypointGenerationTest29)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.785398 };
@@ -500,7 +502,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint29)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint30)
+TEST(WaypointControllerHelperTests, waypointGenerationTest30)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 1.570796 };
@@ -517,7 +519,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint30)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint31)
+TEST(WaypointControllerHelperTests, waypointGenerationTest31)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 2.356194 };
@@ -534,7 +536,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint31)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint32)
+TEST(WaypointControllerHelperTests, waypointGenerationTest32)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 3.141593 };
@@ -551,7 +553,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint32)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint33)
+TEST(WaypointControllerHelperTests, waypointGenerationTest33)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -3.141593 };
@@ -568,7 +570,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint33)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint34)
+TEST(WaypointControllerHelperTests, waypointGenerationTest34)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -2.356194 };
@@ -585,7 +587,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint34)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint35)
+TEST(WaypointControllerHelperTests, waypointGenerationTest35)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -1.570796 };
@@ -602,7 +604,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint35)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint36)
+TEST(WaypointControllerHelperTests, waypointGenerationTest36)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -0.785398 };
@@ -619,7 +621,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint36)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint37)
+TEST(WaypointControllerHelperTests, waypointGenerationTest37)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.000000 };
@@ -636,7 +638,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint37)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint38)
+TEST(WaypointControllerHelperTests, waypointGenerationTest38)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.785398 };
@@ -653,7 +655,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint38)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint39)
+TEST(WaypointControllerHelperTests, waypointGenerationTest39)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 1.570796 };
@@ -670,7 +672,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint39)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint40)
+TEST(WaypointControllerHelperTests, waypointGenerationTest40)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 2.356194 };
@@ -687,7 +689,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint40)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint41)
+TEST(WaypointControllerHelperTests, waypointGenerationTest41)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 3.141593 };
@@ -704,7 +706,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint41)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint42)
+TEST(WaypointControllerHelperTests, waypointGenerationTest42)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -3.141593 };
@@ -721,7 +723,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint42)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint43)
+TEST(WaypointControllerHelperTests, waypointGenerationTest43)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -2.356194 };
@@ -738,7 +740,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint43)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint44)
+TEST(WaypointControllerHelperTests, waypointGenerationTest44)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -1.570796 };
@@ -755,7 +757,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint44)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint45)
+TEST(WaypointControllerHelperTests, waypointGenerationTest45)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -0.785398 };
@@ -772,7 +774,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint45)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint46)
+TEST(WaypointControllerHelperTests, waypointGenerationTest46)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.000000 };
@@ -789,7 +791,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint46)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint47)
+TEST(WaypointControllerHelperTests, waypointGenerationTest47)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.785398 };
@@ -806,7 +808,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint47)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint48)
+TEST(WaypointControllerHelperTests, waypointGenerationTest48)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 1.570796 };
@@ -823,7 +825,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint48)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint49)
+TEST(WaypointControllerHelperTests, waypointGenerationTest49)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 2.356194 };
@@ -840,7 +842,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint49)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint50)
+TEST(WaypointControllerHelperTests, waypointGenerationTest50)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 3.141593 };
@@ -857,7 +859,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint50)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint51)
+TEST(WaypointControllerHelperTests, waypointGenerationTest51)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -3.141593 };
@@ -874,7 +876,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint51)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint52)
+TEST(WaypointControllerHelperTests, waypointGenerationTest52)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -2.356194 };
@@ -891,7 +893,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint52)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint53)
+TEST(WaypointControllerHelperTests, waypointGenerationTest53)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -1.570796 };
@@ -908,7 +910,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint53)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint54)
+TEST(WaypointControllerHelperTests, waypointGenerationTest54)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -0.785398 };
@@ -925,7 +927,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint54)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint55)
+TEST(WaypointControllerHelperTests, waypointGenerationTest55)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.000000 };
@@ -942,7 +944,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint55)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint56)
+TEST(WaypointControllerHelperTests, waypointGenerationTest56)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.785398 };
@@ -959,7 +961,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint56)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint57)
+TEST(WaypointControllerHelperTests, waypointGenerationTest57)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 1.570796 };
@@ -976,7 +978,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint57)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint58)
+TEST(WaypointControllerHelperTests, waypointGenerationTest58)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 2.356194 };
@@ -993,7 +995,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint58)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint59)
+TEST(WaypointControllerHelperTests, waypointGenerationTest59)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 3.141593 };
@@ -1010,7 +1012,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint59)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint60)
+TEST(WaypointControllerHelperTests, waypointGenerationTest60)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -3.141593 };
@@ -1027,7 +1029,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint60)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint61)
+TEST(WaypointControllerHelperTests, waypointGenerationTest61)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -2.356194 };
@@ -1044,7 +1046,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint61)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint62)
+TEST(WaypointControllerHelperTests, waypointGenerationTest62)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -1.570796 };
@@ -1061,7 +1063,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint62)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint63)
+TEST(WaypointControllerHelperTests, waypointGenerationTest63)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -0.785398 };
@@ -1078,7 +1080,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint63)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint64)
+TEST(WaypointControllerHelperTests, waypointGenerationTest64)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.000000 };
@@ -1095,7 +1097,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint64)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint65)
+TEST(WaypointControllerHelperTests, waypointGenerationTest65)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.785398 };
@@ -1112,7 +1114,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint65)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint66)
+TEST(WaypointControllerHelperTests, waypointGenerationTest66)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 1.570796 };
@@ -1129,7 +1131,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint66)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint67)
+TEST(WaypointControllerHelperTests, waypointGenerationTest67)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 2.356194 };
@@ -1146,7 +1148,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint67)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint68)
+TEST(WaypointControllerHelperTests, waypointGenerationTest68)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 3.141593 };
@@ -1163,7 +1165,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint68)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint69)
+TEST(WaypointControllerHelperTests, waypointGenerationTest69)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -3.141593 };
@@ -1180,7 +1182,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint69)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint70)
+TEST(WaypointControllerHelperTests, waypointGenerationTest70)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -2.356194 };
@@ -1197,7 +1199,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint70)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint71)
+TEST(WaypointControllerHelperTests, waypointGenerationTest71)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -1.570796 };
@@ -1214,7 +1216,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint71)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint72)
+TEST(WaypointControllerHelperTests, waypointGenerationTest72)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.000000 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -0.785398 };
@@ -1231,7 +1233,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint72)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint73)
+TEST(WaypointControllerHelperTests, waypointGenerationTest73)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.000000 };
@@ -1248,7 +1250,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint73)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint74)
+TEST(WaypointControllerHelperTests, waypointGenerationTest74)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.785398 };
@@ -1265,7 +1267,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint74)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint75)
+TEST(WaypointControllerHelperTests, waypointGenerationTest75)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 1.570796 };
@@ -1282,7 +1284,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint75)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint76)
+TEST(WaypointControllerHelperTests, waypointGenerationTest76)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 2.356194 };
@@ -1299,7 +1301,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint76)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint77)
+TEST(WaypointControllerHelperTests, waypointGenerationTest77)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 3.141593 };
@@ -1316,7 +1318,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint77)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint78)
+TEST(WaypointControllerHelperTests, waypointGenerationTest78)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -3.141593 };
@@ -1333,7 +1335,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint78)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint79)
+TEST(WaypointControllerHelperTests, waypointGenerationTest79)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -2.356194 };
@@ -1350,7 +1352,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint79)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint80)
+TEST(WaypointControllerHelperTests, waypointGenerationTest80)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -1.570796 };
@@ -1367,7 +1369,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint80)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint81)
+TEST(WaypointControllerHelperTests, waypointGenerationTest81)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -0.785398 };
@@ -1384,7 +1386,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint81)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint82)
+TEST(WaypointControllerHelperTests, waypointGenerationTest82)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.000000 };
@@ -1401,7 +1403,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint82)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint83)
+TEST(WaypointControllerHelperTests, waypointGenerationTest83)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.785398 };
@@ -1418,7 +1420,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint83)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint84)
+TEST(WaypointControllerHelperTests, waypointGenerationTest84)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 1.570796 };
@@ -1435,7 +1437,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint84)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint85)
+TEST(WaypointControllerHelperTests, waypointGenerationTest85)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 2.356194 };
@@ -1452,7 +1454,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint85)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint86)
+TEST(WaypointControllerHelperTests, waypointGenerationTest86)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 3.141593 };
@@ -1469,7 +1471,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint86)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint87)
+TEST(WaypointControllerHelperTests, waypointGenerationTest87)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -3.141593 };
@@ -1486,7 +1488,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint87)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint88)
+TEST(WaypointControllerHelperTests, waypointGenerationTest88)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -2.356194 };
@@ -1503,7 +1505,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint88)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint89)
+TEST(WaypointControllerHelperTests, waypointGenerationTest89)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -1.570796 };
@@ -1520,7 +1522,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint89)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint90)
+TEST(WaypointControllerHelperTests, waypointGenerationTest90)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -0.785398 };
@@ -1537,7 +1539,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint90)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint91)
+TEST(WaypointControllerHelperTests, waypointGenerationTest91)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.000000 };
@@ -1554,7 +1556,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint91)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint92)
+TEST(WaypointControllerHelperTests, waypointGenerationTest92)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.785398 };
@@ -1571,7 +1573,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint92)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint93)
+TEST(WaypointControllerHelperTests, waypointGenerationTest93)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 1.570796 };
@@ -1588,7 +1590,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint93)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint94)
+TEST(WaypointControllerHelperTests, waypointGenerationTest94)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 2.356194 };
@@ -1605,7 +1607,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint94)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint95)
+TEST(WaypointControllerHelperTests, waypointGenerationTest95)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 3.141593 };
@@ -1622,7 +1624,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint95)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint96)
+TEST(WaypointControllerHelperTests, waypointGenerationTest96)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -3.141593 };
@@ -1639,7 +1641,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint96)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint97)
+TEST(WaypointControllerHelperTests, waypointGenerationTest97)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -2.356194 };
@@ -1656,7 +1658,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint97)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint98)
+TEST(WaypointControllerHelperTests, waypointGenerationTest98)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -1.570796 };
@@ -1673,7 +1675,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint98)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint99)
+TEST(WaypointControllerHelperTests, waypointGenerationTest99)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -0.785398 };
@@ -1690,7 +1692,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint99)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint100)
+TEST(WaypointControllerHelperTests, waypointGenerationTest100)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.000000 };
@@ -1707,7 +1709,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint100)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint101)
+TEST(WaypointControllerHelperTests, waypointGenerationTest101)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.785398 };
@@ -1724,7 +1726,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint101)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint102)
+TEST(WaypointControllerHelperTests, waypointGenerationTest102)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 1.570796 };
@@ -1741,7 +1743,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint102)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint103)
+TEST(WaypointControllerHelperTests, waypointGenerationTest103)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 2.356194 };
@@ -1758,7 +1760,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint103)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint104)
+TEST(WaypointControllerHelperTests, waypointGenerationTest104)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 3.141593 };
@@ -1775,7 +1777,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint104)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint105)
+TEST(WaypointControllerHelperTests, waypointGenerationTest105)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -3.141593 };
@@ -1792,7 +1794,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint105)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint106)
+TEST(WaypointControllerHelperTests, waypointGenerationTest106)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -2.356194 };
@@ -1809,7 +1811,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint106)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint107)
+TEST(WaypointControllerHelperTests, waypointGenerationTest107)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -1.570796 };
@@ -1826,7 +1828,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint107)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint108)
+TEST(WaypointControllerHelperTests, waypointGenerationTest108)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -0.785398 };
@@ -1843,7 +1845,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint108)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint109)
+TEST(WaypointControllerHelperTests, waypointGenerationTest109)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.000000 };
@@ -1860,7 +1862,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint109)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint110)
+TEST(WaypointControllerHelperTests, waypointGenerationTest110)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.785398 };
@@ -1877,7 +1879,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint110)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint111)
+TEST(WaypointControllerHelperTests, waypointGenerationTest111)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 1.570796 };
@@ -1894,7 +1896,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint111)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint112)
+TEST(WaypointControllerHelperTests, waypointGenerationTest112)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 2.356194 };
@@ -1911,7 +1913,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint112)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint113)
+TEST(WaypointControllerHelperTests, waypointGenerationTest113)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 3.141593 };
@@ -1928,7 +1930,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint113)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint114)
+TEST(WaypointControllerHelperTests, waypointGenerationTest114)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -3.141593 };
@@ -1945,7 +1947,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint114)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint115)
+TEST(WaypointControllerHelperTests, waypointGenerationTest115)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -2.356194 };
@@ -1962,7 +1964,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint115)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint116)
+TEST(WaypointControllerHelperTests, waypointGenerationTest116)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -1.570796 };
@@ -1979,7 +1981,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint116)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint117)
+TEST(WaypointControllerHelperTests, waypointGenerationTest117)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -0.785398 };
@@ -1996,7 +1998,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint117)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint118)
+TEST(WaypointControllerHelperTests, waypointGenerationTest118)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.000000 };
@@ -2013,7 +2015,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint118)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint119)
+TEST(WaypointControllerHelperTests, waypointGenerationTest119)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.785398 };
@@ -2030,7 +2032,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint119)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint120)
+TEST(WaypointControllerHelperTests, waypointGenerationTest120)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 1.570796 };
@@ -2047,7 +2049,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint120)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint121)
+TEST(WaypointControllerHelperTests, waypointGenerationTest121)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 2.356194 };
@@ -2064,7 +2066,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint121)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint122)
+TEST(WaypointControllerHelperTests, waypointGenerationTest122)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 3.141593 };
@@ -2081,7 +2083,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint122)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint123)
+TEST(WaypointControllerHelperTests, waypointGenerationTest123)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -3.141593 };
@@ -2098,7 +2100,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint123)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint124)
+TEST(WaypointControllerHelperTests, waypointGenerationTest124)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -2.356194 };
@@ -2115,7 +2117,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint124)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint125)
+TEST(WaypointControllerHelperTests, waypointGenerationTest125)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -1.570796 };
@@ -2132,7 +2134,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint125)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint126)
+TEST(WaypointControllerHelperTests, waypointGenerationTest126)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -0.785398 };
@@ -2149,7 +2151,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint126)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint127)
+TEST(WaypointControllerHelperTests, waypointGenerationTest127)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.000000 };
@@ -2166,7 +2168,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint127)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint128)
+TEST(WaypointControllerHelperTests, waypointGenerationTest128)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.785398 };
@@ -2183,7 +2185,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint128)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint129)
+TEST(WaypointControllerHelperTests, waypointGenerationTest129)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 1.570796 };
@@ -2200,7 +2202,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint129)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint130)
+TEST(WaypointControllerHelperTests, waypointGenerationTest130)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 2.356194 };
@@ -2217,7 +2219,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint130)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint131)
+TEST(WaypointControllerHelperTests, waypointGenerationTest131)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 3.141593 };
@@ -2234,7 +2236,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint131)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint132)
+TEST(WaypointControllerHelperTests, waypointGenerationTest132)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -3.141593 };
@@ -2251,7 +2253,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint132)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint133)
+TEST(WaypointControllerHelperTests, waypointGenerationTest133)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -2.356194 };
@@ -2268,7 +2270,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint133)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint134)
+TEST(WaypointControllerHelperTests, waypointGenerationTest134)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -1.570796 };
@@ -2285,7 +2287,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint134)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint135)
+TEST(WaypointControllerHelperTests, waypointGenerationTest135)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -0.785398 };
@@ -2302,7 +2304,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint135)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint136)
+TEST(WaypointControllerHelperTests, waypointGenerationTest136)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.000000 };
@@ -2319,7 +2321,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint136)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint137)
+TEST(WaypointControllerHelperTests, waypointGenerationTest137)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.785398 };
@@ -2336,7 +2338,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint137)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint138)
+TEST(WaypointControllerHelperTests, waypointGenerationTest138)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 1.570796 };
@@ -2353,7 +2355,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint138)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint139)
+TEST(WaypointControllerHelperTests, waypointGenerationTest139)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 2.356194 };
@@ -2370,7 +2372,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint139)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint140)
+TEST(WaypointControllerHelperTests, waypointGenerationTest140)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 3.141593 };
@@ -2387,7 +2389,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint140)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint141)
+TEST(WaypointControllerHelperTests, waypointGenerationTest141)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -3.141593 };
@@ -2404,7 +2406,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint141)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint142)
+TEST(WaypointControllerHelperTests, waypointGenerationTest142)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -2.356194 };
@@ -2421,7 +2423,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint142)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint143)
+TEST(WaypointControllerHelperTests, waypointGenerationTest143)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -1.570796 };
@@ -2438,7 +2440,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint143)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint144)
+TEST(WaypointControllerHelperTests, waypointGenerationTest144)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -0.785398 };
@@ -2455,7 +2457,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint144)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint145)
+TEST(WaypointControllerHelperTests, waypointGenerationTest145)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.000000 };
@@ -2472,7 +2474,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint145)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint146)
+TEST(WaypointControllerHelperTests, waypointGenerationTest146)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.785398 };
@@ -2489,7 +2491,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint146)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint147)
+TEST(WaypointControllerHelperTests, waypointGenerationTest147)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 1.570796 };
@@ -2506,7 +2508,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint147)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint148)
+TEST(WaypointControllerHelperTests, waypointGenerationTest148)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 2.356194 };
@@ -2523,7 +2525,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint148)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint149)
+TEST(WaypointControllerHelperTests, waypointGenerationTest149)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 3.141593 };
@@ -2540,7 +2542,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint149)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint150)
+TEST(WaypointControllerHelperTests, waypointGenerationTest150)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -3.141593 };
@@ -2557,7 +2559,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint150)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint151)
+TEST(WaypointControllerHelperTests, waypointGenerationTest151)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -2.356194 };
@@ -2574,7 +2576,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint151)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint152)
+TEST(WaypointControllerHelperTests, waypointGenerationTest152)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -1.570796 };
@@ -2591,7 +2593,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint152)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint153)
+TEST(WaypointControllerHelperTests, waypointGenerationTest153)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -0.785398 };
@@ -2608,7 +2610,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint153)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint154)
+TEST(WaypointControllerHelperTests, waypointGenerationTest154)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.000000 };
@@ -2625,7 +2627,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint154)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint155)
+TEST(WaypointControllerHelperTests, waypointGenerationTest155)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.785398 };
@@ -2642,7 +2644,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint155)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint156)
+TEST(WaypointControllerHelperTests, waypointGenerationTest156)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 1.570796 };
@@ -2659,7 +2661,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint156)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint157)
+TEST(WaypointControllerHelperTests, waypointGenerationTest157)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 2.356194 };
@@ -2676,7 +2678,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint157)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint158)
+TEST(WaypointControllerHelperTests, waypointGenerationTest158)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 3.141593 };
@@ -2693,7 +2695,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint158)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint159)
+TEST(WaypointControllerHelperTests, waypointGenerationTest159)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -3.141593 };
@@ -2710,7 +2712,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint159)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint160)
+TEST(WaypointControllerHelperTests, waypointGenerationTest160)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -2.356194 };
@@ -2727,7 +2729,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint160)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint161)
+TEST(WaypointControllerHelperTests, waypointGenerationTest161)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -1.570796 };
@@ -2744,7 +2746,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint161)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint162)
+TEST(WaypointControllerHelperTests, waypointGenerationTest162)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -0.785398 };
@@ -2761,7 +2763,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint162)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint163)
+TEST(WaypointControllerHelperTests, waypointGenerationTest163)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.000000 };
@@ -2778,7 +2780,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint163)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint164)
+TEST(WaypointControllerHelperTests, waypointGenerationTest164)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.785398 };
@@ -2795,7 +2797,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint164)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint165)
+TEST(WaypointControllerHelperTests, waypointGenerationTest165)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 1.570796 };
@@ -2812,7 +2814,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint165)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint166)
+TEST(WaypointControllerHelperTests, waypointGenerationTest166)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 2.356194 };
@@ -2829,7 +2831,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint166)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint167)
+TEST(WaypointControllerHelperTests, waypointGenerationTest167)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 3.141593 };
@@ -2846,7 +2848,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint167)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint168)
+TEST(WaypointControllerHelperTests, waypointGenerationTest168)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -3.141593 };
@@ -2863,7 +2865,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint168)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint169)
+TEST(WaypointControllerHelperTests, waypointGenerationTest169)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -2.356194 };
@@ -2880,7 +2882,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint169)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint170)
+TEST(WaypointControllerHelperTests, waypointGenerationTest170)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -1.570796 };
@@ -2897,7 +2899,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint170)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint171)
+TEST(WaypointControllerHelperTests, waypointGenerationTest171)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -0.785398 };
@@ -2914,7 +2916,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint171)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint172)
+TEST(WaypointControllerHelperTests, waypointGenerationTest172)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.000000 };
@@ -2931,7 +2933,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint172)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint173)
+TEST(WaypointControllerHelperTests, waypointGenerationTest173)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.785398 };
@@ -2948,7 +2950,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint173)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint174)
+TEST(WaypointControllerHelperTests, waypointGenerationTest174)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 1.570796 };
@@ -2965,7 +2967,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint174)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint175)
+TEST(WaypointControllerHelperTests, waypointGenerationTest175)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 2.356194 };
@@ -2982,7 +2984,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint175)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint176)
+TEST(WaypointControllerHelperTests, waypointGenerationTest176)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 3.141593 };
@@ -2999,7 +3001,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint176)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint177)
+TEST(WaypointControllerHelperTests, waypointGenerationTest177)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -3.141593 };
@@ -3016,7 +3018,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint177)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint178)
+TEST(WaypointControllerHelperTests, waypointGenerationTest178)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -2.356194 };
@@ -3033,7 +3035,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint178)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint179)
+TEST(WaypointControllerHelperTests, waypointGenerationTest179)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -1.570796 };
@@ -3050,7 +3052,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint179)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint180)
+TEST(WaypointControllerHelperTests, waypointGenerationTest180)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -0.785398 };
@@ -3067,7 +3069,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint180)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint181)
+TEST(WaypointControllerHelperTests, waypointGenerationTest181)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.000000 };
@@ -3084,7 +3086,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint181)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint182)
+TEST(WaypointControllerHelperTests, waypointGenerationTest182)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.785398 };
@@ -3101,7 +3103,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint182)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint183)
+TEST(WaypointControllerHelperTests, waypointGenerationTest183)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 1.570796 };
@@ -3118,7 +3120,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint183)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint184)
+TEST(WaypointControllerHelperTests, waypointGenerationTest184)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 2.356194 };
@@ -3135,7 +3137,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint184)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint185)
+TEST(WaypointControllerHelperTests, waypointGenerationTest185)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 3.141593 };
@@ -3152,7 +3154,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint185)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint186)
+TEST(WaypointControllerHelperTests, waypointGenerationTest186)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -3.141593 };
@@ -3169,7 +3171,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint186)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint187)
+TEST(WaypointControllerHelperTests, waypointGenerationTest187)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -2.356194 };
@@ -3186,7 +3188,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint187)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint188)
+TEST(WaypointControllerHelperTests, waypointGenerationTest188)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -1.570796 };
@@ -3203,7 +3205,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint188)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint189)
+TEST(WaypointControllerHelperTests, waypointGenerationTest189)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -0.785398 };
@@ -3220,7 +3222,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint189)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint190)
+TEST(WaypointControllerHelperTests, waypointGenerationTest190)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.000000 };
@@ -3237,7 +3239,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint190)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint191)
+TEST(WaypointControllerHelperTests, waypointGenerationTest191)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.785398 };
@@ -3254,7 +3256,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint191)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint192)
+TEST(WaypointControllerHelperTests, waypointGenerationTest192)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 1.570796 };
@@ -3271,7 +3273,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint192)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint193)
+TEST(WaypointControllerHelperTests, waypointGenerationTest193)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 2.356194 };
@@ -3288,7 +3290,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint193)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint194)
+TEST(WaypointControllerHelperTests, waypointGenerationTest194)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 3.141593 };
@@ -3305,7 +3307,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint194)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint195)
+TEST(WaypointControllerHelperTests, waypointGenerationTest195)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -3.141593 };
@@ -3322,7 +3324,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint195)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint196)
+TEST(WaypointControllerHelperTests, waypointGenerationTest196)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -2.356194 };
@@ -3339,7 +3341,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint196)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint197)
+TEST(WaypointControllerHelperTests, waypointGenerationTest197)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -1.570796 };
@@ -3356,7 +3358,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint197)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint198)
+TEST(WaypointControllerHelperTests, waypointGenerationTest198)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -0.785398 };
@@ -3373,7 +3375,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint198)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint199)
+TEST(WaypointControllerHelperTests, waypointGenerationTest199)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.000000 };
@@ -3390,7 +3392,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint199)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint200)
+TEST(WaypointControllerHelperTests, waypointGenerationTest200)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.785398 };
@@ -3407,7 +3409,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint200)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint201)
+TEST(WaypointControllerHelperTests, waypointGenerationTest201)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 1.570796 };
@@ -3424,7 +3426,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint201)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint202)
+TEST(WaypointControllerHelperTests, waypointGenerationTest202)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 2.356194 };
@@ -3441,7 +3443,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint202)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint203)
+TEST(WaypointControllerHelperTests, waypointGenerationTest203)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 3.141593 };
@@ -3458,7 +3460,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint203)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint204)
+TEST(WaypointControllerHelperTests, waypointGenerationTest204)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -3.141593 };
@@ -3475,7 +3477,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint204)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint205)
+TEST(WaypointControllerHelperTests, waypointGenerationTest205)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -2.356194 };
@@ -3492,7 +3494,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint205)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint206)
+TEST(WaypointControllerHelperTests, waypointGenerationTest206)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -1.570796 };
@@ -3509,7 +3511,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint206)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint207)
+TEST(WaypointControllerHelperTests, waypointGenerationTest207)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -0.785398 };
@@ -3526,7 +3528,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint207)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint208)
+TEST(WaypointControllerHelperTests, waypointGenerationTest208)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.000000 };
@@ -3543,7 +3545,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint208)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint209)
+TEST(WaypointControllerHelperTests, waypointGenerationTest209)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.785398 };
@@ -3560,7 +3562,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint209)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint210)
+TEST(WaypointControllerHelperTests, waypointGenerationTest210)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 1.570796 };
@@ -3577,7 +3579,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint210)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint211)
+TEST(WaypointControllerHelperTests, waypointGenerationTest211)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 2.356194 };
@@ -3594,7 +3596,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint211)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint212)
+TEST(WaypointControllerHelperTests, waypointGenerationTest212)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 3.141593 };
@@ -3611,7 +3613,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint212)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint213)
+TEST(WaypointControllerHelperTests, waypointGenerationTest213)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -3.141593 };
@@ -3628,7 +3630,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint213)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint214)
+TEST(WaypointControllerHelperTests, waypointGenerationTest214)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -2.356194 };
@@ -3645,7 +3647,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint214)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint215)
+TEST(WaypointControllerHelperTests, waypointGenerationTest215)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -1.570796 };
@@ -3662,7 +3664,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint215)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint216)
+TEST(WaypointControllerHelperTests, waypointGenerationTest216)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -0.785398 };
@@ -3679,7 +3681,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint216)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint217)
+TEST(WaypointControllerHelperTests, waypointGenerationTest217)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.000000 };
@@ -3696,7 +3698,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint217)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint218)
+TEST(WaypointControllerHelperTests, waypointGenerationTest218)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.785398 };
@@ -3713,7 +3715,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint218)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint219)
+TEST(WaypointControllerHelperTests, waypointGenerationTest219)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 1.570796 };
@@ -3730,7 +3732,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint219)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint220)
+TEST(WaypointControllerHelperTests, waypointGenerationTest220)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 2.356194 };
@@ -3747,7 +3749,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint220)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint221)
+TEST(WaypointControllerHelperTests, waypointGenerationTest221)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 3.141593 };
@@ -3764,7 +3766,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint221)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint222)
+TEST(WaypointControllerHelperTests, waypointGenerationTest222)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -3.141593 };
@@ -3781,7 +3783,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint222)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint223)
+TEST(WaypointControllerHelperTests, waypointGenerationTest223)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -2.356194 };
@@ -3798,7 +3800,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint223)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint224)
+TEST(WaypointControllerHelperTests, waypointGenerationTest224)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -1.570796 };
@@ -3815,7 +3817,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint224)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint225)
+TEST(WaypointControllerHelperTests, waypointGenerationTest225)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -0.785398 };
@@ -3832,7 +3834,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint225)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint226)
+TEST(WaypointControllerHelperTests, waypointGenerationTest226)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.000000 };
@@ -3849,7 +3851,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint226)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint227)
+TEST(WaypointControllerHelperTests, waypointGenerationTest227)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.785398 };
@@ -3866,7 +3868,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint227)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint228)
+TEST(WaypointControllerHelperTests, waypointGenerationTest228)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 1.570796 };
@@ -3883,7 +3885,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint228)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint229)
+TEST(WaypointControllerHelperTests, waypointGenerationTest229)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 2.356194 };
@@ -3900,7 +3902,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint229)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint230)
+TEST(WaypointControllerHelperTests, waypointGenerationTest230)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 3.141593 };
@@ -3917,7 +3919,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint230)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint231)
+TEST(WaypointControllerHelperTests, waypointGenerationTest231)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -3.141593 };
@@ -3934,7 +3936,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint231)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint232)
+TEST(WaypointControllerHelperTests, waypointGenerationTest232)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -2.356194 };
@@ -3951,7 +3953,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint232)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint233)
+TEST(WaypointControllerHelperTests, waypointGenerationTest233)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -1.570796 };
@@ -3968,7 +3970,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint233)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint234)
+TEST(WaypointControllerHelperTests, waypointGenerationTest234)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -0.785398 };
@@ -3985,7 +3987,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint234)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint235)
+TEST(WaypointControllerHelperTests, waypointGenerationTest235)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.000000 };
@@ -4002,7 +4004,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint235)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint236)
+TEST(WaypointControllerHelperTests, waypointGenerationTest236)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.785398 };
@@ -4019,7 +4021,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint236)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint237)
+TEST(WaypointControllerHelperTests, waypointGenerationTest237)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 1.570796 };
@@ -4036,7 +4038,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint237)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint238)
+TEST(WaypointControllerHelperTests, waypointGenerationTest238)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 2.356194 };
@@ -4053,7 +4055,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint238)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint239)
+TEST(WaypointControllerHelperTests, waypointGenerationTest239)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 3.141593 };
@@ -4070,7 +4072,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint239)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint240)
+TEST(WaypointControllerHelperTests, waypointGenerationTest240)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -3.141593 };
@@ -4087,7 +4089,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint240)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint241)
+TEST(WaypointControllerHelperTests, waypointGenerationTest241)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -2.356194 };
@@ -4104,7 +4106,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint241)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint242)
+TEST(WaypointControllerHelperTests, waypointGenerationTest242)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -1.570796 };
@@ -4121,7 +4123,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint242)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint243)
+TEST(WaypointControllerHelperTests, waypointGenerationTest243)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -0.785398 };
@@ -4138,7 +4140,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint243)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint244)
+TEST(WaypointControllerHelperTests, waypointGenerationTest244)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.000000 };
@@ -4155,7 +4157,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint244)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint245)
+TEST(WaypointControllerHelperTests, waypointGenerationTest245)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.785398 };
@@ -4172,7 +4174,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint245)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint246)
+TEST(WaypointControllerHelperTests, waypointGenerationTest246)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 1.570796 };
@@ -4189,7 +4191,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint246)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint247)
+TEST(WaypointControllerHelperTests, waypointGenerationTest247)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 2.356194 };
@@ -4206,7 +4208,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint247)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint248)
+TEST(WaypointControllerHelperTests, waypointGenerationTest248)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 3.141593 };
@@ -4223,7 +4225,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint248)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint249)
+TEST(WaypointControllerHelperTests, waypointGenerationTest249)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -3.141593 };
@@ -4240,7 +4242,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint249)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint250)
+TEST(WaypointControllerHelperTests, waypointGenerationTest250)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -2.356194 };
@@ -4257,7 +4259,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint250)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint251)
+TEST(WaypointControllerHelperTests, waypointGenerationTest251)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -1.570796 };
@@ -4274,7 +4276,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint251)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint252)
+TEST(WaypointControllerHelperTests, waypointGenerationTest252)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -0.785398 };
@@ -4291,7 +4293,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint252)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint253)
+TEST(WaypointControllerHelperTests, waypointGenerationTest253)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.000000 };
@@ -4308,7 +4310,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint253)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint254)
+TEST(WaypointControllerHelperTests, waypointGenerationTest254)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.785398 };
@@ -4325,7 +4327,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint254)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint255)
+TEST(WaypointControllerHelperTests, waypointGenerationTest255)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 1.570796 };
@@ -4342,7 +4344,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint255)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint256)
+TEST(WaypointControllerHelperTests, waypointGenerationTest256)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 2.356194 };
@@ -4359,7 +4361,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint256)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint257)
+TEST(WaypointControllerHelperTests, waypointGenerationTest257)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 3.141593 };
@@ -4376,7 +4378,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint257)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint258)
+TEST(WaypointControllerHelperTests, waypointGenerationTest258)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -3.141593 };
@@ -4393,7 +4395,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint258)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint259)
+TEST(WaypointControllerHelperTests, waypointGenerationTest259)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -2.356194 };
@@ -4410,7 +4412,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint259)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint260)
+TEST(WaypointControllerHelperTests, waypointGenerationTest260)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -1.570796 };
@@ -4427,7 +4429,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint260)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint261)
+TEST(WaypointControllerHelperTests, waypointGenerationTest261)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -0.785398 };
@@ -4444,7 +4446,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint261)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint262)
+TEST(WaypointControllerHelperTests, waypointGenerationTest262)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.000000 };
@@ -4461,7 +4463,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint262)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint263)
+TEST(WaypointControllerHelperTests, waypointGenerationTest263)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.785398 };
@@ -4478,7 +4480,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint263)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint264)
+TEST(WaypointControllerHelperTests, waypointGenerationTest264)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 1.570796 };
@@ -4495,7 +4497,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint264)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint265)
+TEST(WaypointControllerHelperTests, waypointGenerationTest265)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 2.356194 };
@@ -4512,7 +4514,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint265)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint266)
+TEST(WaypointControllerHelperTests, waypointGenerationTest266)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 3.141593 };
@@ -4529,7 +4531,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint266)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint267)
+TEST(WaypointControllerHelperTests, waypointGenerationTest267)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -3.141593 };
@@ -4546,7 +4548,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint267)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint268)
+TEST(WaypointControllerHelperTests, waypointGenerationTest268)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -2.356194 };
@@ -4563,7 +4565,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint268)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint269)
+TEST(WaypointControllerHelperTests, waypointGenerationTest269)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -1.570796 };
@@ -4580,7 +4582,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint269)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint270)
+TEST(WaypointControllerHelperTests, waypointGenerationTest270)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -0.785398 };
@@ -4597,7 +4599,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint270)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint271)
+TEST(WaypointControllerHelperTests, waypointGenerationTest271)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.000000 };
@@ -4614,7 +4616,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint271)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint272)
+TEST(WaypointControllerHelperTests, waypointGenerationTest272)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.785398 };
@@ -4631,7 +4633,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint272)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint273)
+TEST(WaypointControllerHelperTests, waypointGenerationTest273)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 1.570796 };
@@ -4648,7 +4650,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint273)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint274)
+TEST(WaypointControllerHelperTests, waypointGenerationTest274)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 2.356194 };
@@ -4665,7 +4667,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint274)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint275)
+TEST(WaypointControllerHelperTests, waypointGenerationTest275)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 3.141593 };
@@ -4682,7 +4684,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint275)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint276)
+TEST(WaypointControllerHelperTests, waypointGenerationTest276)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -3.141593 };
@@ -4699,7 +4701,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint276)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint277)
+TEST(WaypointControllerHelperTests, waypointGenerationTest277)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -2.356194 };
@@ -4716,7 +4718,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint277)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint278)
+TEST(WaypointControllerHelperTests, waypointGenerationTest278)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -1.570796 };
@@ -4733,7 +4735,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint278)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint279)
+TEST(WaypointControllerHelperTests, waypointGenerationTest279)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -0.785398 };
@@ -4750,7 +4752,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint279)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint280)
+TEST(WaypointControllerHelperTests, waypointGenerationTest280)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.000000 };
@@ -4767,7 +4769,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint280)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint281)
+TEST(WaypointControllerHelperTests, waypointGenerationTest281)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.785398 };
@@ -4784,7 +4786,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint281)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint282)
+TEST(WaypointControllerHelperTests, waypointGenerationTest282)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 1.570796 };
@@ -4801,7 +4803,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint282)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint283)
+TEST(WaypointControllerHelperTests, waypointGenerationTest283)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 2.356194 };
@@ -4818,7 +4820,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint283)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint284)
+TEST(WaypointControllerHelperTests, waypointGenerationTest284)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 3.141593 };
@@ -4835,7 +4837,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint284)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint285)
+TEST(WaypointControllerHelperTests, waypointGenerationTest285)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -3.141593 };
@@ -4852,7 +4854,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint285)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint286)
+TEST(WaypointControllerHelperTests, waypointGenerationTest286)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -2.356194 };
@@ -4869,7 +4871,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint286)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint287)
+TEST(WaypointControllerHelperTests, waypointGenerationTest287)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -1.570796 };
@@ -4886,7 +4888,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint287)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint288)
+TEST(WaypointControllerHelperTests, waypointGenerationTest288)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -0.785398 };
@@ -4903,7 +4905,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint288)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint289)
+TEST(WaypointControllerHelperTests, waypointGenerationTest289)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.000000 };
@@ -4920,7 +4922,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint289)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint290)
+TEST(WaypointControllerHelperTests, waypointGenerationTest290)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.785398 };
@@ -4937,7 +4939,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint290)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint291)
+TEST(WaypointControllerHelperTests, waypointGenerationTest291)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 1.570796 };
@@ -4954,7 +4956,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint291)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint292)
+TEST(WaypointControllerHelperTests, waypointGenerationTest292)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 2.356194 };
@@ -4971,7 +4973,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint292)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint293)
+TEST(WaypointControllerHelperTests, waypointGenerationTest293)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 3.141593 };
@@ -4988,7 +4990,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint293)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint294)
+TEST(WaypointControllerHelperTests, waypointGenerationTest294)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -3.141593 };
@@ -5005,7 +5007,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint294)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint295)
+TEST(WaypointControllerHelperTests, waypointGenerationTest295)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -2.356194 };
@@ -5022,7 +5024,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint295)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint296)
+TEST(WaypointControllerHelperTests, waypointGenerationTest296)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -1.570796 };
@@ -5039,7 +5041,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint296)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint297)
+TEST(WaypointControllerHelperTests, waypointGenerationTest297)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -0.785398 };
@@ -5056,7 +5058,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint297)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint298)
+TEST(WaypointControllerHelperTests, waypointGenerationTest298)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.000000 };
@@ -5073,7 +5075,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint298)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint299)
+TEST(WaypointControllerHelperTests, waypointGenerationTest299)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.785398 };
@@ -5090,7 +5092,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint299)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint300)
+TEST(WaypointControllerHelperTests, waypointGenerationTest300)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 1.570796 };
@@ -5107,7 +5109,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint300)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint301)
+TEST(WaypointControllerHelperTests, waypointGenerationTest301)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 2.356194 };
@@ -5124,7 +5126,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint301)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint302)
+TEST(WaypointControllerHelperTests, waypointGenerationTest302)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 3.141593 };
@@ -5141,7 +5143,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint302)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint303)
+TEST(WaypointControllerHelperTests, waypointGenerationTest303)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -3.141593 };
@@ -5158,7 +5160,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint303)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint304)
+TEST(WaypointControllerHelperTests, waypointGenerationTest304)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -2.356194 };
@@ -5175,7 +5177,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint304)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint305)
+TEST(WaypointControllerHelperTests, waypointGenerationTest305)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -1.570796 };
@@ -5192,7 +5194,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint305)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint306)
+TEST(WaypointControllerHelperTests, waypointGenerationTest306)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -0.785398 };
@@ -5209,7 +5211,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint306)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint307)
+TEST(WaypointControllerHelperTests, waypointGenerationTest307)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.000000 };
@@ -5226,7 +5228,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint307)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint308)
+TEST(WaypointControllerHelperTests, waypointGenerationTest308)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.785398 };
@@ -5243,7 +5245,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint308)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint309)
+TEST(WaypointControllerHelperTests, waypointGenerationTest309)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 1.570796 };
@@ -5260,7 +5262,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint309)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint310)
+TEST(WaypointControllerHelperTests, waypointGenerationTest310)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 2.356194 };
@@ -5277,7 +5279,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint310)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint311)
+TEST(WaypointControllerHelperTests, waypointGenerationTest311)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 3.141593 };
@@ -5294,7 +5296,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint311)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint312)
+TEST(WaypointControllerHelperTests, waypointGenerationTest312)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -3.141593 };
@@ -5311,7 +5313,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint312)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint313)
+TEST(WaypointControllerHelperTests, waypointGenerationTest313)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -2.356194 };
@@ -5328,7 +5330,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint313)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint314)
+TEST(WaypointControllerHelperTests, waypointGenerationTest314)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -1.570796 };
@@ -5345,7 +5347,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint314)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint315)
+TEST(WaypointControllerHelperTests, waypointGenerationTest315)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -0.785398 };
@@ -5362,7 +5364,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint315)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint316)
+TEST(WaypointControllerHelperTests, waypointGenerationTest316)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.000000 };
@@ -5379,7 +5381,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint316)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint317)
+TEST(WaypointControllerHelperTests, waypointGenerationTest317)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.785398 };
@@ -5396,7 +5398,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint317)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint318)
+TEST(WaypointControllerHelperTests, waypointGenerationTest318)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 1.570796 };
@@ -5413,7 +5415,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint318)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint319)
+TEST(WaypointControllerHelperTests, waypointGenerationTest319)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 2.356194 };
@@ -5430,7 +5432,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint319)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint320)
+TEST(WaypointControllerHelperTests, waypointGenerationTest320)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 3.141593 };
@@ -5447,7 +5449,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint320)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint321)
+TEST(WaypointControllerHelperTests, waypointGenerationTest321)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -3.141593 };
@@ -5464,7 +5466,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint321)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint322)
+TEST(WaypointControllerHelperTests, waypointGenerationTest322)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -2.356194 };
@@ -5481,7 +5483,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint322)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint323)
+TEST(WaypointControllerHelperTests, waypointGenerationTest323)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -1.570796 };
@@ -5498,7 +5500,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint323)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint324)
+TEST(WaypointControllerHelperTests, waypointGenerationTest324)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -0.785398 };
@@ -5515,7 +5517,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint324)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint325)
+TEST(WaypointControllerHelperTests, waypointGenerationTest325)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.000000 };
@@ -5532,7 +5534,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint325)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint326)
+TEST(WaypointControllerHelperTests, waypointGenerationTest326)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.785398 };
@@ -5549,7 +5551,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint326)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint327)
+TEST(WaypointControllerHelperTests, waypointGenerationTest327)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 1.570796 };
@@ -5566,7 +5568,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint327)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint328)
+TEST(WaypointControllerHelperTests, waypointGenerationTest328)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 2.356194 };
@@ -5583,7 +5585,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint328)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint329)
+TEST(WaypointControllerHelperTests, waypointGenerationTest329)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 3.141593 };
@@ -5600,7 +5602,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint329)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint330)
+TEST(WaypointControllerHelperTests, waypointGenerationTest330)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -3.141593 };
@@ -5617,7 +5619,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint330)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint331)
+TEST(WaypointControllerHelperTests, waypointGenerationTest331)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -2.356194 };
@@ -5634,7 +5636,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint331)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint332)
+TEST(WaypointControllerHelperTests, waypointGenerationTest332)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -1.570796 };
@@ -5651,7 +5653,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint332)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint333)
+TEST(WaypointControllerHelperTests, waypointGenerationTest333)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -0.785398 };
@@ -5668,7 +5670,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint333)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint334)
+TEST(WaypointControllerHelperTests, waypointGenerationTest334)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.000000 };
@@ -5685,7 +5687,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint334)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint335)
+TEST(WaypointControllerHelperTests, waypointGenerationTest335)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.785398 };
@@ -5702,7 +5704,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint335)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint336)
+TEST(WaypointControllerHelperTests, waypointGenerationTest336)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 1.570796 };
@@ -5719,7 +5721,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint336)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint337)
+TEST(WaypointControllerHelperTests, waypointGenerationTest337)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 2.356194 };
@@ -5736,7 +5738,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint337)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint338)
+TEST(WaypointControllerHelperTests, waypointGenerationTest338)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 3.141593 };
@@ -5753,7 +5755,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint338)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint339)
+TEST(WaypointControllerHelperTests, waypointGenerationTest339)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -3.141593 };
@@ -5770,7 +5772,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint339)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint340)
+TEST(WaypointControllerHelperTests, waypointGenerationTest340)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -2.356194 };
@@ -5787,7 +5789,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint340)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint341)
+TEST(WaypointControllerHelperTests, waypointGenerationTest341)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -1.570796 };
@@ -5804,7 +5806,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint341)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint342)
+TEST(WaypointControllerHelperTests, waypointGenerationTest342)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -0.785398 };
@@ -5821,7 +5823,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint342)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint343)
+TEST(WaypointControllerHelperTests, waypointGenerationTest343)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.000000 };
@@ -5838,7 +5840,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint343)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint344)
+TEST(WaypointControllerHelperTests, waypointGenerationTest344)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.785398 };
@@ -5855,7 +5857,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint344)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint345)
+TEST(WaypointControllerHelperTests, waypointGenerationTest345)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 1.570796 };
@@ -5872,7 +5874,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint345)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint346)
+TEST(WaypointControllerHelperTests, waypointGenerationTest346)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 2.356194 };
@@ -5889,7 +5891,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint346)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint347)
+TEST(WaypointControllerHelperTests, waypointGenerationTest347)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 3.141593 };
@@ -5906,7 +5908,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint347)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint348)
+TEST(WaypointControllerHelperTests, waypointGenerationTest348)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -3.141593 };
@@ -5923,7 +5925,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint348)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint349)
+TEST(WaypointControllerHelperTests, waypointGenerationTest349)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -2.356194 };
@@ -5940,7 +5942,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint349)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint350)
+TEST(WaypointControllerHelperTests, waypointGenerationTest350)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -1.570796 };
@@ -5957,7 +5959,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint350)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint351)
+TEST(WaypointControllerHelperTests, waypointGenerationTest351)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -0.785398 };
@@ -5974,7 +5976,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint351)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint352)
+TEST(WaypointControllerHelperTests, waypointGenerationTest352)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.000000 };
@@ -5991,7 +5993,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint352)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint353)
+TEST(WaypointControllerHelperTests, waypointGenerationTest353)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.785398 };
@@ -6008,7 +6010,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint353)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint354)
+TEST(WaypointControllerHelperTests, waypointGenerationTest354)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 1.570796 };
@@ -6025,7 +6027,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint354)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint355)
+TEST(WaypointControllerHelperTests, waypointGenerationTest355)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 2.356194 };
@@ -6042,7 +6044,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint355)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint356)
+TEST(WaypointControllerHelperTests, waypointGenerationTest356)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 3.141593 };
@@ -6059,7 +6061,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint356)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint357)
+TEST(WaypointControllerHelperTests, waypointGenerationTest357)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -3.141593 };
@@ -6076,7 +6078,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint357)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint358)
+TEST(WaypointControllerHelperTests, waypointGenerationTest358)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -2.356194 };
@@ -6093,7 +6095,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint358)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint359)
+TEST(WaypointControllerHelperTests, waypointGenerationTest359)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -1.570796 };
@@ -6110,7 +6112,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint359)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint360)
+TEST(WaypointControllerHelperTests, waypointGenerationTest360)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = 3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -0.785398 };
@@ -6127,7 +6129,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint360)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint361)
+TEST(WaypointControllerHelperTests, waypointGenerationTest361)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.000000 };
@@ -6144,7 +6146,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint361)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint362)
+TEST(WaypointControllerHelperTests, waypointGenerationTest362)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.785398 };
@@ -6161,7 +6163,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint362)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint363)
+TEST(WaypointControllerHelperTests, waypointGenerationTest363)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 1.570796 };
@@ -6178,7 +6180,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint363)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint364)
+TEST(WaypointControllerHelperTests, waypointGenerationTest364)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 2.356194 };
@@ -6195,7 +6197,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint364)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint365)
+TEST(WaypointControllerHelperTests, waypointGenerationTest365)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 3.141593 };
@@ -6212,7 +6214,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint365)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint366)
+TEST(WaypointControllerHelperTests, waypointGenerationTest366)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -3.141593 };
@@ -6229,7 +6231,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint366)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint367)
+TEST(WaypointControllerHelperTests, waypointGenerationTest367)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -2.356194 };
@@ -6246,7 +6248,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint367)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint368)
+TEST(WaypointControllerHelperTests, waypointGenerationTest368)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -1.570796 };
@@ -6263,7 +6265,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint368)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint369)
+TEST(WaypointControllerHelperTests, waypointGenerationTest369)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -0.785398 };
@@ -6280,7 +6282,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint369)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint370)
+TEST(WaypointControllerHelperTests, waypointGenerationTest370)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.000000 };
@@ -6297,7 +6299,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint370)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint371)
+TEST(WaypointControllerHelperTests, waypointGenerationTest371)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.785398 };
@@ -6314,7 +6316,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint371)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint372)
+TEST(WaypointControllerHelperTests, waypointGenerationTest372)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 1.570796 };
@@ -6331,7 +6333,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint372)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint373)
+TEST(WaypointControllerHelperTests, waypointGenerationTest373)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 2.356194 };
@@ -6348,7 +6350,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint373)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint374)
+TEST(WaypointControllerHelperTests, waypointGenerationTest374)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 3.141593 };
@@ -6365,7 +6367,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint374)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint375)
+TEST(WaypointControllerHelperTests, waypointGenerationTest375)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -3.141593 };
@@ -6382,7 +6384,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint375)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint376)
+TEST(WaypointControllerHelperTests, waypointGenerationTest376)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -2.356194 };
@@ -6399,7 +6401,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint376)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint377)
+TEST(WaypointControllerHelperTests, waypointGenerationTest377)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -1.570796 };
@@ -6416,7 +6418,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint377)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint378)
+TEST(WaypointControllerHelperTests, waypointGenerationTest378)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -0.785398 };
@@ -6433,7 +6435,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint378)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint379)
+TEST(WaypointControllerHelperTests, waypointGenerationTest379)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.000000 };
@@ -6450,7 +6452,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint379)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint380)
+TEST(WaypointControllerHelperTests, waypointGenerationTest380)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.785398 };
@@ -6467,7 +6469,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint380)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint381)
+TEST(WaypointControllerHelperTests, waypointGenerationTest381)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 1.570796 };
@@ -6484,7 +6486,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint381)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint382)
+TEST(WaypointControllerHelperTests, waypointGenerationTest382)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 2.356194 };
@@ -6501,7 +6503,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint382)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint383)
+TEST(WaypointControllerHelperTests, waypointGenerationTest383)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 3.141593 };
@@ -6518,7 +6520,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint383)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint384)
+TEST(WaypointControllerHelperTests, waypointGenerationTest384)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -3.141593 };
@@ -6535,7 +6537,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint384)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint385)
+TEST(WaypointControllerHelperTests, waypointGenerationTest385)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -2.356194 };
@@ -6552,7 +6554,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint385)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint386)
+TEST(WaypointControllerHelperTests, waypointGenerationTest386)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -1.570796 };
@@ -6569,7 +6571,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint386)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint387)
+TEST(WaypointControllerHelperTests, waypointGenerationTest387)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -0.785398 };
@@ -6586,7 +6588,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint387)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint388)
+TEST(WaypointControllerHelperTests, waypointGenerationTest388)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.000000 };
@@ -6603,7 +6605,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint388)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint389)
+TEST(WaypointControllerHelperTests, waypointGenerationTest389)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.785398 };
@@ -6620,7 +6622,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint389)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint390)
+TEST(WaypointControllerHelperTests, waypointGenerationTest390)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 1.570796 };
@@ -6637,7 +6639,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint390)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint391)
+TEST(WaypointControllerHelperTests, waypointGenerationTest391)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 2.356194 };
@@ -6654,7 +6656,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint391)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint392)
+TEST(WaypointControllerHelperTests, waypointGenerationTest392)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 3.141593 };
@@ -6671,7 +6673,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint392)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint393)
+TEST(WaypointControllerHelperTests, waypointGenerationTest393)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -3.141593 };
@@ -6688,7 +6690,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint393)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint394)
+TEST(WaypointControllerHelperTests, waypointGenerationTest394)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -2.356194 };
@@ -6705,7 +6707,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint394)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint395)
+TEST(WaypointControllerHelperTests, waypointGenerationTest395)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -1.570796 };
@@ -6722,7 +6724,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint395)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint396)
+TEST(WaypointControllerHelperTests, waypointGenerationTest396)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -0.785398 };
@@ -6739,7 +6741,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint396)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint397)
+TEST(WaypointControllerHelperTests, waypointGenerationTest397)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.000000 };
@@ -6756,7 +6758,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint397)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint398)
+TEST(WaypointControllerHelperTests, waypointGenerationTest398)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.785398 };
@@ -6773,7 +6775,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint398)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint399)
+TEST(WaypointControllerHelperTests, waypointGenerationTest399)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 1.570796 };
@@ -6790,7 +6792,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint399)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint400)
+TEST(WaypointControllerHelperTests, waypointGenerationTest400)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 2.356194 };
@@ -6807,7 +6809,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint400)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint401)
+TEST(WaypointControllerHelperTests, waypointGenerationTest401)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 3.141593 };
@@ -6824,7 +6826,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint401)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint402)
+TEST(WaypointControllerHelperTests, waypointGenerationTest402)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -3.141593 };
@@ -6841,7 +6843,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint402)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint403)
+TEST(WaypointControllerHelperTests, waypointGenerationTest403)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -2.356194 };
@@ -6858,7 +6860,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint403)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint404)
+TEST(WaypointControllerHelperTests, waypointGenerationTest404)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -1.570796 };
@@ -6875,7 +6877,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint404)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint405)
+TEST(WaypointControllerHelperTests, waypointGenerationTest405)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -0.785398 };
@@ -6892,7 +6894,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint405)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint406)
+TEST(WaypointControllerHelperTests, waypointGenerationTest406)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.000000 };
@@ -6909,7 +6911,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint406)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint407)
+TEST(WaypointControllerHelperTests, waypointGenerationTest407)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.785398 };
@@ -6926,7 +6928,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint407)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint408)
+TEST(WaypointControllerHelperTests, waypointGenerationTest408)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 1.570796 };
@@ -6943,7 +6945,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint408)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint409)
+TEST(WaypointControllerHelperTests, waypointGenerationTest409)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 2.356194 };
@@ -6960,7 +6962,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint409)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint410)
+TEST(WaypointControllerHelperTests, waypointGenerationTest410)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 3.141593 };
@@ -6977,7 +6979,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint410)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint411)
+TEST(WaypointControllerHelperTests, waypointGenerationTest411)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -3.141593 };
@@ -6994,7 +6996,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint411)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint412)
+TEST(WaypointControllerHelperTests, waypointGenerationTest412)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -2.356194 };
@@ -7011,7 +7013,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint412)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint413)
+TEST(WaypointControllerHelperTests, waypointGenerationTest413)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -1.570796 };
@@ -7028,7 +7030,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint413)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint414)
+TEST(WaypointControllerHelperTests, waypointGenerationTest414)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -0.785398 };
@@ -7045,7 +7047,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint414)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint415)
+TEST(WaypointControllerHelperTests, waypointGenerationTest415)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.000000 };
@@ -7062,7 +7064,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint415)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint416)
+TEST(WaypointControllerHelperTests, waypointGenerationTest416)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.785398 };
@@ -7079,7 +7081,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint416)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint417)
+TEST(WaypointControllerHelperTests, waypointGenerationTest417)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 1.570796 };
@@ -7096,7 +7098,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint417)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint418)
+TEST(WaypointControllerHelperTests, waypointGenerationTest418)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 2.356194 };
@@ -7113,7 +7115,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint418)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint419)
+TEST(WaypointControllerHelperTests, waypointGenerationTest419)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 3.141593 };
@@ -7130,7 +7132,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint419)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint420)
+TEST(WaypointControllerHelperTests, waypointGenerationTest420)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -3.141593 };
@@ -7147,7 +7149,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint420)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint421)
+TEST(WaypointControllerHelperTests, waypointGenerationTest421)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -2.356194 };
@@ -7164,7 +7166,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint421)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint422)
+TEST(WaypointControllerHelperTests, waypointGenerationTest422)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -1.570796 };
@@ -7181,7 +7183,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint422)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint423)
+TEST(WaypointControllerHelperTests, waypointGenerationTest423)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -0.785398 };
@@ -7198,7 +7200,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint423)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint424)
+TEST(WaypointControllerHelperTests, waypointGenerationTest424)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.000000 };
@@ -7215,7 +7217,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint424)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint425)
+TEST(WaypointControllerHelperTests, waypointGenerationTest425)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.785398 };
@@ -7232,7 +7234,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint425)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint426)
+TEST(WaypointControllerHelperTests, waypointGenerationTest426)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 1.570796 };
@@ -7249,7 +7251,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint426)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint427)
+TEST(WaypointControllerHelperTests, waypointGenerationTest427)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 2.356194 };
@@ -7266,7 +7268,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint427)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint428)
+TEST(WaypointControllerHelperTests, waypointGenerationTest428)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 3.141593 };
@@ -7283,7 +7285,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint428)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint429)
+TEST(WaypointControllerHelperTests, waypointGenerationTest429)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -3.141593 };
@@ -7300,7 +7302,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint429)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint430)
+TEST(WaypointControllerHelperTests, waypointGenerationTest430)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -2.356194 };
@@ -7317,7 +7319,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint430)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint431)
+TEST(WaypointControllerHelperTests, waypointGenerationTest431)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -1.570796 };
@@ -7334,7 +7336,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint431)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint432)
+TEST(WaypointControllerHelperTests, waypointGenerationTest432)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -3.141593 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -0.785398 };
@@ -7351,7 +7353,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint432)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint433)
+TEST(WaypointControllerHelperTests, waypointGenerationTest433)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.000000 };
@@ -7368,7 +7370,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint433)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint434)
+TEST(WaypointControllerHelperTests, waypointGenerationTest434)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.785398 };
@@ -7385,7 +7387,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint434)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint435)
+TEST(WaypointControllerHelperTests, waypointGenerationTest435)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 1.570796 };
@@ -7402,7 +7404,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint435)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint436)
+TEST(WaypointControllerHelperTests, waypointGenerationTest436)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 2.356194 };
@@ -7419,7 +7421,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint436)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint437)
+TEST(WaypointControllerHelperTests, waypointGenerationTest437)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 3.141593 };
@@ -7436,7 +7438,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint437)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint438)
+TEST(WaypointControllerHelperTests, waypointGenerationTest438)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -3.141593 };
@@ -7453,7 +7455,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint438)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint439)
+TEST(WaypointControllerHelperTests, waypointGenerationTest439)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -2.356194 };
@@ -7470,7 +7472,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint439)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint440)
+TEST(WaypointControllerHelperTests, waypointGenerationTest440)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -1.570796 };
@@ -7487,7 +7489,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint440)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint441)
+TEST(WaypointControllerHelperTests, waypointGenerationTest441)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -0.785398 };
@@ -7504,7 +7506,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint441)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint442)
+TEST(WaypointControllerHelperTests, waypointGenerationTest442)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.000000 };
@@ -7521,7 +7523,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint442)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint443)
+TEST(WaypointControllerHelperTests, waypointGenerationTest443)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.785398 };
@@ -7538,7 +7540,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint443)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint444)
+TEST(WaypointControllerHelperTests, waypointGenerationTest444)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 1.570796 };
@@ -7555,7 +7557,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint444)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint445)
+TEST(WaypointControllerHelperTests, waypointGenerationTest445)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 2.356194 };
@@ -7572,7 +7574,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint445)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint446)
+TEST(WaypointControllerHelperTests, waypointGenerationTest446)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 3.141593 };
@@ -7589,7 +7591,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint446)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint447)
+TEST(WaypointControllerHelperTests, waypointGenerationTest447)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -3.141593 };
@@ -7606,7 +7608,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint447)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint448)
+TEST(WaypointControllerHelperTests, waypointGenerationTest448)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -2.356194 };
@@ -7623,7 +7625,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint448)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint449)
+TEST(WaypointControllerHelperTests, waypointGenerationTest449)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -1.570796 };
@@ -7640,7 +7642,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint449)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint450)
+TEST(WaypointControllerHelperTests, waypointGenerationTest450)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -0.785398 };
@@ -7657,7 +7659,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint450)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint451)
+TEST(WaypointControllerHelperTests, waypointGenerationTest451)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.000000 };
@@ -7674,7 +7676,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint451)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint452)
+TEST(WaypointControllerHelperTests, waypointGenerationTest452)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.785398 };
@@ -7691,7 +7693,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint452)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint453)
+TEST(WaypointControllerHelperTests, waypointGenerationTest453)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 1.570796 };
@@ -7708,7 +7710,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint453)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint454)
+TEST(WaypointControllerHelperTests, waypointGenerationTest454)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 2.356194 };
@@ -7725,7 +7727,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint454)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint455)
+TEST(WaypointControllerHelperTests, waypointGenerationTest455)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 3.141593 };
@@ -7742,7 +7744,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint455)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint456)
+TEST(WaypointControllerHelperTests, waypointGenerationTest456)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -3.141593 };
@@ -7759,7 +7761,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint456)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint457)
+TEST(WaypointControllerHelperTests, waypointGenerationTest457)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -2.356194 };
@@ -7776,7 +7778,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint457)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint458)
+TEST(WaypointControllerHelperTests, waypointGenerationTest458)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -1.570796 };
@@ -7793,7 +7795,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint458)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint459)
+TEST(WaypointControllerHelperTests, waypointGenerationTest459)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -0.785398 };
@@ -7810,7 +7812,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint459)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint460)
+TEST(WaypointControllerHelperTests, waypointGenerationTest460)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.000000 };
@@ -7827,7 +7829,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint460)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint461)
+TEST(WaypointControllerHelperTests, waypointGenerationTest461)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.785398 };
@@ -7844,7 +7846,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint461)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint462)
+TEST(WaypointControllerHelperTests, waypointGenerationTest462)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 1.570796 };
@@ -7861,7 +7863,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint462)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint463)
+TEST(WaypointControllerHelperTests, waypointGenerationTest463)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 2.356194 };
@@ -7878,7 +7880,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint463)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint464)
+TEST(WaypointControllerHelperTests, waypointGenerationTest464)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 3.141593 };
@@ -7895,7 +7897,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint464)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint465)
+TEST(WaypointControllerHelperTests, waypointGenerationTest465)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -3.141593 };
@@ -7912,7 +7914,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint465)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint466)
+TEST(WaypointControllerHelperTests, waypointGenerationTest466)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -2.356194 };
@@ -7929,7 +7931,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint466)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint467)
+TEST(WaypointControllerHelperTests, waypointGenerationTest467)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -1.570796 };
@@ -7946,7 +7948,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint467)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint468)
+TEST(WaypointControllerHelperTests, waypointGenerationTest468)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -0.785398 };
@@ -7963,7 +7965,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint468)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint469)
+TEST(WaypointControllerHelperTests, waypointGenerationTest469)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.000000 };
@@ -7980,7 +7982,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint469)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint470)
+TEST(WaypointControllerHelperTests, waypointGenerationTest470)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.785398 };
@@ -7997,7 +7999,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint470)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint471)
+TEST(WaypointControllerHelperTests, waypointGenerationTest471)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 1.570796 };
@@ -8014,7 +8016,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint471)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint472)
+TEST(WaypointControllerHelperTests, waypointGenerationTest472)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 2.356194 };
@@ -8031,7 +8033,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint472)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint473)
+TEST(WaypointControllerHelperTests, waypointGenerationTest473)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 3.141593 };
@@ -8048,7 +8050,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint473)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint474)
+TEST(WaypointControllerHelperTests, waypointGenerationTest474)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -3.141593 };
@@ -8065,7 +8067,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint474)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint475)
+TEST(WaypointControllerHelperTests, waypointGenerationTest475)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -2.356194 };
@@ -8082,7 +8084,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint475)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint476)
+TEST(WaypointControllerHelperTests, waypointGenerationTest476)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -1.570796 };
@@ -8099,7 +8101,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint476)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint477)
+TEST(WaypointControllerHelperTests, waypointGenerationTest477)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -0.785398 };
@@ -8116,7 +8118,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint477)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint478)
+TEST(WaypointControllerHelperTests, waypointGenerationTest478)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.000000 };
@@ -8133,7 +8135,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint478)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint479)
+TEST(WaypointControllerHelperTests, waypointGenerationTest479)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.785398 };
@@ -8150,7 +8152,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint479)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint480)
+TEST(WaypointControllerHelperTests, waypointGenerationTest480)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 1.570796 };
@@ -8167,7 +8169,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint480)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint481)
+TEST(WaypointControllerHelperTests, waypointGenerationTest481)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 2.356194 };
@@ -8184,7 +8186,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint481)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint482)
+TEST(WaypointControllerHelperTests, waypointGenerationTest482)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 3.141593 };
@@ -8201,7 +8203,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint482)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint483)
+TEST(WaypointControllerHelperTests, waypointGenerationTest483)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -3.141593 };
@@ -8218,7 +8220,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint483)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint484)
+TEST(WaypointControllerHelperTests, waypointGenerationTest484)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -2.356194 };
@@ -8235,7 +8237,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint484)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint485)
+TEST(WaypointControllerHelperTests, waypointGenerationTest485)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -1.570796 };
@@ -8252,7 +8254,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint485)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint486)
+TEST(WaypointControllerHelperTests, waypointGenerationTest486)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -0.785398 };
@@ -8269,7 +8271,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint486)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint487)
+TEST(WaypointControllerHelperTests, waypointGenerationTest487)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.000000 };
@@ -8286,7 +8288,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint487)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint488)
+TEST(WaypointControllerHelperTests, waypointGenerationTest488)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.785398 };
@@ -8303,7 +8305,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint488)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint489)
+TEST(WaypointControllerHelperTests, waypointGenerationTest489)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 1.570796 };
@@ -8320,7 +8322,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint489)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint490)
+TEST(WaypointControllerHelperTests, waypointGenerationTest490)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 2.356194 };
@@ -8337,7 +8339,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint490)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint491)
+TEST(WaypointControllerHelperTests, waypointGenerationTest491)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 3.141593 };
@@ -8354,7 +8356,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint491)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint492)
+TEST(WaypointControllerHelperTests, waypointGenerationTest492)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -3.141593 };
@@ -8371,7 +8373,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint492)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint493)
+TEST(WaypointControllerHelperTests, waypointGenerationTest493)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -2.356194 };
@@ -8388,7 +8390,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint493)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint494)
+TEST(WaypointControllerHelperTests, waypointGenerationTest494)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -1.570796 };
@@ -8405,7 +8407,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint494)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint495)
+TEST(WaypointControllerHelperTests, waypointGenerationTest495)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -0.785398 };
@@ -8422,7 +8424,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint495)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint496)
+TEST(WaypointControllerHelperTests, waypointGenerationTest496)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.000000 };
@@ -8439,7 +8441,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint496)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint497)
+TEST(WaypointControllerHelperTests, waypointGenerationTest497)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.785398 };
@@ -8456,7 +8458,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint497)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint498)
+TEST(WaypointControllerHelperTests, waypointGenerationTest498)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 1.570796 };
@@ -8473,7 +8475,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint498)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint499)
+TEST(WaypointControllerHelperTests, waypointGenerationTest499)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 2.356194 };
@@ -8490,7 +8492,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint499)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint500)
+TEST(WaypointControllerHelperTests, waypointGenerationTest500)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 3.141593 };
@@ -8507,7 +8509,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint500)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint501)
+TEST(WaypointControllerHelperTests, waypointGenerationTest501)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -3.141593 };
@@ -8524,7 +8526,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint501)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint502)
+TEST(WaypointControllerHelperTests, waypointGenerationTest502)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -2.356194 };
@@ -8541,7 +8543,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint502)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint503)
+TEST(WaypointControllerHelperTests, waypointGenerationTest503)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -1.570796 };
@@ -8558,7 +8560,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint503)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint504)
+TEST(WaypointControllerHelperTests, waypointGenerationTest504)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -2.356194 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -0.785398 };
@@ -8575,7 +8577,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint504)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint505)
+TEST(WaypointControllerHelperTests, waypointGenerationTest505)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.000000 };
@@ -8592,7 +8594,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint505)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint506)
+TEST(WaypointControllerHelperTests, waypointGenerationTest506)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.785398 };
@@ -8609,7 +8611,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint506)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint507)
+TEST(WaypointControllerHelperTests, waypointGenerationTest507)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 1.570796 };
@@ -8626,7 +8628,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint507)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint508)
+TEST(WaypointControllerHelperTests, waypointGenerationTest508)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 2.356194 };
@@ -8643,7 +8645,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint508)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint509)
+TEST(WaypointControllerHelperTests, waypointGenerationTest509)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 3.141593 };
@@ -8660,7 +8662,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint509)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint510)
+TEST(WaypointControllerHelperTests, waypointGenerationTest510)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -3.141593 };
@@ -8677,7 +8679,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint510)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint511)
+TEST(WaypointControllerHelperTests, waypointGenerationTest511)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -2.356194 };
@@ -8694,7 +8696,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint511)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint512)
+TEST(WaypointControllerHelperTests, waypointGenerationTest512)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -1.570796 };
@@ -8711,7 +8713,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint512)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint513)
+TEST(WaypointControllerHelperTests, waypointGenerationTest513)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -0.785398 };
@@ -8728,7 +8730,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint513)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint514)
+TEST(WaypointControllerHelperTests, waypointGenerationTest514)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.000000 };
@@ -8745,7 +8747,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint514)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint515)
+TEST(WaypointControllerHelperTests, waypointGenerationTest515)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.785398 };
@@ -8762,7 +8764,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint515)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint516)
+TEST(WaypointControllerHelperTests, waypointGenerationTest516)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 1.570796 };
@@ -8779,7 +8781,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint516)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint517)
+TEST(WaypointControllerHelperTests, waypointGenerationTest517)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 2.356194 };
@@ -8796,7 +8798,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint517)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint518)
+TEST(WaypointControllerHelperTests, waypointGenerationTest518)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 3.141593 };
@@ -8813,7 +8815,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint518)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint519)
+TEST(WaypointControllerHelperTests, waypointGenerationTest519)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -3.141593 };
@@ -8830,7 +8832,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint519)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint520)
+TEST(WaypointControllerHelperTests, waypointGenerationTest520)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -2.356194 };
@@ -8847,7 +8849,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint520)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint521)
+TEST(WaypointControllerHelperTests, waypointGenerationTest521)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -1.570796 };
@@ -8864,7 +8866,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint521)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint522)
+TEST(WaypointControllerHelperTests, waypointGenerationTest522)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -0.785398 };
@@ -8881,7 +8883,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint522)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint523)
+TEST(WaypointControllerHelperTests, waypointGenerationTest523)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.000000 };
@@ -8898,7 +8900,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint523)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint524)
+TEST(WaypointControllerHelperTests, waypointGenerationTest524)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.785398 };
@@ -8915,7 +8917,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint524)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint525)
+TEST(WaypointControllerHelperTests, waypointGenerationTest525)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 1.570796 };
@@ -8932,7 +8934,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint525)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint526)
+TEST(WaypointControllerHelperTests, waypointGenerationTest526)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 2.356194 };
@@ -8949,7 +8951,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint526)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint527)
+TEST(WaypointControllerHelperTests, waypointGenerationTest527)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 3.141593 };
@@ -8966,7 +8968,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint527)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint528)
+TEST(WaypointControllerHelperTests, waypointGenerationTest528)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -3.141593 };
@@ -8983,7 +8985,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint528)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint529)
+TEST(WaypointControllerHelperTests, waypointGenerationTest529)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -2.356194 };
@@ -9000,7 +9002,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint529)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint530)
+TEST(WaypointControllerHelperTests, waypointGenerationTest530)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -1.570796 };
@@ -9017,7 +9019,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint530)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint531)
+TEST(WaypointControllerHelperTests, waypointGenerationTest531)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -0.785398 };
@@ -9034,7 +9036,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint531)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint532)
+TEST(WaypointControllerHelperTests, waypointGenerationTest532)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.000000 };
@@ -9051,7 +9053,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint532)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint533)
+TEST(WaypointControllerHelperTests, waypointGenerationTest533)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.785398 };
@@ -9068,7 +9070,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint533)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint534)
+TEST(WaypointControllerHelperTests, waypointGenerationTest534)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 1.570796 };
@@ -9085,7 +9087,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint534)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint535)
+TEST(WaypointControllerHelperTests, waypointGenerationTest535)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 2.356194 };
@@ -9102,7 +9104,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint535)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint536)
+TEST(WaypointControllerHelperTests, waypointGenerationTest536)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 3.141593 };
@@ -9119,7 +9121,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint536)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint537)
+TEST(WaypointControllerHelperTests, waypointGenerationTest537)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -3.141593 };
@@ -9136,7 +9138,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint537)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint538)
+TEST(WaypointControllerHelperTests, waypointGenerationTest538)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -2.356194 };
@@ -9153,7 +9155,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint538)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint539)
+TEST(WaypointControllerHelperTests, waypointGenerationTest539)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -1.570796 };
@@ -9170,7 +9172,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint539)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint540)
+TEST(WaypointControllerHelperTests, waypointGenerationTest540)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -0.785398 };
@@ -9187,7 +9189,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint540)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint541)
+TEST(WaypointControllerHelperTests, waypointGenerationTest541)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.000000 };
@@ -9204,7 +9206,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint541)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint542)
+TEST(WaypointControllerHelperTests, waypointGenerationTest542)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.785398 };
@@ -9221,7 +9223,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint542)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint543)
+TEST(WaypointControllerHelperTests, waypointGenerationTest543)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 1.570796 };
@@ -9238,7 +9240,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint543)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint544)
+TEST(WaypointControllerHelperTests, waypointGenerationTest544)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 2.356194 };
@@ -9255,7 +9257,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint544)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint545)
+TEST(WaypointControllerHelperTests, waypointGenerationTest545)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 3.141593 };
@@ -9272,7 +9274,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint545)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint546)
+TEST(WaypointControllerHelperTests, waypointGenerationTest546)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -3.141593 };
@@ -9289,7 +9291,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint546)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint547)
+TEST(WaypointControllerHelperTests, waypointGenerationTest547)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -2.356194 };
@@ -9306,7 +9308,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint547)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint548)
+TEST(WaypointControllerHelperTests, waypointGenerationTest548)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -1.570796 };
@@ -9323,7 +9325,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint548)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint549)
+TEST(WaypointControllerHelperTests, waypointGenerationTest549)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -0.785398 };
@@ -9340,7 +9342,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint549)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint550)
+TEST(WaypointControllerHelperTests, waypointGenerationTest550)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.000000 };
@@ -9357,7 +9359,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint550)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint551)
+TEST(WaypointControllerHelperTests, waypointGenerationTest551)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.785398 };
@@ -9374,7 +9376,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint551)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint552)
+TEST(WaypointControllerHelperTests, waypointGenerationTest552)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 1.570796 };
@@ -9391,7 +9393,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint552)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint553)
+TEST(WaypointControllerHelperTests, waypointGenerationTest553)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 2.356194 };
@@ -9408,7 +9410,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint553)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint554)
+TEST(WaypointControllerHelperTests, waypointGenerationTest554)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 3.141593 };
@@ -9425,7 +9427,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint554)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint555)
+TEST(WaypointControllerHelperTests, waypointGenerationTest555)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -3.141593 };
@@ -9442,7 +9444,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint555)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint556)
+TEST(WaypointControllerHelperTests, waypointGenerationTest556)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -2.356194 };
@@ -9459,7 +9461,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint556)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint557)
+TEST(WaypointControllerHelperTests, waypointGenerationTest557)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -1.570796 };
@@ -9476,7 +9478,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint557)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint558)
+TEST(WaypointControllerHelperTests, waypointGenerationTest558)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -0.785398 };
@@ -9493,7 +9495,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint558)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint559)
+TEST(WaypointControllerHelperTests, waypointGenerationTest559)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.000000 };
@@ -9510,7 +9512,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint559)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint560)
+TEST(WaypointControllerHelperTests, waypointGenerationTest560)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.785398 };
@@ -9527,7 +9529,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint560)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint561)
+TEST(WaypointControllerHelperTests, waypointGenerationTest561)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 1.570796 };
@@ -9544,7 +9546,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint561)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint562)
+TEST(WaypointControllerHelperTests, waypointGenerationTest562)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 2.356194 };
@@ -9561,7 +9563,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint562)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint563)
+TEST(WaypointControllerHelperTests, waypointGenerationTest563)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 3.141593 };
@@ -9578,7 +9580,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint563)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint564)
+TEST(WaypointControllerHelperTests, waypointGenerationTest564)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -3.141593 };
@@ -9595,7 +9597,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint564)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint565)
+TEST(WaypointControllerHelperTests, waypointGenerationTest565)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -2.356194 };
@@ -9612,7 +9614,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint565)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint566)
+TEST(WaypointControllerHelperTests, waypointGenerationTest566)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -1.570796 };
@@ -9629,7 +9631,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint566)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint567)
+TEST(WaypointControllerHelperTests, waypointGenerationTest567)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -0.785398 };
@@ -9646,7 +9648,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint567)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint568)
+TEST(WaypointControllerHelperTests, waypointGenerationTest568)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.000000 };
@@ -9663,7 +9665,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint568)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint569)
+TEST(WaypointControllerHelperTests, waypointGenerationTest569)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.785398 };
@@ -9680,7 +9682,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint569)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint570)
+TEST(WaypointControllerHelperTests, waypointGenerationTest570)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 1.570796 };
@@ -9697,7 +9699,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint570)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint571)
+TEST(WaypointControllerHelperTests, waypointGenerationTest571)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 2.356194 };
@@ -9714,7 +9716,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint571)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint572)
+TEST(WaypointControllerHelperTests, waypointGenerationTest572)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 3.141593 };
@@ -9731,7 +9733,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint572)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint573)
+TEST(WaypointControllerHelperTests, waypointGenerationTest573)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -3.141593 };
@@ -9748,7 +9750,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint573)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint574)
+TEST(WaypointControllerHelperTests, waypointGenerationTest574)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -2.356194 };
@@ -9765,7 +9767,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint574)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint575)
+TEST(WaypointControllerHelperTests, waypointGenerationTest575)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -1.570796 };
@@ -9782,7 +9784,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint575)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint576)
+TEST(WaypointControllerHelperTests, waypointGenerationTest576)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -1.570796 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -0.785398 };
@@ -9799,7 +9801,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint576)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint577)
+TEST(WaypointControllerHelperTests, waypointGenerationTest577)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.000000 };
@@ -9816,7 +9818,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint577)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint578)
+TEST(WaypointControllerHelperTests, waypointGenerationTest578)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 0.785398 };
@@ -9833,7 +9835,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint578)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint579)
+TEST(WaypointControllerHelperTests, waypointGenerationTest579)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 1.570796 };
@@ -9850,7 +9852,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint579)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint580)
+TEST(WaypointControllerHelperTests, waypointGenerationTest580)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 2.356194 };
@@ -9867,7 +9869,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint580)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint581)
+TEST(WaypointControllerHelperTests, waypointGenerationTest581)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = 3.141593 };
@@ -9884,7 +9886,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint581)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint582)
+TEST(WaypointControllerHelperTests, waypointGenerationTest582)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -3.141593 };
@@ -9901,7 +9903,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint582)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint583)
+TEST(WaypointControllerHelperTests, waypointGenerationTest583)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -2.356194 };
@@ -9918,7 +9920,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint583)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint584)
+TEST(WaypointControllerHelperTests, waypointGenerationTest584)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -1.570796 };
@@ -9935,7 +9937,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint584)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint585)
+TEST(WaypointControllerHelperTests, waypointGenerationTest585)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 0.000000, .theta = -0.785398 };
@@ -9952,7 +9954,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint585)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint586)
+TEST(WaypointControllerHelperTests, waypointGenerationTest586)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.000000 };
@@ -9969,7 +9971,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint586)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint587)
+TEST(WaypointControllerHelperTests, waypointGenerationTest587)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 0.785398 };
@@ -9986,7 +9988,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint587)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint588)
+TEST(WaypointControllerHelperTests, waypointGenerationTest588)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 1.570796 };
@@ -10003,7 +10005,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint588)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint589)
+TEST(WaypointControllerHelperTests, waypointGenerationTest589)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 2.356194 };
@@ -10020,7 +10022,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint589)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint590)
+TEST(WaypointControllerHelperTests, waypointGenerationTest590)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = 3.141593 };
@@ -10037,7 +10039,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint590)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint591)
+TEST(WaypointControllerHelperTests, waypointGenerationTest591)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -3.141593 };
@@ -10054,7 +10056,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint591)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint592)
+TEST(WaypointControllerHelperTests, waypointGenerationTest592)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -2.356194 };
@@ -10071,7 +10073,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint592)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint593)
+TEST(WaypointControllerHelperTests, waypointGenerationTest593)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -1.570796 };
@@ -10088,7 +10090,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint593)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint594)
+TEST(WaypointControllerHelperTests, waypointGenerationTest594)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.500000, .y = 0.000000, .theta = -0.785398 };
@@ -10105,7 +10107,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint594)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint595)
+TEST(WaypointControllerHelperTests, waypointGenerationTest595)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.000000 };
@@ -10122,7 +10124,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint595)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint596)
+TEST(WaypointControllerHelperTests, waypointGenerationTest596)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 0.785398 };
@@ -10139,7 +10141,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint596)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint597)
+TEST(WaypointControllerHelperTests, waypointGenerationTest597)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 1.570796 };
@@ -10156,7 +10158,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint597)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint598)
+TEST(WaypointControllerHelperTests, waypointGenerationTest598)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 2.356194 };
@@ -10173,7 +10175,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint598)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint599)
+TEST(WaypointControllerHelperTests, waypointGenerationTest599)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = 3.141593 };
@@ -10190,7 +10192,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint599)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint600)
+TEST(WaypointControllerHelperTests, waypointGenerationTest600)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -3.141593 };
@@ -10207,7 +10209,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint600)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint601)
+TEST(WaypointControllerHelperTests, waypointGenerationTest601)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -2.356194 };
@@ -10224,7 +10226,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint601)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint602)
+TEST(WaypointControllerHelperTests, waypointGenerationTest602)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -1.570796 };
@@ -10241,7 +10243,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint602)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint603)
+TEST(WaypointControllerHelperTests, waypointGenerationTest603)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.000000, .theta = -0.785398 };
@@ -10258,7 +10260,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint603)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint604)
+TEST(WaypointControllerHelperTests, waypointGenerationTest604)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.000000 };
@@ -10275,7 +10277,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint604)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint605)
+TEST(WaypointControllerHelperTests, waypointGenerationTest605)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 0.785398 };
@@ -10292,7 +10294,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint605)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint606)
+TEST(WaypointControllerHelperTests, waypointGenerationTest606)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 1.570796 };
@@ -10309,7 +10311,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint606)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint607)
+TEST(WaypointControllerHelperTests, waypointGenerationTest607)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 2.356194 };
@@ -10326,7 +10328,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint607)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint608)
+TEST(WaypointControllerHelperTests, waypointGenerationTest608)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = 3.141593 };
@@ -10343,7 +10345,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint608)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint609)
+TEST(WaypointControllerHelperTests, waypointGenerationTest609)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -3.141593 };
@@ -10360,7 +10362,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint609)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint610)
+TEST(WaypointControllerHelperTests, waypointGenerationTest610)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -2.356194 };
@@ -10377,7 +10379,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint610)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint611)
+TEST(WaypointControllerHelperTests, waypointGenerationTest611)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -1.570796 };
@@ -10394,7 +10396,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint611)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint612)
+TEST(WaypointControllerHelperTests, waypointGenerationTest612)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 3.000000, .y = 1.500000, .theta = -0.785398 };
@@ -10411,7 +10413,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint612)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint613)
+TEST(WaypointControllerHelperTests, waypointGenerationTest613)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.000000 };
@@ -10428,7 +10430,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint613)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint614)
+TEST(WaypointControllerHelperTests, waypointGenerationTest614)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 0.785398 };
@@ -10445,7 +10447,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint614)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint615)
+TEST(WaypointControllerHelperTests, waypointGenerationTest615)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 1.570796 };
@@ -10462,7 +10464,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint615)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint616)
+TEST(WaypointControllerHelperTests, waypointGenerationTest616)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 2.356194 };
@@ -10479,7 +10481,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint616)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint617)
+TEST(WaypointControllerHelperTests, waypointGenerationTest617)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = 3.141593 };
@@ -10496,7 +10498,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint617)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint618)
+TEST(WaypointControllerHelperTests, waypointGenerationTest618)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -3.141593 };
@@ -10513,7 +10515,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint618)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint619)
+TEST(WaypointControllerHelperTests, waypointGenerationTest619)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -2.356194 };
@@ -10530,7 +10532,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint619)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint620)
+TEST(WaypointControllerHelperTests, waypointGenerationTest620)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -1.570796 };
@@ -10547,7 +10549,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint620)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint621)
+TEST(WaypointControllerHelperTests, waypointGenerationTest621)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 2.000000, .y = 1.500000, .theta = -0.785398 };
@@ -10564,7 +10566,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint621)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint622)
+TEST(WaypointControllerHelperTests, waypointGenerationTest622)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.000000 };
@@ -10581,7 +10583,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint622)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint623)
+TEST(WaypointControllerHelperTests, waypointGenerationTest623)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 0.785398 };
@@ -10598,7 +10600,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint623)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint624)
+TEST(WaypointControllerHelperTests, waypointGenerationTest624)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 1.570796 };
@@ -10615,7 +10617,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint624)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint625)
+TEST(WaypointControllerHelperTests, waypointGenerationTest625)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 2.356194 };
@@ -10632,7 +10634,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint625)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint626)
+TEST(WaypointControllerHelperTests, waypointGenerationTest626)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = 3.141593 };
@@ -10649,7 +10651,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint626)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint627)
+TEST(WaypointControllerHelperTests, waypointGenerationTest627)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -3.141593 };
@@ -10666,7 +10668,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint627)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint628)
+TEST(WaypointControllerHelperTests, waypointGenerationTest628)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -2.356194 };
@@ -10683,7 +10685,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint628)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint629)
+TEST(WaypointControllerHelperTests, waypointGenerationTest629)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -1.570796 };
@@ -10700,7 +10702,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint629)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint630)
+TEST(WaypointControllerHelperTests, waypointGenerationTest630)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.500000, .y = 1.500000, .theta = -0.785398 };
@@ -10717,7 +10719,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint630)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint631)
+TEST(WaypointControllerHelperTests, waypointGenerationTest631)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.000000 };
@@ -10734,7 +10736,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint631)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint632)
+TEST(WaypointControllerHelperTests, waypointGenerationTest632)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 0.785398 };
@@ -10751,7 +10753,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint632)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint633)
+TEST(WaypointControllerHelperTests, waypointGenerationTest633)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 1.570796 };
@@ -10768,7 +10770,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint633)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint634)
+TEST(WaypointControllerHelperTests, waypointGenerationTest634)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 2.356194 };
@@ -10785,7 +10787,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint634)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint635)
+TEST(WaypointControllerHelperTests, waypointGenerationTest635)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = 3.141593 };
@@ -10802,7 +10804,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint635)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint636)
+TEST(WaypointControllerHelperTests, waypointGenerationTest636)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -3.141593 };
@@ -10819,7 +10821,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint636)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint637)
+TEST(WaypointControllerHelperTests, waypointGenerationTest637)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -2.356194 };
@@ -10836,7 +10838,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint637)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint638)
+TEST(WaypointControllerHelperTests, waypointGenerationTest638)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -1.570796 };
@@ -10853,7 +10855,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint638)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint639)
+TEST(WaypointControllerHelperTests, waypointGenerationTest639)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 1.000000, .theta = -0.785398 };
@@ -10870,7 +10872,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint639)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint640)
+TEST(WaypointControllerHelperTests, waypointGenerationTest640)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.000000 };
@@ -10887,7 +10889,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint640)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint641)
+TEST(WaypointControllerHelperTests, waypointGenerationTest641)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 0.785398 };
@@ -10904,7 +10906,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint641)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint642)
+TEST(WaypointControllerHelperTests, waypointGenerationTest642)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 1.570796 };
@@ -10921,7 +10923,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint642)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint643)
+TEST(WaypointControllerHelperTests, waypointGenerationTest643)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 2.356194 };
@@ -10938,7 +10940,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint643)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint644)
+TEST(WaypointControllerHelperTests, waypointGenerationTest644)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = 3.141593 };
@@ -10955,7 +10957,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint644)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint645)
+TEST(WaypointControllerHelperTests, waypointGenerationTest645)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -3.141593 };
@@ -10972,7 +10974,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint645)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint646)
+TEST(WaypointControllerHelperTests, waypointGenerationTest646)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -2.356194 };
@@ -10989,7 +10991,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint646)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint647)
+TEST(WaypointControllerHelperTests, waypointGenerationTest647)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -1.570796 };
@@ -11006,7 +11008,7 @@ TEST(WaypointControllerHelperTests, ableToReflectWaypoint647)
   EXPECT_NEAR(anglediff(returnPose.theta, waypoint.theta), 0.0f, WAYPOINT2MANEUVERTOL);
 }
 
-TEST(WaypointControllerHelperTests, ableToReflectWaypoint648)
+TEST(WaypointControllerHelperTests, waypointGenerationTest648)
 {
   pose waypoint = {.x = 2.000000, .y = 1.000000, .theta = -0.785398 };
   pose initialPose = {.x = 1.000000, .y = 0.500000, .theta = -0.785398 };
