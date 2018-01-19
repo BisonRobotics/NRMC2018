@@ -148,13 +148,15 @@ WaypointController::Status WaypointController::update(pose robotPose, float dt)
       currMan = navigationQueue.at(0).mans.at(currManeuverIndex);  // set current maneuver
 
       if (currManeuverIndex == 0)  // if this is the first maneuver on the stack for this waypoint
-        maneuverEnd = WaypointControllerHelper::endOfManeuver(navigationQueue.at(0).initialPose,
-                                    currMan);  // the end pose is the extension from the initial pose
+        maneuverEnd =
+            WaypointControllerHelper::endOfManeuver(navigationQueue.at(0).initialPose,
+                                                    currMan);  // the end pose is the extension from the initial pose
       else
         maneuverEnd = WaypointControllerHelper::endOfManeuver(maneuverEnd, currMan);
       // else the end pose is from the last maneuverEnd through the current maneuver
 
-      std::pair<float, float> myPair = WaypointControllerHelper::speedAndRadius2WheelVels(.6f * maxSpeed, currMan.radius, axelLen, maxSpeed);
+      std::pair<float, float> myPair =
+          WaypointControllerHelper::speedAndRadius2WheelVels(.6f * maxSpeed, currMan.radius, axelLen, maxSpeed);
       LeftWheelSetSpeed = myPair.first;
       RightWheelSetSpeed = myPair.second;
       doingManeuver = true;

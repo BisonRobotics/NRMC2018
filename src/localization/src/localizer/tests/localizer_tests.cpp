@@ -59,7 +59,7 @@ TEST(LocalizerTests, ForwardRight)
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
   EXPECT_NEAR(loki.getStateVector().x_pos, .004, .0001);
-  EXPECT_NEAR (loki.getStateVector().y_pos, -.000008, .0000001);
+  EXPECT_NEAR(loki.getStateVector().y_pos, -.000008, .0000001);
   EXPECT_NEAR(loki.getStateVector().theta, -.004, .0001);
 }
 
@@ -88,7 +88,7 @@ TEST(LocalizerTests, BackwardRight)
   ON_CALL(blvesc, getLinearVelocity()).WillByDefault(Return(-.5));
 
   loki.updateStateVector(.01);  // 10 ms, 100Hz update
-  EXPECT_NEAR(loki.getStateVector().x_pos, -.004,.0001);
+  EXPECT_NEAR(loki.getStateVector().x_pos, -.004, .0001);
   EXPECT_NEAR(loki.getStateVector().y_pos, -.000008, .0000001);
   EXPECT_NEAR(loki.getStateVector().theta, .004, .0001);
 }
