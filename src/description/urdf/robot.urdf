@@ -101,7 +101,6 @@
         </collision>
     </link>
 
-
     <joint name="frame_to_sensor" type="fixed">
         <parent link="frame"/>
         <child link="sensor"/>
