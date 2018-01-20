@@ -10,6 +10,7 @@
 
 <!-- time limit (in minutes) should be 10, can be changed for testing purposes -->
 <param name="time_limit" value="2"/>
+<param name="turn_around" value="1"/>
 <param name="location_accuracy" value="0.1"/>
 
 </launch>

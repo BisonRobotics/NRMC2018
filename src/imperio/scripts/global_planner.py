@@ -9,7 +9,7 @@ Version: 2
 
 import math
 import rospy
-import astar as path_finder
+from astar import *
 import map_utils
 
 from robot import *
@@ -27,6 +27,7 @@ class MovementStatus(Enum):
     HAS_REACHED_GOAL = 1
     STUCK = 2
     CANNOT_PLAN_PATH = 3
+    WAITING = 4
 
 
 class GlobalPlanner(object):
@@ -47,15 +48,13 @@ class GlobalPlanner(object):
         self.movement_status = MovementStatus.HAS_REACHED_GOAL
 
     def map_callback(self, map_message):
-        args = [map_message]
-        #self.occupancy_grid = map_utils.Map(map_message, None)
+        self.occupancy_grid = map_utils.Map(map_message)
 
     def drive_status_callback(self, status_message):
         """
         Callback for when the drive status is published
         :param status_message: the message that was published
         """
-        print("Goly Gee Yeah")
         if status_message.has_reached_goal:
             self.movement_status = MovementStatus.HAS_REACHED_GOAL
         if status_message.is_stuck:
@@ -76,12 +75,27 @@ class GlobalPlanner(object):
         if self.movement_status == MovementStatus.HAS_REACHED_GOAL and self.robot_within_threshold(goal):
             return True
 
-        #waypoints = self.find_waypoints(goal)
-        # currently debugging the A* implementation.
-        waypoints = [[0,1], [1,0]]
-        oriented_waypoints = self.calculate_orientation(waypoints)
+        #We can't do anything until we have the occupancy grid
+        if self.occupancy_grid == None:
+            self.movement_status == MovementStatus.WAITING
+            return False
 
-        self.publish_waypoints(oriented_waypoints)
+
+        #TODO : make goal a tuple instead of an array
+        #Using this just for testing now
+        start = (0,0)
+        goal = (250, 250)
+        #TODO : actually get the occupnacy grid to message working
+        #Use path planning to find goal to destination
+        #waypoints = astar(start, goal, self.occupancy_grid)
+        waypoints = None
+        #TODO : match types of waypoints to A* implementation output
+        #oriented_waypoints = self.calculate_orientation(waypoints)
+
+
+        self.publish_waypoints(waypoints)
+
+        #It can't have reached the final goal if it was just sent out
         return False
 
     def find_waypoints(self, goal):
@@ -97,7 +111,6 @@ class GlobalPlanner(object):
             location = [0,0]
         results = path_finder.aStar(location, goal, self.occupancy_grid)
         print("Path finder has returned")
-        print(results)
         #path_finder.bullshit_it(location, goal, self.occupancy_grid)
 
 
@@ -107,10 +120,12 @@ class GlobalPlanner(object):
         :param waypoints: an array of warpoints
         """
         message = GlobalWaypoints()
-        message.poses = waypoints
-        # message.occupancyGrid = self.occupancy_grid.to_message()
+        #TODO this needs to be real
+        #message.poses = None
+        message.occupancyGrid = self.occupancy_grid.to_message()
         self.waypoints_publisher.publish(message)
         self.movement_status = MovementStatus.MOVING
+        print("Waypoints published to local planner")
 
     def robot_within_threshold(self, goal):
         """
@@ -129,6 +144,7 @@ class GlobalPlanner(object):
             print("Imperio: Unable to localize the robot")
             #TODO recovery behavior for localization fail
             return False
+
 
         loc_x = location[0]
         loc_y = location[1]
