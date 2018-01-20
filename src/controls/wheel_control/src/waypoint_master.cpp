@@ -36,9 +36,6 @@
 #include <vector>
 #include <utility>
 
-/*#define AXEL_LEN .5f
-#define MAX_SPEED .5f
-*/
 bool newWaypointHere = false;
 pose newWaypoint;
 bool halt = false;
@@ -121,16 +118,19 @@ int main(int argc, char **argv)
   ros::Subscriber haltsub = node.subscribe ("halt", 100, haltCallback);
   ros::Publisher mode_pub = node.advertise<std_msgs::String>  ("mode", 1000);
   //hang here until someone knows where we are
-
+  ROS_INFO ("Going into wait loop for local");
  // bool hasFirstPose = false;
-  while (!superLocalizer.getIsDataGood())
+  ros::Rate rate(50.0);
+
+  while (!superLocalizer.getIsDataGood() && ros::ok () )
   {
     //do initial localization
     superLocalizer.updateStateVector((ros::Time::now() - last_time).toSec());
     last_time = ros::Time::now();
     stateVector = superLocalizer.getStateVector();
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
-
+    ros::spinOnce ();
+    rate.sleep ();
   }
   //populate currPose from localization data
 /*  currPose.x = transformStamped.transform.translation.x; //-1.0f * transform.getOrigin().x();
@@ -144,9 +144,9 @@ int main(int argc, char **argv)
   WaypointController::Status wcStat;
   std_msgs::String msg;
   std::stringstream ss;
-  ros::Rate rate(50.0);
-  ros::Duration looptime;
-  while (node.ok()) {
+    ros::Duration looptime;
+  ROS_INFO ("Entering MAIN LOOP");
+  while (ros::ok()) {
     //update localizer here
     looptime = ros::Time::now() - last_time;
     superLocalizer.updateStateVector(looptime.toSec());
