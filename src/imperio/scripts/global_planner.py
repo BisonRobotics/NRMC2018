@@ -19,6 +19,7 @@ from robot import *
 from imperio.msg import GlobalWaypoints
 from imperio.msg import DriveStatus
 from nav_msgs.msg import OccupancyGrid
+from geometry_msgs.msg import PoseStamped
 
 class MovementStatus(Enum):
     """
@@ -82,11 +83,11 @@ class GlobalPlanner(object):
             return False
 
         waypoints = self.find_waypoints(goal)
+        oriented_waypoints = self.calculate_orientation(waypoints)
 
-        #TODO : match types of waypoints to A* implementation output
-        #oriented_waypoints = self.calculate_orientation(waypoints)
+        print("Path found : {}".format(oriented_waypoints))
 
-        self.publish_waypoints(waypoints)
+        self.publish_waypoints(oriented_waypoints)
         return False
 
     def find_waypoints(self, goal):
@@ -97,7 +98,7 @@ class GlobalPlanner(object):
         """
         (location, pose) = self.robot.localize()
 
-        #TODO : No . . .
+        #TODO : No . . . fix this when you get localization pinned down
         if location == None:
             location = [0,0]
 
@@ -106,24 +107,26 @@ class GlobalPlanner(object):
         location = (0,0)
         goal = (2,1)
 
-        print("starting the path planner")
+        print("Starting the path planner")
         saved_time = time.time()
         results = aStar(location, goal, self.occupancy_grid)
-        print("Path finder has returned")
-        print("Total path planning time")
-        print(time.time() - saved_time)
-        print(results)
+        print("Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
         return results
 
 
     def publish_waypoints(self, waypoints):
         """
         Publishes the waypoints to the local planner
-        :param waypoints: an array of warpoints
+        :param waypoints: an array of oriented waypoints
         """
         message = GlobalWaypoints()
-        #TODO this needs to be real
-        #message.poses = None
+        waypoint_array = []
+
+        for point in waypoints:
+            msg = PoseStamped()
+            msg.pose.position.x, msg.pose.position.y, msg.pose.orientation.z = point
+            waypoint_array.append(msg)
+
         message.occupancyGrid = self.occupancy_grid.to_message()
         self.waypoints_publisher.publish(message)
         self.movement_status = MovementStatus.MOVING
@@ -173,12 +176,8 @@ class GlobalPlanner(object):
         oriented_waypoints = []
 
         for i in range(1, len(waypoints)):
-            waypoint1 = waypoints[i -1]
-            waypoint2 = waypoints[i]
-            x1 = waypoint1[0]
-            y1 = waypoint1[1]
-            x2 = waypoint2[0]
-            y2 = waypoint2[1]
+            x1, y1 = waypoints[i -1]
+            x2, y2 = waypoints[i]
 
             orientation = 0
             #moving to the right
