@@ -16,7 +16,7 @@ double dist(double A, double B, double C, double D)
   return sqrt((A - C) * (A - C) + (B - D) * (B - D));
 }
 
-WaypointController::WaypointController(float axelLength, float maxSafeSpeed, pose initialPose, iVescAccess *fl,
+WaypointController::WaypointController(double axelLength, double maxSafeSpeed, pose initialPose, iVescAccess *fl,
                                        iVescAccess *fr, iVescAccess *br, iVescAccess *bl)
 {
   axelLen = axelLength;
@@ -71,19 +71,19 @@ pose WaypointController::getManeuverEnd()  // DEBUG
   return maneuverEnd;
 }
 
-float WaypointController::getETpEstimate()  // DEBUG
+double WaypointController::getETpEstimate()  // DEBUG
 {
   return ETpEst;
 }
 
-float WaypointController::getEPpEstimate()  // DEBUG
+double WaypointController::getEPpEstimate()  // DEBUG
 {
   return EPpEst;
 }
 
-std::pair<float, float> WaypointController::getSetSpeeds()
+std::pair<double, double> WaypointController::getSetSpeeds()
 {
-  return std::pair<float, float>(LeftWheelSetSpeed, RightWheelSetSpeed);
+  return std::pair<double, double>(LeftWheelSetSpeed, RightWheelSetSpeed);
 }
 
 void WaypointController::haltAndAbort()
@@ -94,7 +94,7 @@ void WaypointController::haltAndAbort()
   back_right_wheel->setLinearVelocity(0);
 }
 
-std::vector<std::pair<float, float> > WaypointController::addWaypoint(pose waypoint, pose currRobotPose)
+std::vector<std::pair<double, double> > WaypointController::addWaypoint(pose waypoint, pose currRobotPose)
 {
   // add waypoint to queue, and calculate needed maneuvers to get there
   waypointWithManeuvers newWaypoint;
@@ -115,7 +115,7 @@ std::vector<std::pair<float, float> > WaypointController::addWaypoint(pose waypo
   navigationQueue.push_back(newWaypoint);  // append calculated maneuvers to queue
 
   // calculate points that will be covered by the new maneuver
-  std::vector<std::pair<float, float> > myVector;
+  std::vector<std::pair<double, double> > myVector;
 
   myVector = WaypointControllerHelper::waypointWithManeuvers2points(newWaypoint);
   // if returned vector is empty, we were unable to plan a path
@@ -123,7 +123,7 @@ std::vector<std::pair<float, float> > WaypointController::addWaypoint(pose waypo
   return myVector;
 }
 
-WaypointController::Status WaypointController::update(pose robotPose, float dt)
+WaypointController::Status WaypointController::update(pose robotPose, double dt)
 {
   // navQueue has some elements in it
   // these elements consist of starting and terminal poses along with the maneuvers to get from A to B
@@ -155,7 +155,7 @@ WaypointController::Status WaypointController::update(pose robotPose, float dt)
         maneuverEnd = WaypointControllerHelper::endOfManeuver(maneuverEnd, currMan);
       // else the end pose is from the last maneuverEnd through the current maneuver
 
-      std::pair<float, float> myPair =
+      std::pair<double, double> myPair =
           WaypointControllerHelper::speedAndRadius2WheelVels(.6f * maxSpeed, currMan.radius, axelLen, maxSpeed);
       LeftWheelSetSpeed = myPair.first;
       RightWheelSetSpeed = myPair.second;

@@ -22,6 +22,7 @@
 
 #include <geometry_msgs/Pose2D.h>
 #include <geometry_msgs/TransformStamped.h>
+#include <std_msgs/Empty.h>
 
 #include <vesc_access/ivesc_access.h>
 #include <vesc_access/vesc_access.h>
@@ -39,7 +40,7 @@
 
 bool newWaypointHere = false;
 pose newWaypoint;
-
+bool halt = false;
 void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 {
   // should add the waypoint to the queue of waypoints
@@ -67,6 +68,11 @@ geometry_msgs::TransformStamped create_tf(double x, double y, double theta)
   return tfStamp;
 }
 
+
+void haltCallback (const std_msgs::Empty::ConstPtr& msg){
+  halt = true;
+}
+
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "my_tf2_listener");
@@ -75,9 +81,9 @@ int main(int argc, char **argv)
 
   ros::Subscriber sub = node.subscribe("global_planner_goal", 1, newGoalCallback);
 
-  ros::Time curr;
-  ros::Time last;
-  ros::Duration delta;
+//  ros::Time curr;
+//  ros::Time last;
+//  ros::Duration delta;
 
   //tf::StampedTransform transform;
   //tf::TransformListener listener;
@@ -111,11 +117,11 @@ int main(int argc, char **argv)
   LpResearchImu *lpResearchImu = new LpResearchImu("imu");
   SuperLocalizer superLocalizer(AXEL_LEN, 0,0,0, &fl, &fr, &br, &bl, lpResearchImu, aprilTags, SuperLocalizer_default_gains);
   LocalizerInterface::stateVector stateVector;
-
+  ros::Subscriber haltsub = node.subscribe ("halt", 100, haltCallback);
   //hang here until someone knows where we are
 
-  bool hasFirstPose = false;
-  while (!hasFirstPose)
+ // bool hasFirstPose = false;
+  while (!superLocalizer.getIsDataGood())
   {
     //do initial localization
     superLocalizer.updateStateVector((ros::Time::now() - last_time).toSec());
@@ -123,42 +129,31 @@ int main(int argc, char **argv)
     stateVector = superLocalizer.getStateVector();
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
 
-    //should figure out a way to wait until localization thinks its converged to the 
-    //actual position
-
-    try
-    {
-      ROS_INFO("Waiting for initial localization data");
-      transformStamped = tfBuffer.lookupTransform("/map", "/base_link", ros::Time(0), ros::Duration(30));
-      hasFirstPose = true;
-    }
-    catch (tf2::TransformException &ex)
-    {
-       ROS_WARN("%s",ex.what());
-       hasFirstPose = false;
-    }
   }
   //populate currPose from localization data
-  currPose.x = transformStamped.transform.translation.x; //-1.0f * transform.getOrigin().x();
+/*  currPose.x = transformStamped.transform.translation.x; //-1.0f * transform.getOrigin().x();
   currPose.y = transformStamped.transform.translation.y; //-1.0f * transform.getOrigin().y();
   tf2::Quaternion tempQuat(transformStamped.transform.rotation.x, transformStamped.transform.rotation.y,
                       transformStamped.transform.rotation.z, transformStamped.transform.rotation.w);
   currPose.theta = tempQuat.getAngle() - M_PI;//-transform.getRotation().getAngle();
-
+*/
   //initialize waypoint controller
   WaypointController wc = WaypointController(AXEL_LEN, MAX_SPEED, currPose, &fl, &fr, &br, &bl);
   WaypointController::Status wcStat;
 
   ros::Rate rate(50.0);
-  while (node.ok())
-  {
+  ros::Duration looptime;
+  while (node.ok()) {
     //update localizer here
-    superLocalizer.updateStateVector((ros::Time::now() - last_time).toSec());
-    last_time = ros::Time::now();
+    looptime = ros::Time::now() - last_time;
+    superLocalizer.updateStateVector(looptime.toSec());
+
     stateVector = superLocalizer.getStateVector();
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
-    
-    try  // get position
+    currPose.x = stateVector.x_pos;
+    currPose.y = stateVector.y_pos;
+    currPose.theta = stateVector.theta;
+/*    try  // get position
     {
       //listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10));
       //listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
@@ -176,30 +171,30 @@ int main(int argc, char **argv)
       //ros::Duration(1.0).sleep();
       continue;
     }
-
-    if (newWaypointHere)
-    {
+*/
+    if (newWaypointHere) {
       wc.addWaypoint(newWaypoint, currPose);
     }
 
     // update controller
     ROS_INFO("GOING TO UPDATE");
-    curr = ros::Time::now();
-    delta = curr - last;
-    wcStat = wc.update(currPose, (float)delta.toSec());
-    last = curr;
+
+    wcStat = wc.update(currPose, (float) looptime.toSec());
+
 
     //check if we are stuck by comparing commanded velocity to actual
     //maybe integrate error with some decay
 
     // print status also post to topic /drive_controller_status
-    if (wcStat == WaypointController::Status::ALLBAD)
+    if (wcStat == WaypointController::Status::ALLBAD){
       ROS_WARN("CONTROLLER SAYS BAD");
-    else if (wcStat == WaypointController::Status::ALLGOOD)
+    }else if (wcStat == WaypointController::Status::ALLGOOD) {
       ROS_INFO("CONTROLLER SAYS GOOD");
+    }
     else if (wcStat == WaypointController::Status::GOALREACHED)
     {
       ROS_INFO("GOOOOOAAAAALLLLL!!");
+      wc.haltAndAbort();
       // if (isRunning)
       // {
       //   isRunning = false;
@@ -234,9 +229,13 @@ int main(int argc, char **argv)
       ROS_INFO("Nav terminal Pose:\nx: %.4f\ny: %.4f\nth: %.4f", navigationQueue.at(0).terminalPose.x,
                navigationQueue.at(0).terminalPose.y, navigationQueue.at(0).terminalPose.theta);
     }
-
+    if (halt){
+      wc.haltAndAbort();
+      break;
+    }
     // ros end stuff
     ros::spinOnce();
+    last_time = ros::Time::now ();
     rate.sleep();
   }
 }

@@ -31,7 +31,7 @@ public:
   LocalizerInterface::stateVector getResidual();
   LocalizerInterface::stateVector getMeasured();
   LocalizerInterface::stateVector getGainVector();
-
+    bool getIsDataGood (void);
 private:
   bool data_is_good;
   Localizer *deadReck;

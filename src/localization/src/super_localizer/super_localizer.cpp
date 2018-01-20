@@ -139,3 +139,7 @@ bool SuperLocalizer::getHavePosition()
 {
   return have_pos;
 }
+
+bool SuperLocalizer::getIsDataGood() {
+  return data_is_good;
+}

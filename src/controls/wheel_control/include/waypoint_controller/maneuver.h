@@ -3,7 +3,7 @@
 
 struct maneuver
 {
-  float radius, xc, yc, distance;
+  double radius, xc, yc, distance;
 };
 
 #endif

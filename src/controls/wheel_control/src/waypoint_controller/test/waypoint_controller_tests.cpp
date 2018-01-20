@@ -19,7 +19,7 @@ TEST(WaypointControllerTests, instantiateAndAddWaypointReturnsPoints)
   pose wcInitial = {.x = 0, .y = 0, .theta = 0 };
   pose theWay = {.x = 3, .y = 1, .theta = M_PI_2 };
   WaypointController wc = WaypointController(.5f, .5f, wcInitial, &fl, &fr, &br, &bl);
-  std::vector<std::pair<float, float> > returnPoints = wc.addWaypoint(theWay, wcInitial);
+  std::vector<std::pair<double, double> > returnPoints = wc.addWaypoint(theWay, wcInitial);
   EXPECT_TRUE(returnPoints.size() > 0);
 }
 
