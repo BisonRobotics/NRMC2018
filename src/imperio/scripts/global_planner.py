@@ -81,7 +81,7 @@ class GlobalPlanner(object):
             self.movement_status == MovementStatus.WAITING
             return False
 
-        self.find_waypoints(goal)
+        waypoints = self.find_waypoints(goal)
 
         #TODO : match types of waypoints to A* implementation output
         #oriented_waypoints = self.calculate_orientation(waypoints)
@@ -103,8 +103,8 @@ class GlobalPlanner(object):
 
         #TODO : Issue getting the location
         #Using this now just for testing
-        location = (3,3)
-        goal = (6,3)
+        location = (0,0)
+        goal = (1,1)
 
         print("starting the path planner")
         saved_time = time.time()
