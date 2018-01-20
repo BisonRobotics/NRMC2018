@@ -1,3 +1,4 @@
 <launch>
   <node name="position_controller" pkg="wheel_control" type="waypoint_master"/>
+  <include file="$(find lpms_imu)/launch/imu_node.launch"/>
 </launch>
