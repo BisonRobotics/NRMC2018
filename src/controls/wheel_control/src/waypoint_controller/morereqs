@@ -1,0 +1,8 @@
+hasReachedGoal() -> made it to the last waypoint
+hasStoppedExecution() -> halted for some reason, probably bad
+couldNotPlanPath()
+stuck()
+
+addGoalWithWaypoints(vector<waypoint> waypoints, costmap* themap) -> add a goal for the control 
+																	 system to reach via waypoints
+																	 (goal is last waypoint)

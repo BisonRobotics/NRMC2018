@@ -22,6 +22,7 @@ TEST(LocalizerHelperTests, CanSub)
 {
   LocalizerInterface::stateVector v1 = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 };
   LocalizerInterface::stateVector v2 = { 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0 };
+
   LocalizerInterface::stateVector v3 = LocalizerInterface::diff(v2, v1);
 
   EXPECT_NEAR(v3.x_pos, 1.0, .01);
@@ -85,6 +86,7 @@ TEST(LocalizerHelperTests, CanMultiply)
   EXPECT_NEAR(v3.y_accel, v1.y_accel * v2.y_accel, .01);
   EXPECT_NEAR(v3.alpha, v1.alpha * v2.alpha, .01);
 }
+
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {

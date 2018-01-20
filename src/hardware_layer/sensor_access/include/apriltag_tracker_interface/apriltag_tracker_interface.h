@@ -26,5 +26,4 @@ private:
   tf2::Stamped<tf2::Transform> map_to_position_estimate_tf;
 };
 
-
-#endif //PROJECT_APRILTAG_TRACKER_INTERFACE_H
+#endif  // PROJECT_APRILTAG_TRACKER_INTERFACE_H

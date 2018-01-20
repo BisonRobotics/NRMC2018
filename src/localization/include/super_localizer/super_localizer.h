@@ -14,13 +14,14 @@
 class SuperLocalizer : public LocalizerInterface::LocalizerInterface_c
 {
 public:
-  SuperLocalizer(double axleLen, double xi, double yi, double thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc,
-                 iVescAccess *backRightVesc, iVescAccess *backLeftVesc, ImuSensorInterface *centerIMU,
+  SuperLocalizer(double axleLen, double xi, double yi, double thi, iVescAccess *frontLeftVesc,
+                 iVescAccess *frontRightVesc, iVescAccess *backRightVesc, iVescAccess *backLeftVesc,
+                 ImuSensorInterface *centerIMU, PosSensorInterface *posSensor, LocalizerInterface::stateVector gains);
+  SuperLocalizer(double axleLen, double xi, double yi, double thi, iVescAccess *frontLeftVesc,
+                 iVescAccess *frontRightVesc, iVescAccess *backRightVesc, iVescAccess *backLeftVesc,
                  PosSensorInterface *posSensor, LocalizerInterface::stateVector gains);
-  SuperLocalizer(double axleLen, double xi, double yi, double thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc,
-                 iVescAccess *backRightVesc, iVescAccess *backLeftVesc, PosSensorInterface *posSensor,
-                 LocalizerInterface::stateVector gains);
   UpdateStatus updateStateVector(double dt);
+
   ~SuperLocalizer();
 
   // static constexpr Localizer::stateVector_s default_gains;

@@ -17,6 +17,7 @@ typedef struct stateVector_s
   double x_accel;
   double y_accel;
   double alpha;
+
 } stateVector;
 
 class LocalizerInterface_c
