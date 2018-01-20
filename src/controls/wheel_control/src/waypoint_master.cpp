@@ -32,6 +32,7 @@
 #include <super_localizer/super_localizer.h>
 #include <lp_research/lpresearchimu.h>
 #include <apriltag_tracker_interface/apriltag_tracker_interface.h>
+#include <sensor_msgs/JointState.h>
 
 #include <vector>
 #include <utility>
@@ -78,14 +79,16 @@ int main(int argc, char **argv)
   ros::NodeHandle node;
 
   ros::Subscriber sub = node.subscribe("global_planner_goal", 1, newGoalCallback);
-
-//  ros::Time curr;
-//  ros::Time last;
-//  ros::Duration delta;
-
-  //tf::StampedTransform transform;
-  //tf::TransformListener listener;
-
+  ros::Publisher jspub = node.advertise<sensor_msgs::JointState> ("wheel_joints", 500);
+  sensor_msgs::JointState jsMessage;
+  jsMessage.name.push_back("front_left");
+  jsMessage.name.push_back("front_right");
+  jsMessage.name.push_back("back_right");
+  jsMessage.name.push_back("back_left");
+  jsMessage.velocity.push_back(0.0);
+  jsMessage.velocity.push_back(0.0);
+  jsMessage.velocity.push_back(0.0);
+  jsMessage.velocity.push_back(0.0);
   tf2_ros::Buffer tfBuffer;
   tf2_ros::TransformListener tfListener(tfBuffer);
   geometry_msgs::TransformStamped transformStamped;
@@ -105,9 +108,6 @@ int main(int argc, char **argv)
   VescAccess bl(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
                 WHEEL_TORQUE_CONSTANT, can_name, 1);
 
-  //listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(30));
-  //listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
-
   //initialize the localizer here
   ros::Time last_time = ros::Time::now();
   tf2_ros::TransformBroadcaster tfBroad;
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
   ros::Publisher mode_pub = node.advertise<std_msgs::String>  ("mode", 1000);
   //hang here until someone knows where we are
   ROS_INFO ("Going into wait loop for local");
- // bool hasFirstPose = false;
+
   ros::Rate rate(50.0);
 
   while (!superLocalizer.getIsDataGood() && ros::ok () )
@@ -156,25 +156,10 @@ int main(int argc, char **argv)
     currPose.x = stateVector.x_pos;
     currPose.y = stateVector.y_pos;
     currPose.theta = stateVector.theta;
-/*    try  // get position
-    {
-      //listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10));
-      //listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
-      transformStamped = tfBuffer.lookupTransform("/map", "/base_link", ros::Time(0), ros::Duration(0));
-      //populate currPose from localization data
-      currPose.x = transformStamped.transform.translation.x; //-1.0f * transform.getOrigin().x();
-      currPose.y = transformStamped.transform.translation.y; //-1.0f * transform.getOrigin().y();
-      tf2::Quaternion tempQuat(transformStamped.transform.rotation.x, transformStamped.transform.rotation.y,
-                          transformStamped.transform.rotation.z, transformStamped.transform.rotation.w);
-      currPose.theta = tempQuat.getAngle() - M_PI;//-transform.getRotation().getAngle();
-    }
-    catch (tf2::TransformException &ex)
-    {
-      ROS_ERROR("%s", ex.what());
-      //ros::Duration(1.0).sleep();
-      continue;
-    }
-*/
+    jsMessage.velocity[0] = fl.getLinearVelocity();
+    jsMessage.velocity[1] = fr.getLinearVelocity();
+    jsMessage.velocity[2] = br.getLinearVelocity();
+    jsMessage.velocity[3] = bl.getLinearVelocity();
     if (newWaypointHere) {
       wc.addWaypoint(newWaypoint, currPose);
     }
@@ -201,11 +186,6 @@ int main(int argc, char **argv)
       ROS_INFO("GOOOOOAAAAALLLLL!!");
       wc.haltAndAbort();
       ss << "Mode: Chillin";
-      // if (isRunning)
-      // {
-      //   isRunning = false;
-      //   ros::shutdown();
-      // }
     }
     msg.data = ss.str ();
     mode_pub.publish (msg);
@@ -241,6 +221,7 @@ int main(int argc, char **argv)
       break;
     }
     // ros end stuff
+    jspub.publish(jsMessage);
     ros::spinOnce();
     last_time = ros::Time::now ();
     rate.sleep();
