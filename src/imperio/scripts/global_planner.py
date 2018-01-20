@@ -104,7 +104,7 @@ class GlobalPlanner(object):
         #TODO : Issue getting the location
         #Using this now just for testing
         location = (0,0)
-        goal = (1,1)
+        goal = (2,1)
 
         print("starting the path planner")
         saved_time = time.time()
@@ -112,6 +112,8 @@ class GlobalPlanner(object):
         print("Path finder has returned")
         print("Total path planning time")
         print(time.time() - saved_time)
+        print(results)
+        return results
 
 
     def publish_waypoints(self, waypoints):
