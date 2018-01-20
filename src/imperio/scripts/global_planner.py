@@ -11,6 +11,7 @@ import math
 import rospy
 from astar import *
 import map_utils
+import time
 
 from robot import *
 
@@ -80,22 +81,12 @@ class GlobalPlanner(object):
             self.movement_status == MovementStatus.WAITING
             return False
 
+        self.find_waypoints(goal)
 
-        #TODO : make goal a tuple instead of an array
-        #Using this just for testing now
-        start = (0,0)
-        goal = (250, 250)
-        #TODO : actually get the occupnacy grid to message working
-        #Use path planning to find goal to destination
-        #waypoints = astar(start, goal, self.occupancy_grid)
-        waypoints = None
         #TODO : match types of waypoints to A* implementation output
         #oriented_waypoints = self.calculate_orientation(waypoints)
 
-
         self.publish_waypoints(waypoints)
-
-        #It can't have reached the final goal if it was just sent out
         return False
 
     def find_waypoints(self, goal):
@@ -104,14 +95,23 @@ class GlobalPlanner(object):
         :param goal: the final goal as (x,y)
         :return: an array of waypoints
         """
-        #while self.occupancy_grid == None:
-         #   print("Occupancy grid has not been initialized yet")
         (location, pose) = self.robot.localize()
+
+        #TODO : No . . .
         if location == None:
             location = [0,0]
-        results = path_finder.aStar(location, goal, self.occupancy_grid)
+
+        #TODO : Issue getting the location
+        #Using this now just for testing
+        location = (3,3)
+        goal = (6,3)
+
+        print("starting the path planner")
+        saved_time = time.time()
+        results = aStar(location, goal, self.occupancy_grid)
         print("Path finder has returned")
-        #path_finder.bullshit_it(location, goal, self.occupancy_grid)
+        print("Total path planning time")
+        print(time.time() - saved_time)
 
 
     def publish_waypoints(self, waypoints):
@@ -135,6 +135,7 @@ class GlobalPlanner(object):
         """
         errorThreshold = rospy.get_param('/location_accuracy')
 
+        #TODO : clean this up
         goal_x = goal[0]
         goal_y = goal[1]
 

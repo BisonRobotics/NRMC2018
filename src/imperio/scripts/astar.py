@@ -10,8 +10,9 @@ class Node:
 
 #Returns the Children as Nodes (Up, Down, Left, Right)
 def children(point,grid):
+    sample_size = 1
     x,y = point.point
-    links = [Node(grid[d[0]][d[1]], (d[0],d[1])) for d in [(x-1, y),(x,y - 1),(x,y + 1),(x+1,y)]]
+    links = [Node(grid[d[0]][d[1]], (d[0],d[1])) for d in [(x-sample_size, y),(x,y - sample_size),(x,y + sample_size),(x+sample_size,y)]]
     return [link for link in links if link.value <= .5]#Change this if needed to change the threshold
     
 def heuristic(point,point2):
@@ -72,5 +73,6 @@ def aStar(start, goal, OccGrid):
                 node.parent = current
                 #Add it to the set
                 openset.add(node)
+    #TODO handle this in a treatable way . . .
     #Throw an exception if there is no path
     raise ValueError('No Path Found')
