@@ -104,7 +104,7 @@ int main(int argc, char **argv)
 
     // print status
     if (wcStat == WaypointController::Status::ALLBAD)
-      ROS_INFO("CONTROLLER SAYS BAD");
+      ROS_WARN("CONTROLLER SAYS BAD");
     else if (wcStat == WaypointController::Status::ALLGOOD)
       ROS_INFO("CONTROLLER SAYS GOOD");
     else if (wcStat == WaypointController::Status::GOALREACHED)
