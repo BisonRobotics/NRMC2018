@@ -111,7 +111,23 @@ class GlobalPlanner(object):
         saved_time = time.time()
         results = aStar(location, goal, self.occupancy_grid)
         print("Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
+        self.draw_tree(results)
         return results
+
+    def draw_tree(self, waypoints):
+        print("Drawing the waypoint to the tree")
+        #TODO : This will eventually go into a visualization helper file, here for now for easy debugging
+        import matplotlib.pyplot as plt
+        for x in range(1, len(waypoints)):
+            x1, y1 = waypoints[x-1]
+            x2, y2 = waypoints[x]
+            plt.plot([x1, x2], [y1, y2])
+
+        #configure plot axises
+        plt.xlim(0, 10)
+        plt.ylim(0,10)
+
+        plt.show()
 
 
     def publish_waypoints(self, waypoints):
