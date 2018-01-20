@@ -1,12 +1,10 @@
 // this is the waypoint master, right now it:
+// runs the superlocalizer and uses it to post the tf from map to base_link
 // gets the current robot position from the tf from map to base_link
 // gets waypoints from /global_planner_goal
 
 // soon it will
-// run the super localizer and have it publish the tf from map to base_link
 // update status at /drive_controller_status
-// take input from the costmap about where the path should not go
-// initially this will just be that it does not go out of bounds
 
 // after that it will (second sprint 2018 cycle)
 // take a stream of incoming valid waypoints on the costmap and 
@@ -17,19 +15,27 @@
 
 #include <ros/ros.h>
 #include <tf2_ros/transform_listener.h>
+#include <tf2_ros/transform_broadcaster.h>
 
 #include <waypoint_controller/waypoint_controller.h>
 #include <waypoint_controller/waypoint_with_maneuvers.h>
 
 #include <geometry_msgs/Pose2D.h>
 #include <geometry_msgs/TransformStamped.h>
-//#include <LinearMath/Quaternion.h>
 
 #include <vesc_access/ivesc_access.h>
 #include <vesc_access/vesc_access.h>
 #include <wheel_params/wheel_params.h>
+
+#include <super_localizer/super_localizer.h>
+#include <lp_research/lpresearchimu.h>
+#include <apriltag_tracker_interface/apriltag_tracker_interface.h>
+
 #include <vector>
 #include <utility>
+
+#define AXEL_LEN .5f
+#define MAX_SPEED .5f
 
 bool newWaypointHere = false;
 pose newWaypoint;
@@ -37,11 +43,28 @@ pose newWaypoint;
 void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 {
   // should add the waypoint to the queue of waypoints
-  // first it shall just print it out
   newWaypoint.x = msg->x;
   newWaypoint.y = msg->y;
   newWaypoint.theta = msg->theta;
   newWaypointHere = true;
+}
+
+geometry_msgs::TransformStamped create_tf(double x, double y, double theta)
+{
+  geometry_msgs::TransformStamped tfStamp;
+  tfStamp.header.stamp = ros::Time::now();
+  tfStamp.header.frame_id = "map";
+  tfStamp.child_frame_id = "base_link";
+  tfStamp.transform.translation.x = x;
+  tfStamp.transform.translation.y = y;
+  tfStamp.transform.translation.z = 0.0;
+  tf2::Quaternion q;
+  q.setRPY(0, 0, theta);
+  tfStamp.transform.rotation.x = q.x();
+  tfStamp.transform.rotation.y = q.y();
+  tfStamp.transform.rotation.z = q.z();
+  tfStamp.transform.rotation.w = q.w();
+  return tfStamp;
 }
 
 int main(int argc, char **argv)
@@ -63,7 +86,7 @@ int main(int argc, char **argv)
   tf2_ros::TransformListener tfListener(tfBuffer);
   geometry_msgs::TransformStamped transformStamped;
 
-  pose theWay = {.x = 2.3f, .y = 0.0f, .theta = -1.42f };
+  pose theWay;
   pose currPose;
   pose theCPP;
 
@@ -82,11 +105,27 @@ int main(int argc, char **argv)
   //listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
 
   //initialize the localizer here
+  ros::Time last_time = ros::Time::now();
+  tf2_ros::TransformBroadcaster tfBroad;
+  AprilTagTrackerInterface *aprilTags = new AprilTagTrackerInterface();
+  LpResearchImu *lpResearchImu = new LpResearchImu("imu");
+  SuperLocalizer superLocalizer(AXEL_LEN, 0,0,0, &fl, &fr, &br, &bl, lpResearchImu, aprilTags, SuperLocalizer_default_gains);
+  LocalizerInterface::stateVector stateVector;
 
   //hang here until someone knows where we are
+
   bool hasFirstPose = false;
   while (!hasFirstPose)
   {
+    //do initial localization
+    superLocalizer.updateStateVector((ros::Time::now() - last_time).toSec());
+    last_time = ros::Time::now();
+    stateVector = superLocalizer.getStateVector();
+    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+
+    //should figure out a way to wait until localization thinks its converged to the 
+    //actual position
+
     try
     {
       ROS_INFO("Waiting for initial localization data");
@@ -99,25 +138,32 @@ int main(int argc, char **argv)
        hasFirstPose = false;
     }
   }
-
+  //populate currPose from localization data
   currPose.x = transformStamped.transform.translation.x; //-1.0f * transform.getOrigin().x();
   currPose.y = transformStamped.transform.translation.y; //-1.0f * transform.getOrigin().y();
   tf2::Quaternion tempQuat(transformStamped.transform.rotation.x, transformStamped.transform.rotation.y,
                       transformStamped.transform.rotation.z, transformStamped.transform.rotation.w);
   currPose.theta = tempQuat.getAngle() - M_PI;//-transform.getRotation().getAngle();
 
-  WaypointController wc = WaypointController(.5f, 1.0f, currPose, &fl, &fr, &br, &bl);
+  //initialize waypoint controller
+  WaypointController wc = WaypointController(AXEL_LEN, MAX_SPEED, currPose, &fl, &fr, &br, &bl);
   WaypointController::Status wcStat;
 
   ros::Rate rate(50.0);
   while (node.ok())
   {
+    //update localizer here
+    superLocalizer.updateStateVector((ros::Time::now() - last_time).toSec());
+    last_time = ros::Time::now();
+    stateVector = superLocalizer.getStateVector();
+    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+    
     try  // get position
     {
       //listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10));
       //listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
       transformStamped = tfBuffer.lookupTransform("/map", "/base_link", ros::Time(0), ros::Duration(0));
-
+      //populate currPose from localization data
       currPose.x = transformStamped.transform.translation.x; //-1.0f * transform.getOrigin().x();
       currPose.y = transformStamped.transform.translation.y; //-1.0f * transform.getOrigin().y();
       tf2::Quaternion tempQuat(transformStamped.transform.rotation.x, transformStamped.transform.rotation.y,
@@ -140,7 +186,7 @@ int main(int argc, char **argv)
     ROS_INFO("GOING TO UPDATE");
     curr = ros::Time::now();
     delta = curr - last;
-    wcStat = wc.update(currPose, (float)delta.toSec());  // need to get actual time
+    wcStat = wc.update(currPose, (float)delta.toSec());
     last = curr;
 
     //check if we are stuck by comparing commanded velocity to actual
