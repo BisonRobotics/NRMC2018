@@ -3,15 +3,27 @@
 // gets waypoints from /global_planner_goal
 
 // soon it will
+// run the super localizer and have it publish the tf from map to base_link
 // update status at /drive_controller_status
 // take input from the costmap about where the path should not go
+// initially this will just be that it does not go out of bounds
+
+// after that it will (second sprint 2018 cycle)
+// take a stream of incoming valid waypoints on the costmap and 
+// pick the "best" ones to follow
+// initial idea: start at the furthest waypoint and work backwords
+// after iterating through the available waypoints, either choose the
+// furthest valid one (could just pick the first one that works)
 
 #include <ros/ros.h>
-#include <tf/transform_listener.h>
+#include <tf2_ros/transform_listener.h>
+
 #include <waypoint_controller/waypoint_controller.h>
 #include <waypoint_controller/waypointWithManeuvers.h>
 
 #include <geometry_msgs/Pose2D.h>
+#include <geometry_msgs/TransformStamped.h>
+//#include <LinearMath/Quaternion.h>
 
 #include <vesc_access/ivesc_access.h>
 #include <vesc_access/vesc_access.h>
@@ -34,7 +46,7 @@ void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "my_tf_listener");
+  ros::init(argc, argv, "my_tf2_listener");
 
   ros::NodeHandle node;
 
@@ -44,8 +56,12 @@ int main(int argc, char **argv)
   ros::Time last;
   ros::Duration delta;
 
-  tf::StampedTransform transform;
-  tf::TransformListener listener;
+  //tf::StampedTransform transform;
+  //tf::TransformListener listener;
+
+  tf2_ros::Buffer tfBuffer;
+  tf2_ros::TransformListener tfListener(tfBuffer);
+  geometry_msgs::TransformStamped transformStamped;
 
   pose theWay = {.x = 2.3f, .y = 0.0f, .theta = -1.42f };
   pose currPose;
@@ -62,12 +78,33 @@ int main(int argc, char **argv)
   VescAccess bl(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
                 WHEEL_TORQUE_CONSTANT, can_name, 1);
 
-  listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(30));
-  listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
+  //listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(30));
+  //listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
 
-  currPose.x = -1.0f * transform.getOrigin().x();
-  currPose.y = -1.0f * transform.getOrigin().y();
-  currPose.theta = -transform.getRotation().getAngle();
+  //initialize the localizer here
+
+  //hang here until someone knows where we are
+  bool hasFirstPose = false;
+  while (!hasFirstPose)
+  {
+    try
+    {
+      ROS_INFO("Waiting for initial localization data");
+      transformStamped = tfBuffer.lookupTransform("/map", "/base_link", ros::Time(0), ros::Duration(30));
+      hasFirstPose = true;
+    }
+    catch (tf2::TransformException &ex)
+    {
+       ROS_WARN("%s",ex.what());
+       hasFirstPose = false;
+    }
+  }
+
+  currPose.x = transformStamped.transform.translation.x; //-1.0f * transform.getOrigin().x();
+  currPose.y = transformStamped.transform.translation.y; //-1.0f * transform.getOrigin().y();
+  tf2::Quaternion tempQuat(transformStamped.transform.rotation.x, transformStamped.transform.rotation.y,
+                      transformStamped.transform.rotation.z, transformStamped.transform.rotation.w);
+  currPose.theta = tempQuat.getAngle() - M_PI;//-transform.getRotation().getAngle();
 
   WaypointController wc = WaypointController(.5f, 1.0f, currPose, &fl, &fr, &br, &bl);
   WaypointController::Status wcStat;
@@ -77,16 +114,20 @@ int main(int argc, char **argv)
   {
     try  // get position
     {
-      listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10));
-      listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
-      currPose.x = -1.0f * transform.getOrigin().x();
-      currPose.y = -1.0f * transform.getOrigin().y();
-      currPose.theta = -transform.getRotation().getAngle();
+      //listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10));
+      //listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
+      transformStamped = tfBuffer.lookupTransform("/map", "/base_link", ros::Time(0), ros::Duration(0));
+
+      currPose.x = transformStamped.transform.translation.x; //-1.0f * transform.getOrigin().x();
+      currPose.y = transformStamped.transform.translation.y; //-1.0f * transform.getOrigin().y();
+      tf2::Quaternion tempQuat(transformStamped.transform.rotation.x, transformStamped.transform.rotation.y,
+                          transformStamped.transform.rotation.z, transformStamped.transform.rotation.w);
+      currPose.theta = tempQuat.getAngle() - M_PI;//-transform.getRotation().getAngle();
     }
-    catch (tf::TransformException &ex)
+    catch (tf2::TransformException &ex)
     {
       ROS_ERROR("%s", ex.what());
-      ros::Duration(1.0).sleep();
+      //ros::Duration(1.0).sleep();
       continue;
     }
 
@@ -102,7 +143,10 @@ int main(int argc, char **argv)
     wcStat = wc.update(currPose, (float)delta.toSec());  // need to get actual time
     last = curr;
 
-    // print status
+    //check if we are stuck by comparing commanded velocity to actual
+    //maybe integrate error with some decay
+
+    // print status also post to topic /drive_controller_status
     if (wcStat == WaypointController::Status::ALLBAD)
       ROS_INFO("CONTROLLER SAYS BAD");
     else if (wcStat == WaypointController::Status::ALLGOOD)
