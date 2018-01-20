@@ -9,7 +9,7 @@
 #include <ros/ros.h>
 #include <tf/transform_listener.h>
 #include <waypoint_controller/waypoint_controller.h>
-#include <waypoint_controller/waypointWithManeuvers.h>
+#include <waypoint_controller/waypoint_with_maneuvers.h>
 
 #include <geometry_msgs/Pose2D.h>
 

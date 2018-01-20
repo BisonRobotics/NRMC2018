@@ -6,7 +6,7 @@
 #include <utility>
 #include <waypoint_controller/pose.h>
 #include <waypoint_controller/maneuver.h>
-#include <waypoint_controller/waypointWithManeuvers.h>
+#include <waypoint_controller/waypoint_with_maneuvers.h>
 
 // a manuever is one arc that the robot does
 // it has a radius, a turn center (in world coord)

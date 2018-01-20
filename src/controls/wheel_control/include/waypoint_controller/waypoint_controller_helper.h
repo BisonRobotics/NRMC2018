@@ -2,7 +2,7 @@
 #define WAYPOINT_CONTROLLER_HELPER_H
 #include <waypoint_controller/maneuver.h>
 #include <waypoint_controller/pose.h>
-#include <waypoint_controller/waypointWithManeuvers.h>
+#include <waypoint_controller/waypoint_with_maneuvers.h>
 #include <vector>
 
 namespace WaypointControllerHelper
