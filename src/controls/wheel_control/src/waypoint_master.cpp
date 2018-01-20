@@ -23,6 +23,7 @@
 #include <geometry_msgs/Pose2D.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <std_msgs/Empty.h>
+#include <std_msgs/String.h>
 
 #include <vesc_access/ivesc_access.h>
 #include <vesc_access/vesc_access.h>
@@ -118,6 +119,7 @@ int main(int argc, char **argv)
   SuperLocalizer superLocalizer(AXEL_LEN, 0,0,0, &fl, &fr, &br, &bl, lpResearchImu, aprilTags, SuperLocalizer_default_gains);
   LocalizerInterface::stateVector stateVector;
   ros::Subscriber haltsub = node.subscribe ("halt", 100, haltCallback);
+  ros::Publisher mode_pub = node.advertise<std_msgs::String>  ("mode", 1000);
   //hang here until someone knows where we are
 
  // bool hasFirstPose = false;
@@ -140,7 +142,8 @@ int main(int argc, char **argv)
   //initialize waypoint controller
   WaypointController wc = WaypointController(AXEL_LEN, MAX_SPEED, currPose, &fl, &fr, &br, &bl);
   WaypointController::Status wcStat;
-
+  std_msgs::String msg;
+  std::stringstream ss;
   ros::Rate rate(50.0);
   ros::Duration looptime;
   while (node.ok()) {
@@ -179,7 +182,7 @@ int main(int argc, char **argv)
     // update controller
     ROS_INFO("GOING TO UPDATE");
 
-    wcStat = wc.update(currPose, (float) looptime.toSec());
+    wcStat = wc.update(currPose, looptime.toSec());
 
 
     //check if we are stuck by comparing commanded velocity to actual
@@ -188,20 +191,24 @@ int main(int argc, char **argv)
     // print status also post to topic /drive_controller_status
     if (wcStat == WaypointController::Status::ALLBAD){
       ROS_WARN("CONTROLLER SAYS BAD");
+      ss << "Mode : Bad";
     }else if (wcStat == WaypointController::Status::ALLGOOD) {
       ROS_INFO("CONTROLLER SAYS GOOD");
+      ss << "Mode: Good";
     }
     else if (wcStat == WaypointController::Status::GOALREACHED)
     {
       ROS_INFO("GOOOOOAAAAALLLLL!!");
       wc.haltAndAbort();
+      ss << "Mode: Chillin";
       // if (isRunning)
       // {
       //   isRunning = false;
       //   ros::shutdown();
       // }
     }
-
+    msg.data = ss.str ();
+    mode_pub.publish (msg);
     // print some info
     navigationQueue = wc.getNavigationQueue();
     theCPP = wc.getCPP();
