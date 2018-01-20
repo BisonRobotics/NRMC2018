@@ -36,9 +36,9 @@
 #include <vector>
 #include <utility>
 
-#define AXEL_LEN .5f
+/*#define AXEL_LEN .5f
 #define MAX_SPEED .5f
-
+*/
 bool newWaypointHere = false;
 pose newWaypoint;
 bool halt = false;
@@ -116,7 +116,7 @@ int main(int argc, char **argv)
   tf2_ros::TransformBroadcaster tfBroad;
   AprilTagTrackerInterface *aprilTags = new AprilTagTrackerInterface();
   LpResearchImu *lpResearchImu = new LpResearchImu("imu");
-  SuperLocalizer superLocalizer(AXEL_LEN, 0,0,0, &fl, &fr, &br, &bl, lpResearchImu, aprilTags, SuperLocalizer_default_gains);
+  SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0,0,0, &fl, &fr, &br, &bl, lpResearchImu, aprilTags, SuperLocalizer_default_gains);
   LocalizerInterface::stateVector stateVector;
   ros::Subscriber haltsub = node.subscribe ("halt", 100, haltCallback);
   ros::Publisher mode_pub = node.advertise<std_msgs::String>  ("mode", 1000);
@@ -140,7 +140,7 @@ int main(int argc, char **argv)
   currPose.theta = tempQuat.getAngle() - M_PI;//-transform.getRotation().getAngle();
 */
   //initialize waypoint controller
-  WaypointController wc = WaypointController(AXEL_LEN, MAX_SPEED, currPose, &fl, &fr, &br, &bl);
+  WaypointController wc = WaypointController(ROBOT_AXLE_LENGTH, ROBOT_MAX_SPEED, currPose, &fl, &fr, &br, &bl);
   WaypointController::Status wcStat;
   std_msgs::String msg;
   std::stringstream ss;

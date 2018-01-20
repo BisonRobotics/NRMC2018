@@ -16,5 +16,6 @@
 #define WHEEL_TORQUE_CONSTANT 4.0f
 
 #define ROBOT_AXLE_LENGTH 0.5f
+#define ROBOT_MAX_SPEED 0.5f
 
 #endif
