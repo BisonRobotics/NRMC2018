@@ -19,7 +19,7 @@
 #include <tf2_ros/transform_listener.h>
 
 #include <waypoint_controller/waypoint_controller.h>
-#include <waypoint_controller/waypointWithManeuvers.h>
+#include <waypoint_controller/waypoint_with_maneuvers.h>
 
 #include <geometry_msgs/Pose2D.h>
 #include <geometry_msgs/TransformStamped.h>
@@ -148,7 +148,7 @@ int main(int argc, char **argv)
 
     // print status also post to topic /drive_controller_status
     if (wcStat == WaypointController::Status::ALLBAD)
-      ROS_INFO("CONTROLLER SAYS BAD");
+      ROS_WARN("CONTROLLER SAYS BAD");
     else if (wcStat == WaypointController::Status::ALLGOOD)
       ROS_INFO("CONTROLLER SAYS GOOD");
     else if (wcStat == WaypointController::Status::GOALREACHED)

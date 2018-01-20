@@ -5,8 +5,8 @@
 #include <vector>
 #include <utility>
 
-#define PI 3.1415926539f
-#define APPROX(A, B, T) ((A > B - T && A < B + T) ? true : false)
+#define _USE_MATH_DEFINES
+#include <cmath>
 
 using ::testing::NiceMock;
 
@@ -17,7 +17,7 @@ TEST(WaypointControllerTests, instantiateAndAddWaypointReturnsPoints)
   NiceMock<MockVescAccess> fr;
   NiceMock<MockVescAccess> fl;
   pose wcInitial = {.x = 0, .y = 0, .theta = 0 };
-  pose theWay = {.x = 3, .y = 1, .theta = PI / 2.0f };
+  pose theWay = {.x = 3, .y = 1, .theta = M_PI_2 };
   WaypointController wc = WaypointController(.5f, .5f, wcInitial, &fl, &fr, &br, &bl);
   std::vector<std::pair<float, float> > returnPoints = wc.addWaypoint(theWay, wcInitial);
   EXPECT_TRUE(returnPoints.size() > 0);
@@ -30,7 +30,7 @@ TEST(WaypointControllerTests, updateReturnsAStatus)
   NiceMock<MockVescAccess> fr;
   NiceMock<MockVescAccess> fl;
   pose wcInitial = {.x = 0, .y = 0, .theta = 0 };
-  pose theWay = {.x = 3, .y = 1, .theta = PI / 2.0f };
+  pose theWay = {.x = 3, .y = 1, .theta = M_PI_2 };
   WaypointController wc = WaypointController(.5f, .5f, wcInitial, &fl, &fr, &br, &bl);
   WaypointController::Status returnStatus = wc.update(wcInitial, .01);
 

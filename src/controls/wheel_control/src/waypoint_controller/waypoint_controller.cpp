@@ -6,12 +6,12 @@
 #define ANGLETOL .2f
 #define BADLINE .3f
 
-bool APPROX(double A, double B, double T)
+bool approx(double A, double B, double T)
 {
   return ((A > B - T && A < B + T) ? true : false);
 }
 
-double DIST(double A, double B, double C, double D)
+double dist(double A, double B, double C, double D)
 {
   return sqrt((A - C) * (A - C) + (B - D) * (B - D));
 }
@@ -163,7 +163,7 @@ WaypointController::Status WaypointController::update(pose robotPose, float dt)
     }
     else  // doing a maneuver, need to see if robot has completed it
     {
-      if (APPROX(DIST(robotPose.x, robotPose.y, maneuverEnd.x, maneuverEnd.y), 0, POSITIONTOL))
+      if (approx(dist(robotPose.x, robotPose.y, maneuverEnd.x, maneuverEnd.y), 0, POSITIONTOL))
       {  // reached the end of this maneuver
         doingManeuver = false;
         currManeuverIndex++;
@@ -174,16 +174,16 @@ WaypointController::Status WaypointController::update(pose robotPose, float dt)
 
     // figure out if we are in tolerance or not
     Status returnStatus;
-    if (APPROX(DIST(robotPose.x, robotPose.y, theCPP.x, theCPP.y), 0, BADLINE))
+    if (approx(dist(robotPose.x, robotPose.y, theCPP.x, theCPP.y), 0, BADLINE))
       returnStatus = Status::ALLGOOD;
     else
       returnStatus = Status::ALLBAD;
 
     // do control system calculations
     if (currMan.radius > 0)  // signed turn radius
-      EPpEst = currMan.radius - DIST(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
+      EPpEst = currMan.radius - dist(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
     else
-      EPpEst = currMan.radius + DIST(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
+      EPpEst = currMan.radius + dist(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
 
     ETpEst = WaypointControllerHelper::anglediff(theCPP.theta, robotPose.theta);  // positive error means turn left
 
