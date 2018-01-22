@@ -43,6 +43,7 @@ class GlobalPlanner(object):
         :param robot: the robot object the planner will be moving
         """
         self.waypoints_publisher = rospy.Publisher('/global_planner_goal', GlobalWaypoints, queue_size=1)
+        self.draw_points_publisher = rospy.Publisher('/draw_points', GlobalWaypoints, queue_size=1)
         rospy.Subscriber('/drive_controller_status', DriveStatus, self.drive_status_callback)
         rospy.Subscriber('/vrep/map', OccupancyGrid, self.map_callback)
         self.robot = robot
@@ -109,26 +110,23 @@ class GlobalPlanner(object):
 
         print("Starting the path planner")
         saved_time = time.time()
-        results = aStar(location, goal, self.occupancy_grid)
+        #results = aStar(location, goal, self.occupancy_grid)
+        #TODO : using for interacting with the local planner
+        print("Path Planner : Hardcoded for testing purposes")
+        results = [(0,1),(1,1), (1,2),(1,3),(1,4)]
         print("Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
-        self.draw_tree(results)
+
+        message = GlobalWaypoints()
+        pose_array = []
+        for point in results:
+            msg = PoseStamped()
+            msg.pose.position.x, msg.pose.position.y = point
+            pose_array.append(msg)
+
+        message.poses = pose_array
+        self.draw_points_publisher.publish(message)
+        print("Waypoints sent to visualizer")
         return results
-
-    def draw_tree(self, waypoints):
-        print("Drawing the waypoint to the tree")
-        #TODO : This will eventually go into a visualization helper file, here for now for easy debugging
-        import matplotlib.pyplot as plt
-        for x in range(1, len(waypoints)):
-            x1, y1 = waypoints[x-1]
-            x2, y2 = waypoints[x]
-            plt.plot([x1, x2], [y1, y2])
-
-        #configure plot axises
-        plt.xlim(0, 10)
-        plt.ylim(0,10)
-
-        plt.show()
-
 
     def publish_waypoints(self, waypoints):
         """
@@ -143,10 +141,11 @@ class GlobalPlanner(object):
             msg.pose.position.x, msg.pose.position.y, msg.pose.orientation.z = point
             waypoint_array.append(msg)
 
+        #TODO : Add message array to message
         message.occupancyGrid = self.occupancy_grid.to_message()
         self.waypoints_publisher.publish(message)
         self.movement_status = MovementStatus.MOVING
-        print("Waypoints published to local planner")
+        print("Imperio: Waypoints published to local planner")
 
     def robot_within_threshold(self, goal):
         """
@@ -157,8 +156,7 @@ class GlobalPlanner(object):
         errorThreshold = rospy.get_param('/location_accuracy')
 
         #TODO : clean this up
-        goal_x = goal[0]
-        goal_y = goal[1]
+        goal_x, goal_y = goal
 
         (location, pose) = self.robot.localize()
 
