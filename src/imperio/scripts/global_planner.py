@@ -134,14 +134,14 @@ class GlobalPlanner(object):
         :param waypoints: an array of oriented waypoints
         """
         message = GlobalWaypoints()
-        waypoint_array = []
+        stamped_points = []
 
         for point in waypoints:
             msg = PoseStamped()
             msg.pose.position.x, msg.pose.position.y, msg.pose.orientation.z = point
-            waypoint_array.append(msg)
+            stamped_points.append(msg)
 
-        #TODO : Add message array to message
+        message.poses = stamped_points
         message.occupancyGrid = self.occupancy_grid.to_message()
         self.waypoints_publisher.publish(message)
         self.movement_status = MovementStatus.MOVING
