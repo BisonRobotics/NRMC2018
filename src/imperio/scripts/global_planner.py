@@ -105,7 +105,7 @@ class GlobalPlanner(object):
         #TODO : Issue getting the location
         #Using this now just for testing
         location = (0,0)
-        goal = (2,1)
+        goal = (2,2)
 
         print("Starting the path planner")
         saved_time = time.time()
