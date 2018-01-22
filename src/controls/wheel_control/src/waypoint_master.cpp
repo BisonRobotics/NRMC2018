@@ -90,7 +90,7 @@ int main(int argc, char **argv)
   jsMessage.velocity.push_back(0.0);
   jsMessage.velocity.push_back(0.0);
   tf2_ros::Buffer tfBuffer;
-  tf2_ros::TransformListener tfListener(tfBuffer);
+ // tf2_ros::TransformListener tfListener(tfBuffer);
   geometry_msgs::TransformStamped transformStamped;
 
   pose theWay;
@@ -116,7 +116,7 @@ int main(int argc, char **argv)
   SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0,0,0, &fl, &fr, &br, &bl, lpResearchImu, aprilTags, SuperLocalizer_default_gains);
   LocalizerInterface::stateVector stateVector;
   ros::Subscriber haltsub = node.subscribe ("halt", 100, haltCallback);
-  ros::Publisher mode_pub = node.advertise<std_msgs::String>  ("mode", 1000);
+  ros::Publisher mode_pub = node.advertise<std_msgs::String>  ("drive_controller_status", 1000);
   //hang here until someone knows where we are
   ROS_INFO ("Going into wait loop for local");
 
@@ -144,7 +144,7 @@ int main(int argc, char **argv)
   WaypointController::Status wcStat;
   std_msgs::String msg;
   std::stringstream ss;
-    ros::Duration looptime;
+  ros::Duration looptime;
   ROS_INFO ("Entering MAIN LOOP");
   while (ros::ok()) {
     //update localizer here

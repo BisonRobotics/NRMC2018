@@ -147,14 +147,15 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
       }
       currMan = navigationQueue.at(0).mans.at(currManeuverIndex);  // set current maneuver
 
-      if (currManeuverIndex == 0)  // if this is the first maneuver on the stack for this waypoint
-        maneuverEnd =
-            WaypointControllerHelper::endOfManeuver(navigationQueue.at(0).initialPose,
-                                                    currMan);  // the end pose is the extension from the initial pose
-      else
-        maneuverEnd = WaypointControllerHelper::endOfManeuver(maneuverEnd, currMan);
-      // else the end pose is from the last maneuverEnd through the current maneuver
-
+      if (currManeuverIndex == 0) {  // if this is the first maneuver on the stack for this waypoint
+          maneuverEnd =
+                  WaypointControllerHelper::endOfManeuver(navigationQueue.at(0).initialPose,
+                                                          currMan);  // the end pose is the extension from the initial pose
+      }
+      else {
+          maneuverEnd = WaypointControllerHelper::endOfManeuver(maneuverEnd, currMan);
+          // else the end pose is from the last maneuverEnd through the current maneuver
+      }
       std::pair<double, double> myPair =
           WaypointControllerHelper::speedAndRadius2WheelVels(.6f * maxSpeed, currMan.radius, axelLen, maxSpeed);
       LeftWheelSetSpeed = myPair.first;
@@ -174,17 +175,17 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
 
     // figure out if we are in tolerance or not
     Status returnStatus;
-    if (approx(dist(robotPose.x, robotPose.y, theCPP.x, theCPP.y), 0, BADLINE))
-      returnStatus = Status::ALLGOOD;
-    else
-      returnStatus = Status::ALLBAD;
-
+    if (approx(dist(robotPose.x, robotPose.y, theCPP.x, theCPP.y), 0, BADLINE)) {
+        returnStatus = Status::ALLGOOD;
+    }else {
+        returnStatus = Status::ALLBAD;
+    }
     // do control system calculations
-    if (currMan.radius > 0)  // signed turn radius
+    if (currMan.radius > 0) {  // signed turn radius
       EPpEst = currMan.radius - dist(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
-    else
+    }else {
       EPpEst = currMan.radius + dist(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
-
+    }
     ETpEst = WaypointControllerHelper::anglediff(theCPP.theta, robotPose.theta);  // positive error means turn left
 
     EPpLowPassPrev = EPpLowPass;
