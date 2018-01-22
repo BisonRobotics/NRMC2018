@@ -40,9 +40,35 @@
 bool newWaypointHere = false;
 pose newWaypoint;
 bool halt = false;
+
 void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 {
-  // should add the waypoint to the queue of waypoints
+  //this callback will flag that there is a new waypoint if there are no future
+  //or current maneuvers. If thera are future maneuvers then
+  //this callback will quick check to see if the new waypoint will generate a
+  //better manuever than the current planned maneuvers.
+  //better is defined as X distance travelled per maneuver distance
+
+  //when checking potential maneuvers against the costmap, if a
+  //maneuver would violate the costmap, it is replaced with a caveman maneuver.
+  //a caveman maneuver (turn in place, go fwd, turn in place) is guarenteed safe.
+
+  //will need waypoint_controlelr_helper waypoint to maneuvers
+  //get future goodness
+  //dump future maneuvers
+  //get terminal pose of current maneuver
+
+  //if no future maneuvers, add this one
+  //else
+  //get terminal pose of current maneuver
+  //waypoint to maneuvers of terminal pose and potential waypoint
+  //get goodness of this maneuver
+  //compare the goodnesses
+  //either keep the current plan or dump it and switch to the new one
+
+  pose potentialWaypoint;
+  potentialWaypoint.x = msg->x;potentialWaypoint.y = msg->y;potentialWaypoint.theta = msg->theta;
+  
   newWaypoint.x = msg->x;
   newWaypoint.y = msg->y;
   newWaypoint.theta = msg->theta;
@@ -169,7 +195,7 @@ int main(int argc, char **argv)
 
     wcStat = wc.update(currPose, looptime.toSec());
 
-
+    //TODO
     //check if we are stuck by comparing commanded velocity to actual
     //maybe integrate error with some decay
 

@@ -94,6 +94,13 @@ void WaypointController::haltAndAbort()
   back_right_wheel->setLinearVelocity(0);
 }
 
+//TODO
+//Dump future maneuvers
+
+//TODO
+//get planned goodness method
+//X distance travelled / distance taken for all future maneuvers
+
 std::vector<std::pair<double, double> > WaypointController::addWaypoint(pose waypoint, pose currRobotPose)
 {
   // add waypoint to queue, and calculate needed maneuvers to get there
