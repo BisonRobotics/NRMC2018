@@ -26,8 +26,8 @@ class Visualizaion(object):
 
     def draw_points_callback(self, message):
         waypoints = []
-        for pose in message.poses:
-            point = (pose.pose.position.x, pose.pose.position.y)
+        for pose in message.pose_array:
+            point = (pose.x, pose.y)
             waypoints.append(point)
         self.draw_tree(waypoints)
 

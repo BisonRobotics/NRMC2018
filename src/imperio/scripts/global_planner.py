@@ -19,7 +19,7 @@ from robot import *
 from imperio.msg import GlobalWaypoints
 from imperio.msg import DriveStatus
 from nav_msgs.msg import OccupancyGrid
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import Pose2D
 
 class MovementStatus(Enum):
     """
@@ -119,11 +119,11 @@ class GlobalPlanner(object):
         message = GlobalWaypoints()
         pose_array = []
         for point in results:
-            msg = PoseStamped()
-            msg.pose.position.x, msg.pose.position.y = point
+            msg = Pose2D()
+            msg.x, msg.y = point
             pose_array.append(msg)
 
-        message.poses = pose_array
+        message.pose_array = pose_array
         self.draw_points_publisher.publish(message)
         print("Waypoints sent to visualizer")
         return results
@@ -134,18 +134,18 @@ class GlobalPlanner(object):
         :param waypoints: an array of oriented waypoints
         """
         message = GlobalWaypoints()
-        stamped_points = []
+        pose_array = []
 
         for point in waypoints:
-            msg = PoseStamped()
-            msg.pose.position.x, msg.pose.position.y, msg.pose.orientation.z = point
-            stamped_points.append(msg)
+            msg = Pose2D()
+            msg.x, msg.y, msg.theta = point
+            pose_array.append(msg)
 
-        message.poses = stamped_points
-        message.occupancyGrid = self.occupancy_grid.to_message()
+        message.pose_array = pose_array
         self.waypoints_publisher.publish(message)
         self.movement_status = MovementStatus.MOVING
         print("Imperio: Waypoints published to local planner")
+
 
     def robot_within_threshold(self, goal):
         """
