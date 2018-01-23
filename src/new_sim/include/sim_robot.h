@@ -1,5 +1,3 @@
-
-
 #include <sim_pos.h>
 #include <sim_imu.h>
 #include <sim_vesc.h>
