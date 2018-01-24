@@ -17,6 +17,9 @@ class SimRobot
   PosSensorInterface * getPos();
 
   void update(double dt);
+  double getX();
+  double getY();
+  double getTheta();
 
   private:
   SimVesc * fl;

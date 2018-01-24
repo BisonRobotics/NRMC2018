@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   localization
   geometry_msgs
   tf2
+  new_sim
 )
 
 
@@ -47,6 +48,7 @@ include_directories (include ${catkin_INCLUDE_DIRS} )
 include_directories(${GTEST_INCLUDE_DIRS})
 include_directories(${vesc_access_INCLUDE_DIRS})
 include_directories(${localization_INCLUDE_DIRS})
+include_directories(${new_sim_INCLUDE_DIRS})
 ## Declare a C++ library
 
 add_library(velocity_plugins
@@ -72,7 +74,8 @@ target_link_libraries (wheel_goal_master ${catkin_LIBRARIES} pos_control localiz
 
 
 add_executable(waypoint_master src/waypoint_master.cpp)
-target_link_libraries (waypoint_master way_control ${catkin_LIBRARIES} )
+add_dependencies(waypoint_master way_control sim_robot)
+target_link_libraries (waypoint_master way_control ${new_sim_LIBRARIES} ${catkin_LIBRARIES} )
 
 add_dependencies (wheel_goal_master localizer_lib)
 add_dependencies (waypoint_master ${PROJECT_NAME}_gencpp)

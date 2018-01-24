@@ -33,3 +33,18 @@ void SimRobot::update(double dt)
   //post pose/statevector to \sim_robot_base_link
 
 }
+
+double SimRobot::getX()
+{
+  return deadReck->getStateVector().x_pos;
+}
+
+double SimRobot::getY()
+{
+  return deadReck->getStateVector().y_pos;
+}
+
+double SimRobot::getTheta()
+{
+  return deadReck->getStateVector().theta;
+}
