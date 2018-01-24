@@ -1,7 +1,7 @@
-#include <sim_pos.h>
-#include <sim_imu.h>
-#include <sim_vesc.h>
-#include <localizer/localizer.h>
+#include "sim_robot/sim_pos.h"
+#include "sim_robot/sim_imu.h"
+#include "sim_robot/sim_vesc.h"
+#include "localizer/localizer.h"
 
 class SimRobot
 {

@@ -36,4 +36,35 @@ add_library(sim_robot
   src/sim_robot.cpp
 )
 
+add_library(support_libs
+  src/sim_imu.cpp
+  src/sim_pos.cpp
+  src/sim_vesc.cpp
+)
+
+
+target_link_libraries (
+  support_libs
+  ${vesc_access_LIBRARIES}
+  ${sensor_access_LIBRARIES}
+)
+
+target_link_libraries (sim_robot ${vesc_access_LIBRARIES} ${sensor_access_LIBRARIES})
+
 #include_directories(${GTEST_INCLUDE_DIRS})
+
+## Mark executables and/or libraries for installation
+ install(TARGETS sim_robot
+   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+ )
+
+## Mark cpp header files for installation
+ install(DIRECTORY include/sim_robot
+   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+   FILES_MATCHING PATTERN "*.h"
+   PATTERN ".svn" EXCLUDE
+ )
+
+

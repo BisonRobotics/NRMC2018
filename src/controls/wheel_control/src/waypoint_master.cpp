@@ -39,7 +39,7 @@
 #endif
 
 #if SIMULATING == TRUE
-#include <sim_robot.h>
+#include <sim_robot/sim_robot.h>
 #else
 #include <lp_research/lpresearchimu.h>
 #include <apriltag_tracker_interface/apriltag_tracker_interface.h>
