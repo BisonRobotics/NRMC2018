@@ -19,13 +19,15 @@ class SimRobot
   void update(double dt);
 
   private:
-  iVescAccess * fl;
-  iVescAccess * fr;
-  iVescAccess * br;
-  iVescAccess * bl;
+  SimVesc * fl;
+  SimVesc * fr;
+  SimVesc * br;
+  SimVesc * bl;
 
-  ImuSensorInterface * imu;
-  PosSensorInterface * pos;
+  SimImu * imu;
+  SimPos * pos;
 
   Localizer * deadReck;
-}
+
+  double prevXVel, prevYVel;
+};

@@ -20,6 +20,7 @@ link_directories (
 
 catkin_package(
   INCLUDE_DIRS include/ 
+  LIBRARIES sim_robot
   DEPENDS vesc_access sensor_access localization
 )
 
@@ -29,6 +30,10 @@ include_directories(
   ${sensor_access_INCLUDE_DIRS}
   include/
   ${localization_INCLUDE_DIRS}
+)
+
+add_library(sim_robot
+  src/sim_robot.cpp
 )
 
 #include_directories(${GTEST_INCLUDE_DIRS})

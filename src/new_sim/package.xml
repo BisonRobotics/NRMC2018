@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>localization</name>
+  <name>new_sim</name>
   <version>0.0.0</version>
   <description>The new_sim package</description>
   <maintainer email="marcintrosh@todo.todo">marcintrosh</maintainer>

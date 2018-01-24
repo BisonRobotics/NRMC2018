@@ -17,4 +17,4 @@ class SimVesc : public iVescAccess
     double errI;
     double vesc_Pgain;
     double vesc_Igain;
-}
+};

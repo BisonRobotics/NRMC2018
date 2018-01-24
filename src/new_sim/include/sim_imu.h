@@ -1,6 +1,6 @@
 #include <sensor_access/imu_sensor_interface.h>
 
-class SimImu : public ImusensorInterface
+class SimImu : public ImuSensorInterface
 {
 public:
   SimImu(double xnoise1, double ynoise1, double omeganoise1);
@@ -13,5 +13,5 @@ public:
   void update(double x1, double y1, double omega1);
 private:
   double x,y,omega;
-  double xnoise, ynoise, omeganoise
-}
+  double xnoise, ynoise, omeganoise;
+};
