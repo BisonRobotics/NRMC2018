@@ -13,6 +13,8 @@
 // after iterating through the available waypoints, either choose the
 // furthest valid one (could just pick the first one that works)
 
+#define SIMULATING TRUE
+
 #include <ros/ros.h>
 #include <tf2_ros/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
@@ -30,9 +32,18 @@
 #include <wheel_params/wheel_params.h>
 
 #include <super_localizer/super_localizer.h>
+#include <sensor_msgs/JointState.h>
+
+#ifndef SIMULATING
+#error You must define a value (TRUE/FALSE) for SIMULATING
+#endif
+
+#if SIMULATING == TRUE
+#include <sim_robot.h>
+#else
 #include <lp_research/lpresearchimu.h>
 #include <apriltag_tracker_interface/apriltag_tracker_interface.h>
-#include <sensor_msgs/JointState.h>
+#endif
 
 #include <vector>
 #include <utility>
@@ -40,9 +51,35 @@
 bool newWaypointHere = false;
 pose newWaypoint;
 bool halt = false;
+
 void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 {
-  // should add the waypoint to the queue of waypoints
+  //this callback will flag that there is a new waypoint if there are no future
+  //or current maneuvers. If thera are future maneuvers then
+  //this callback will quick check to see if the new waypoint will generate a
+  //better manuever than the current planned maneuvers.
+  //better is defined as X distance travelled per maneuver distance
+
+  //when checking potential maneuvers against the costmap, if a
+  //maneuver would violate the costmap, it is replaced with a caveman maneuver.
+  //a caveman maneuver (turn in place, go fwd, turn in place) is guarenteed safe.
+
+  //will need waypoint_controlelr_helper waypoint to maneuvers
+  //get future goodness
+  //dump future maneuvers
+  //get terminal pose of current maneuver
+
+  //if no future maneuvers, add this one
+  //else
+  //get terminal pose of current maneuver
+  //waypoint to maneuvers of terminal pose and potential waypoint
+  //get goodness of this maneuver
+  //compare the goodnesses
+  //either keep the current plan or dump it and switch to the new one
+
+  pose potentialWaypoint;
+  potentialWaypoint.x = msg->x;potentialWaypoint.y = msg->y;potentialWaypoint.theta = msg->theta;
+  
   newWaypoint.x = msg->x;
   newWaypoint.y = msg->y;
   newWaypoint.theta = msg->theta;
@@ -67,6 +104,25 @@ geometry_msgs::TransformStamped create_tf(double x, double y, double theta)
   return tfStamp;
 }
 
+#if SIMULATING ==TRUE
+geometry_msgs::TransformStamped create_sim_tf(double x, double y, double theta)
+{
+  geometry_msgs::TransformStamped tfStamp;
+  tfStamp.header.stamp = ros::Time::now();
+  tfStamp.header.frame_id = "map";
+  tfStamp.child_frame_id = "sim_base_link";
+  tfStamp.transform.translation.x = x;
+  tfStamp.transform.translation.y = y;
+  tfStamp.transform.translation.z = 0.0;
+  tf2::Quaternion q;
+  q.setRPY(0, 0, theta);
+  tfStamp.transform.rotation.x = q.x();
+  tfStamp.transform.rotation.y = q.y();
+  tfStamp.transform.rotation.z = q.z();
+  tfStamp.transform.rotation.w = q.w();
+  return tfStamp;
+}
+#endif
 
 void haltCallback (const std_msgs::Empty::ConstPtr& msg){
   halt = true;
@@ -98,22 +154,36 @@ int main(int argc, char **argv)
   pose theCPP;
 
   std::vector<waypointWithManeuvers> navigationQueue;
+
+  #if SIMULATING == TRUE
+  SimRobot sim(ROBOT_AXLE_LENGTH, 0,0,0);
+  iVescAccess *fl = (sim.getFLVesc());
+  iVescAccess *fr = (sim.getFRVesc());
+  iVescAccess *br = (sim.getBRVesc());
+  iVescAccess *bl = (sim.getBLVesc());
+
+  ImuSensorInterface* imu = sim.getImu();
+  PosSensorInterface* pos = sim.getPos();
+  #else
   char *can_name = (char *)WHEEL_CAN_NETWORK;
-  VescAccess fl(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
+  iVescAccess *fl = new VescAccess(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
                 WHEEL_TORQUE_CONSTANT, can_name, 1);
-  VescAccess fr(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
+  iVescAccess *fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
                 MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-  VescAccess br(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
+  VescAccess *br = new VescAccess(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
                 WHEEL_TORQUE_CONSTANT, can_name, 1);
-  VescAccess bl(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
+  VescAccess *bl = new VescAccess(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
                 WHEEL_TORQUE_CONSTANT, can_name, 1);
+
+  PosSensorInterface *pos = new AprilTagTrackerInterface();
+  ImuSensorInterface *imu = new LpResearchImu("imu");
+  #endif
 
   //initialize the localizer here
   ros::Time last_time = ros::Time::now();
   tf2_ros::TransformBroadcaster tfBroad;
-  AprilTagTrackerInterface *aprilTags = new AprilTagTrackerInterface();
-  LpResearchImu *lpResearchImu = new LpResearchImu("imu");
-  SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0,0,0, &fl, &fr, &br, &bl, lpResearchImu, aprilTags, SuperLocalizer_default_gains);
+
+  SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0,0,0, fl, fr, br, bl, imu, pos, SuperLocalizer_default_gains);
   LocalizerInterface::stateVector stateVector;
   ros::Subscriber haltsub = node.subscribe ("halt", 100, haltCallback);
   ros::Publisher mode_pub = node.advertise<std_msgs::String>  ("drive_controller_status", 1000);
@@ -140,7 +210,7 @@ int main(int argc, char **argv)
   currPose.theta = tempQuat.getAngle() - M_PI;//-transform.getRotation().getAngle();
 */
   //initialize waypoint controller
-  WaypointController wc = WaypointController(ROBOT_AXLE_LENGTH, ROBOT_MAX_SPEED, currPose, &fl, &fr, &br, &bl);
+  WaypointController wc = WaypointController(ROBOT_AXLE_LENGTH, ROBOT_MAX_SPEED, currPose, fl, fr, br, bl);
   WaypointController::Status wcStat;
   std_msgs::String msg;
   std::stringstream ss;
@@ -153,13 +223,17 @@ int main(int argc, char **argv)
 
     stateVector = superLocalizer.getStateVector();
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+    #if SIMULATING == TRUE
+    tfBroad.sendTransform(create_sim_tf(sim.getX(), sim.getY(), sim.getTheta()));
+    #endif
+
     currPose.x = stateVector.x_pos;
     currPose.y = stateVector.y_pos;
     currPose.theta = stateVector.theta;
-    jsMessage.velocity[0] = fl.getLinearVelocity();
-    jsMessage.velocity[1] = fr.getLinearVelocity();
-    jsMessage.velocity[2] = br.getLinearVelocity();
-    jsMessage.velocity[3] = bl.getLinearVelocity();
+    jsMessage.velocity[0] = fl->getLinearVelocity();
+    jsMessage.velocity[1] = fr->getLinearVelocity();
+    jsMessage.velocity[2] = br->getLinearVelocity();
+    jsMessage.velocity[3] = bl->getLinearVelocity();
     if (newWaypointHere) {
       wc.addWaypoint(newWaypoint, currPose);
     }
@@ -169,7 +243,7 @@ int main(int argc, char **argv)
 
     wcStat = wc.update(currPose, looptime.toSec());
 
-
+    //TODO
     //check if we are stuck by comparing commanded velocity to actual
     //maybe integrate error with some decay
 
