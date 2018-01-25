@@ -183,7 +183,11 @@ int main(int argc, char **argv)
   ros::Time last_time = ros::Time::now();
   tf2_ros::TransformBroadcaster tfBroad;
 
-  SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0,0,0, fl, fr, br, bl, imu, pos, SuperLocalizer_default_gains);
+#if SIMULATING == TRUE
+  SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0,0,0, fl, fr, br, bl, pos, SuperLocalizer_default_gains);
+#else
+  SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH,0,0,0, fl, fr, br, bl, imu, pos, SuperLocalizer_default_gains)
+#endif
   LocalizerInterface::stateVector stateVector;
   ros::Subscriber haltsub = node.subscribe ("halt", 100, haltCallback);
   ros::Publisher mode_pub = node.advertise<std_msgs::String>  ("drive_controller_status", 1000);
@@ -224,6 +228,7 @@ int main(int argc, char **argv)
     stateVector = superLocalizer.getStateVector();
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
     #if SIMULATING == TRUE
+    sim.update(looptime.toSec());
     tfBroad.sendTransform(create_sim_tf(sim.getX(), sim.getY(), sim.getTheta()));
     #endif
 
