@@ -49,7 +49,7 @@ target_link_libraries (
   ${sensor_access_LIBRARIES}
 )
 
-target_link_libraries (sim_robot ${vesc_access_LIBRARIES} ${sensor_access_LIBRARIES})
+target_link_libraries (sim_robot ${vesc_access_LIBRARIES} ${sensor_access_LIBRARIES} support_libs)
 
 #include_directories(${GTEST_INCLUDE_DIRS})
 

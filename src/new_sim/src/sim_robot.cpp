@@ -34,6 +34,28 @@ void SimRobot::update(double dt)
 
 }
 
+iVescAccess * SimRobot::getFLVesc(){
+  return fl;
+}
+
+iVescAccess * SimRobot::getFRVesc(){
+  return fr;
+}
+iVescAccess * SimRobot::getBRVesc(){
+  return br;
+}
+iVescAccess * SimRobot::getBLVesc(){
+  return bl;
+}
+
+ImuSensorInterface * SimRobot::getImu(){
+  return imu;
+}
+PosSensorInterface * SimRobot::getPos(){
+  return pos;
+}
+
+ 
 double SimRobot::getX()
 {
   return deadReck->getStateVector().x_pos;

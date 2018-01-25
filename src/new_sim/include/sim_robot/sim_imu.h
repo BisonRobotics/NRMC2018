@@ -12,6 +12,6 @@ public:
 
   void update(double x1, double y1, double omega1);
 private:
-  double x,y,omega;
+  double x, y, omega;
   double xnoise, ynoise, omeganoise;
 };

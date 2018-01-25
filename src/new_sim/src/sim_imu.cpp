@@ -17,17 +17,17 @@ double SimImu::getY()
   return y;
 }
 
-double SimImu::getOmege()
+double SimImu::getOmega()
 {
   return omega;
 }
 
-ReadableSensors::ReadStatus SimImu::recieveData()
+ReadableSensors::ReadStatus SimImu::receiveData()
 {
   return ReadableSensors::ReadStatus::READ_SUCCESS;
 }
 
-void update(double x1, double y1, double omega1)
+void SimImu::update(double x1, double y1, double omega1)
 {
   //add noise eventually
   x = x1;

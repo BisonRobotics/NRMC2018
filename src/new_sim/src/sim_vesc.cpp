@@ -1,4 +1,6 @@
 #include <vesc_access/ivesc_access.h>
+#include "sim_robot/sim_vesc.h"
+
 
 SimVesc::SimVesc(double Pgain, double Igain)
 {
@@ -13,7 +15,7 @@ void SimVesc::update(double dt)
 {
    double err = setVel - vel;
    errI += err; 
-   vel = -Pgain * err + -Igain * errI; 
+   vel = -vesc_Pgain * err + -vesc_Igain * errI; 
 }
 
 void SimVesc::setLinearVelocity(float meters_per_second)
@@ -21,17 +23,17 @@ void SimVesc::setLinearVelocity(float meters_per_second)
   setVel = meters_per_second;
 }
 
-void SimVesc::getLinearVelocity(void)
+float SimVesc::getLinearVelocity(void)
 {
   return vel;
 }
 
-float SimVesv::getTorque(void)
+float SimVesc::getTorque(void)
 {
   return 0;
 }
 
-float SimVesc::setTorque(float current)
+void SimVesc::setTorque(float current)
 {
   //not implemented
 }
