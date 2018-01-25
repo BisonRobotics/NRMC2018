@@ -14,9 +14,12 @@ SimVesc::SimVesc(double Pgain, double Igain, double velo_factor)
 
 void SimVesc::update(double dt)
 {
+   /*
    double err = setVel - vel;
-   errI += err; 
-   vel = -vesc_Pgain * err + -vesc_Igain * errI; 
+   errI += err * dt; 
+   vel = -vesc_Pgain * err + -vesc_Igain * errI * dt; 
+  */
+   vel = setVel;
 }
 
 void SimVesc::setLinearVelocity(float meters_per_second)

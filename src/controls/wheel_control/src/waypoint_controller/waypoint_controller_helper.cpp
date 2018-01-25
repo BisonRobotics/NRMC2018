@@ -396,62 +396,16 @@ std::vector<maneuver> WaypointControllerHelper::waypoint2maneuvers(pose robotPos
 
 pose WaypointControllerHelper::findCPP(pose robotPose, maneuver curManeuver)
 {
-  // find nearest point on path of maneuver to robot as well as theta of path at that point
-  double Xp, Xpa, Xpb, Yp, Ypa, Ypb, M;
+  // find nearest point on path (in world coords) of maneuver to robot as well as theta of path at that point
+  double thetatangent;
   pose CPP;
-  if (std::abs(robotPose.x - curManeuver.xc) < CPPEQUALTOL)  // dont want to divide by zero
-  {
-    // Xp is the same, Yp is the closest y coord
-    Xp = curManeuver.xc;
-    Ypa = curManeuver.yc + curManeuver.radius;
-    Ypb = curManeuver.yc - curManeuver.radius;
-    if (std::abs(Ypa - robotPose.y) < std::abs(Ypb - robotPose.y))
-      Yp = Ypa;
-    else
-      Yp = Ypb;
-  }
-  else
-  {
-    M = (curManeuver.yc - robotPose.y) / (curManeuver.xc - robotPose.x);
-    // this is a shitfest
+  thetatangent = atan2(robotPose.y - curManeuver.yc, robotPose.x - curManeuver.xc);
+  CPP.theta = thetatangent + M_PI_2 * sign(curManeuver.radius);
+  CPP.theta = WaypointControllerHelper::anglediff(CPP.theta,0);
 
-    double A, B, C;
-    A = (1 + M * M);
-    B = (-2 * curManeuver.xc - 2 * M * M * curManeuver.xc);
-    C = (curManeuver.xc * curManeuver.xc - curManeuver.radius * curManeuver.radius +
-         M * M * curManeuver.xc * curManeuver.xc);
+  CPP.x = std::abs(curManeuver.radius) * cos(thetatangent) + curManeuver.xc;
+  CPP.y = std::abs(curManeuver.radius) * sin(thetatangent) + curManeuver.yc;
 
-    Xpa = (-B + sqrt(B * B - 4 * A * C)) / (2.0 * A);
-    Xpb = (-B - sqrt(B * B - 4 * A * C)) / (2.0 * A);
-
-    /*
-    Xpa =
-        (-(-2 * curManeuver.xc - 2 * M * M * curManeuver.xc) +
-         sqrt((-2 * curManeuver.xc - 2 * M * M * curManeuver.xc) * (-2 * curManeuver.xc - 2 * M * M * curManeuver.xc) -
-              4 * (1 + M * M) * (curManeuver.xc * curManeuver.xc - curManeuver.radius * curManeuver.radius +
-                                 M * M * curManeuver.xc * curManeuver.xc))) /
-        (2 * (1 + M * M));
-
-    Xpb =
-        (-(-2 * curManeuver.xc - 2 * M * M * curManeuver.xc) -
-         sqrt((-2 * curManeuver.xc - 2 * M * M * curManeuver.xc) * (-2 * curManeuver.xc - 2 * M * M * curManeuver.xc) -
-              4 * (1 + M * M) * (curManeuver.xc * curManeuver.xc - curManeuver.radius * curManeuver.radius +
-                                 M * M * curManeuver.xc * curManeuver.xc))) /
-        (2 * (1 + M * M));
-    */
-
-    if (std::abs(robotPose.x - Xpa) < std::abs(robotPose.x - Xpb))
-      Xp = Xpa;
-    else
-      Xp = Xpb;
-
-    Yp = M * (Xp - curManeuver.xc) + curManeuver.yc;
-  }
-
-  CPP.x = Xp;
-  CPP.y = Yp;
-  CPP.theta = WaypointControllerHelper::anglediff(atan2(Yp - curManeuver.yc, Xp - curManeuver.xc),
-                                                  M_PI / 2);  // this needs fixed
   return CPP;
 }
 

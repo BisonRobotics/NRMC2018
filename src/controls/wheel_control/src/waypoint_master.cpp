@@ -156,7 +156,7 @@ int main(int argc, char **argv)
   std::vector<waypointWithManeuvers> navigationQueue;
 
   #if SIMULATING == TRUE
-  SimRobot sim(ROBOT_AXLE_LENGTH, 0,0,0);
+  SimRobot sim(ROBOT_AXLE_LENGTH, .5,.5,0);
   iVescAccess *fl = (sim.getFLVesc());
   iVescAccess *fr = (sim.getFRVesc());
   iVescAccess *br = (sim.getBRVesc());
@@ -166,14 +166,14 @@ int main(int argc, char **argv)
   PosSensorInterface* pos = sim.getPos();
   #else
   char *can_name = (char *)WHEEL_CAN_NETWORK;
-  iVescAccess *fl = new VescAccess(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
-                WHEEL_TORQUE_CONSTANT, can_name, 1);
+  iVescAccess *fl = new VescAccess(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
+                    MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
   iVescAccess *fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
-                MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-  VescAccess *br = new VescAccess(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
-                WHEEL_TORQUE_CONSTANT, can_name, 1);
-  VescAccess *bl = new VescAccess(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
-                WHEEL_TORQUE_CONSTANT, can_name, 1);
+                    MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
+  iVescAccess *br = new VescAccess(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, 
+                    MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
+  iVescAccess *bl = new VescAccess(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
+                    MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
 
   PosSensorInterface *pos = new AprilTagTrackerInterface();
   ImuSensorInterface *imu = new LpResearchImu("imu");
@@ -245,9 +245,10 @@ int main(int argc, char **argv)
     jsMessage.velocity[2] = br->getLinearVelocity();
     jsMessage.velocity[3] = bl->getLinearVelocity();
     if (newWaypointHere) {
+      ROS_INFO("Attempting to add waypoint");
       wc.addWaypoint(newWaypoint, currPose);
       newWaypointHere = false;
-      ROS_INFO ("Got a waypoint");
+      ROS_INFO ("Waypoint Added!");
     }
 
     // update controller
@@ -287,6 +288,7 @@ int main(int argc, char **argv)
     ROS_INFO("Epp Estimate: %.4f", wc.getEPpEstimate());
 
     ROS_INFO("SetSpeeds: %.4f, %.4f", wc.getSetSpeeds().first, wc.getSetSpeeds().second);
+    ROS_INFO("CmdSpeeds: %.4f, %.4f", wc.getCmdSpeeds().first, wc.getCmdSpeeds().second);
 
     if (navigationQueue.size() > 0)
     {

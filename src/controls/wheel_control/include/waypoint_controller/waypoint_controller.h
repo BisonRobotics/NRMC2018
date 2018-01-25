@@ -32,6 +32,7 @@ public:
   double getETpEstimate();                                   // DEBUG
   double getEPpEstimate();                                   // DEBUG
   std::pair<double, double> getSetSpeeds();                   // DEBUG
+  std::pair<double, double> getCmdSpeeds();                  //DEBUG
 
   void haltAndAbort();
 

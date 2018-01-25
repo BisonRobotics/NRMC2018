@@ -86,12 +86,35 @@ std::pair<double, double> WaypointController::getSetSpeeds()
   return std::pair<double, double>(LeftWheelSetSpeed, RightWheelSetSpeed);
 }
 
+std::pair<double, double> WaypointController::getCmdSpeeds()
+{
+  return std::pair<double, double>(LvelCmd, RvelCmd);
+}
+
 void WaypointController::haltAndAbort()
 {
   front_left_wheel->setLinearVelocity(0);
   back_left_wheel->setLinearVelocity(0);
   front_right_wheel->setLinearVelocity(0);
   back_right_wheel->setLinearVelocity(0);
+
+  EPpLowPass = 0;
+  EPpLowPassPrev = 0;
+  ETpLowPass = 0;
+  ETpLowPassPrev = 0;
+  EPpDerivFiltEst = 0;
+  ETpDerivFiltEst = 0;
+
+  EPpEst = 0;
+  ETpEst = 0;
+
+  currManeuverIndex = 0;
+  doingManeuver = false;
+
+  LvelCmd = 0;
+  RvelCmd = 0;
+
+  navigationQueue.clear();
 }
 
 //TODO
@@ -188,7 +211,7 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
         returnStatus = Status::ALLBAD;
     }
     // do control system calculations
-    if (currMan.radius > 0) {  // signed turn radius
+    if (currMan.radius > 0) {  // signed turn radius, positice means turn left
       EPpEst = currMan.radius - dist(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
     }else {
       EPpEst = currMan.radius + dist(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
