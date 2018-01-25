@@ -39,6 +39,21 @@ TEST(WaypointControllerTests, updateReturnsAStatus)
               returnStatus == WaypointController::Status::ALLBAD);
 }
 
+TEST(WaypointControllerTests, ableToAddWaypoint)
+{
+  NiceMock<MockVescAccess> br;
+  NiceMock<MockVescAccess> bl;
+  NiceMock<MockVescAccess> fr;
+  NiceMock<MockVescAccess> fl;
+  pose wcInitial = {.x = 0, .y = 0, .theta = 0 };
+  pose theWay = {.x = 3, .y = 1, .theta = M_PI_2 };
+  WaypointController wc = WaypointController(.5f, .5f, wcInitial, &fl, &fr, &br, &bl);
+  wc.addWaypoint(theWay, wcInitial);
+
+  //expect no segfault?
+  EXPECT_TRUE(false);
+}
+
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {
