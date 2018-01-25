@@ -7,6 +7,7 @@ class SimRobot
 {
   public:
   SimRobot(double axelLen, double xi, double yi ,double thi);
+  SimRobot(double axelLen, double xi, double yi, double thi, double VescPgain);
 
   iVescAccess * getFLVesc();
   iVescAccess * getFRVesc();

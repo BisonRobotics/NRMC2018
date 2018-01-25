@@ -19,7 +19,9 @@ void SimVesc::update(double dt)
    errI += err * dt; 
    vel = -vesc_Pgain * err + -vesc_Igain * errI * dt; 
   */
-   vel = setVel;
+   //vel = setVel;
+   double err = vel - setVel;
+   vel += (-vesc_Pgain) * err * dt;
 }
 
 void SimVesc::setLinearVelocity(float meters_per_second)

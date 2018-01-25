@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <waypoint_controller/waypoint_controller.h>
 #include <vesc_access/mock_vesc_access.h>
+#include <sim_robot/sim_robot.h>
 #include <gmock/gmock.h>
 #include <vector>
 #include <utility>
@@ -39,19 +40,38 @@ TEST(WaypointControllerTests, updateReturnsAStatus)
               returnStatus == WaypointController::Status::ALLBAD);
 }
 
-TEST(WaypointControllerTests, ableToAddWaypoint)
+TEST(WaypointControllerTests, ableToAddWaypoint_FrontThenRight)
 {
+  SimRobot sim(.5f, 0,0,0, 16);
+  /*
   NiceMock<MockVescAccess> br;
   NiceMock<MockVescAccess> bl;
   NiceMock<MockVescAccess> fr;
   NiceMock<MockVescAccess> fl;
-  pose wcInitial = {.x = 0, .y = 0, .theta = 0 };
-  pose theWay = {.x = 3, .y = 1, .theta = M_PI_2 };
-  WaypointController wc = WaypointController(.5f, .5f, wcInitial, &fl, &fr, &br, &bl);
-  wc.addWaypoint(theWay, wcInitial);
+  */
+  iVescAccess *fl = (sim.getFLVesc());
+  iVescAccess *fr = (sim.getFRVesc());
+  iVescAccess *br = (sim.getBRVesc());
+  iVescAccess *bl = (sim.getBLVesc());
 
-  //expect no segfault?
-  EXPECT_TRUE(false);
+  pose wcInitial = {.x = 0, .y = 0, .theta = 0 };
+  pose theWay = {.x = 3, .y = 0, .theta = 0 };
+  WaypointController wc = WaypointController(.5f, .5f, wcInitial, fl, fr, br, bl);
+
+  wc.addWaypoint(theWay, wcInitial);  
+  pose currPose;
+  for (int loop=0; loop<1000;loop++)
+  {
+    currPose.x = sim.getX();
+    currPose.y = sim.getY();
+    currPose.theta = sim.getTheta();
+    wc.update(currPose, .01);
+    sim.update(.01);
+    ASSERT_NEAR(wc.getETpEstimate(), 0, 4) << "loop index: "<< loop <<"\nSim Robot Pose:\n"
+    <<"X: " << sim.getX() <<"\nY: " << sim.getY() << "\nTh: "<<sim.getTheta() << "\n"; //angle stay within .5 rad (~30deg)
+    ASSERT_NEAR(wc.getEPpEstimate(), 0, .3) << "loop index: "<< loop <<"\nSim Robot Pose:\n"
+    <<"X: " << sim.getX() <<"\nY: " << sim.getY() << "\nTh: "<<sim.getTheta() << "\n"; //path error below 10cm
+  }
 }
 
 // Run all the tests that were declared with TEST()

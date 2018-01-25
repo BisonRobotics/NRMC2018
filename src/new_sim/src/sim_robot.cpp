@@ -2,10 +2,25 @@
 
 SimRobot::SimRobot(double axelLen, double xi, double yi, double thi)
 {
-  fl = new SimVesc(.2, .01, 1.0);
-  fr = new SimVesc(.2, .01, 1.0);
-  br = new SimVesc(.2, .01, 1.0);
-  bl = new SimVesc(.2, .01, 1.0);
+  fl = new SimVesc(16, 0, 1.0);
+  fr = new SimVesc(16, 0, 1.0);
+  br = new SimVesc(16, 0, 1.0);
+  bl = new SimVesc(16, 0, 1.0);
+
+  imu = new SimImu(0,0,0);
+  pos = new SimPos(0,0,0);
+
+  deadReck = new Localizer(axelLen, xi, yi, thi, fl, fr, br, bl);
+  prevXVel =0;
+  prevYVel =0;
+}
+
+SimRobot::SimRobot(double axelLen, double xi, double yi, double thi, double VescPgain)
+{
+  fl = new SimVesc(VescPgain, 0, 1.0);
+  fr = new SimVesc(VescPgain, 0, 1.0);
+  br = new SimVesc(VescPgain, 0, 1.0);
+  bl = new SimVesc(VescPgain, 0, 1.0);
 
   imu = new SimImu(0,0,0);
   pos = new SimPos(0,0,0);
@@ -29,8 +44,6 @@ void SimRobot::update(double dt)
   prevYVel = states.y_vel;
   imu->update(xaccel, yaccel, states.omega);
   pos->update(states.x_pos, states.y_pos, states.theta);
-
-  //post pose/statevector to \sim_robot_base_link
 
 }
 

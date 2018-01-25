@@ -183,16 +183,13 @@ int main(int argc, char **argv)
   ros::Time last_time = ros::Time::now();
   tf2_ros::TransformBroadcaster tfBroad;
 
-#if SIMULATING == TRUE
   SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0,0,0, fl, fr, br, bl, imu, pos, SuperLocalizer_default_gains);
-#else
-  SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH,0,0,0, fl, fr, br, bl, imu, pos, SuperLocalizer_default_gains)
-#endif
+
   LocalizerInterface::stateVector stateVector;
   ros::Subscriber haltsub = node.subscribe ("halt", 100, haltCallback);
   ros::Publisher mode_pub = node.advertise<std_msgs::String>  ("drive_controller_status", 1000);
   //hang here until someone knows where we are
-  ROS_INFO ("Going into wait loop for local");
+  ROS_INFO ("Going into wait loop for localizer");
 
   ros::Rate rate(50.0);
 
