@@ -2,10 +2,10 @@
 
 SimRobot::SimRobot(double axelLen, double xi, double yi, double thi)
 {
-  fl = new SimVesc(.2, .01);
-  fr = new SimVesc(.2, .01);
-  br = new SimVesc(.2, .01);
-  bl = new SimVesc(.2, .01);
+  fl = new SimVesc(.2, .01, 1.0);
+  fr = new SimVesc(.2, .01, 1.0);
+  br = new SimVesc(.2, .01, 1.0);
+  bl = new SimVesc(.2, .01, 1.0);
 
   imu = new SimImu(0,0,0);
   pos = new SimPos(0,0,0);

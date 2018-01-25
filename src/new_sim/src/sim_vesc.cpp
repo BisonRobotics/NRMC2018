@@ -2,13 +2,14 @@
 #include "sim_robot/sim_vesc.h"
 #include "sensor_msgs/JointState.h"
 
-SimVesc::SimVesc(double Pgain, double Igain)
+SimVesc::SimVesc(double Pgain, double Igain, double velo_factor)
 {
   vesc_Pgain = Pgain;
   vesc_Igain = Igain;
   vel =0;
   setVel =0;
   errI =0;
+    velocity_factor = velo_factor;
 }
 
 void SimVesc::update(double dt)
@@ -20,7 +21,7 @@ void SimVesc::update(double dt)
 
 void SimVesc::setLinearVelocity(float meters_per_second)
 {
-  setVel = meters_per_second;
+  setVel = meters_per_second * velocity_factor;
 }
 
 float SimVesc::getLinearVelocity(void)

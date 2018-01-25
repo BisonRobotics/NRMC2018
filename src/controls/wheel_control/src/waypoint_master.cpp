@@ -149,9 +149,9 @@ int main(int argc, char **argv)
  // tf2_ros::TransformListener tfListener(tfBuffer);
   geometry_msgs::TransformStamped transformStamped;
 
-  pose theWay;
-  pose currPose;
-  pose theCPP;
+ // pose theWay = {0,0,0};
+  pose currPose = {0,0,0};
+  pose theCPP = {0,0,0};
 
   std::vector<waypointWithManeuvers> navigationQueue;
 
@@ -184,7 +184,7 @@ int main(int argc, char **argv)
   tf2_ros::TransformBroadcaster tfBroad;
 
 #if SIMULATING == TRUE
-  SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0,0,0, fl, fr, br, bl, pos, SuperLocalizer_default_gains);
+  SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0,0,0, fl, fr, br, bl, imu, pos, SuperLocalizer_default_gains);
 #else
   SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH,0,0,0, fl, fr, br, bl, imu, pos, SuperLocalizer_default_gains)
 #endif
@@ -199,6 +199,9 @@ int main(int argc, char **argv)
   while (!superLocalizer.getIsDataGood() && ros::ok () )
   {
     //do initial localization
+#if SIMULATING == TRUE
+    sim.update ((ros::Time::now ()-last_time).toSec());
+    #endif
     superLocalizer.updateStateVector((ros::Time::now() - last_time).toSec());
     last_time = ros::Time::now();
     stateVector = superLocalizer.getStateVector();
@@ -223,14 +226,16 @@ int main(int argc, char **argv)
   while (ros::ok()) {
     //update localizer here
     looptime = ros::Time::now() - last_time;
+     #if SIMULATING == TRUE
+    sim.update(looptime.toSec());
     superLocalizer.updateStateVector(looptime.toSec());
+    tfBroad.sendTransform(create_sim_tf(sim.getX(), sim.getY(), sim.getTheta()));
+     #endif
+
 
     stateVector = superLocalizer.getStateVector();
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
-    #if SIMULATING == TRUE
-    sim.update(looptime.toSec());
-    tfBroad.sendTransform(create_sim_tf(sim.getX(), sim.getY(), sim.getTheta()));
-    #endif
+
 
     currPose.x = stateVector.x_pos;
     currPose.y = stateVector.y_pos;
@@ -241,6 +246,8 @@ int main(int argc, char **argv)
     jsMessage.velocity[3] = bl->getLinearVelocity();
     if (newWaypointHere) {
       wc.addWaypoint(newWaypoint, currPose);
+      newWaypointHere = false;
+      ROS_INFO ("Got a waypoint");
     }
 
     // update controller
