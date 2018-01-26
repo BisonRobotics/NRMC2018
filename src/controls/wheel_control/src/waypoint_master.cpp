@@ -48,6 +48,8 @@
 #include <vector>
 #include <utility>
 
+#define UPDATE_RATE_HZ 50.0
+
 bool newWaypointHere = false;
 pose newWaypoint;
 bool halt = false;
@@ -191,12 +193,12 @@ int main(int argc, char **argv)
   //hang here until someone knows where we are
   ROS_INFO ("Going into wait loop for localizer");
 
-  ros::Rate rate(50.0);
+  ros::Rate rate(UPDATE_RATE_HZ);
 
   while (!superLocalizer.getIsDataGood() && ros::ok () )
   {
     //do initial localization
-#if SIMULATING == TRUE
+    #if SIMULATING == TRUE
     sim.update ((ros::Time::now ()-last_time).toSec());
     #endif
     superLocalizer.updateStateVector((ros::Time::now() - last_time).toSec());
@@ -214,7 +216,7 @@ int main(int argc, char **argv)
   currPose.theta = tempQuat.getAngle() - M_PI;//-transform.getRotation().getAngle();
 */
   //initialize waypoint controller
-  WaypointController wc = WaypointController(ROBOT_AXLE_LENGTH, ROBOT_MAX_SPEED, currPose, fl, fr, br, bl);
+  WaypointController wc = WaypointController(ROBOT_AXLE_LENGTH, ROBOT_MAX_SPEED, currPose, fl, fr, br, bl, 1.0 / UPDATE_RATE_HZ);
   WaypointController::Status wcStat;
   std_msgs::String msg;
   std::stringstream ss;
