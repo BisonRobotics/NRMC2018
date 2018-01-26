@@ -13,7 +13,7 @@ from astar import *
 import map_utils
 import time
 import RRT
-
+import matplotlib.pyplot as plt
 from robot import *
 
 # TODO : Currently an issue trying to import a custom message, no module named .msg
@@ -108,7 +108,7 @@ class GlobalPlanner(object):
         #TODO : Issue getting the location
         #Using this now just for testing
         location = (0,0)
-        goal = (3,3)
+        goal = (6,6)
 
         print("Starting the path planner")
         saved_time = time.time()
@@ -227,6 +227,19 @@ class GlobalPlanner(object):
             oriented_waypoints.append(single)
 
         return oriented_waypoints
+
+    #TODO : CAN BE REMOVED, ONLY FOR TESTING/DEBUGGING
+    def draw_tree(self, waypoints):
+        for x in range(1, len(waypoints)):
+            x1, y1 = waypoints[x - 1]
+            x2, y2 = waypoints[x]
+            plt.plot([x1, x2], [y1, y2])
+
+        # configure plot axises
+        plt.xlim(-1, 11)
+        plt.ylim(-1, 11)
+
+        plt.show()
 
 
 

@@ -39,8 +39,8 @@ class Visualizaion(object):
             plt.plot([x1, x2], [y1, y2])
 
         # configure plot axises
-        plt.xlim(0, 10)
-        plt.ylim(-6, 6)
+        plt.xlim(-1, 11)
+        plt.ylim(-1, 11)
 
         plt.show()
 

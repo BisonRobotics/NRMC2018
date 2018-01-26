@@ -130,17 +130,130 @@ class Node():
         self.y = y
         self.parent = None
 
+def GetPathLength(path):
+    le = 0
+    for i in range(len(path) - 1):
+        dx = path[i + 1][0] - path[i][0]
+        dy = path[i + 1][1] - path[i][1]
+        d = math.sqrt(dx * dx + dy * dy)
+        le += d
+
+    return le
+
+
+def GetTargetPoint(path, targetL):
+    le = 0
+    ti = 0
+    lastPairLen = 0
+    for i in range(len(path) - 1):
+        dx = path[i + 1][0] - path[i][0]
+        dy = path[i + 1][1] - path[i][1]
+        d = math.sqrt(dx * dx + dy * dy)
+        le += d
+        if le >= targetL:
+            ti = i - 1
+            lastPairLen = d
+            break
+
+    partRatio = (le - targetL) / lastPairLen
+    #  print(partRatio)
+    #  print((ti,len(path),path[ti],path[ti+1]))
+
+    x = path[ti][0] + (path[ti + 1][0] - path[ti][0]) * partRatio
+    y = path[ti][1] + (path[ti + 1][1] - path[ti][1]) * partRatio
+    #  print((x,y))
+
+    return [x, y, ti]
+
+
+def LineCollisionCheck(first, second, obstacleList):
+    # Line Equation
+
+    x1 = first[0]
+    y1 = first[1]
+    x2 = second[0]
+    y2 = second[1]
+
+    try:
+        a = y2 - y1
+        b = -(x2 - x1)
+        c = y2 * (x2 - x1) - x2 * (y2 - y1)
+    except ZeroDivisionError:
+        return False
+
+    for (ox, oy, size) in obstacleList:
+        d = abs(a * ox + b * oy + c) / (math.sqrt(a * a + b * b))
+        if d <= (size):
+            return False
+
+    #  print("OK")
+
+    return True  # OK
+
+def path_smoothing(path, maxIter, obstacleList):
+    #  print("PathSmoothing")
+
+    le = GetPathLength(path)
+
+    for i in range(maxIter):
+        # Sample two points
+        pickPoints = [random.uniform(0, le), random.uniform(0, le)]
+        pickPoints.sort()
+        #  print(pickPoints)
+        first = GetTargetPoint(path, pickPoints[0])
+        #  print(first)
+        second = GetTargetPoint(path, pickPoints[1])
+        #  print(second)
+
+        if first[2] <= 0 or second[2] <= 0:
+            continue
+
+        if (second[2] + 1) > len(path):
+            continue
+
+        if second[2] == first[2]:
+            continue
+
+        # collision check
+        if not LineCollisionCheck(first, second, obstacleList):
+            continue
+
+        # Create New path
+        newPath = []
+        newPath.extend(path[:first[2] + 1])
+        newPath.append([first[0], first[1]])
+        newPath.append([second[0], second[1]])
+        newPath.extend(path[second[2] + 1:])
+        path = newPath
+        le = GetPathLength(path)
+
+    return path
+
+
+
 def path_planning(start, goal):
     print("Start RRT path planning")
-    # ====Search Path with RRT====
     #TODO : Add the obstacles in
-    obstacleList = [
-
-    ]  # [x,y,size]
+    obstacleList = []  # [x,y,size]
     # Set Initial parameters
     rrt = RRT(start=start, goal=goal,
               randArea=[-2, 15], obstacleList=obstacleList)
     path = rrt.Planning()
+    draw_tree(path)
+    smooth_path = path_smoothing(path, 1000, obstacleList)
+    draw_tree(smooth_path)
 
+    return smooth_path
 
-    return path
+   #TODO : CAN BE REMOVED, ONLY FOR TESTING/DEBUGGING
+def draw_tree(waypoints):
+    for x in range(1, len(waypoints)):
+        x1, y1 = waypoints[x - 1]
+        x2, y2 = waypoints[x]
+        plt.plot([x1, x2], [y1, y2])
+
+    # configure plot axises
+    plt.xlim(-1, 11)
+    plt.ylim(-1, 11)
+
+    plt.show()
