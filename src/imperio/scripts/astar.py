@@ -1,121 +1,154 @@
-import math
+import heapq
 
-class Node:
-    def __init__(self, value, point):
-        self.value = value
-        self.point = point
-        self.parent = None
-        self.H = 0
-        self.G = 0
-    def move_cost(self,other):
-        return other.value
 
-#Returns the Children as Nodes (Up, Down, Left, Right)
-def children(point,grid, width, height):
-    sample_size = 1
-    x,y = point.point
-    links = []
+class PathNode:
+    """
+    state: A tuple of XY Coordinates
+    parent: PathNode (if null start state)
+    path_cost: Number
+    action_to: Currently the same as state
+    """
 
-    if x - 1 >= 0:
-        value = grid[x-1][y]
-        node = Node(value, (x-1,y))
-        links.append(node)
+    def __init__(self, state, parent, step_cost, action_to):
+        self.state = state
+        self.parent = parent
+        if parent is None:
+            self.path_cost = 0
+        else:
+            self.path_cost = parent.path_cost + step_cost
+        self.action_to = action_to
 
-    if y - 1 >= 0:
-        value = grid[x][y-1]
-        node = Node(value, (x,y-1))
-        links.append(node)
+    def getPathCost(self):
+        return self.path_cost
 
-    if x + 1 < width:
-        value = grid[x+1][y]
-        node = Node(value, (x+1,y))
-        links.append(node)
+    def returnPath(self):
+        return_path = []
+        pnode = self.parent
+        return_path.append(self.action_to)
+        while pnode is not None and pnode.action_to is not None:
+            return_path.insert(0, pnode.action_to)
+            pnode = pnode.parent
+            print
 
-    if y + 1 < height:
-        value = grid[x][y+1]
-        node = Node(value, (x,y+1))
-        links.append(node)
+        return return_path
 
-    return [link for link in links if link.value <= .5]#Change this if needed to change the threshold
-    
-def heuristic(point,point2):
-    return abs(point.point[0] - point2.point[0]) + abs(point.point[1]-point2.point[0])
+    def getNeighbors(self, width, height):
+        succ = []
+        size = 1
+        if (self.state[0] - size >= 0):
+            succ.append((self.state[0] - size, self.state[1]))
+        if (self.state[0] + size < height):
+            succ.append((self.state[0] + size, self.state[1]))
+        if (self.state[1] - size >= 0):
+            succ.append((self.state[0], self.state[1] - size))
+        if (self.state[1] + size < width):
+            succ.append((self.state[0], self.state[1] + size))
+        return succ
 
-#Returns the path as points
-"""
-Uses the Astar algorithm to find the shortest path from the start to the goal using the
-occupancy grid given. The Start and Goal are tuples and OccGrid is the Occupancy Grid
-as defined within the map_utils file.
-"""
-def aStar(global_start, global_goal, OccGrid):
-    x,y = global_goal
-    goal = OccGrid.cell_index(x, y)
-    x,y = global_start
-    start = OccGrid.cell_index(x,y)
-    print("goal : {} start : {}", goal, start)
-    #Gets the grid from the occupancy grid and uses that as the map.
-    grid = OccGrid.grid
-    #The open and closed sets (Store Nodes)
-    openset = set()
-    closedset = set()
-    #Current point is the starting point (Change it to a Node from a point)
-    current = Node(0,start)
-    end = Node(0,goal)
-    #Add the starting point to the open set
-    openset.add(current)
-    #While the open set is not empty
-    
-    while openset:
-        #Where G is actual cost and H is hueristic
-        #Find the item in the open set with the lowest G + H score
-        current = min(openset, key=lambda o:o.G + o.H)
-        #If it is the item we want, retrace the path and return it
-        #TODO : calculate threshold based on resulotion of occupancy grid
-        #print("current point :", current.point)
-        current_x, current_y = current.point
-        goal_x, goal_y = goal
-        abs_distance = math.sqrt((current_x - goal_x) ** 2 + (current_y - goal_y) ** 2)
-        if abs_distance <= 0:
-            path = []
-            while current.parent:
-                global_point = OccGrid.cell_position(current.point[0], current.point[1])
-                path.append(global_point)
-                current = current.parent
-            global_point = OccGrid.cell_position(current.point[0], current.point[1])
-            path.append(global_point)
-            return path[::-1]
-        #Remove the item from the open set
-        openset.remove(current)
-        print(len(openset))
-        #Add it to the closed set
-        closedset.add(current)
-        #Loop through the node's children/siblings
-        for node in children(current,grid, OccGrid.height, OccGrid.width):
-            #If it is already in the closed set, skip it
-            if node in closedset:
-                print("FUCK")
-                continue
-            #Otherwise if it is already in the open set
-            if node in openset:
-                print(".")
-                #Check if we beat the G score 
-                new_g = current.G + current.move_cost(node)
-                if new_g != 0:
-                    print("NEW_G does not equal 0")
-                if node.G != 0:
-                    print("NODE.G does not equal 0")
-                if node.G > new_g:
-                    #If so, update the node to have a new
-                    node.G = new_g
-                    node.parent = current
+    def __eq__(self, other):
+        return self.state == other.state
+
+
+class PriorityQueue:
+    """
+      Implements a priority queue data structure. Each inserted item
+      has a priority associated with it and the client is usually interested
+      in quick retrieval of the lowest-priority item in the queue. This
+      data structure allows O(1) access to the lowest-priority item.
+    """
+
+    def __init__(self):
+        self.heap = []
+        self.count = 0
+
+    def push(self, item, priority):
+        entry = (priority, self.count, item)
+        heapq.heappush(self.heap, entry)
+        self.count += 1
+
+    def pop(self):
+        (_, _, item) = heapq.heappop(self.heap)
+        return item
+
+    def isEmpty(self):
+        return len(self.heap) == 0
+
+    def length(self):
+        return len(self.heap)
+
+    def contains(self, item):
+        for index, (p, c, i) in enumerate(self.heap):
+            if i == item:
+                return True
+        return False
+
+    def update(self, item, priority):
+        # If item already in priority queue with higher priority, update its priority and rebuild the heap.
+        # If item already in priority queue with equal or lower priority, do nothing.
+        # If item not in priority queue, do the same thing as self.push.
+        for index, (p, c, i) in enumerate(self.heap):
+            if i == item:
+                if p <= priority:
+                    break
+                del self.heap[index]
+                self.heap.append((priority, c, item))
+                heapq.heapify(self.heap)
+                break
             else:
-                #If it isn't in the open set, calculate the G and H score for the node
-                node.G = current.G + current.move_cost(node)
-                node.H = heuristic(node, end)
-                #Set the parent to our current item
-                node.parent = current
-                #Add it to the set
-                openset.add(node)
-    #TODO handle this in a treatable way . . .
-    #Throw an exception if there is no path
-    raise ValueError('No Path Found')
+                self.push(item, priority)
+
+
+def heuristic(current, goal):
+    """
+    Heuristic to be Used by the AStar Algorithm.
+    """
+    return abs(current[0] - goal[0]) + abs(current[1] - goal[1])  # Manhattan Distance
+
+def aStar_xy(start_xy, end_xy, grid):
+    x,y = start_xy
+    start = grid.cell_index(x,y)
+    x,y = end_xy
+    end = grid.cell_index(x,y)
+
+    cell_results = aStar(start, end, grid)
+    return cell_results
+    point_results = []
+    for cell in cell_results:
+        x,y = cell
+        point_results.append(grid.cell_position(x,y))
+    return point_results
+
+def aStar(start, end, OccupancyGrid):  # Assumes that 0,0 is the bottom left corner
+    grid = OccupancyGrid.grid
+    if start == end:
+        return []
+    # Initialize the Goal Node, open Queue, and closedSet
+    goal = PathNode(end, None, 0, None)
+    openSet = PriorityQueue()
+    openSet.push(PathNode(start, None, 0, None), 0)
+    closedSet = set()
+
+    # Perform the actual Astar Algorithm
+    while not openSet.isEmpty():
+        # Get the next node off of the queue and add it to the closed set
+        currentNode = openSet.pop()
+        closedSet.add(currentNode.state)
+        # Check to see if it is the Goal, and if it is return the path to it as points
+        if goal == currentNode:
+            return currentNode.returnPath()
+        # Check each neighbor of the current Node to see if we found it already
+        for neighbor in currentNode.getNeighbors(OccupancyGrid.width, OccupancyGrid.height):
+            # Get the stepCost and Make a Neighbor Node
+            stepCost = grid[neighbor[0]][neighbor[1]]
+            neighborNode = PathNode(neighbor, currentNode, stepCost, neighbor)
+            # Check to see if the neighbors have already been checked
+            # which would mean they have the optimal cost, I think
+            if neighbor not in closedSet and not openSet.contains(neighborNode):
+                # print neighborNode.getPathCost()
+                # print heuristic(neighbor, end)
+                openSet.push(neighborNode, neighborNode.getPathCost() + heuristic(neighbor, end))
+                # Added this after I got home, so I could not test it with an empty OccGrid
+            elif neighbor not in closedSet and openSet.contains(neighborNode):
+                openSet.update(neighborNode, neighborNode.getPathCost() + heuristic(neighbor, end))
+
+    return []

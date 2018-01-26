@@ -111,11 +111,13 @@ class GlobalPlanner(object):
 
         print("Starting the path planner")
         saved_time = time.time()
-        #results = aStar(location, goal, self.occupancy_grid)
-        results = random_point.path_planner(location, goal, self.occupancy_grid)
-        #TODO : using for interacting with the local planner
+        results = aStar_xy(location, goal, self.occupancy_grid)
+        print(results)
+        #TODO : Below is for testing, remove for final code
+        #results = random_point.path_planner(location, goal, self.occupancy_grid)
         #print("Path Planner : Hardcoded for testing purposes")
         #results = [(0,1),(1,1), (1,2),(1,3),(1,4)]
+
         print("Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
 
         message = GlobalWaypoints()
@@ -215,10 +217,11 @@ class GlobalPlanner(object):
             oriented_waypoints.append(single)
 
         #still need to add the last waypoint
-        final_waypoint = waypoints[len(waypoints) - 1]
-        final_orientation = 180
-        single = [final_waypoint[0], final_waypoint[1], final_orientation]
-        oriented_waypoints.append(single)
+        if len(waypoints) > 1:
+            final_waypoint = waypoints[len(waypoints) - 1]
+            final_orientation = 180
+            single = [final_waypoint[0], final_waypoint[1], final_orientation]
+            oriented_waypoints.append(single)
 
         return oriented_waypoints
 
