@@ -46,7 +46,7 @@ class GlobalPlanner(object):
         self.waypoints_publisher = rospy.Publisher('/global_planner_goal', GlobalWaypoints, queue_size=1)
         self.draw_points_publisher = rospy.Publisher('/draw_points', GlobalWaypoints, queue_size=1)
         rospy.Subscriber('/drive_controller_status', DriveStatus, self.drive_status_callback)
-        rospy.Subscriber('/vrep/map', OccupancyGrid, self.map_callback)
+        rospy.Subscriber('/map', OccupancyGrid, self.map_callback)
         self.robot = robot
         self.occupancy_grid = None
         self.movement_status = MovementStatus.HAS_REACHED_GOAL
@@ -81,9 +81,10 @@ class GlobalPlanner(object):
 
         #We can't do anything until we have the occupancy grid
         if self.occupancy_grid == None:
+            print("IMPERIO: Cannot find the occupancy grid")
             self.movement_status == MovementStatus.WAITING
             return False
-
+        print("Imperio: Occupancy Grid Exists")
         waypoints = self.find_waypoints(goal)
         oriented_waypoints = self.calculate_orientation(waypoints)
 
@@ -113,10 +114,10 @@ class GlobalPlanner(object):
         saved_time = time.time()
 
         #TODO : Below is for testing, remove for final code and pick sorting alg
-        results = aStar_xy(location, goal, self.occupancy_grid)
+        #results = aStar_xy(location, goal, self.occupancy_grid)
         #results = random_point.path_planner(location, goal, self.occupancy_grid)
-        #print("Path Planner : Hardcoded for testing purposes")
-        #results = [(0,1),(1,1), (1,2),(1,3),(1,4)]
+        print("Path Planner : Hardcoded for testing purposes")
+        results = [(0,1),(1,1), (1,2),(1,3),(1,4)]
 
         print(results)
         print("Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))

@@ -34,8 +34,6 @@ class robot(object):
         Initializes the robot
         :param node: the ROS node being used
         """
-        rospy.Subscriber('/vrep/laser_scan_front', LaserScan, self.laser_scan_callback)
-
         self.state = None
         self.change_state(RobotState.OUTBOUND)
         self.tf = tf.TransformListener(node)
@@ -104,7 +102,12 @@ class robot(object):
         :return: robot location (x,y) and pose (x,y,theta)
         """
         try:
-            (self.location, self.pose) = self.tf.lookupTransform('/map', '/base_link', rospy.Time(0))
+            #TODO : Add localization stuff here when it become available
+            #(self.location, self.pose) = self.tf.lookupTransform('/map', '/base_link', rospy.Time(0))
+            self.pose = (0,0)
+            self.location = (0,0,0)
+            return (self.location, self.pose)
+
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             return (None, None)
         return (self.location, self.pose)
