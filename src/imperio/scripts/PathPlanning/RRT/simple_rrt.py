@@ -1,11 +1,17 @@
 """
 Path Planning Sample Code with Randamized Rapidly-Exploring Random Trees (RRT)
+
+author: AtsushiSakai(@Atsushi_twi)
+
 """
 
 import matplotlib.pyplot as plt
 import random
 import math
 import copy
+
+show_animation = True
+
 
 class RRT():
     """
@@ -32,9 +38,11 @@ class RRT():
         self.maxIter = maxIter
         self.obstacleList = obstacleList
 
-    def Planning(self):
-        """
+    def Planning(self, animation=True):
+        u"""
         Pathplanning
+
+        animation: flag for animation on or off
         """
 
         self.nodeList = [self.start]
@@ -48,6 +56,7 @@ class RRT():
 
             # Find nearest node
             nind = self.GetNearestListIndex(self.nodeList, rnd)
+            # print(nind)
 
             # expand tree
             nearestNode = self.nodeList[nind]
@@ -70,6 +79,9 @@ class RRT():
             if d <= self.expandDis:
                 print("Goal!!")
                 break
+
+            if animation:
+                self.DrawGraph(rnd)
 
         path = [[self.end.x, self.end.y]]
         lastIndex = len(self.nodeList) - 1
@@ -130,17 +142,31 @@ class Node():
         self.y = y
         self.parent = None
 
-def path_planning(start, goal):
-    print("Start RRT path planning")
-    # ====Search Path with RRT====
-    #TODO : Add the obstacles in
-    obstacleList = [
 
+def main():
+    print("start RRT path planning")
+
+    # ====Search Path with RRT====
+    obstacleList = [
+        (5, 5, 1),
+        (3, 6, 2),
+        (3, 8, 2),
+        (3, 10, 2),
+        (7, 5, 2),
+        (9, 5, 2)
     ]  # [x,y,size]
     # Set Initial parameters
-    rrt = RRT(start=start, goal=goal,
+    rrt = RRT(start=[0, 0], goal=[5, 10],
               randArea=[-2, 15], obstacleList=obstacleList)
-    path = rrt.Planning()
+    path = rrt.Planning(animation=show_animation)
+
+    # Draw final path
+    if show_animation:
+        rrt.DrawGraph()
+        plt.plot([x for (x, y) in path], [y for (x, y) in path], '-r')
+        plt.grid(True)
+        plt.show()
 
 
-    return path
+if __name__ == '__main__':
+    main()

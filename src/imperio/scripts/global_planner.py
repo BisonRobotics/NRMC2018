@@ -2,7 +2,7 @@
 """
 Move the robot to desired location.
 
-Author: James Madison University
+Author: Nicole Maguire - James Madison University
 Date: 11/26/2017
 Version: 2
 """
@@ -12,6 +12,7 @@ import rospy
 from astar import *
 import map_utils
 import time
+import RRT
 
 from robot import *
 
@@ -107,7 +108,7 @@ class GlobalPlanner(object):
         #TODO : Issue getting the location
         #Using this now just for testing
         location = (0,0)
-        goal = (2,2)
+        goal = (3,3)
 
         print("Starting the path planner")
         saved_time = time.time()
@@ -115,10 +116,9 @@ class GlobalPlanner(object):
         #TODO : Below is for testing, remove for final code and pick sorting alg
         #results = aStar_xy(location, goal, self.occupancy_grid)
         #results = random_point.path_planner(location, goal, self.occupancy_grid)
-        print("Path Planner : Hardcoded for testing purposes")
-        results = [(0,1),(1,1), (1,2),(1,3),(1,4)]
-
-        print(results)
+        #print("Path Planner : Hardcoded for testing purposes")
+        #results = [(0,1),(1,1), (1,2),(1,3),(1,4)]
+        results = RRT.path_planning(location, goal)
         print("Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
 
         message = GlobalWaypoints()
@@ -191,6 +191,8 @@ class GlobalPlanner(object):
         :param waypoints: array of waypoints
         :return: array of waypoints with orientation
         """
+
+        #TODO : FIX THIS
         oriented_waypoints = []
 
         for i in range(1, len(waypoints)):
