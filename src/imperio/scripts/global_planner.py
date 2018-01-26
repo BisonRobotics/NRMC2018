@@ -12,7 +12,6 @@ import rospy
 from astar import *
 import map_utils
 import time
-import random_point
 
 from robot import *
 
