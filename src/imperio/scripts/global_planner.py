@@ -111,13 +111,14 @@ class GlobalPlanner(object):
 
         print("Starting the path planner")
         saved_time = time.time()
+
+        #TODO : Below is for testing, remove for final code and pick sorting alg
         results = aStar_xy(location, goal, self.occupancy_grid)
-        print(results)
-        #TODO : Below is for testing, remove for final code
         #results = random_point.path_planner(location, goal, self.occupancy_grid)
         #print("Path Planner : Hardcoded for testing purposes")
         #results = [(0,1),(1,1), (1,2),(1,3),(1,4)]
 
+        print(results)
         print("Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
 
         message = GlobalWaypoints()

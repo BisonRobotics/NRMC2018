@@ -34,7 +34,7 @@ class PathNode:
 
     def getNeighbors(self, width, height):
         succ = []
-        size = 1
+        size = 40
         if (self.state[0] - size >= 0):
             succ.append((self.state[0] - size, self.state[1]))
         if (self.state[0] + size < height):
@@ -134,7 +134,9 @@ def aStar(start, end, OccupancyGrid):  # Assumes that 0,0 is the bottom left cor
         currentNode = openSet.pop()
         closedSet.add(currentNode.state)
         # Check to see if it is the Goal, and if it is return the path to it as points
-        if goal == currentNode:
+        #if goal == currentNode:
+        #TODO : set threshold
+        if heuristic(goal.state, currentNode.state) < 1:
             return currentNode.returnPath()
         # Check each neighbor of the current Node to see if we found it already
         for neighbor in currentNode.getNeighbors(OccupancyGrid.width, OccupancyGrid.height):
