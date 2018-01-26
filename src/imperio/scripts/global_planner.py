@@ -12,6 +12,7 @@ import rospy
 from astar import *
 import map_utils
 import time
+import random_point
 
 from robot import *
 
@@ -111,9 +112,10 @@ class GlobalPlanner(object):
         print("Starting the path planner")
         saved_time = time.time()
         #results = aStar(location, goal, self.occupancy_grid)
+        results = random_point.path_planner(location, goal, self.occupancy_grid)
         #TODO : using for interacting with the local planner
-        print("Path Planner : Hardcoded for testing purposes")
-        results = [(0,1),(1,1), (1,2),(1,3),(1,4)]
+        #print("Path Planner : Hardcoded for testing purposes")
+        #results = [(0,1),(1,1), (1,2),(1,3),(1,4)]
         print("Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
 
         message = GlobalWaypoints()
@@ -125,7 +127,6 @@ class GlobalPlanner(object):
 
         message.pose_array = pose_array
         self.draw_points_publisher.publish(message)
-        print("Waypoints sent to visualizer")
         return results
 
     def publish_waypoints(self, waypoints):

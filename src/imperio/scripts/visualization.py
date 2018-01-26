@@ -25,6 +25,7 @@ class Visualizaion(object):
         rospy.Subscriber('/draw_points', GlobalWaypoints, self.draw_points_callback)
 
     def draw_points_callback(self, message):
+        print("Imperio VIS: Drawing Points")
         waypoints = []
         for pose in message.pose_array:
             point = (pose.x, pose.y)
@@ -39,7 +40,7 @@ class Visualizaion(object):
 
         # configure plot axises
         plt.xlim(0, 10)
-        plt.ylim(0, 10)
+        plt.ylim(-6, 6)
 
         plt.show()
 
