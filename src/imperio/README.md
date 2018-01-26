@@ -5,7 +5,7 @@ Imperio is Robotic Autonomy. It is the top level software for controlling the ro
 ### What is this repository for? ###
 
 * Autonomous software package for NDSU submission of the NASA Robotic Mining Competition
-* Version : 1.0
+* Version : 3.0
 
 ### How do I get set up? ###
 
@@ -19,7 +19,6 @@ Imperio is Robotic Autonomy. It is the top level software for controlling the ro
   >source devel/setup.bash    
   >rospack profile  
   
-
 ### How do I run it? ###
 
 * From the terminal:  
@@ -27,6 +26,8 @@ Imperio is Robotic Autonomy. It is the top level software for controlling the ro
 
 * From a seperate terminal:  
    >roslaunch imperio imperio.launch --screen
+   
+   this will launch the imperio node, the imperio visualization tool, and the competition timer.
 
 ### Contribution guidelines ###
 
