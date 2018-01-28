@@ -1,0 +1,3 @@
+<launch>
+  <node name="waypoint_filter" pkg="wheel_control" type="waypoint_filter"/>
+</launch>

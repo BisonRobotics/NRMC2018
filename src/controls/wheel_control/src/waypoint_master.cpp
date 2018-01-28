@@ -136,7 +136,7 @@ int main(int argc, char **argv)
 
   ros::NodeHandle node;
 
-  ros::Subscriber sub = node.subscribe("global_planner_goal", 1, newGoalCallback);
+  ros::Subscriber sub = node.subscribe("additional_waypoint", 1, newGoalCallback);
   ros::Publisher jspub = node.advertise<sensor_msgs::JointState> ("wheel_joints", 500);
   sensor_msgs::JointState jsMessage;
   jsMessage.name.push_back("front_left");
@@ -227,11 +227,11 @@ int main(int argc, char **argv)
     looptime = ros::Time::now() - last_time;
      #if SIMULATING == TRUE
     sim.update(looptime.toSec());
-    superLocalizer.updateStateVector(looptime.toSec());
+
     tfBroad.sendTransform(create_sim_tf(sim.getX(), sim.getY(), sim.getTheta()));
      #endif
 
-
+    superLocalizer.updateStateVector(looptime.toSec());
     stateVector = superLocalizer.getStateVector();
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
 
