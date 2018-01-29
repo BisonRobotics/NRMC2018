@@ -243,6 +243,7 @@ def path_planning(start, goal):
     smooth_path = path_smoothing(path, 1000, obstacleList)
     draw_tree(smooth_path)
 
+    smooth_path.reverse()
     return smooth_path
 
    #TODO : CAN BE REMOVED, ONLY FOR TESTING/DEBUGGING
