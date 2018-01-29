@@ -86,6 +86,8 @@ class GlobalPlanner(object):
             return False
         print("Imperio: Occupancy Grid Exists")
         waypoints = self.find_waypoints(goal)
+
+        waypoints.reverse()
         oriented_waypoints = self.calculate_orientation(waypoints)
 
         print("Path found : {}".format(oriented_waypoints))
