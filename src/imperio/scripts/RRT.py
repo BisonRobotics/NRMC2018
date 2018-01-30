@@ -7,7 +7,7 @@ import random
 import math
 import copy
 
-halt_for_visualization = False
+halt_for_visualization = True
 
 class RRT():
     """
@@ -15,7 +15,7 @@ class RRT():
     """
 
     def __init__(self, start, goal, obstacleList,
-                 randArea, expandDis=1.0, goalSampleRate=5, maxIter=500):
+                 randAreaX, randAreaY, expandDis=1.0, goalSampleRate=5, maxIter=500):
         """
         Setting Parameter
 
@@ -27,8 +27,8 @@ class RRT():
         """
         self.start = Node(start[0], start[1])
         self.end = Node(goal[0], goal[1])
-        self.minrand = randArea[0]
-        self.maxrand = randArea[1]
+        self.minrand_x, self.maxrand_x = randAreaX
+        self.minrand_y, self.maxrand_y = randAreaY
         self.expandDis = expandDis
         self.goalSampleRate = goalSampleRate
         self.maxIter = maxIter
@@ -43,8 +43,8 @@ class RRT():
         while True:
             # Random Sampling
             if random.randint(0, 100) > self.goalSampleRate:
-                rnd = [random.uniform(self.minrand, self.maxrand), random.uniform(
-                    self.minrand, self.maxrand)]
+                rnd = [random.uniform(self.minrand_x, self.maxrand_x), random.uniform(
+                    self.minrand_y, self.maxrand_y)]
             else:
                 rnd = [self.end.x, self.end.y]
 
@@ -89,7 +89,30 @@ class RRT():
         minind = dlist.index(min(dlist))
         return minind
 
-    def collision_check(self, node, obstacleList):
+    def collision_check(self, node, map):
+        threshold = .7
+        #convert the node to a space in the cell
+        row, col = map.cell_index(node.x, node.y)
+        #There was an error, this point shouldn't be possible
+        row_max = map.height - 1
+        col_max = map.width - 1
+        if row > row_max or col > col_max:
+            print(row, col)
+            print("out of bounds")
+            return False
+
+        #check that there isn't anything in the grid
+        #TODO : the current testing settup are inverted occupancy grids
+        if map.grid[row][col] > threshold:
+            #print("OBSTACLE")
+            #print(node.x, node.y)
+            return True
+        else:
+            print("Not Clean")
+            return False
+
+        return True
+
     #TODO : make this work with obstacles
         for (ox, oy, size) in obstacleList:
             dx = ox - node.x
@@ -150,6 +173,7 @@ def get_target_point(path, targetL):
 def line_collision_check(first, second, obstacleList):
     # Line Equation
     #TODO : Make this work with obstacles
+    return True
 
     x1 = first[0]
     y1 = first[1]
@@ -213,23 +237,38 @@ def path_smoothing(path, maxIter, obstacleList):
 
 
 
-def path_planning(start, goal):
+def path_planning(start, goal, map):
     print("Start RRT path planning")
     #TODO : Add the obstacles in
-    obstacleList = []  # [x,y,size]
+
+    print()
+    print()
+    print()
+    print("Working with the map . . . ")
+    print(map.cell_position(0,0))
+    print(map.cell_position(map.width - 1, map.height - 1))
+    print()
+    print()
+    print()
+
+    min_x, min_y = map.cell_position(0,0)
+    max_x, max_y = map.cell_position(map.width - 1, map.height - 1)
+
+    obstacleList = map
     # Set Initial parameters
+    area_x, area_y = map.cell_position(map.width, map.height)
     rrt = RRT(start=start, goal=goal,
-              randArea=[-2, 15], obstacleList=obstacleList)
+              randAreaX=[min_x, max_x], randAreaY=[min_y, max_y], obstacleList=obstacleList)
     path = rrt.planning()
-    draw_tree(path)
+    draw_tree(path, map)
     smooth_path = path_smoothing(path, 1000, obstacleList)
-    draw_tree(smooth_path)
+    draw_tree(smooth_path, map)
 
     smooth_path.reverse()
     return smooth_path
 
    #TODO : CAN BE REMOVED, ONLY FOR TESTING/DEBUGGING
-def draw_tree(waypoints):
+def draw_tree(waypoints, map):
     if halt_for_visualization == False:
         return
     for x in range(1, len(waypoints)):
@@ -238,7 +277,11 @@ def draw_tree(waypoints):
         plt.plot([x1, x2], [y1, y2])
 
     # configure plot axises
-    plt.xlim(-1, 11)
-    plt.ylim(-1, 11)
+    min_x, min_y = map.cell_position(0, 0)
+    max_x, max_y = map.cell_position(map.width - 1, map.height - 1)
+
+    #to keep things in scale
+    plt.xlim(min_y, max_y)
+    plt.ylim(min_y, max_y)
 
     plt.show()

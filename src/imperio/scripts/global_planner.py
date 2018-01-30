@@ -109,8 +109,8 @@ class GlobalPlanner(object):
 
         #TODO : Issue getting the location
         #Using this now just for testing
-        location = (0,0)
-        goal = (6,6)
+        location = (1,1)
+        goal = (2,6)
 
         print("Starting the path planner")
         saved_time = time.time()
@@ -120,7 +120,7 @@ class GlobalPlanner(object):
         #results = random_point.path_planner(location, goal, self.occupancy_grid)
         #print("Path Planner : Hardcoded for testing purposes")
         #results = [(0,1),(1,1), (1,2),(1,3),(1,4)]
-        results = RRT.path_planning(location, goal)
+        results = RRT.path_planning(location, goal, self.occupancy_grid)
         print("Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
 
         message = GlobalWaypoints()
