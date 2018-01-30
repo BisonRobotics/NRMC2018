@@ -22,6 +22,8 @@ from imperio.msg import DriveStatus
 from nav_msgs.msg import OccupancyGrid
 from geometry_msgs.msg import Pose2D
 
+halt_for_visualization = False
+
 class MovementStatus(Enum):
     """
     Movement Status is the enum of the different states that the robot can be in for movement.
@@ -230,6 +232,9 @@ class GlobalPlanner(object):
 
     #TODO : CAN BE REMOVED, ONLY FOR TESTING/DEBUGGING
     def draw_tree(self, waypoints):
+        if halt_for_visualization == False:
+            return
+
         for x in range(1, len(waypoints)):
             x1, y1 = waypoints[x - 1]
             x2, y2 = waypoints[x]

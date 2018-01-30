@@ -7,6 +7,8 @@ import random
 import math
 import copy
 
+halt_for_visualization = False
+
 class RRT():
     """
     Class for RRT Planning
@@ -248,6 +250,8 @@ def path_planning(start, goal):
 
    #TODO : CAN BE REMOVED, ONLY FOR TESTING/DEBUGGING
 def draw_tree(waypoints):
+    if halt_for_visualization == False:
+        return
     for x in range(1, len(waypoints)):
         x1, y1 = waypoints[x - 1]
         x2, y2 = waypoints[x]
