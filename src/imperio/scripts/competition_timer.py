@@ -12,10 +12,16 @@ from std_msgs.msg import Bool
 
 rospy.init_node('competition_timer')
 timerPublisher = rospy.Publisher('/times_up', Bool, queue_size=1)
-timeLimit = rospy.get_param('/time_limit')
+time_limit = rospy.get_param('/time_limit')
+turn_around = rospy.get_param('/turn_around')
 
-rospy.sleep(timeLimit * 60)
+rospy.sleep(time_limit - turn_around * 60)
+turn_around_time = Bool()
+turn_around_time.data = False
+timerPublisher.publish(turn_around_time)
 
-timesUp = Bool()
-timesUp.data = True
-timerPublisher.publish(timesUp)
+rospy.sleep(turn_around * 60)
+times_up = Bool()
+times_up.data = True
+timerPublisher.publish(times_up)
+
