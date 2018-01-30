@@ -75,6 +75,37 @@ TEST(WaypointControllerTests, ableToAddWaypoint_FrontThenRight)
   }
 }
 
+TEST(WaypointControllerTests, ableToAddWaypoint_BackAndLeft2Turn)
+{
+  pose wcInitial = {.x = 3, .y = 0, .theta = 0 };
+  pose theWay = {.x = 1, .y = .5, .theta = 0 };
+
+  SimRobot sim(.5f, wcInitial.x, wcInitial.y, wcInitial.theta, 16);
+
+  iVescAccess *fl = (sim.getFLVesc());
+  iVescAccess *fr = (sim.getFRVesc());
+  iVescAccess *br = (sim.getBRVesc());
+  iVescAccess *bl = (sim.getBLVesc());
+
+  WaypointController wc = WaypointController(.5f, .5f, wcInitial, fl, fr, br, bl, .01);
+
+  wc.addWaypoint(theWay, wcInitial);  
+  pose currPose;
+  for (int loop=0; loop<1000;loop++)
+  {
+    currPose.x = sim.getX();
+    currPose.y = sim.getY();
+    currPose.theta = sim.getTheta();
+    wc.update(currPose, .01);
+    sim.update(.01);
+    ASSERT_NEAR(wc.getETpEstimate(), 0, 4) << "loop index: "<< loop <<"\nSim Robot Pose:\n"
+    <<"X: " << sim.getX() <<"\nY: " << sim.getY() << "\nTh: "<<sim.getTheta() << "\n"; //angle stay within .5 rad (~30deg)
+    ASSERT_NEAR(wc.getEPpEstimate(), 0, .3) << "loop index: "<< loop <<"\nSim Robot Pose:\n"
+    <<"X: " << sim.getX() <<"\nY: " << sim.getY() << "\nTh: "<<sim.getTheta() << "\n"; //path error below 10cm
+  
+  }
+}
+
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {
