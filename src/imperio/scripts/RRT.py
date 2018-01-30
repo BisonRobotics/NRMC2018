@@ -34,7 +34,7 @@ class RRT():
         self.maxIter = maxIter
         self.obstacleList = obstacleList
 
-    def Planning(self):
+    def planning(self):
         """
         Pathplanning
         """
@@ -49,7 +49,7 @@ class RRT():
                 rnd = [self.end.x, self.end.y]
 
             # Find nearest node
-            nind = self.GetNearestListIndex(self.nodeList, rnd)
+            nind = self.get_nearest_list_index(self.nodeList, rnd)
 
             # expand tree
             nearestNode = self.nodeList[nind]
@@ -60,7 +60,7 @@ class RRT():
             newNode.y += self.expandDis * math.sin(theta)
             newNode.parent = nind
 
-            if not self.__CollisionCheck(newNode, self.obstacleList):
+            if not self.collision_check(newNode, self.obstacleList):
                 continue
 
             self.nodeList.append(newNode)
@@ -83,14 +83,14 @@ class RRT():
 
         return path
 
-    def GetNearestListIndex(self, nodeList, rnd):
+    def get_nearest_list_index(self, nodeList, rnd):
         dlist = [(node.x - rnd[0]) ** 2 + (node.y - rnd[1])
                  ** 2 for node in nodeList]
         minind = dlist.index(min(dlist))
         return minind
 
-    def __CollisionCheck(self, node, obstacleList):
-
+    def collision_check(self, node, obstacleList):
+    #TODO : make this work with obstacles
         for (ox, oy, size) in obstacleList:
             dx = ox - node.x
             dy = oy - node.y
@@ -102,7 +102,7 @@ class RRT():
 
 
 class Node():
-    u"""
+    """
     RRT Node
     """
 
@@ -111,7 +111,7 @@ class Node():
         self.y = y
         self.parent = None
 
-def GetPathLength(path):
+def get_path_length(path):
     le = 0
     for i in range(len(path) - 1):
         dx = path[i + 1][0] - path[i][0]
@@ -122,7 +122,7 @@ def GetPathLength(path):
     return le
 
 
-def GetTargetPoint(path, targetL):
+def get_target_point(path, targetL):
     le = 0
     ti = 0
     lastPairLen = 0
@@ -147,8 +147,9 @@ def GetTargetPoint(path, targetL):
     return [x, y, ti]
 
 
-def LineCollisionCheck(first, second, obstacleList):
+def line_collision_check(first, second, obstacleList):
     # Line Equation
+    #TODO : Make this work with obstacles
 
     x1 = first[0]
     y1 = first[1]
@@ -174,16 +175,16 @@ def LineCollisionCheck(first, second, obstacleList):
 def path_smoothing(path, maxIter, obstacleList):
     #  print("PathSmoothing")
 
-    le = GetPathLength(path)
+    le = get_path_length(path)
 
     for i in range(maxIter):
         # Sample two points
         pickPoints = [random.uniform(0, le), random.uniform(0, le)]
         pickPoints.sort()
         #  print(pickPoints)
-        first = GetTargetPoint(path, pickPoints[0])
+        first = get_target_point(path, pickPoints[0])
         #  print(first)
-        second = GetTargetPoint(path, pickPoints[1])
+        second = get_target_point(path, pickPoints[1])
         #  print(second)
 
         if first[2] <= 0 or second[2] <= 0:
@@ -196,7 +197,7 @@ def path_smoothing(path, maxIter, obstacleList):
             continue
 
         # collision check
-        if not LineCollisionCheck(first, second, obstacleList):
+        if not line_collision_check(first, second, obstacleList):
             continue
 
         # Create New path
@@ -206,7 +207,7 @@ def path_smoothing(path, maxIter, obstacleList):
         newPath.append([second[0], second[1]])
         newPath.extend(path[second[2] + 1:])
         path = newPath
-        le = GetPathLength(path)
+        le = get_path_length(path)
 
     return path
 
@@ -219,7 +220,7 @@ def path_planning(start, goal):
     # Set Initial parameters
     rrt = RRT(start=start, goal=goal,
               randArea=[-2, 15], obstacleList=obstacleList)
-    path = rrt.Planning()
+    path = rrt.planning()
     draw_tree(path)
     smooth_path = path_smoothing(path, 1000, obstacleList)
     draw_tree(smooth_path)
