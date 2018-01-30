@@ -21,7 +21,7 @@ class RRT():
 
         start:Start Position [x,y]
         goal:Goal Position [x,y]
-        obstacleList:obstacle Positions [[x,y,size],...]
+        obstacleList:obstacle Positions [[x,y,size]]
         randArea:Ramdom Samping Area [min,max]
 
         """
@@ -82,27 +82,6 @@ class RRT():
         path.append([self.start.x, self.start.y])
 
         return path
-
-    def DrawGraph(self, rnd=None):
-        u"""
-        Draw Graph
-        """
-        plt.clf()
-        if rnd is not None:
-            plt.plot(rnd[0], rnd[1], "^k")
-        for node in self.nodeList:
-            if node.parent is not None:
-                plt.plot([node.x, self.nodeList[node.parent].x], [
-                         node.y, self.nodeList[node.parent].y], "-g")
-
-        for (ox, oy, size) in self.obstacleList:
-            plt.plot(ox, oy, "ok", ms=30 * size)
-
-        plt.plot(self.start.x, self.start.y, "xr")
-        plt.plot(self.end.x, self.end.y, "xr")
-        plt.axis([-2, 15, -2, 15])
-        plt.grid(True)
-        plt.pause(0.01)
 
     def GetNearestListIndex(self, nodeList, rnd):
         dlist = [(node.x - rnd[0]) ** 2 + (node.y - rnd[1])
