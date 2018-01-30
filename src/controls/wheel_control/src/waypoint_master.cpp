@@ -182,7 +182,10 @@ int main(int argc, char **argv)
   #endif
 
   //initialize the localizer here
-  ros::Time last_time = ros::Time::now();
+  ros::Time lastTime;
+  ros::Time currTime;
+  ros::Duration loopTime;
+  bool firstTime = true;
   tf2_ros::TransformBroadcaster tfBroad;
 
   SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0,0,0, fl, fr, br, bl, imu, pos, SuperLocalizer_default_gains);
@@ -194,15 +197,28 @@ int main(int argc, char **argv)
   ROS_INFO ("Going into wait loop for localizer");
 
   ros::Rate rate(UPDATE_RATE_HZ);
+  ros::Duration idealLoopTime(1.0/UPDATE_RATE_HZ);
 
   while (!superLocalizer.getIsDataGood() && ros::ok () )
   {
     //do initial localization
+    if (firstTime)
+    {
+       firstTime = false;
+       currTime = ros::Time::now();
+       lastTime = currTime - idealLoopTime;
+       loopTime = (currTime - lastTime);
+    }
+    else
+    {
+       lastTime = currTime;
+       currTime = ros::Time::now();
+       loopTime = (currTime - lastTime);
+    }
     #if SIMULATING == TRUE
-    sim.update ((ros::Time::now ()-last_time).toSec());
+    sim.update ((loopTime).toSec());
     #endif
-    superLocalizer.updateStateVector((ros::Time::now() - last_time).toSec());
-    last_time = ros::Time::now();
+    superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
     ros::spinOnce ();
@@ -220,18 +236,32 @@ int main(int argc, char **argv)
   WaypointController::Status wcStat;
   std_msgs::String msg;
   std::stringstream ss;
-  ros::Duration looptime;
+
   ROS_INFO ("Entering MAIN LOOP");
+  firstTime = true;
   while (ros::ok()) {
     //update localizer here
-    looptime = ros::Time::now() - last_time;
+    if (firstTime)
+    {
+       firstTime = false;
+       currTime = ros::Time::now();
+       lastTime = currTime - idealLoopTime;
+       loopTime = currTime - lastTime;
+    }
+    else
+    {
+       lastTime = currTime;
+       currTime = ros::Time::now();
+       loopTime = currTime - lastTime;
+    }
+    ROS_INFO("Looptime of %.5f\nError from ideal time is %f\n", loopTime.toSec(), (idealLoopTime-loopTime).toSec());
      #if SIMULATING == TRUE
-    sim.update(looptime.toSec());
+    sim.update(loopTime.toSec());
 
     tfBroad.sendTransform(create_sim_tf(sim.getX(), sim.getY(), sim.getTheta()));
      #endif
 
-    superLocalizer.updateStateVector(looptime.toSec());
+    superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
 
@@ -253,7 +283,7 @@ int main(int argc, char **argv)
     // update controller
     ROS_INFO("GOING TO UPDATE");
 
-    wcStat = wc.update(currPose, looptime.toSec());
+    wcStat = wc.update(currPose, loopTime.toSec());
 
     //TODO
     //check if we are stuck by comparing commanded velocity to actual
@@ -310,7 +340,6 @@ int main(int argc, char **argv)
     // ros end stuff
     jspub.publish(jsMessage);
     ros::spinOnce();
-    last_time = ros::Time::now ();
     rate.sleep();
   }
 }
