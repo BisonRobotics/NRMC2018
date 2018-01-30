@@ -26,16 +26,16 @@ WaypointController::WaypointController(double axelLength, double maxSafeSpeed, p
   back_right_wheel = br;
   back_left_wheel = bl;
 
-  EPlpGain = .0012;
+  EPlpGain = 0;//.0012;
   EPlpAlpha = 2*M_PI*gaurenteedDt*.00008 / (2*M_PI*gaurenteedDt*.00008 +1);
 
-  EPpGain = .0015;
-  EPdGain = .008;
-  ETpGain = .0001;
-  ETdGain = .120;
+  EPpGain = 0;//.0015;
+  EPdGain = .03;
+  ETpGain = 0;//.0001;
+  ETdGain = .16;
   EPpLowPassGain =  2*M_PI*gaurenteedDt*.1608/(2*M_PI*gaurenteedDt*.1608+1);
   ETpLowPassGain = 2*M_PI*gaurenteedDt*.1608/(2*M_PI*gaurenteedDt*.1608+1);
-  WheelSpeedPGain = .009;
+  WheelSpeedPGain = 0;//.009;
 
   // control states
   clearControlStates();
@@ -175,19 +175,23 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
       }
       currMan = navigationQueue.at(0).mans.at(currManeuverIndex);  // set current maneuver
 
-      if (currManeuverIndex == 0) {  // if this is the first maneuver on the stack for this waypoint
+      if (currManeuverIndex == 0) 
+      {  // if this is the first maneuver on the stack for this waypoint
           maneuverEnd =
                   WaypointControllerHelper::endOfManeuver(navigationQueue.at(0).initialPose,
                                                           currMan);  // the end pose is the extension from the initial pose
       }
-      else {
+      else 
+      {
           maneuverEnd = WaypointControllerHelper::endOfManeuver(maneuverEnd, currMan);
           // else the end pose is from the last maneuverEnd through the current maneuver
       }
       std::pair<double, double> myPair =
           WaypointControllerHelper::speedAndRadius2WheelVels(.6f* maxSpeed, currMan.radius, axelLen, maxSpeed);
-      LeftWheelSetSpeed = myPair.first;
-      RightWheelSetSpeed = myPair.second;
+      //LeftWheelSetSpeed = myPair.first;
+      //RightWheelSetSpeed = myPair.second;
+      LvelCmd = myPair.first;
+      RvelCmd = myPair.second;
       doingManeuver = true;
     }
     else  // doing a maneuver, need to see if robot has completed it
@@ -214,7 +218,7 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
     }else {
       EPpEst = currMan.radius + dist(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
     }
-    ETpEst = WaypointControllerHelper::anglediff( theCPP.theta, robotPose.theta);//order?  // positive error means turn left
+    ETpEst = WaypointControllerHelper::anglediff(robotPose.theta, theCPP.theta);//order?  // positive error means turn left
 
     EPpLowPassPrev = EPpLowPass;
     EPpLowPass = EPpLowPassGain * EPpEst + (1 - EPpLowPassGain) * EPpLowPassPrev;
@@ -227,10 +231,10 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
     EPpDerivFiltEst = (EPpLowPass - EPpLowPassPrev) / dt;
     ETpDerivFiltEst = WaypointControllerHelper::anglediff(ETpLowPass, ETpLowPassPrev) / dt; //order?
 
-    LvelCmd = LvelCmd + (EPpGain * EPpEst + EPdGain * EPpDerivFiltEst + EPlpGain*EPLowerPass) -
-              (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) - WheelSpeedPGain * (LvelCmd - LeftWheelSetSpeed);
-    RvelCmd = RvelCmd - (EPpGain * EPpEst + EPdGain * EPpDerivFiltEst + EPlpGain*EPLowerPass) +
-              (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) - WheelSpeedPGain * (RvelCmd - RightWheelSetSpeed);
+    LvelCmd = LvelCmd + ((EPpGain * EPpEst + EPdGain * EPpDerivFiltEst + EPlpGain*EPLowerPass) -
+              (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) - WheelSpeedPGain * (LvelCmd - LeftWheelSetSpeed))*dt;
+    RvelCmd = RvelCmd - ((EPpGain * EPpEst + EPdGain * EPpDerivFiltEst + EPlpGain*EPLowerPass) +
+              (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) - WheelSpeedPGain * (RvelCmd - RightWheelSetSpeed)*dt);
 
     front_left_wheel->setLinearVelocity(LvelCmd);
     back_left_wheel->setLinearVelocity(LvelCmd);

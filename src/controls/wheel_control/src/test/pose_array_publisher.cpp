@@ -12,7 +12,7 @@ int main(int argc, char** argv)
   std::vector<geometry_msgs::Pose2D> waypoints;
   imperio::GlobalWaypoints wpmsg;
 
-  ros::Rate rate(.01);
+  ros::Rate rate(.05);
 
   geometry_msgs::Pose2D wp1; wp1.x = 1; wp1.y = 0; wp1.theta = 0;
   geometry_msgs::Pose2D wp2; wp2.x = 2; wp2.y = .25; wp2.theta = 0;
@@ -20,11 +20,29 @@ int main(int argc, char** argv)
   waypoints.push_back(wp1);
   waypoints.push_back(wp2);
 
-  wpmsg.pose_array = waypoints;
+  wpmsg.pose_array = waypoints; 
+
+  double xcounter =3;
 
   while (ros::ok())
   {
-     pub.publish(wpmsg);  
+     wpmsg.pose_array = waypoints; 
+     pub.publish(wpmsg);
+
+     wp1.x = xcounter;
+     wp1.y = -.5;
+     wp1.theta = 0;
+     xcounter += 1;
+     wp2.x = xcounter;
+     wp2.y = .5;
+     wp2.theta = 0;
+     xcounter += 1;
+
+     waypoints.clear();
+	 waypoints.push_back(wp1);
+	 waypoints.push_back(wp2);
+
      ros::spinOnce();
+     rate.sleep(); 
   }
 }
