@@ -108,7 +108,7 @@ class RRT():
             #print(node.x, node.y)
             return True
         else:
-            print("Not Clean")
+            print("Not Clear")
             return False
 
         return True
@@ -241,16 +241,6 @@ def path_planning(start, goal, map):
     print("Start RRT path planning")
     #TODO : Add the obstacles in
 
-    print()
-    print()
-    print()
-    print("Working with the map . . . ")
-    print(map.cell_position(0,0))
-    print(map.cell_position(map.width - 1, map.height - 1))
-    print()
-    print()
-    print()
-
     min_x, min_y = map.cell_position(0,0)
     max_x, max_y = map.cell_position(map.width - 1, map.height - 1)
 
@@ -262,10 +252,14 @@ def path_planning(start, goal, map):
     path = rrt.planning()
     draw_tree(path, map)
     smooth_path = path_smoothing(path, 1000, obstacleList)
-    draw_tree(smooth_path, map)
+    #draw_tree(smooth_path, map)
 
-    smooth_path.reverse()
-    return smooth_path
+    #TODO : Add path smoothing in with obstacles
+    #smooth_path.reverse()
+    #return smooth_path
+
+    path.reverse()
+    return path
 
    #TODO : CAN BE REMOVED, ONLY FOR TESTING/DEBUGGING
 def draw_tree(waypoints, map):
@@ -279,6 +273,14 @@ def draw_tree(waypoints, map):
     # configure plot axises
     min_x, min_y = map.cell_position(0, 0)
     max_x, max_y = map.cell_position(map.width - 1, map.height - 1)
+
+    '''obstacle_grid = map
+    for col in range(0, obstacle_grid.width - 1):
+        for row in range(0, obstacle_grid.height - 1):
+            if obstacle_grid.grid[row][col] < .7:
+                x, y = obstacle_grid.cell_position(row, col)
+                plt.plot(x, y)
+                '''
 
     #to keep things in scale
     plt.xlim(min_y, max_y)
