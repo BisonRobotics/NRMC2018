@@ -7,32 +7,34 @@ import random
 import math
 import copy
 
+halt_for_visualization = True
+
 class RRT():
     """
     Class for RRT Planning
     """
 
     def __init__(self, start, goal, obstacleList,
-                 randArea, expandDis=1.0, goalSampleRate=5, maxIter=500):
+                 randAreaX, randAreaY, expandDis=1.0, goalSampleRate=5, maxIter=500):
         """
         Setting Parameter
 
         start:Start Position [x,y]
         goal:Goal Position [x,y]
-        obstacleList:obstacle Positions [[x,y,size],...]
+        obstacleList:obstacle Positions [[x,y,size]]
         randArea:Ramdom Samping Area [min,max]
 
         """
         self.start = Node(start[0], start[1])
         self.end = Node(goal[0], goal[1])
-        self.minrand = randArea[0]
-        self.maxrand = randArea[1]
+        self.minrand_x, self.maxrand_x = randAreaX
+        self.minrand_y, self.maxrand_y = randAreaY
         self.expandDis = expandDis
         self.goalSampleRate = goalSampleRate
         self.maxIter = maxIter
         self.obstacleList = obstacleList
 
-    def Planning(self):
+    def planning(self):
         """
         Pathplanning
         """
@@ -41,13 +43,13 @@ class RRT():
         while True:
             # Random Sampling
             if random.randint(0, 100) > self.goalSampleRate:
-                rnd = [random.uniform(self.minrand, self.maxrand), random.uniform(
-                    self.minrand, self.maxrand)]
+                rnd = [random.uniform(self.minrand_x, self.maxrand_x), random.uniform(
+                    self.minrand_y, self.maxrand_y)]
             else:
                 rnd = [self.end.x, self.end.y]
 
             # Find nearest node
-            nind = self.GetNearestListIndex(self.nodeList, rnd)
+            nind = self.get_nearest_list_index(self.nodeList, rnd)
 
             # expand tree
             nearestNode = self.nodeList[nind]
@@ -58,7 +60,7 @@ class RRT():
             newNode.y += self.expandDis * math.sin(theta)
             newNode.parent = nind
 
-            if not self.__CollisionCheck(newNode, self.obstacleList):
+            if not self.collision_check(newNode, self.obstacleList):
                 continue
 
             self.nodeList.append(newNode)
@@ -81,35 +83,37 @@ class RRT():
 
         return path
 
-    def DrawGraph(self, rnd=None):
-        u"""
-        Draw Graph
-        """
-        plt.clf()
-        if rnd is not None:
-            plt.plot(rnd[0], rnd[1], "^k")
-        for node in self.nodeList:
-            if node.parent is not None:
-                plt.plot([node.x, self.nodeList[node.parent].x], [
-                         node.y, self.nodeList[node.parent].y], "-g")
-
-        for (ox, oy, size) in self.obstacleList:
-            plt.plot(ox, oy, "ok", ms=30 * size)
-
-        plt.plot(self.start.x, self.start.y, "xr")
-        plt.plot(self.end.x, self.end.y, "xr")
-        plt.axis([-2, 15, -2, 15])
-        plt.grid(True)
-        plt.pause(0.01)
-
-    def GetNearestListIndex(self, nodeList, rnd):
+    def get_nearest_list_index(self, nodeList, rnd):
         dlist = [(node.x - rnd[0]) ** 2 + (node.y - rnd[1])
                  ** 2 for node in nodeList]
         minind = dlist.index(min(dlist))
         return minind
 
-    def __CollisionCheck(self, node, obstacleList):
+    def collision_check(self, node, map):
+        threshold = .7
+        #convert the node to a space in the cell
+        row, col = map.cell_index(node.x, node.y)
+        #There was an error, this point shouldn't be possible
+        row_max = map.height - 1
+        col_max = map.width - 1
+        if row > row_max or col > col_max:
+            print(row, col)
+            print("out of bounds")
+            return False
 
+        #check that there isn't anything in the grid
+        #TODO : the current testing settup are inverted occupancy grids
+        if map.grid[row][col] > threshold:
+            #print("OBSTACLE")
+            #print(node.x, node.y)
+            return True
+        else:
+            print("Not Clear")
+            return False
+
+        return True
+
+    #TODO : make this work with obstacles
         for (ox, oy, size) in obstacleList:
             dx = ox - node.x
             dy = oy - node.y
@@ -121,7 +125,7 @@ class RRT():
 
 
 class Node():
-    u"""
+    """
     RRT Node
     """
 
@@ -130,7 +134,7 @@ class Node():
         self.y = y
         self.parent = None
 
-def GetPathLength(path):
+def get_path_length(path):
     le = 0
     for i in range(len(path) - 1):
         dx = path[i + 1][0] - path[i][0]
@@ -141,7 +145,7 @@ def GetPathLength(path):
     return le
 
 
-def GetTargetPoint(path, targetL):
+def get_target_point(path, targetL):
     le = 0
     ti = 0
     lastPairLen = 0
@@ -166,8 +170,10 @@ def GetTargetPoint(path, targetL):
     return [x, y, ti]
 
 
-def LineCollisionCheck(first, second, obstacleList):
+def line_collision_check(first, second, obstacleList):
     # Line Equation
+    #TODO : Make this work with obstacles
+    return True
 
     x1 = first[0]
     y1 = first[1]
@@ -193,16 +199,16 @@ def LineCollisionCheck(first, second, obstacleList):
 def path_smoothing(path, maxIter, obstacleList):
     #  print("PathSmoothing")
 
-    le = GetPathLength(path)
+    le = get_path_length(path)
 
     for i in range(maxIter):
         # Sample two points
         pickPoints = [random.uniform(0, le), random.uniform(0, le)]
         pickPoints.sort()
         #  print(pickPoints)
-        first = GetTargetPoint(path, pickPoints[0])
+        first = get_target_point(path, pickPoints[0])
         #  print(first)
-        second = GetTargetPoint(path, pickPoints[1])
+        second = get_target_point(path, pickPoints[1])
         #  print(second)
 
         if first[2] <= 0 or second[2] <= 0:
@@ -215,7 +221,7 @@ def path_smoothing(path, maxIter, obstacleList):
             continue
 
         # collision check
-        if not LineCollisionCheck(first, second, obstacleList):
+        if not line_collision_check(first, second, obstacleList):
             continue
 
         # Create New path
@@ -225,35 +231,59 @@ def path_smoothing(path, maxIter, obstacleList):
         newPath.append([second[0], second[1]])
         newPath.extend(path[second[2] + 1:])
         path = newPath
-        le = GetPathLength(path)
+        le = get_path_length(path)
 
     return path
 
 
 
-def path_planning(start, goal):
+def path_planning(start, goal, map):
     print("Start RRT path planning")
     #TODO : Add the obstacles in
-    obstacleList = []  # [x,y,size]
-    # Set Initial parameters
-    rrt = RRT(start=start, goal=goal,
-              randArea=[-2, 15], obstacleList=obstacleList)
-    path = rrt.Planning()
-    draw_tree(path)
-    smooth_path = path_smoothing(path, 1000, obstacleList)
-    draw_tree(smooth_path)
 
-    return smooth_path
+    min_x, min_y = map.cell_position(0,0)
+    max_x, max_y = map.cell_position(map.width - 1, map.height - 1)
+
+    obstacleList = map
+    # Set Initial parameters
+    area_x, area_y = map.cell_position(map.width, map.height)
+    rrt = RRT(start=start, goal=goal,
+              randAreaX=[min_x, max_x], randAreaY=[min_y, max_y], obstacleList=obstacleList)
+    path = rrt.planning()
+    draw_tree(path, map)
+    smooth_path = path_smoothing(path, 1000, obstacleList)
+    #draw_tree(smooth_path, map)
+
+    #TODO : Add path smoothing in with obstacles
+    #smooth_path.reverse()
+    #return smooth_path
+
+    path.reverse()
+    return path
 
    #TODO : CAN BE REMOVED, ONLY FOR TESTING/DEBUGGING
-def draw_tree(waypoints):
+def draw_tree(waypoints, map):
+    if halt_for_visualization == False:
+        return
     for x in range(1, len(waypoints)):
         x1, y1 = waypoints[x - 1]
         x2, y2 = waypoints[x]
         plt.plot([x1, x2], [y1, y2])
 
     # configure plot axises
-    plt.xlim(-1, 11)
-    plt.ylim(-1, 11)
+    min_x, min_y = map.cell_position(0, 0)
+    max_x, max_y = map.cell_position(map.width - 1, map.height - 1)
+
+    '''obstacle_grid = map
+    for col in range(0, obstacle_grid.width - 1):
+        for row in range(0, obstacle_grid.height - 1):
+            if obstacle_grid.grid[row][col] < .7:
+                x, y = obstacle_grid.cell_position(row, col)
+                plt.plot(x, y)
+                '''
+
+    #to keep things in scale
+    plt.xlim(min_y, max_y)
+    plt.ylim(min_y, max_y)
 
     plt.show()
