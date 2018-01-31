@@ -1,0 +1,3 @@
+<launch>
+  <node name="pose_array_publisher" pkg="wheel_control" type="pose_array_publisher"/>
+</launch>

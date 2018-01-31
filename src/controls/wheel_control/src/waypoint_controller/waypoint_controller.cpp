@@ -17,7 +17,7 @@ double dist(double A, double B, double C, double D)
 }
 
 WaypointController::WaypointController(double axelLength, double maxSafeSpeed, pose initialPose, iVescAccess *fl,
-                                       iVescAccess *fr, iVescAccess *br, iVescAccess *bl)
+                                       iVescAccess *fr, iVescAccess *br, iVescAccess *bl, double gaurenteedDt)
 {
   axelLen = axelLength;
   maxSpeed = maxSafeSpeed;
@@ -26,30 +26,23 @@ WaypointController::WaypointController(double axelLength, double maxSafeSpeed, p
   back_right_wheel = br;
   back_left_wheel = bl;
 
-  EPpGain = .02;
-  EPdGain = .16;
-  ETpGain = .0005;
-  ETdGain = .0040;
-  EPpLowPassGain = .01;
-  ETpLowPassGain = .01;
-  WheelSpeedPGain = .018;
+  EPlpGain = 0;//.0012;
+  EPlpAlpha = 2*M_PI*gaurenteedDt*.00008 / (2*M_PI*gaurenteedDt*.00008 +1);
+
+  EPpGain = 0;//.0015;
+  EPdGain = .03;
+  ETpGain = 0;//.0001;
+  ETdGain = .16;
+  EPpLowPassGain =  2*M_PI*gaurenteedDt*.1608/(2*M_PI*gaurenteedDt*.1608+1);
+  ETpLowPassGain = 2*M_PI*gaurenteedDt*.1608/(2*M_PI*gaurenteedDt*.1608+1);
+  WheelSpeedPGain = 0;//.009;
 
   // control states
-  EPpLowPass = 0;
-  EPpLowPassPrev = 0;
-  ETpLowPass = 0;
-  ETpLowPassPrev = 0;
-  EPpDerivFiltEst = 0;
-  ETpDerivFiltEst = 0;
-
-  EPpEst = 0;
-  ETpEst = 0;
+  clearControlStates();
 
   currManeuverIndex = 0;
   doingManeuver = false;
 
-  LvelCmd = 0;
-  RvelCmd = 0;
 }
 
 std::vector<waypointWithManeuvers> WaypointController::getNavigationQueue()  // DEBUG
@@ -91,13 +84,8 @@ std::pair<double, double> WaypointController::getCmdSpeeds()
   return std::pair<double, double>(LvelCmd, RvelCmd);
 }
 
-void WaypointController::haltAndAbort()
+void WaypointController::clearControlStates()
 {
-  front_left_wheel->setLinearVelocity(0);
-  back_left_wheel->setLinearVelocity(0);
-  front_right_wheel->setLinearVelocity(0);
-  back_right_wheel->setLinearVelocity(0);
-
   EPpLowPass = 0;
   EPpLowPassPrev = 0;
   ETpLowPass = 0;
@@ -105,14 +93,28 @@ void WaypointController::haltAndAbort()
   EPpDerivFiltEst = 0;
   ETpDerivFiltEst = 0;
 
+  EPLowerPass =0;
+  EPLowerPassPrev =0;
+
   EPpEst = 0;
   ETpEst = 0;
 
-  currManeuverIndex = 0;
-  doingManeuver = false;
-
   LvelCmd = 0;
   RvelCmd = 0;
+
+}
+
+void WaypointController::haltAndAbort()
+{
+  front_left_wheel->setLinearVelocity(0);
+  back_left_wheel->setLinearVelocity(0);
+  front_right_wheel->setLinearVelocity(0);
+  back_right_wheel->setLinearVelocity(0);
+
+  clearControlStates();
+
+  currManeuverIndex = 0;
+  doingManeuver = false;
 
   navigationQueue.clear();
 }
@@ -167,29 +169,29 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
       {
         currManeuverIndex = 0;
         navigationQueue.erase(navigationQueue.begin());
-        /*//remember to stop
-        front_left_wheel->setLinearVelocity(0);
-        back_left_wheel->setLinearVelocity(0);
-        front_right_wheel->setLinearVelocity(0);
-        back_right_wheel->setLinearVelocity(0);*/
+        clearControlStates();
         return Status::ALLGOOD;  // gotta get out of here, if the navigationQueue is empty, then the next time
         // update is called, this function will return GOALREACHED and stop the robot
       }
       currMan = navigationQueue.at(0).mans.at(currManeuverIndex);  // set current maneuver
 
-      if (currManeuverIndex == 0) {  // if this is the first maneuver on the stack for this waypoint
+      if (currManeuverIndex == 0) 
+      {  // if this is the first maneuver on the stack for this waypoint
           maneuverEnd =
                   WaypointControllerHelper::endOfManeuver(navigationQueue.at(0).initialPose,
                                                           currMan);  // the end pose is the extension from the initial pose
       }
-      else {
+      else 
+      {
           maneuverEnd = WaypointControllerHelper::endOfManeuver(maneuverEnd, currMan);
           // else the end pose is from the last maneuverEnd through the current maneuver
       }
       std::pair<double, double> myPair =
-          WaypointControllerHelper::speedAndRadius2WheelVels(.6f * maxSpeed, currMan.radius, axelLen, maxSpeed);
-      LeftWheelSetSpeed = myPair.first;
-      RightWheelSetSpeed = myPair.second;
+          WaypointControllerHelper::speedAndRadius2WheelVels(.6f* maxSpeed, currMan.radius, axelLen, maxSpeed);
+      //LeftWheelSetSpeed = myPair.first;
+      //RightWheelSetSpeed = myPair.second;
+      LvelCmd = myPair.first;
+      RvelCmd = myPair.second;
       doingManeuver = true;
     }
     else  // doing a maneuver, need to see if robot has completed it
@@ -216,20 +218,23 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
     }else {
       EPpEst = currMan.radius + dist(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
     }
-    ETpEst = WaypointControllerHelper::anglediff(theCPP.theta, robotPose.theta);  // positive error means turn left
+    ETpEst = WaypointControllerHelper::anglediff(robotPose.theta, theCPP.theta);//order?  // positive error means turn left
 
     EPpLowPassPrev = EPpLowPass;
     EPpLowPass = EPpLowPassGain * EPpEst + (1 - EPpLowPassGain) * EPpLowPassPrev;
     ETpLowPassPrev = ETpLowPass;
     ETpLowPass = ETpLowPassGain * ETpEst + (1 - ETpLowPassGain) * ETpLowPassPrev;
 
-    EPpDerivFiltEst = (EPpLowPass - EPpLowPassPrev) / dt;
-    ETpDerivFiltEst = (ETpLowPass - ETpLowPassPrev) / dt;
+    EPLowerPass = (EPlpAlpha * EPpEst + (1-EPlpAlpha) * EPLowerPassPrev);
+    EPLowerPassPrev = EPLowerPass;
 
-    LvelCmd = LvelCmd + (EPpGain * EPpEst + EPdGain * EPpDerivFiltEst) -
-              (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) - WheelSpeedPGain * (LvelCmd - LeftWheelSetSpeed);
-    RvelCmd = RvelCmd - (EPpGain * EPpEst + EPdGain * EPpDerivFiltEst) +
-              (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) - WheelSpeedPGain * (RvelCmd - RightWheelSetSpeed);
+    EPpDerivFiltEst = (EPpLowPass - EPpLowPassPrev) / dt;
+    ETpDerivFiltEst = WaypointControllerHelper::anglediff(ETpLowPass, ETpLowPassPrev) / dt; //order?
+
+    LvelCmd = LvelCmd + ((EPpGain * EPpEst + EPdGain * EPpDerivFiltEst + EPlpGain*EPLowerPass) -
+              (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) - WheelSpeedPGain * (LvelCmd - LeftWheelSetSpeed))*dt;
+    RvelCmd = RvelCmd - ((EPpGain * EPpEst + EPdGain * EPpDerivFiltEst + EPlpGain*EPLowerPass) +
+              (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) - WheelSpeedPGain * (RvelCmd - RightWheelSetSpeed)*dt);
 
     front_left_wheel->setLinearVelocity(LvelCmd);
     back_left_wheel->setLinearVelocity(LvelCmd);

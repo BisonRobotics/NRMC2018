@@ -421,36 +421,23 @@ WaypointControllerHelper::waypointWithManeuvers2points(waypointWithManeuvers myM
   std::pair<double, double> aPoint;
   std::pair<double, double> transformPoint;
 
-  pose currPoint = myMan.initialPose;
+  pose currPose = myMan.initialPose;
 
   for (std::vector<maneuver>::iterator it = myMan.mans.begin(); it != myMan.mans.end(); ++it)
   {
-    // go from currPoint through manuever
-    // get arc and transform to currPoint
-    //
-    // find the Net Arc Distance (NAD) in radians and each point should be
-    // CMPERPOINT away along the arc
-    // compute the untransformed point on the arc, then transform to robots position
-    double NAD = it->distance / it->radius;
-    double radPerMeter = NAD / it->distance;
-    double radPerPoint = radPerMeter * METERPERCM * CMPERPOINT;
-    for (double dTheta = 0; dTheta <= NAD; dTheta += radPerPoint)
-    {
-      // this could be optimized by only computing the arc which starts at the
-      // proper angle, then translating it to the correct place
-      aPoint.first = (it->radius * cos(dTheta - M_PI / 2));
-      aPoint.second = (it->radius * sin(dTheta - M_PI / 2)) + it->radius;
-      // transform point
-      transformPoint.first = cos(currPoint.theta) * aPoint.first - sin(currPoint.theta) * aPoint.second + currPoint.x;
-      transformPoint.second = sin(currPoint.theta) * aPoint.first + cos(currPoint.theta) * aPoint.second + currPoint.y;
-      allPoints.push_back(transformPoint);
+	  maneuver currMan = *it; //I mean copy, and thats what this does.
+	  pose retPose;
+	  for (double travel = 0; std::abs(travel) <= std::abs(it->distance); travel += sign(it->distance)*METERPERCM * CMPERPOINT)
+	  {
+	    currMan.distance = travel;
+	    retPose = endOfManeuver(currPose, currMan);
+	    transformPoint.first = retPose.x;
+	    transformPoint.second = retPose.y;
+	    allPoints.push_back(transformPoint);
+	  }
+      currPose = retPose;
     }
-    // went through maneuver, get ready for next maneuver
-    currPoint.x = transformPoint.first;
-    currPoint.y = transformPoint.second;
-    currPoint.theta += NAD;
-  }
-  // if there are no points, there were no maneuvers
+
   return allPoints;
 }
 
@@ -461,8 +448,8 @@ pose WaypointControllerHelper::endOfManeuver(pose robotPose, maneuver myMan)  //
   double NAD = myMan.distance / myMan.radius;
 
   // untransformed endpose
-  endPoseUT.x = myMan.radius * cos(NAD - M_PI / 2);
-  endPoseUT.y = myMan.radius * sin(NAD - M_PI / 2) + myMan.radius;
+  endPoseUT.x = myMan.radius * cos(NAD - M_PI_2);
+  endPoseUT.y = myMan.radius * sin(NAD - M_PI_2) + myMan.radius;
 
   endPose.x = cos(robotPose.theta) * endPoseUT.x - sin(robotPose.theta) * endPoseUT.y + robotPose.x;
   endPose.y = sin(robotPose.theta) * endPoseUT.x + cos(robotPose.theta) * endPoseUT.y + robotPose.y;

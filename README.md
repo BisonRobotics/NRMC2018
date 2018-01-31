@@ -81,10 +81,10 @@ echo "alias wss='source ~/NRMC2018/devel/setup.bash'" >> ~/.bashrc
 ```
 To start the simulator
 ```
-# New terminal for each command
+# Make sure you run each command in a new terminal and have your workspace sourced
 roscore
 vrep
-
+roslaunch description display.launch
 ```
 ## Useful unit test commands for debugging
 # Build and run single test suite
