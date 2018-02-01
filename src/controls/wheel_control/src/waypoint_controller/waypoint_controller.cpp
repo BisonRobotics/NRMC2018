@@ -30,9 +30,9 @@ WaypointController::WaypointController(double axelLength, double maxSafeSpeed, p
   EPlpAlpha = 2*M_PI*gaurenteedDt*.00008 / (2*M_PI*gaurenteedDt*.00008 +1);
 
   EPpGain = 0;//.0015;
-  EPdGain = .03;
+  EPdGain = .01;
   ETpGain = 0;//.0001;
-  ETdGain = .16;
+  ETdGain = .08;
   EPpLowPassGain =  2*M_PI*gaurenteedDt*.1608/(2*M_PI*gaurenteedDt*.1608+1);
   ETpLowPassGain = 2*M_PI*gaurenteedDt*.1608/(2*M_PI*gaurenteedDt*.1608+1);
   WheelSpeedPGain = 0;//.009;
@@ -190,8 +190,12 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
           WaypointControllerHelper::speedAndRadius2WheelVels(.6f* maxSpeed, currMan.radius, axelLen, maxSpeed);
       //LeftWheelSetSpeed = myPair.first;
       //RightWheelSetSpeed = myPair.second;
+      //reset control states
+      clearControlStates();
+      //input/seed new calculated wheel velocities
       LvelCmd = myPair.first;
       RvelCmd = myPair.second;
+
       doingManeuver = true;
     }
     else  // doing a maneuver, need to see if robot has completed it

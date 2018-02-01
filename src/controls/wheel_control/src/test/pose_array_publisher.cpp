@@ -14,27 +14,29 @@ int main(int argc, char** argv)
 
   ros::Rate rate(.05);
 
-  geometry_msgs::Pose2D wp1; wp1.x = 1; wp1.y = 0; wp1.theta = 0;
-  geometry_msgs::Pose2D wp2; wp2.x = 2; wp2.y = .25; wp2.theta = 0;
+  geometry_msgs::Pose2D wp1; wp1.x = 2; wp1.y = 0; wp1.theta = 0;
+  geometry_msgs::Pose2D wp2; wp2.x = 4; wp2.y = .25; wp2.theta = 0;
 
   waypoints.push_back(wp1);
   waypoints.push_back(wp2);
 
   wpmsg.pose_array = waypoints; 
 
-  double xcounter =3;
+  double xcounter =5;
 
   while (ros::ok())
   {
      wpmsg.pose_array = waypoints; 
+     ROS_INFO("Publishing waypoints:\nX: %f\nY: %f\n, Th: %f\n\nX: %f\nY: %f\n, Th: %f",
+               wp1.x, wp1.y, wp1.theta, wp2.x, wp2.y, wp2.theta);
      pub.publish(wpmsg);
 
      wp1.x = xcounter;
-     wp1.y = -.5;
+     wp1.y = -1;
      wp1.theta = 0;
      xcounter += 1;
      wp2.x = xcounter;
-     wp2.y = .5;
+     wp2.y = 1;
      wp2.theta = 0;
      xcounter += 1;
 
