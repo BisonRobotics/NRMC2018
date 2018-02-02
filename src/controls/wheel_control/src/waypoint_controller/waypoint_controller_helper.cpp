@@ -492,5 +492,11 @@ std::pair<double, double> WaypointControllerHelper::speedAndRadius2WheelVels(dou
     Vels.second = .5 * speed;
   }
 
+  if (speed < 0) //make sure speeds are negative
+  {
+    Vels.first = -std::abs(Vels.first);
+    Vels.second = -std::abs(Vels.second);
+  }
+
   return Vels;
 }
