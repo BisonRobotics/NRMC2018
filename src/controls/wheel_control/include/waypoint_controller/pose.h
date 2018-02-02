@@ -3,7 +3,7 @@
 
 struct pose
 {
-  float x, y, theta;
+  double x, y, theta;
 };
 
 #endif

@@ -1,5 +1,6 @@
 #include <localizer/localizer.h>
 #include <Eigen/Dense>
+#define _USE_MATH_DEFINES
 #include <cmath>
 #define CONSTANT_TO_AVERAGE_TWO_NUMBERS 2.0f
 
@@ -75,6 +76,10 @@ Localizer::UpdateStatus Localizer::updateStateVector(double dt)
   state_vector.x_pos += d_pos_world(0);
   state_vector.y_pos += d_pos_world(1);
   state_vector.theta += d_theta;
+  if (state_vector.theta > M_PI)
+    state_vector.theta -= 2.0 * M_PI;
+  else if (state_vector.theta < -M_PI)
+    state_vector.theta += 2.0 * M_PI;
 
   state_vector.x_vel = d_pos_world(0) / dt;
   state_vector.y_vel = d_pos_world(1) / dt;

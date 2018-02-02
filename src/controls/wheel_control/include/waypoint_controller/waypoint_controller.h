@@ -21,30 +21,34 @@ public:
     GOALREACHED,
     ALLBAD
   };
-  WaypointController(float axelLength, float maxSafeSpeed, pose initialPose, iVescAccess *fl, iVescAccess *fr,
-                     iVescAccess *br, iVescAccess *bl);
-  std::vector<std::pair<float, float> > addWaypoint(pose waypoint, pose currRobotPose);
-  Status update(pose robotPose, float dt);
+  WaypointController(double axelLength, double maxSafeSpeed, pose initialPose, iVescAccess *fl, iVescAccess *fr,
+                     iVescAccess *br, iVescAccess *bl, double gaurenteedDt);
+  std::vector<std::pair<double, double> > addWaypoint(pose waypoint, pose currRobotPose);
+  Status update(pose robotPose, double dt);
   std::vector<waypointWithManeuvers> getNavigationQueue();  // DEBUG
   pose getCPP();                                            // DEBUG
   unsigned int getCurrManeuverIndex();                      // DEBUG
   pose getManeuverEnd();                                    // DEBUG
-  float getETpEstimate();                                   // DEBUG
-  float getEPpEstimate();                                   // DEBUG
-  std::pair<float, float> getSetSpeeds();                   // DEBUG
+  double getETpEstimate();                                  // DEBUG
+  double getEPpEstimate();                                  // DEBUG
+  std::pair<double, double> getSetSpeeds();                 // DEBUG
+  std::pair<double, double> getCmdSpeeds();  // DEBUG
 
   void haltAndAbort();
+  void clearControlStates();
 
 private:
   std::vector<waypointWithManeuvers> navigationQueue;
   iVescAccess *front_left_wheel, *front_right_wheel, *back_right_wheel, *back_left_wheel;
-  float axelLen, maxSpeed;
-  float EPpGain, EPdGain, ETpGain, ETdGain, EPpLowPassGain, ETpLowPassGain;  // path and theta error gains
-  float EPpLowPass, EPpLowPassPrev, ETpLowPass, ETpLowPassPrev, EPpDerivFiltEst, ETpDerivFiltEst;
-  float EPpEst, ETpEst;
-  float WheelSpeedPGain;
-  float LvelCmd, RvelCmd;
-  float LeftWheelSetSpeed, RightWheelSetSpeed;
+  double axelLen, maxSpeed;
+  double EPpGain, EPdGain, ETpGain, ETdGain, EPpLowPassGain, ETpLowPassGain, EPlpGain,
+      EPlpAlpha;  // path and theta error gains
+  double EPpLowPass, EPpLowPassPrev, ETpLowPass, ETpLowPassPrev, EPpDerivFiltEst, ETpDerivFiltEst, EPLowerPass,
+      EPLowerPassPrev;
+  double EPpEst, ETpEst;
+  double WheelSpeedPGain;
+  double LvelCmd, RvelCmd;
+  double LeftWheelSetSpeed, RightWheelSetSpeed;
   unsigned int currManeuverIndex;
   bool doingManeuver;
 

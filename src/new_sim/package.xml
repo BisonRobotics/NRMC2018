@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package>
+  <name>new_sim</name>
+  <version>0.0.0</version>
+  <description>The new_sim package</description>
+  <maintainer email="marcintrosh@todo.todo">marcintrosh</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>cmake_modules</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>vesc_access</build_depend>
+  <build_depend>sensor_access</build_depend>
+  <build_depend>localization</build_depend>
+
+  <run_depend>roscpp</run_depend>
+  <run_depend>vesc_access</run_depend>
+  <run_depend>sensor_access</run_depend>
+  <run_depend>localization</run_depend>
+  <export>
+  </export>
+</package>

@@ -7,7 +7,7 @@
 #define CUTOFFDIST4DOUBLEARC .01
 #define CPPEQUALTOL .05
 
-int SIGN(double A)
+int sign(double A)
 {
   return (A >= 0 ? 1 : -1);
 }
@@ -93,7 +93,7 @@ std::pair<pose, pose> WaypointControllerHelper::inputCleaner(pose robotPose, pos
   return newPair;
 }
 
-float WaypointControllerHelper::anglediff(float x, float y)
+double WaypointControllerHelper::anglediff(double x, double y)
 {
   return atan2(sin(x - y), cos(x - y));
 }
@@ -117,11 +117,11 @@ pose WaypointControllerHelper::reflectWaypointAroundRobot(pose waypoint, pose ro
   returnPose.theta = WaypointControllerHelper::anglediff(
       robot.theta, WaypointControllerHelper::anglediff(waypoint.theta, robot.theta));
 
-  float m = tan(robot.theta);  // need corner case for if robot angle is +/- 90 deg
+  double m = tan(robot.theta);  // need corner case for if robot angle is +/- 90 deg
 
-  float a = 1;
-  float b = -m;
-  float c = m * robot.x - robot.y;
+  double a = 1;
+  double b = -m;
+  double c = m * robot.x - robot.y;
 
   returnPose.x = (waypoint.x * (a * a - b * b) - 2 * b * (a * waypoint.y + c)) / (a * a + b * b);
   returnPose.y = (waypoint.y * (b * b - a * a) - 2 * a * (b * waypoint.x + c)) / (a * a + b * b);
@@ -148,19 +148,19 @@ std::vector<maneuver> WaypointControllerHelper::oneTurnSolution(pose robotPose, 
   pose wp;  // waypoint in robot coord, by inverse transform
   wp = WaypointControllerHelper::transformPoseToRobotCoord(robotPose, waypoint);
 
-  float xintercept = -wp.y / tan(wp.theta) + wp.x;
+  double xintercept = -wp.y / tan(wp.theta) + wp.x;
   // if the waypoint were a line extended back,
   // this is where it would intersect on the robot's x axis
   // find which is closer, the robots position to the xintercept, or the final waypoint
   // to the xintercept
 
-  if (xintercept < 0 || SIGN(wp.theta) != SIGN(wp.y))  // this solution won't work
+  if (xintercept < 0 || sign(wp.theta) != sign(wp.y))  // this solution won't work
   {
     return returnVector;  // return empty vector
   }
 
-  float distancetoendsq = (wp.x - xintercept) * (wp.x - xintercept) + wp.y * wp.y;
-  float distancetostartsq = xintercept * xintercept;
+  double distancetoendsq = (wp.x - xintercept) * (wp.x - xintercept) + wp.y * wp.y;
+  double distancetostartsq = xintercept * xintercept;
   // waypoint is assumed to have been transformed to robot coordinates
   // maneuvers will need transformed back to world coord
 
@@ -178,25 +178,25 @@ std::vector<maneuver> WaypointControllerHelper::oneTurnSolution(pose robotPose, 
     // center is radius distance away, perpendicular to halfway point between common and end
 
     // find point common to arc and line
-    float xtangent = maneuver1.radius * cos(maneuver1.distance / maneuver1.radius - M_PI_2);
-    float ytangent = maneuver1.radius * sin(maneuver1.distance / maneuver1.radius - M_PI_2) + maneuver1.radius;
+    double xtangent = maneuver1.radius * cos(maneuver1.distance / maneuver1.radius - M_PI_2);
+    double ytangent = maneuver1.radius * sin(maneuver1.distance / maneuver1.radius - M_PI_2) + maneuver1.radius;
 
     maneuver2.radius = STRAIGHTRADIUS;
     maneuver2.distance = sqrt((xtangent - wp.x) * (xtangent - wp.x) + (ytangent - wp.y) * (ytangent - wp.y));
 
-    float xhalf = (wp.x + xtangent) / 2.0f;
-    float yhalf = (wp.y + ytangent) / 2.0f;
+    double xhalf = (wp.x + xtangent) / 2.0f;
+    double yhalf = (wp.y + ytangent) / 2.0f;
     // this below could be correct
-    float M = tan(wp.theta);
+    double M = tan(wp.theta);
     maneuver2.xc = xhalf + sqrt(STRAIGHTRADIUS * STRAIGHTRADIUS / (M * M + 1));
     maneuver2.yc = (-1.0f / M) * (maneuver2.xc - xhalf) + yhalf;
   }
   else  // turn is second
   {
-    float A = 1;
-    float B = (2 * wp.y / tan(wp.theta) - 2 * wp.x);
-    float C = wp.x * wp.x - 2 * wp.y * wp.x / tan(wp.theta) - wp.y * wp.y;
-    float potxcenter2a, potxcenter2b;
+    double A = 1;
+    double B = (2 * wp.y / tan(wp.theta) - 2 * wp.x);
+    double C = wp.x * wp.x - 2 * wp.y * wp.x / tan(wp.theta) - wp.y * wp.y;
+    double potxcenter2a, potxcenter2b;
     if (B * B - 4 * A * C < 0)
     {
       // this solution should not have been called if we get to here
@@ -216,7 +216,7 @@ std::vector<maneuver> WaypointControllerHelper::oneTurnSolution(pose robotPose, 
       potxcenter2a = (-B + sqrt(B * B - 4 * A * C)) / (2 * A);
       potxcenter2b = (-B - sqrt(B * B - 4 * A * C)) / (2 * A);
 
-      float xcenter2 = potxcenter2a < potxcenter2b ? potxcenter2a : potxcenter2b;  // pick smallest
+      double xcenter2 = potxcenter2a < potxcenter2b ? potxcenter2a : potxcenter2b;  // pick smallest
 
       // first maneuver is going straight
       maneuver1.distance = xcenter2;
@@ -319,7 +319,7 @@ std::vector<maneuver> WaypointControllerHelper::twoTurnSolution(pose robotPose, 
   double xintermediate = (man1.xc + man2.xc) / 2.0f;
   double yintermediate = (man1.yc + man2.yc) / 2.0f;
 
-  float theta1 = std::atan2(xintermediate, d - yintermediate);
+  double theta1 = std::atan2(xintermediate, d - yintermediate);
 
   man1.distance = d * theta1;
   man2.distance = d * (theta1 - wp.theta);  // should this be an WaypointControllerHelper::anglediff?
@@ -370,24 +370,24 @@ std::vector<maneuver> WaypointControllerHelper::waypoint2maneuvers(pose robotPos
   // if the waypoint were a line extended back,
   // this is where it would intersect on the robot's x axis
 
-  double xintercept = -wp.y / tan(wp.theta) + wp.x;  // sign is set so SIGN(0) ==1
+  double xintercept = -wp.y / tan(wp.theta) + wp.x;  // sign is set so sign(0) ==1
 
-  if (SIGN(wp.y) == 1)
+  if (sign(wp.y) == 1)
   {
-    if (SIGN(xintercept) != SIGN(wp.theta))
+    if (sign(xintercept) != sign(wp.theta))
       myMan = twoTurnSolution(robotPose, waypoint);
-    else if (SIGN(xintercept) == 1 && SIGN(wp.theta) == 1)
+    else if (sign(xintercept) == 1 && sign(wp.theta) == 1)
       myMan = oneTurnSolution(robotPose, waypoint);
-    else if (SIGN(xintercept) == -1 && SIGN(wp.theta) == -1)
+    else if (sign(xintercept) == -1 && sign(wp.theta) == -1)
       myMan = inverseOneTurnSolution(robotPose, waypoint);
   }
   else
   {
-    if (SIGN(xintercept) == SIGN(wp.theta))
+    if (sign(xintercept) == sign(wp.theta))
       myMan = twoTurnSolution(robotPose, waypoint);
-    else if (SIGN(xintercept) == 1 && SIGN(wp.theta) == -1)
+    else if (sign(xintercept) == 1 && sign(wp.theta) == -1)
       myMan = oneTurnSolution(robotPose, waypoint);
-    else if (SIGN(xintercept) == -1 && SIGN(wp.theta) == 1)
+    else if (sign(xintercept) == -1 && sign(wp.theta) == 1)
       myMan = inverseOneTurnSolution(robotPose, waypoint);
   }
 
@@ -396,66 +396,20 @@ std::vector<maneuver> WaypointControllerHelper::waypoint2maneuvers(pose robotPos
 
 pose WaypointControllerHelper::findCPP(pose robotPose, maneuver curManeuver)
 {
-  // find nearest point on path of maneuver to robot as well as theta of path at that point
-  float Xp, Xpa, Xpb, Yp, Ypa, Ypb, M;
+  // find nearest point on path (in world coords) of maneuver to robot as well as theta of path at that point
+  double thetatangent;
   pose CPP;
-  if (std::abs(robotPose.x - curManeuver.xc) < CPPEQUALTOL)  // dont want to divide by zero
-  {
-    // Xp is the same, Yp is the closest y coord
-    Xp = curManeuver.xc;
-    Ypa = curManeuver.yc + curManeuver.radius;
-    Ypb = curManeuver.yc - curManeuver.radius;
-    if (std::abs(Ypa - robotPose.y) < std::abs(Ypb - robotPose.y))
-      Yp = Ypa;
-    else
-      Yp = Ypb;
-  }
-  else
-  {
-    M = (curManeuver.yc - robotPose.y) / (curManeuver.xc - robotPose.x);
-    // this is a shitfest
+  thetatangent = atan2(robotPose.y - curManeuver.yc, robotPose.x - curManeuver.xc);
+  CPP.theta = thetatangent + M_PI_2 * sign(curManeuver.radius);
+  CPP.theta = WaypointControllerHelper::anglediff(CPP.theta, 0);
 
-    double A, B, C;
-    A = (1 + M * M);
-    B = (-2 * curManeuver.xc - 2 * M * M * curManeuver.xc);
-    C = (curManeuver.xc * curManeuver.xc - curManeuver.radius * curManeuver.radius +
-         M * M * curManeuver.xc * curManeuver.xc);
+  CPP.x = std::abs(curManeuver.radius) * cos(thetatangent) + curManeuver.xc;
+  CPP.y = std::abs(curManeuver.radius) * sin(thetatangent) + curManeuver.yc;
 
-    Xpa = (-B + sqrt(B * B - 4 * A * C)) / (2.0 * A);
-    Xpb = (-B - sqrt(B * B - 4 * A * C)) / (2.0 * A);
-
-    /*
-    Xpa =
-        (-(-2 * curManeuver.xc - 2 * M * M * curManeuver.xc) +
-         sqrt((-2 * curManeuver.xc - 2 * M * M * curManeuver.xc) * (-2 * curManeuver.xc - 2 * M * M * curManeuver.xc) -
-              4 * (1 + M * M) * (curManeuver.xc * curManeuver.xc - curManeuver.radius * curManeuver.radius +
-                                 M * M * curManeuver.xc * curManeuver.xc))) /
-        (2 * (1 + M * M));
-
-    Xpb =
-        (-(-2 * curManeuver.xc - 2 * M * M * curManeuver.xc) -
-         sqrt((-2 * curManeuver.xc - 2 * M * M * curManeuver.xc) * (-2 * curManeuver.xc - 2 * M * M * curManeuver.xc) -
-              4 * (1 + M * M) * (curManeuver.xc * curManeuver.xc - curManeuver.radius * curManeuver.radius +
-                                 M * M * curManeuver.xc * curManeuver.xc))) /
-        (2 * (1 + M * M));
-    */
-
-    if (std::abs(robotPose.x - Xpa) < std::abs(robotPose.x - Xpb))
-      Xp = Xpa;
-    else
-      Xp = Xpb;
-
-    Yp = M * (Xp - curManeuver.xc) + curManeuver.yc;
-  }
-
-  CPP.x = Xp;
-  CPP.y = Yp;
-  CPP.theta = WaypointControllerHelper::anglediff(atan2(Yp - curManeuver.yc, Xp - curManeuver.xc),
-                                                  M_PI / 2);  // this needs fixed
   return CPP;
 }
 
-std::vector<std::pair<float, float> >
+std::vector<std::pair<double, double> >
 WaypointControllerHelper::waypointWithManeuvers2points(waypointWithManeuvers myMan)
 {
   // get points from initial point to terminal point by
@@ -463,40 +417,28 @@ WaypointControllerHelper::waypointWithManeuvers2points(waypointWithManeuvers myM
   // record intermediate point and solve from there through the next maneuver
   // repeat until out of maneuvers
 
-  std::vector<std::pair<float, float> > allPoints;
-  std::pair<float, float> aPoint;
-  std::pair<float, float> transformPoint;
+  std::vector<std::pair<double, double> > allPoints;
+  std::pair<double, double> aPoint;
+  std::pair<double, double> transformPoint;
 
-  pose currPoint = myMan.initialPose;
+  pose currPose = myMan.initialPose;
 
   for (std::vector<maneuver>::iterator it = myMan.mans.begin(); it != myMan.mans.end(); ++it)
   {
-    // go from currPoint through manuever
-    // get arc and transform to currPoint
-    //
-    // find the Net Arc Distance (NAD) in radians and each point should be
-    // CMPERPOINT away along the arc
-    // compute the untransformed point on the arc, then transform to robots position
-    float NAD = it->distance / it->radius;
-    float radPerMeter = NAD / it->distance;
-    float radPerPoint = radPerMeter * METERPERCM * CMPERPOINT;
-    for (float dTheta = 0; dTheta <= NAD; dTheta += radPerPoint)
+    maneuver currMan = *it;  // I mean copy, and thats what this does.
+    pose retPose;
+    for (double travel = 0; std::abs(travel) <= std::abs(it->distance);
+         travel += sign(it->distance) * METERPERCM * CMPERPOINT)
     {
-      // this could be optimized by only computing the arc which starts at the
-      // proper angle, then translating it to the correct place
-      aPoint.first = (it->radius * cos(dTheta - M_PI / 2));
-      aPoint.second = (it->radius * sin(dTheta - M_PI / 2)) + it->radius;
-      // transform point
-      transformPoint.first = cos(currPoint.theta) * aPoint.first - sin(currPoint.theta) * aPoint.second + currPoint.x;
-      transformPoint.second = sin(currPoint.theta) * aPoint.first + cos(currPoint.theta) * aPoint.second + currPoint.y;
+      currMan.distance = travel;
+      retPose = endOfManeuver(currPose, currMan);
+      transformPoint.first = retPose.x;
+      transformPoint.second = retPose.y;
       allPoints.push_back(transformPoint);
     }
-    // went through maneuver, get ready for next maneuver
-    currPoint.x = transformPoint.first;
-    currPoint.y = transformPoint.second;
-    currPoint.theta += NAD;
+    currPose = retPose;
   }
-  // if there are no points, there were no maneuvers
+
   return allPoints;
 }
 
@@ -504,11 +446,11 @@ pose WaypointControllerHelper::endOfManeuver(pose robotPose, maneuver myMan)  //
                                                                               // which starts at a pose
 {
   pose endPoseUT, endPose;
-  float NAD = myMan.distance / myMan.radius;
+  double NAD = myMan.distance / myMan.radius;
 
   // untransformed endpose
-  endPoseUT.x = myMan.radius * cos(NAD - M_PI / 2);
-  endPoseUT.y = myMan.radius * sin(NAD - M_PI / 2) + myMan.radius;
+  endPoseUT.x = myMan.radius * cos(NAD - M_PI_2);
+  endPoseUT.y = myMan.radius * sin(NAD - M_PI_2) + myMan.radius;
 
   endPose.x = cos(robotPose.theta) * endPoseUT.x - sin(robotPose.theta) * endPoseUT.y + robotPose.x;
   endPose.y = sin(robotPose.theta) * endPoseUT.x + cos(robotPose.theta) * endPoseUT.y + robotPose.y;
@@ -517,14 +459,14 @@ pose WaypointControllerHelper::endOfManeuver(pose robotPose, maneuver myMan)  //
   return endPose;
 }
 
-std::pair<float, float> WaypointControllerHelper::speedAndRadius2WheelVels(float speed, float radius, float AxelLen,
-                                                                           float maxSpeed)
+std::pair<double, double> WaypointControllerHelper::speedAndRadius2WheelVels(double speed, double radius,
+                                                                             double AxelLen, double maxSpeed)
 {
   // positive radius is CCW, first vel is left wheel, second is right
   // speed is average of wheel velocities: TotalVel = .5*(LeftVel + RightVel)
   // Turn Radius = AxelLen/2 * (LeftVel+RightVel)/(RightVel - LeftVel)
-  std::pair<float, float> Vels;
-  float Sfactor = 1, S2factor = 1;
+  std::pair<double, double> Vels;
+  double Sfactor = 1, S2factor = 1;
   if (radius != 0)
   {
     Vels.first = (4 * radius * speed / (AxelLen)-2 * speed) * AxelLen / (radius * 4);
