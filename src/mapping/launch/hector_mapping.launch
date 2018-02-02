@@ -1,11 +1,5 @@
 <launch>
-
-
   <include file="$(find realsense_ros_camera)/launch/demo_pointcloud_and_laser.launch"/>
-
-
-<!--
-
 
   <node pkg="hector_mapping" type="hector_mapping" name="mapper">
     <param name="base_frame" value="base_link"/>
@@ -19,8 +13,5 @@
     <param name="laser_z_min_value" value="-.15"/>
     <param name="pub_map_odom_transform" value="false"/>
   </node>
--->
-
-
 
 </launch>
