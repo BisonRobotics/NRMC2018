@@ -1,0 +1,6 @@
+uses costmap from /map
+robot position from tf from map to base_link
+gets new waypoints from /global_planner_goal
+updates status at /drive_controller_status
+
+sends this information between a waypoint controller object and imperio through these topics

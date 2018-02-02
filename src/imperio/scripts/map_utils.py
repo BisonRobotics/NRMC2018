@@ -127,7 +127,7 @@ class Map(object):
         y = col * self.resolution + .5 * self.resolution + self.origin_y
         return x, y
 
-    def _cell_index(self, x, y):
+    def cell_index(self, x, y):
         """
         Helper method for finding map index.  x and y are in the map
         coordinate system.

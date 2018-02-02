@@ -12,7 +12,7 @@ using namespace WaypointControllerHelper;
 
 TEST(WaypointControllerHelperTests, anglediffWorks1)
 {
-  float angle1, angle2, result;
+  double angle1, angle2, result;
   angle1 = 2.0;
   angle2 = -2.0;
   result = -2.283;
@@ -21,7 +21,7 @@ TEST(WaypointControllerHelperTests, anglediffWorks1)
 
 TEST(WaypointControllerHelperTests, anglediffWorks2)
 {
-  float angle1, angle2, result;
+  double angle1, angle2, result;
   angle1 = 0;
   angle2 = 4;
   result = 2.283;
@@ -48,7 +48,7 @@ TEST(WaypointControllerHelperTests, waypointWithManeuvers2PointsReturnsEnoughPoi
   pose initialPose = {.x = 0, .y = 0, .theta = 0 };
   pose finalDestination = {.x = 3, .y = 1, .theta = M_PI / 4 };
 
-  std::vector<std::pair<float, float> > points;
+  std::vector<std::pair<double, double> > points;
   std::vector<maneuver> myMans;
   myMans.push_back(myMan1);
   myMans.push_back(myMan2);
@@ -64,12 +64,12 @@ TEST(WaypointControllerHelperTests, waypointWithManeuvers2PointsReturnsEnoughPoi
 
 TEST(WaypointControllerHelperTests, speedAndRadius2WheelVelsTests)
 {
-  std::pair<float, float> returnSpeeds;
-  std::pair<float, float> expectedSpeeds;
-  float AxelLen = .5f;
-  float maxSpeed = .5f;
-  float turnRadius = 1.0f;
-  float speed = .3f;
+  std::pair<double, double> returnSpeeds;
+  std::pair<double, double> expectedSpeeds;
+  double AxelLen = .5f;
+  double maxSpeed = .5f;
+  double turnRadius = 1.0f;
+  double speed = .3f;
   expectedSpeeds.first = .2250f;
   expectedSpeeds.second = .3750f;
 

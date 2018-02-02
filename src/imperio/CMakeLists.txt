@@ -11,6 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   tf
+  geometry_msgs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -68,10 +70,11 @@ add_message_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+generate_messages(
+   DEPENDENCIES
+   std_msgs
+   geometry_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -105,7 +108,7 @@ add_message_files(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES imperio
-#  CATKIN_DEPENDS rospy std_msgs tf
+  CATKIN_DEPENDS message_runtime
 #  DEPENDS system_lib
 )
 

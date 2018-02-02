@@ -1,122 +1,310 @@
 // this is the waypoint master, right now it:
+// runs the superlocalizer and uses it to post the tf from map to base_link
 // gets the current robot position from the tf from map to base_link
 // gets waypoints from /global_planner_goal
 
 // soon it will
 // update status at /drive_controller_status
-// take input from the costmap about where the path should not go
+
+// after that it will (second sprint 2018 cycle)
+// take a stream of incoming valid waypoints on the costmap and 
+// pick the "best" ones to follow
+// initial idea: start at the furthest waypoint and work backwords
+// after iterating through the available waypoints, either choose the
+// furthest valid one (could just pick the first one that works)
+
+#define SIMULATING TRUE
 
 #include <ros/ros.h>
-#include <tf/transform_listener.h>
+#include <tf2_ros/transform_listener.h>
+#include <tf2_ros/transform_broadcaster.h>
+
 #include <waypoint_controller/waypoint_controller.h>
 #include <waypoint_controller/waypoint_with_maneuvers.h>
 
 #include <geometry_msgs/Pose2D.h>
+#include <geometry_msgs/TransformStamped.h>
+#include <std_msgs/Empty.h>
+#include <std_msgs/String.h>
 
 #include <vesc_access/ivesc_access.h>
 #include <vesc_access/vesc_access.h>
 #include <wheel_params/wheel_params.h>
+
+#include <super_localizer/super_localizer.h>
+#include <sensor_msgs/JointState.h>
+
+#ifndef SIMULATING
+#error You must define a value (TRUE/FALSE) for SIMULATING
+#endif
+
+#if SIMULATING == TRUE
+#include <sim_robot/sim_robot.h>
+#else
+#include <lp_research/lpresearchimu.h>
+#include <apriltag_tracker_interface/apriltag_tracker_interface.h>
+#endif
+
 #include <vector>
 #include <utility>
 
+#define UPDATE_RATE_HZ 50.0
+
 bool newWaypointHere = false;
 pose newWaypoint;
+bool halt = false;
 
 void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 {
-  // should add the waypoint to the queue of waypoints
-  // first it shall just print it out
+  //this callback will flag that there is a new waypoint if there are no future
+  //or current maneuvers. If thera are future maneuvers then
+  //this callback will quick check to see if the new waypoint will generate a
+  //better manuever than the current planned maneuvers.
+  //better is defined as X distance travelled per maneuver distance
+
+  //when checking potential maneuvers against the costmap, if a
+  //maneuver would violate the costmap, it is replaced with a caveman maneuver.
+  //a caveman maneuver (turn in place, go fwd, turn in place) is guarenteed safe.
+
+  //will need waypoint_controlelr_helper waypoint to maneuvers
+  //get future goodness
+  //dump future maneuvers
+  //get terminal pose of current maneuver
+
+  //if no future maneuvers, add this one
+  //else
+  //get terminal pose of current maneuver
+  //waypoint to maneuvers of terminal pose and potential waypoint
+  //get goodness of this maneuver
+  //compare the goodnesses
+  //either keep the current plan or dump it and switch to the new one
+
+  pose potentialWaypoint;
+  potentialWaypoint.x = msg->x;potentialWaypoint.y = msg->y;potentialWaypoint.theta = msg->theta;
+  
   newWaypoint.x = msg->x;
   newWaypoint.y = msg->y;
   newWaypoint.theta = msg->theta;
   newWaypointHere = true;
 }
 
+geometry_msgs::TransformStamped create_tf(double x, double y, double theta)
+{
+  geometry_msgs::TransformStamped tfStamp;
+  tfStamp.header.stamp = ros::Time::now();
+  tfStamp.header.frame_id = "map";
+  tfStamp.child_frame_id = "base_link";
+  tfStamp.transform.translation.x = x;
+  tfStamp.transform.translation.y = y;
+  tfStamp.transform.translation.z = 0.0;
+  tf2::Quaternion q;
+  q.setRPY(0, 0, theta);
+  tfStamp.transform.rotation.x = q.x();
+  tfStamp.transform.rotation.y = q.y();
+  tfStamp.transform.rotation.z = q.z();
+  tfStamp.transform.rotation.w = q.w();
+  return tfStamp;
+}
+
+#if SIMULATING ==TRUE
+geometry_msgs::TransformStamped create_sim_tf(double x, double y, double theta)
+{
+  geometry_msgs::TransformStamped tfStamp;
+  tfStamp.header.stamp = ros::Time::now();
+  tfStamp.header.frame_id = "map";
+  tfStamp.child_frame_id = "sim_base_link";
+  tfStamp.transform.translation.x = x;
+  tfStamp.transform.translation.y = y;
+  tfStamp.transform.translation.z = 0.0;
+  tf2::Quaternion q;
+  q.setRPY(0, 0, theta);
+  tfStamp.transform.rotation.x = q.x();
+  tfStamp.transform.rotation.y = q.y();
+  tfStamp.transform.rotation.z = q.z();
+  tfStamp.transform.rotation.w = q.w();
+  return tfStamp;
+}
+#endif
+
+void haltCallback (const std_msgs::Empty::ConstPtr& msg){
+  halt = true;
+}
+
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "my_tf_listener");
+  ros::init(argc, argv, "my_tf2_listener");
 
   ros::NodeHandle node;
 
-  ros::Subscriber sub = node.subscribe("global_planner_goal", 1, newGoalCallback);
+  ros::Subscriber sub = node.subscribe("additional_waypoint", 1, newGoalCallback);
+  ros::Publisher jspub = node.advertise<sensor_msgs::JointState> ("wheel_joints", 500);
+  sensor_msgs::JointState jsMessage;
+  jsMessage.name.push_back("front_left");
+  jsMessage.name.push_back("front_right");
+  jsMessage.name.push_back("back_right");
+  jsMessage.name.push_back("back_left");
+  jsMessage.velocity.push_back(0.0);
+  jsMessage.velocity.push_back(0.0);
+  jsMessage.velocity.push_back(0.0);
+  jsMessage.velocity.push_back(0.0);
+  tf2_ros::Buffer tfBuffer;
+ // tf2_ros::TransformListener tfListener(tfBuffer);
+  geometry_msgs::TransformStamped transformStamped;
 
-  ros::Time curr;
-  ros::Time last;
-  ros::Duration delta;
-
-  tf::StampedTransform transform;
-  tf::TransformListener listener;
-
-  pose theWay = {.x = 2.3f, .y = 0.0f, .theta = -1.42f };
-  pose currPose;
-  pose theCPP;
+ // pose theWay = {0,0,0};
+  pose currPose = {0,0,0};
+  pose theCPP = {0,0,0};
 
   std::vector<waypointWithManeuvers> navigationQueue;
+
+  #if SIMULATING == TRUE
+  SimRobot sim(ROBOT_AXLE_LENGTH, .5,.5,0);
+  iVescAccess *fl = (sim.getFLVesc());
+  iVescAccess *fr = (sim.getFRVesc());
+  iVescAccess *br = (sim.getBRVesc());
+  iVescAccess *bl = (sim.getBLVesc());
+
+  ImuSensorInterface* imu = sim.getImu();
+  PosSensorInterface* pos = sim.getPos();
+  #else
   char *can_name = (char *)WHEEL_CAN_NETWORK;
-  VescAccess fl(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
-                WHEEL_TORQUE_CONSTANT, can_name, 1);
-  VescAccess fr(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
-                MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-  VescAccess br(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
-                WHEEL_TORQUE_CONSTANT, can_name, 1);
-  VescAccess bl(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
-                WHEEL_TORQUE_CONSTANT, can_name, 1);
+  iVescAccess *fl = new VescAccess(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
+                    MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
+  iVescAccess *fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
+                    MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
+  iVescAccess *br = new VescAccess(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, 
+                    MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
+  iVescAccess *bl = new VescAccess(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
+                    MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
 
-  listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(30));
-  listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
+  PosSensorInterface *pos = new AprilTagTrackerInterface();
+  ImuSensorInterface *imu = new LpResearchImu("imu");
+  #endif
 
-  currPose.x = -1.0f * transform.getOrigin().x();
-  currPose.y = -1.0f * transform.getOrigin().y();
-  currPose.theta = -transform.getRotation().getAngle();
+  //initialize the localizer here
+  ros::Time lastTime;
+  ros::Time currTime;
+  ros::Duration loopTime;
+  bool firstTime = true;
+  tf2_ros::TransformBroadcaster tfBroad;
 
-  WaypointController wc = WaypointController(.5f, 1.0f, currPose, &fl, &fr, &br, &bl);
-  WaypointController::Status wcStat;
+  SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0,0,0, fl, fr, br, bl, imu, pos, SuperLocalizer_default_gains);
 
-  ros::Rate rate(50.0);
-  while (node.ok())
+  LocalizerInterface::stateVector stateVector;
+  ros::Subscriber haltsub = node.subscribe ("halt", 100, haltCallback);
+  ros::Publisher mode_pub = node.advertise<std_msgs::String>  ("drive_controller_status", 1000);
+  //hang here until someone knows where we are
+  ROS_INFO ("Going into wait loop for localizer");
+
+  ros::Rate rate(UPDATE_RATE_HZ);
+  ros::Duration idealLoopTime(1.0/UPDATE_RATE_HZ);
+
+  while (!superLocalizer.getIsDataGood() && ros::ok () )
   {
-    try  // get position
+    //do initial localization
+    if (firstTime)
     {
-      listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10));
-      listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
-      currPose.x = -1.0f * transform.getOrigin().x();
-      currPose.y = -1.0f * transform.getOrigin().y();
-      currPose.theta = -transform.getRotation().getAngle();
+       firstTime = false;
+       currTime = ros::Time::now();
+       lastTime = currTime - idealLoopTime;
+       loopTime = (currTime - lastTime);
     }
-    catch (tf::TransformException &ex)
+    else
     {
-      ROS_ERROR("%s", ex.what());
-      ros::Duration(1.0).sleep();
-      continue;
+       lastTime = currTime;
+       currTime = ros::Time::now();
+       loopTime = (currTime - lastTime);
     }
+    #if SIMULATING == TRUE
+    sim.update ((loopTime).toSec());
+    #endif
+    superLocalizer.updateStateVector(loopTime.toSec());
+    stateVector = superLocalizer.getStateVector();
+    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+    ros::spinOnce ();
+    rate.sleep ();
+  }
+  //populate currPose from localization data
+/*  currPose.x = transformStamped.transform.translation.x; //-1.0f * transform.getOrigin().x();
+  currPose.y = transformStamped.transform.translation.y; //-1.0f * transform.getOrigin().y();
+  tf2::Quaternion tempQuat(transformStamped.transform.rotation.x, transformStamped.transform.rotation.y,
+                      transformStamped.transform.rotation.z, transformStamped.transform.rotation.w);
+  currPose.theta = tempQuat.getAngle() - M_PI;//-transform.getRotation().getAngle();
+*/
+  //initialize waypoint controller
+  WaypointController wc = WaypointController(ROBOT_AXLE_LENGTH, ROBOT_MAX_SPEED, currPose, fl, fr, br, bl, 1.0 / UPDATE_RATE_HZ);
+  WaypointController::Status wcStat;
+  std_msgs::String msg;
+  std::stringstream ss;
 
-    if (newWaypointHere)
+  ROS_INFO ("Entering MAIN LOOP");
+  firstTime = true;
+  while (ros::ok()) {
+    //update localizer here
+    if (firstTime)
     {
+       firstTime = false;
+       currTime = ros::Time::now();
+       lastTime = currTime - idealLoopTime;
+       loopTime = currTime - lastTime;
+    }
+    else
+    {
+       lastTime = currTime;
+       currTime = ros::Time::now();
+       loopTime = currTime - lastTime;
+    }
+    ROS_INFO("Looptime of %.5f\nError from ideal time is %f\n", loopTime.toSec(), (idealLoopTime-loopTime).toSec());
+     #if SIMULATING == TRUE
+    sim.update(loopTime.toSec());
+
+    tfBroad.sendTransform(create_sim_tf(sim.getX(), sim.getY(), sim.getTheta()));
+     #endif
+
+    superLocalizer.updateStateVector(loopTime.toSec());
+    stateVector = superLocalizer.getStateVector();
+    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+
+
+    currPose.x = stateVector.x_pos;
+    currPose.y = stateVector.y_pos;
+    currPose.theta = stateVector.theta;
+    jsMessage.velocity[0] = fl->getLinearVelocity();
+    jsMessage.velocity[1] = fr->getLinearVelocity();
+    jsMessage.velocity[2] = br->getLinearVelocity();
+    jsMessage.velocity[3] = bl->getLinearVelocity();
+    if (newWaypointHere) {
+      ROS_INFO("Attempting to add waypoint");
       wc.addWaypoint(newWaypoint, currPose);
+      newWaypointHere = false;
+      ROS_INFO ("Waypoint Added!");
     }
 
     // update controller
     ROS_INFO("GOING TO UPDATE");
-    curr = ros::Time::now();
-    delta = curr - last;
-    wcStat = wc.update(currPose, (float)delta.toSec());  // need to get actual time
-    last = curr;
 
-    // print status
-    if (wcStat == WaypointController::Status::ALLBAD)
+    wcStat = wc.update(currPose, loopTime.toSec());
+
+    //TODO
+    //check if we are stuck by comparing commanded velocity to actual
+    //maybe integrate error with some decay
+
+    // print status also post to topic /drive_controller_status
+    if (wcStat == WaypointController::Status::ALLBAD){
       ROS_WARN("CONTROLLER SAYS BAD");
-    else if (wcStat == WaypointController::Status::ALLGOOD)
+      ss << "Mode : Bad";
+    }else if (wcStat == WaypointController::Status::ALLGOOD) {
       ROS_INFO("CONTROLLER SAYS GOOD");
+      ss << "Mode: Good";
+    }
     else if (wcStat == WaypointController::Status::GOALREACHED)
     {
       ROS_INFO("GOOOOOAAAAALLLLL!!");
-      // if (isRunning)
-      // {
-      //   isRunning = false;
-      //   ros::shutdown();
-      // }
+      wc.haltAndAbort();
+      ss << "Mode: Chillin";
     }
-
+    msg.data = ss.str ();
+    mode_pub.publish (msg);
     // print some info
     navigationQueue = wc.getNavigationQueue();
     theCPP = wc.getCPP();
@@ -129,6 +317,7 @@ int main(int argc, char **argv)
     ROS_INFO("Epp Estimate: %.4f", wc.getEPpEstimate());
 
     ROS_INFO("SetSpeeds: %.4f, %.4f", wc.getSetSpeeds().first, wc.getSetSpeeds().second);
+    ROS_INFO("CmdSpeeds: %.4f, %.4f", wc.getCmdSpeeds().first, wc.getCmdSpeeds().second);
 
     if (navigationQueue.size() > 0)
     {
@@ -144,8 +333,12 @@ int main(int argc, char **argv)
       ROS_INFO("Nav terminal Pose:\nx: %.4f\ny: %.4f\nth: %.4f", navigationQueue.at(0).terminalPose.x,
                navigationQueue.at(0).terminalPose.y, navigationQueue.at(0).terminalPose.theta);
     }
-
+    if (halt){
+      wc.haltAndAbort();
+      break;
+    }
     // ros end stuff
+    jspub.publish(jsMessage);
     ros::spinOnce();
     rate.sleep();
   }

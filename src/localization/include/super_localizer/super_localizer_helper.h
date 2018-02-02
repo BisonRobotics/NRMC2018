@@ -1,5 +1,4 @@
 #include <localizer/localizer.h>
-
 namespace LocalizerInterface
 {
 LocalizerInterface::stateVector diff(LocalizerInterface::stateVector lhs, LocalizerInterface::stateVector rhs);
