@@ -21,7 +21,6 @@ public:
                  iVescAccess *frontRightVesc, iVescAccess *backRightVesc, iVescAccess *backLeftVesc,
                  PosSensorInterface *posSensor, LocalizerInterface::stateVector gains);
   UpdateStatus updateStateVector(double dt);
-
   ~SuperLocalizer();
 
   // static constexpr Localizer::stateVector_s default_gains;
@@ -32,6 +31,7 @@ public:
   LocalizerInterface::stateVector getResidual();
   LocalizerInterface::stateVector getMeasured();
   LocalizerInterface::stateVector getGainVector();
+  bool getIsDataGood(void);
 
 private:
   bool data_is_good;

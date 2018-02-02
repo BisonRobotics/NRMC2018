@@ -13,11 +13,11 @@ pose findCPP(pose robotPose, maneuver curManeuver);
 
 pose endOfManeuver(pose robotPose, maneuver myMan);
 
-std::pair<float, float> speedAndRadius2WheelVels(float speed, float radius, float AxelLen, float maxSpeed);
+std::pair<double, double> speedAndRadius2WheelVels(double speed, double radius, double AxelLen, double maxSpeed);
 
-std::vector<std::pair<float, float> > waypointWithManeuvers2points(waypointWithManeuvers myMan);
+std::vector<std::pair<double, double> > waypointWithManeuvers2points(waypointWithManeuvers myMan);
 
-float anglediff(float x, float y);
+double anglediff(double x, double y);
 
 pose reflectWaypointAroundRobot(pose waypoint, pose robot);
 

@@ -54,7 +54,7 @@ ReadableSensors::ReadStatus AprilTagTrackerInterface::receiveData()
     x = 0.0f;
     y = 0.0f;
     theta = 0.0f;
-    ROS_WARN("Caught exception: %s", e.what());
+    //    ROS_WARN("Caught exception: %s", e.what());
     return ReadableSensors::ReadStatus::READ_FAILED;
   }
 }

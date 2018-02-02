@@ -11,10 +11,13 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs 
   actionlib
   std_msgs
+  message_generation
   vesc_access 
   localization
   geometry_msgs
-  tf
+  tf2
+  new_sim
+  imperio
 )
 
 
@@ -34,12 +37,10 @@ generate_messages(DEPENDENCIES
     std_msgs
 )
 
-
-
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES Wheels velocity_plugins
-    CATKIN_DEPENDS roscpp pluginlib
+    CATKIN_DEPENDS roscpp pluginlib message_runtime
     #DEPENDS EIGEN3
 )
 
@@ -47,6 +48,7 @@ include_directories (include ${catkin_INCLUDE_DIRS} )
 include_directories(${GTEST_INCLUDE_DIRS})
 include_directories(${vesc_access_INCLUDE_DIRS})
 include_directories(${localization_INCLUDE_DIRS})
+include_directories(${new_sim_INCLUDE_DIRS})
 ## Declare a C++ library
 
 add_library(velocity_plugins
@@ -70,9 +72,16 @@ target_link_libraries (way_control vesc_access way_control_helper)
 add_executable (wheel_goal_master src/wheel_goal_master.cpp)
 target_link_libraries (wheel_goal_master ${catkin_LIBRARIES} pos_control localizer_lib)
 
-
 add_executable(waypoint_master src/waypoint_master.cpp)
-target_link_libraries (waypoint_master way_control ${catkin_LIBRARIES} )
+add_dependencies(waypoint_master way_control sim_robot)
+target_link_libraries (waypoint_master way_control ${new_sim_LIBRARIES} ${catkin_LIBRARIES} )
+
+add_executable(waypoint_filter src/waypoint_filter.cpp)
+add_dependencies(waypoint_filter way_control_helper)
+target_link_libraries(waypoint_filter way_control_helper ${catkin_LIBRARIES})
+
+add_executable(pose_array_publisher src/test/pose_array_publisher.cpp)
+target_link_libraries(pose_array_publisher ${catkin_LIBRARIES})
 
 add_dependencies (wheel_goal_master localizer_lib)
 add_dependencies (waypoint_master ${PROJECT_NAME}_gencpp)
