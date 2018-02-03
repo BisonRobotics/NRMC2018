@@ -5,6 +5,7 @@ SimPos::SimPos(double xnoise1, double ynoise1, double thetanoise1)
   xnoise = xnoise1;
   ynoise = ynoise1;
   thetanoise = thetanoise1;
+  is_floating = false;
 }
 
 double SimPos::getX()
@@ -33,4 +34,12 @@ void SimPos::update(double x1, double y1, double theta1)
   x = x1;
   y = y1;
   theta = theta1;
+}
+
+bool SimPos::isFloating (){
+  return is_floating;
+}
+
+void SimPos::setIsFloating (bool is_floating){
+  this->is_floating = is_floating;
 }
