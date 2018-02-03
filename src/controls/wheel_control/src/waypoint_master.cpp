@@ -242,10 +242,11 @@ int main(int argc, char **argv)
   std_msgs::String msg;
   std::stringstream ss;
 
-  ROS_INFO("Entering MAIN LOOP");
   firstTime = true;
   while (ros::ok())
   {
+      ROS_INFO ("\n");
+      ROS_INFO ("Top");
     // update localizer here
     if (firstTime)
     {
@@ -260,7 +261,7 @@ int main(int argc, char **argv)
       currTime = ros::Time::now();
       loopTime = currTime - lastTime;
     }
-    ROS_INFO("Looptime of %.5f\nError from ideal time is %f\n", loopTime.toSec(), (idealLoopTime - loopTime).toSec());
+    ROS_INFO("Looptime : %.5f", loopTime.toSec());
 #if SIMULATING == 1
     sim.update(loopTime.toSec());
 
@@ -278,16 +279,22 @@ int main(int argc, char **argv)
     jsMessage.velocity[1] = fr->getLinearVelocity();
     jsMessage.velocity[2] = br->getLinearVelocity();
     jsMessage.velocity[3] = bl->getLinearVelocity();
+
+      ROS_INFO ("FrontLeftVel : %.4f", jsMessage.velocity[0] );
+      ROS_INFO ("FrontRightVel : %.4f", jsMessage.velocity[1]);
+      ROS_INFO ("BackRightVel : %.4f", jsMessage.velocity[2]);
+      ROS_INFO ("BackLeftVel : %.4f", jsMessage.velocity[3]);
     if (newWaypointHere)
     {
-      ROS_INFO("Attempting to add waypoint");
       wc.addWaypoint(newWaypoint, currPose);
       newWaypointHere = false;
-      ROS_INFO("Waypoint Added!");
+        ROS_INFO ("NewWaypoint : 1");
+    } else {
+        ROS_INFO ("NewWaypoint : 0");
     }
 
     // update controller
-    ROS_INFO("GOING TO UPDATE");
+
 
     wcStat = wc.update(currPose, loopTime.toSec());
 
@@ -298,17 +305,17 @@ int main(int argc, char **argv)
     // print status also post to topic /drive_controller_status
     if (wcStat == WaypointController::Status::ALLBAD)
     {
-      ROS_WARN("CONTROLLER SAYS BAD");
+      ROS_WARN("Mode : 0");
       ss << "Mode : Bad";
     }
     else if (wcStat == WaypointController::Status::ALLGOOD)
     {
-      ROS_INFO("CONTROLLER SAYS GOOD");
+      ROS_INFO("Mode : 1");
       ss << "Mode: Good";
     }
     else if (wcStat == WaypointController::Status::GOALREACHED)
     {
-      ROS_INFO("GOOOOOAAAAALLLLL!!");
+      ROS_INFO("Mode : 2");
       wc.haltAndAbort();
       ss << "Mode: Chillin";
     }
@@ -318,29 +325,77 @@ int main(int argc, char **argv)
     navigationQueue = wc.getNavigationQueue();
     theCPP = wc.getCPP();
 
-    ROS_INFO("\nCPP x: %.4f \nCPP y: %.4f\nCPP th:%.4f", theCPP.x, theCPP.y, theCPP.theta);
+    ROS_INFO("CPPx : %.4f", theCPP.x);
+    ROS_INFO ("CPPy : %.4f", theCPP.y);
+    ROS_INFO ("CPPth : %.4f", theCPP.theta);
 
-    ROS_INFO("\nCurP x: %.4f \nCurP y: %.4f\nCurP th:%.4f", currPose.x, currPose.y, currPose.theta);
+    ROS_INFO("CurPx : %.4f", currPose.x);
+    ROS_INFO("CurPy : %.4f", currPose.y);
+    ROS_INFO("CurPth : %.4f", currPose.theta);
 
-    ROS_INFO("Etp Estimate: %.4f", wc.getETpEstimate());
-    ROS_INFO("Epp Estimate: %.4f", wc.getEPpEstimate());
+    ROS_INFO("EtpEstimate : %.4f", wc.getETpEstimate());
+    ROS_INFO("EppEstimate : %.4f", wc.getEPpEstimate());
 
-    ROS_INFO("SetSpeeds: %.4f, %.4f", wc.getSetSpeeds().first, wc.getSetSpeeds().second);
-    ROS_INFO("CmdSpeeds: %.4f, %.4f", wc.getCmdSpeeds().first, wc.getCmdSpeeds().second);
+    ROS_INFO("SetSpeed1 : %.4f", wc.getSetSpeeds().first);
+    ROS_INFO ("SetSpeed2 : %.4f", wc.getSetSpeeds().second);
+    ROS_INFO("CmdSpeed1 : %.4f", wc.getCmdSpeeds().first);
+    ROS_INFO ("CmdSpeed2 : %.4f", wc.getCmdSpeeds().second);
 
-    if (navigationQueue.size() > 0)
-    {
-      ROS_INFO("Nav mans Size: %d", (int)navigationQueue.at(0).mans.size());
-      for (int k = wc.getCurrManeuverIndex(); k < navigationQueue.at(0).mans.size(); k++)
-        ROS_INFO("Nav Man %d Param:\nradius: %.4f\nxc: %.4f\nyc: %.4f\ndistance: %.4f", k,
-                 navigationQueue.at(0).mans.at(k).radius, navigationQueue.at(0).mans.at(k).xc,
-                 navigationQueue.at(0).mans.at(k).yc, navigationQueue.at(0).mans.at(k).distance);
-      pose manEnd = wc.getManeuverEnd();
-      ROS_INFO("CurrManEnd:\nx: %.4f\ny: %.4f\nth: %.4f", manEnd.x, manEnd.y, manEnd.theta);
-      ROS_INFO("Nav initial Pose:\nx: %.4f\ny: %.4f\nth: %.4f", navigationQueue.at(0).initialPose.x,
-               navigationQueue.at(0).initialPose.y, navigationQueue.at(0).initialPose.theta);
-      ROS_INFO("Nav terminal Pose:\nx: %.4f\ny: %.4f\nth: %.4f", navigationQueue.at(0).terminalPose.x,
-               navigationQueue.at(0).terminalPose.y, navigationQueue.at(0).terminalPose.theta);
+    if (navigationQueue.size() > 0) {
+        ROS_INFO ("NavManSize : %d", (int) navigationQueue.at(0).mans.size());
+
+        ROS_INFO ("NavMan0rad : %.4f", navigationQueue.at(0).mans.at(0).radius);
+        ROS_INFO ("NavMan0nxc : %.4f", navigationQueue.at(0).mans.at(0).xc);
+        ROS_INFO ("NavMan0yc : %.4f", navigationQueue.at(0).mans.at(0).yc);
+        ROS_INFO ("NavMan0dist : %.4f", navigationQueue.at(0).mans.at(0).distance);
+        if (navigationQueue.at(0).mans.size() >= 2) {
+            ROS_INFO ("NavMan1rad : %.4f", navigationQueue.at(0).mans.at(1).radius);
+            ROS_INFO ("NavMan1nxc : %.4f", navigationQueue.at(0).mans.at(1).xc);
+            ROS_INFO ("NavMan1yc : %.4f", navigationQueue.at(0).mans.at(1).yc);
+            ROS_INFO ("NavMan1dist : %.4f", navigationQueue.at(0).mans.at(1).distance);
+        } else {
+             ROS_INFO ("NavMan1rad : %.4f", 0.0);
+            ROS_INFO ("NavMan1nxc : %.4f", 0.0);
+            ROS_INFO ("NavMan1yc : %.4f", 0.0);
+            ROS_INFO ("NavMan1dist : %.4f", 0.0);
+        }
+        pose manEnd = wc.getManeuverEnd();
+        ROS_INFO("CurrManEndx : %.4f", manEnd.x);
+        ROS_INFO("CurrManEndy : %.4f", manEnd.y);
+        ROS_INFO("CurrManEndTh : %.4f", manEnd.theta);
+
+        ROS_INFO("NavInitPosex : %.4f", navigationQueue.at(0).initialPose.x);
+        ROS_INFO("NavInitPosey : %.4f", navigationQueue.at(0).initialPose.y);
+        ROS_INFO("NavInitPoseth : %.4f", navigationQueue.at(0).initialPose.theta);
+
+        ROS_INFO("NavTermPosex : %.4f", navigationQueue.at(0).terminalPose.x);
+        ROS_INFO("NavTermPosey : %.4f", navigationQueue.at(0).terminalPose.y);
+        ROS_INFO("NavTermPoseth : %.4f", navigationQueue.at(0).terminalPose.theta);
+    } else {
+        ROS_INFO ("NavManSize : %d", 0);
+
+        ROS_INFO ("NavMan0rad : %.4f", 0.0);
+        ROS_INFO ("NavMan0nxc : %.4f", 0.0);
+        ROS_INFO ("NavMan0yc : %.4f", 0.0);
+        ROS_INFO ("NavMan0dist : %.4f", 0.0);
+        ROS_INFO ("NavMan1rad : %.4f", 0.0);
+        ROS_INFO ("NavMan1nxc : %.4f", 0.0);
+        ROS_INFO ("NavMan1yc : %.4f", 0.0);
+        ROS_INFO ("NavMan1dist : %.4f", 0.0);
+
+
+        ROS_INFO("CurrManEndx : %.4f", 0.0);
+        ROS_INFO("CurrManEndy : %.4f", 0.0);
+        ROS_INFO("CurrManEndTh : %.4f", 0.0);
+
+        ROS_INFO("NavInitPosex : %.4f", 0.0);
+        ROS_INFO("NavInitPosey : %.4f", 0.0);
+        ROS_INFO("NavInitPoseth : %.4f",0.0);
+
+        ROS_INFO("NavTermPosex : %.4f", 0.0);
+        ROS_INFO("NavTermPosey : %.4f", 0.0);
+        ROS_INFO("NavTermPoseth : %.4f", 0.0);
+
     }
     if (halt)
     {
