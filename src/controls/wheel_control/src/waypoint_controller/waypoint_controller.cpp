@@ -16,6 +16,12 @@ double dist(double A, double B, double C, double D)
   return sqrt((A - C) * (A - C) + (B - D) * (B - D));
 }
 
+int sign(double A)
+{
+  return (A >= 0 ? 1 : -1);
+}
+
+
 WaypointController::WaypointController(double axelLength, double maxSafeSpeed, pose initialPose, iVescAccess *fl,
                                        iVescAccess *fr, iVescAccess *br, iVescAccess *bl, double gaurenteedDt)
 {
@@ -185,7 +191,8 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
         // else the end pose is from the last maneuverEnd through the current maneuver
       }
       std::pair<double, double> myPair =
-          WaypointControllerHelper::speedAndRadius2WheelVels(.6f * maxSpeed, currMan.radius, axelLen, maxSpeed);
+          WaypointControllerHelper::speedAndRadius2WheelVels(.6f * maxSpeed * sign(currMan.distance), 
+                                                             currMan.radius, axelLen, maxSpeed);
       // LeftWheelSetSpeed = myPair.first;
       // RightWheelSetSpeed = myPair.second;
       // reset control states
