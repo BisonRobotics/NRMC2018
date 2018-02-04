@@ -354,7 +354,7 @@ int main(int argc, char **argv)
             ROS_INFO ("NavMan1yc : %.4f", navigationQueue.at(0).mans.at(1).yc);
             ROS_INFO ("NavMan1dist : %.4f", navigationQueue.at(0).mans.at(1).distance);
         } else {
-             ROS_INFO ("NavMan1rad : %.4f", 0.0);
+            ROS_INFO ("NavMan1rad : %.4f", 0.0);
             ROS_INFO ("NavMan1nxc : %.4f", 0.0);
             ROS_INFO ("NavMan1yc : %.4f", 0.0);
             ROS_INFO ("NavMan1dist : %.4f", 0.0);
