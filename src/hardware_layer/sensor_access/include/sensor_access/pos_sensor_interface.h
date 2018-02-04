@@ -9,6 +9,7 @@ public:
   virtual double getX() = 0;
   virtual double getY() = 0;
   virtual double getTheta() = 0;
+  virtual bool isFloating () = 0;
   virtual ReadableSensors::ReadStatus receiveData() = 0;
 };
 
