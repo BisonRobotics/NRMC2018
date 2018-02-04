@@ -77,9 +77,12 @@ SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(double dt)
       // unimplemented sensor, set to model value so residual stays 0
     }
     // get Pos data, This is measured pos
-    if (have_pos){
+    if (have_pos)
+    {
       floating = pSensor->isFloating(); // this is done this way to prevent accessing a null method on pSensor
-    } else {
+    }
+    else
+    {
       floating = true;
     }
 
