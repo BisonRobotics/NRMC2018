@@ -45,6 +45,7 @@ SuperLocalizer::SuperLocalizer(double axleLen, double xi, double yi, double thi,
 
 SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(double dt)
 {
+  bool floating = false;
   // do dead reckoning calculation, this uses information from the vescs
   this->deadReck->updateStateVector(dt);
   // read sensors
@@ -67,8 +68,7 @@ SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(double dt)
       this->measured.x_accel = cIMU->getX();
       this->measured.y_accel = cIMU->getY();
     }
-    else
-    {
+    else {
       this->measured.x_vel = deadReck->getStateVector().x_vel;
       // unimplemented sensor, set to model value so residual stays 0
       this->measured.y_vel = deadReck->getStateVector().y_vel;
@@ -76,9 +76,18 @@ SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(double dt)
       this->measured.omega = deadReck->getStateVector().omega;
       // unimplemented sensor, set to model value so residual stays 0
     }
-
     // get Pos data, This is measured pos
     if (have_pos)
+    {
+      floating = pSensor->isFloating(); // this is done this way to prevent accessing a null method on pSensor
+    }
+    else
+    {
+      floating = true;
+    }
+
+
+    if (floating)
     {
       this->measured.x_pos = pSensor->getX();
       this->measured.y_pos = pSensor->getY();

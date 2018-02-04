@@ -14,6 +14,7 @@ public:
   double getX() override;
   double getY() override;
   double getTheta() override;
+  bool isFloating () override;
   ReadableSensors::ReadStatus receiveData() override;
 
 private:

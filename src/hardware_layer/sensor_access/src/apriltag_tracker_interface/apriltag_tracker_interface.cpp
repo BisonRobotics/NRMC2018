@@ -51,10 +51,15 @@ ReadableSensors::ReadStatus AprilTagTrackerInterface::receiveData()
   }
   catch (std::exception e)
   {
-    x = 0.0f;
-    y = 0.0f;
-    theta = 0.0f;
     //    ROS_WARN("Caught exception: %s", e.what());
     return ReadableSensors::ReadStatus::READ_FAILED;
   }
+}
+
+// TODO: implement this, should return true if the tag is currently in sight. Maybe through a ROS message?
+
+
+
+bool AprilTagTrackerInterface::isFloating() {
+  return false;
 }
