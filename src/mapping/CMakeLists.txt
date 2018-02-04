@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   realsense_ros_camera
   tf2
   geometry_msgs
+  gmapping
 )
 
 ## System dependencies are found with CMake's conventions
