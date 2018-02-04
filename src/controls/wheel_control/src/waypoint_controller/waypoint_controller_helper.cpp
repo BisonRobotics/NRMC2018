@@ -466,6 +466,7 @@ std::pair<double, double> WaypointControllerHelper::speedAndRadius2WheelVels(dou
   // speed is average of wheel velocities: TotalVel = .5*(LeftVel + RightVel)
   // Turn Radius = AxelLen/2 * (LeftVel+RightVel)/(RightVel - LeftVel)
   std::pair<double, double> Vels;
+/*
   double Sfactor = 1, S2factor = 1;
   if (radius != 0)
   {
@@ -496,6 +497,27 @@ std::pair<double, double> WaypointControllerHelper::speedAndRadius2WheelVels(dou
   {
     Vels.first = -std::abs(Vels.first);
     Vels.second = -std::abs(Vels.second);
+  }
+*/
+
+  if (radius != 0) //todo: add min radius? or does max speed take care of any problems?
+  {
+    Vels.first = ((4*radius*speed/AxelLen) - 2*speed))*AxelLen/(radius*4);
+    Vels.second = (2*speed) - Vels.first;
+
+    //this scales the max wheel speed to the max speed if necessary
+    double maxabs = std::max(std::abs(Vels.first), std::abs(Vels.second));
+    if (maxabs > maxSpeed)
+    {
+      double newspeed = speed * maxSpeed/maxabs; //this then calculates the new scaled speeds
+      Vels.first = ((4*radius*newspeed/AxelLen) - 2*newspeed))*AxelLen/(radius*4);
+      Vels.second = (2*newspeed) - Vels.first;
+    }
+  }
+  else
+  {
+    Vels.first = -.5*speed;
+    Vels.second = .5*speed; //if doing min radius, multiply these by +/-sign(radius);
   }
 
   return Vels;
