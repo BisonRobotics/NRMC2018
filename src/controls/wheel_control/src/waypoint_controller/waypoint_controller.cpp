@@ -5,7 +5,7 @@
 #define POSITIONTOL .30f
 #define ANGLETOL .2f
 #define BADLINE .3f
-
+#define SPEED_CONST .2
 bool approx(double A, double B, double T)
 {
   return ((A > B - T && A < B + T) ? true : false);
@@ -36,9 +36,9 @@ WaypointController::WaypointController(double axelLength, double maxSafeSpeed, p
   EPlpAlpha = 2 * M_PI * gaurenteedDt * .00008 / (2 * M_PI * gaurenteedDt * .00008 + 1);
 
   EPpGain = 0;  //.0015;
-  EPdGain = .01;
+  EPdGain = .75;
   ETpGain = 0;  //.0001;
-  ETdGain = .08;
+  ETdGain = .2;
   EPpLowPassGain = 2 * M_PI * gaurenteedDt * .1608 / (2 * M_PI * gaurenteedDt * .1608 + 1);
   ETpLowPassGain = 2 * M_PI * gaurenteedDt * .1608 / (2 * M_PI * gaurenteedDt * .1608 + 1);
   WheelSpeedPGain = 0;  //.009;
@@ -191,7 +191,7 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
         // else the end pose is from the last maneuverEnd through the current maneuver
       }
       std::pair<double, double> myPair =
-          WaypointControllerHelper::speedAndRadius2WheelVels(.6f * maxSpeed * sign(currMan.distance), 
+          WaypointControllerHelper::speedAndRadius2WheelVels(SPEED_CONST * maxSpeed * sign(currMan.distance), 
                                                              currMan.radius, axelLen, maxSpeed);
       // LeftWheelSetSpeed = myPair.first;
       // RightWheelSetSpeed = myPair.second;
@@ -247,13 +247,12 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
     EPpDerivFiltEst = (EPpLowPass - EPpLowPassPrev) / dt;
     ETpDerivFiltEst = WaypointControllerHelper::anglediff(ETpLowPass, ETpLowPassPrev) / dt;  // order?
 
-    LvelCmd = LvelCmd +
-              ((EPpGain * EPpEst + EPdGain * EPpDerivFiltEst + EPlpGain * EPLowerPass) -
-               (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) - WheelSpeedPGain * (LvelCmd - LeftWheelSetSpeed)) *
-                  dt;
-    RvelCmd = RvelCmd -
-              ((EPpGain * EPpEst + EPdGain * EPpDerivFiltEst + EPlpGain * EPLowerPass) +
-               (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) - WheelSpeedPGain * (RvelCmd - RightWheelSetSpeed) * dt);
+    LvelCmd = LvelCmd + sign(currMan.distance) * 
+              ((EPpGain * EPpEst + EPdGain * EPpDerivFiltEst + EPlpGain * EPLowerPass) + sign(currMan.distance) *
+               (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) - WheelSpeedPGain * (LvelCmd - LeftWheelSetSpeed)) * dt;
+    RvelCmd = RvelCmd - sign(currMan.distance) *
+              ((EPpGain * EPpEst + EPdGain * EPpDerivFiltEst + EPlpGain * EPLowerPass) + sign(currMan.distance) * 
+               (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) - WheelSpeedPGain * (RvelCmd - RightWheelSetSpeed)) * dt;
 
     front_left_wheel->setLinearVelocity(LvelCmd);
     back_left_wheel->setLinearVelocity(LvelCmd);

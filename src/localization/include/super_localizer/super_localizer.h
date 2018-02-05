@@ -4,9 +4,9 @@
 #include <readable_sensors/readable_sensors.h>
 #include <super_localizer/super_localizer_helper.h>
 
-#define XRESGAIN .05f
-#define YRESGAIN .05f
-#define THETARESGAIN .13f
+#define XRESGAIN .025f
+#define YRESGAIN .025f
+#define THETARESGAIN .025f
 #define DXRESGAIN .05f
 #define DYRESGAIN .05f
 #define OMEGARESGAIN .05f

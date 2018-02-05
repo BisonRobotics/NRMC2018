@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   vesc_access 
   localization
   geometry_msgs
+  visualization_msgs
   tf2
   new_sim
   imperio

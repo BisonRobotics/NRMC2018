@@ -13,7 +13,7 @@
 // after iterating through the available waypoints, either choose the
 // furthest valid one (could just pick the first one that works)
 
-#define SIMULATING 1
+#define SIMULATING 0
 // one for simulating, 0 for real deal
 
 #include <ros/ros.h>
@@ -24,6 +24,7 @@
 #include <waypoint_controller/waypoint_with_maneuvers.h>
 
 #include <geometry_msgs/Pose2D.h>
+//#include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <std_msgs/Empty.h>
 #include <std_msgs/String.h>
@@ -34,6 +35,8 @@
 
 #include <super_localizer/super_localizer.h>
 #include <sensor_msgs/JointState.h>
+
+#include <visualization_msgs/Marker.h>
 
 #ifndef SIMULATING
 #error You must define a value (1/0) for SIMULATING
@@ -127,7 +130,9 @@ geometry_msgs::TransformStamped create_sim_tf(double x, double y, double theta)
   tfStamp.transform.rotation.w = q.w();
   return tfStamp;
 }
-#endif
+#endif 
+
+
 
 void haltCallback(const std_msgs::Empty::ConstPtr &msg)
 {
@@ -191,12 +196,22 @@ int main(int argc, char **argv)
   ros::Duration loopTime;
   bool firstTime = true;
   tf2_ros::TransformBroadcaster tfBroad;
-
+  std::vector<std::pair<double, double> > waypoint_set;
   SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0, 0, 0, fl, fr, br, bl, imu, pos, SuperLocalizer_default_gains);
 
   LocalizerInterface::stateVector stateVector;
   ros::Subscriber haltsub = node.subscribe("halt", 100, haltCallback);
   ros::Publisher mode_pub = node.advertise<std_msgs::String>("drive_controller_status", 1000);
+  ros::Publisher path_marker_pub = node.advertise<visualization_msgs::Marker>("waypoint_path", 10000);
+  visualization_msgs::Marker line_strip;
+  line_strip.action = visualization_msgs::Marker::ADD;
+  line_strip.pose.orientation.w = 1;
+  line_strip.type = visualization_msgs::Marker::LINE_STRIP;
+  line_strip.scale.x = .1;
+  line_strip.color.g = 1;
+  line_strip.color.a = 1;
+  line_strip.header.frame_id = "/map";
+  geometry_msgs::Point vis_point;
   // hang here until someone knows where we are
   ROS_INFO("Going into wait loop for localizer");
 
@@ -241,7 +256,7 @@ int main(int argc, char **argv)
   WaypointController::Status wcStat;
   std_msgs::String msg;
   std::stringstream ss;
-
+  geometry_msgs::PoseStamped poser;
   firstTime = true;
   while (ros::ok())
   {
@@ -286,7 +301,23 @@ int main(int argc, char **argv)
       ROS_INFO ("BackLeftVel : %.4f", jsMessage.velocity[3]);
     if (newWaypointHere)
     {
-      wc.addWaypoint(newWaypoint, currPose);
+      waypoint_set = wc.addWaypoint(newWaypoint, currPose);
+      line_strip.points.clear();
+      for (auto const& waypoint : waypoint_set)
+      {
+//	poser.header.stamp = ros::Time::now ();
+//	poser.header.seq++;
+//	poser.header.frame_id = "map";
+//	poser.pose.position.x = waypoint.first;
+//	poser.pose.position.y = waypoint.second;
+//	poser.pose.position.z = 0.0f;
+//	pose_pub.publish (poser);
+        vis_point.x = waypoint.first;
+        vis_point.y = waypoint.second;
+        vis_point.z = .4;
+        line_strip.points.push_back(vis_point);
+      }
+      path_marker_pub.publish(line_strip);
       newWaypointHere = false;
         ROS_INFO ("NewWaypoint : 1");
     } else {

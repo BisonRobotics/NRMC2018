@@ -187,9 +187,12 @@ std::vector<maneuver> WaypointControllerHelper::oneTurnSolution(pose robotPose, 
     double xhalf = (wp.x + xtangent) / 2.0f;
     double yhalf = (wp.y + ytangent) / 2.0f;
     // this below could be correct
-    double M = tan(wp.theta);
-    maneuver2.xc = xhalf + sqrt(STRAIGHTRADIUS * STRAIGHTRADIUS / (M * M + 1));
-    maneuver2.yc = (-1.0f / M) * (maneuver2.xc - xhalf) + yhalf;
+  //  double M = tan(wp.theta);
+  //  maneuver2.xc = xhalf + sqrt(STRAIGHTRADIUS * STRAIGHTRADIUS / (M * M + 1));
+  //  maneuver2.yc = (-1.0f / M) * (maneuver2.xc - xhalf) + yhalf;
+    maneuver2.xc = xhalf + maneuver2.radius*cos(wp.theta+M_PI_2);
+    maneuver2.yc = yhalf + maneuver2.radius*sin(wp.theta+M_PI_2);
+
   }
   else  // turn is second
   {

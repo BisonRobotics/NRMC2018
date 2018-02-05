@@ -87,7 +87,7 @@ SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(double dt)
     }
 
 
-    if (floating)
+    if (!floating)
     {
       this->measured.x_pos = pSensor->getX();
       this->measured.y_pos = pSensor->getY();
