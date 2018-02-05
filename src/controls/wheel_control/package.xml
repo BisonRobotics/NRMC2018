@@ -49,6 +49,7 @@
   <build_depend>vesc_access</build_depend>
   <build_depend>localization_lib</build_depend>
   <build_depend>geometry_msgs</build_depend>
+  <build_depend>visualization_msgs</build_depend>
   <build_depend>tf2</build_depend>
   <build_depend>imperio</build_depend>
   <build_depend>message_generation</build_depend>
@@ -58,6 +59,7 @@
   <run_depend>pluginlib</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>geometry_msgs</run_depend>
+  <run_depend>visualization_msgs</run_depend>
   <run_depend>tf2</run_depend>
   <run_depend>imperio</run_depend>
   <run_depend>message_runtime</run_depend>

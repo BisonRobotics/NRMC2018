@@ -62,7 +62,7 @@ TEST(WaypointControllerHelperTests, waypointWithManeuvers2PointsReturnsEnoughPoi
       << points.size();  // point at least every 10cm
 }
 
-TEST(WaypointControllerHelperTests, speedAndRadius2WheelVelsTests)
+TEST(WaypointControllerHelperTests, speedAndRadius2WheelVelsTests_fwdleft)
 {
   std::pair<double, double> returnSpeeds;
   std::pair<double, double> expectedSpeeds;
@@ -72,6 +72,57 @@ TEST(WaypointControllerHelperTests, speedAndRadius2WheelVelsTests)
   double speed = .3f;
   expectedSpeeds.first = .2250f;
   expectedSpeeds.second = .3750f;
+
+  returnSpeeds = speedAndRadius2WheelVels(speed, turnRadius, AxelLen, maxSpeed);
+
+  EXPECT_NEAR(returnSpeeds.first, expectedSpeeds.first, SPEEDNRADIUSTOL);
+  EXPECT_NEAR(returnSpeeds.second, expectedSpeeds.second, SPEEDNRADIUSTOL);
+}
+
+TEST(WaypointControllerHelperTests, speedAndRadius2WheelVelsTests_bkwdright)
+{
+  std::pair<double, double> returnSpeeds;
+  std::pair<double, double> expectedSpeeds;
+  double AxelLen = .5f;
+  double maxSpeed = .5f;
+  double turnRadius = 1.0f;
+  double speed = -.3f;
+  expectedSpeeds.first = -.2250f;
+  expectedSpeeds.second = -.3750f;
+
+  returnSpeeds = speedAndRadius2WheelVels(speed, turnRadius, AxelLen, maxSpeed);
+
+  EXPECT_NEAR(returnSpeeds.first, expectedSpeeds.first, SPEEDNRADIUSTOL);
+  EXPECT_NEAR(returnSpeeds.second, expectedSpeeds.second, SPEEDNRADIUSTOL);
+}
+
+TEST(WaypointControllerHelperTests, speedAndRadius2WheelVelsTests_bkwdleft)
+{
+  std::pair<double, double> returnSpeeds;
+  std::pair<double, double> expectedSpeeds;
+  double AxelLen = .5f;
+  double maxSpeed = .5f;
+  double turnRadius = -1.0f;
+  double speed = -.3f;
+  expectedSpeeds.first = -.3750f;
+  expectedSpeeds.second =-.2250f ;
+
+  returnSpeeds = speedAndRadius2WheelVels(speed, turnRadius, AxelLen, maxSpeed);
+
+  EXPECT_NEAR(returnSpeeds.first, expectedSpeeds.first, SPEEDNRADIUSTOL);
+  EXPECT_NEAR(returnSpeeds.second, expectedSpeeds.second, SPEEDNRADIUSTOL);
+}
+
+TEST(WaypointControllerHelperTests, speedAndRadius2WheelVelsTests_fwdright)
+{
+  std::pair<double, double> returnSpeeds;
+  std::pair<double, double> expectedSpeeds;
+  double AxelLen = .5f;
+  double maxSpeed = .5f;
+  double turnRadius = -1.0f;
+  double speed = .3f;
+  expectedSpeeds.first = .3750f;
+  expectedSpeeds.second =.2250f ;
 
   returnSpeeds = speedAndRadius2WheelVels(speed, turnRadius, AxelLen, maxSpeed);
 
