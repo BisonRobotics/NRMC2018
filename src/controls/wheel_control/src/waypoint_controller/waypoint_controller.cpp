@@ -16,9 +16,9 @@ double dist(double A, double B, double C, double D)
   return sqrt((A - C) * (A - C) + (B - D) * (B - D));
 }
 
-int sign(double A)
+double sign(double A)
 {
-  return (A >= 0 ? 1 : -1);
+  return (A >= 0 ? 1.0 : -1.0);
 }
 
 
