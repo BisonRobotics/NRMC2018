@@ -186,10 +186,6 @@ std::vector<maneuver> WaypointControllerHelper::oneTurnSolution(pose robotPose, 
 
     double xhalf = (wp.x + xtangent) / 2.0f;
     double yhalf = (wp.y + ytangent) / 2.0f;
-    // this below could be correct
-  //  double M = tan(wp.theta);
-  //  maneuver2.xc = xhalf + sqrt(STRAIGHTRADIUS * STRAIGHTRADIUS / (M * M + 1));
-  //  maneuver2.yc = (-1.0f / M) * (maneuver2.xc - xhalf) + yhalf;
     maneuver2.xc = xhalf + maneuver2.radius*cos(wp.theta+M_PI_2);
     maneuver2.yc = yhalf + maneuver2.radius*sin(wp.theta+M_PI_2);
 
@@ -469,40 +465,6 @@ std::pair<double, double> WaypointControllerHelper::speedAndRadius2WheelVels(dou
   // speed is average of wheel velocities: TotalVel = .5*(LeftVel + RightVel)
   // Turn Radius = AxelLen/2 * (LeftVel+RightVel)/(RightVel - LeftVel)
   std::pair<double, double> Vels;
-/*
-  double Sfactor = 1, S2factor = 1;
-  if (radius != 0)
-  {
-    Vels.first = (4 * radius * speed / (AxelLen)-2 * speed) * AxelLen / (radius * 4);
-
-    if (std::abs(Vels.first) > maxSpeed)
-    {
-      Sfactor = Vels.first / maxSpeed;
-      Vels.first = Vels.first / Sfactor;
-    }
-
-    Vels.second = 2 * (speed / Sfactor) - Vels.first;
-
-    if (std::abs(Vels.second) > maxSpeed)
-    {
-      S2factor = Vels.second / maxSpeed;
-      Vels.second = Vels.second / S2factor;
-      Vels.first = Vels.first / S2factor;
-    }
-  }
-  else
-  {
-    Vels.first = -.5 * speed;
-    Vels.second = .5 * speed;
-  }
-
-  if (speed < 0) //make sure speeds are negative
-  {
-    Vels.first = -std::abs(Vels.first);
-    Vels.second = -std::abs(Vels.second);
-  }
-*/
-
   if (radius != 0) //todo: add min radius? or does max speed take care of any problems?
   {
     Vels.first = ((4*radius*speed/AxelLen) - 2*speed)*AxelLen/(radius*4);
