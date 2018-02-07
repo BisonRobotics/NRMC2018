@@ -8,6 +8,36 @@
 #include <waypoint_controller/maneuver.h>
 #include <waypoint_controller/waypoint_with_maneuvers.h>
 
+
+namespace WaypointControllerNs {
+    typedef struct waypointGains_s {
+        double eplpgain;
+        double eplpalpha;
+        double eppgain;
+        double epdgain;
+        double etpgain;
+        double etdgain;
+        double epplpgain;
+        double etplpgain;
+        double wheelspeedgain;
+    }waypointControllerGains;
+
+
+}
+
+ static constexpr WaypointControllerNs::waypointControllerGains waypoint_default_gains = {
+        .eplpgain = 0.0,
+        .eplpalpha = 1.005e-5,
+        .eppgain = 0,
+        .epdgain=.75,
+        .etpgain = 0,
+        .etdgain = .2,
+        .epplpgain = 1.005e-2,
+        .etplpgain = 1.005e-2,
+        .wheelspeedgain  = 0
+};
+
+
 // a manuever is one arc that the robot does
 // it has a radius, a turn center (in world coord)
 // and a distance. a negative distance means to travel
@@ -22,7 +52,7 @@ public:
     ALLBAD
   };
   WaypointController(double axelLength, double maxSafeSpeed, pose initialPose, iVescAccess *fl, iVescAccess *fr,
-                     iVescAccess *br, iVescAccess *bl, double gaurenteedDt);
+                     iVescAccess *br, iVescAccess *bl, double gaurenteedDt, WaypointControllerNs::waypointControllerGains gains);
   std::vector<std::pair<double, double> > addWaypoint(pose waypoint, pose currRobotPose);
   Status update(pose robotPose, double dt);
   std::vector<waypointWithManeuvers> getNavigationQueue();  // DEBUG
@@ -56,5 +86,6 @@ private:
   maneuver currMan;
   pose theCPP;
 };
+
 
 #endif
