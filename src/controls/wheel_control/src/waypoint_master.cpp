@@ -186,7 +186,7 @@ int main(int argc, char **argv)
   iVescAccess *bl = new VescAccess(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
                                    MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
 
-  PosSensorInterface *pos = new AprilTagTrackerInterface("pose_estimate", .01);
+  PosSensorInterface *pos = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .3);
   ImuSensorInterface *imu = new LpResearchImu("imu");
 #endif
 
