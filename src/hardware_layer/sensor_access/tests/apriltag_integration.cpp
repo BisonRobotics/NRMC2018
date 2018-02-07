@@ -4,7 +4,7 @@
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "imu_listener");
-  AprilTagTrackerInterface ap ("pose_estimate", .01);
+  AprilTagTrackerInterface ap ("/position_sensor/pose_estimate", .3);
   ros::Rate loop_rate (50);
   ros::NodeHandle n;
   while (ros::ok())
@@ -16,6 +16,10 @@ int main(int argc, char **argv)
     else
     {
       ROS_INFO("No Data received");
+    }
+
+    if (ap.isFloating ()){
+      ROS_INFO ("is floating");
     }
     loop_rate.sleep ();
     ros::spinOnce();

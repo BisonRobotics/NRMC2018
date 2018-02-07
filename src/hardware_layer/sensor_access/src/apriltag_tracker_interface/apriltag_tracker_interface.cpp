@@ -50,7 +50,7 @@ ReadableSensors::ReadStatus AprilTagTrackerInterface::receiveData()
   if (is_floating){
     return ReadableSensors::ReadStatus::READ_FAILED;
   } else {
-    return ReadableSensors::ReadStatus::READ_FAILED;
+    return ReadableSensors::ReadStatus::READ_SUCCESS;
   }
 }
 
