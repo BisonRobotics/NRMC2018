@@ -4,7 +4,7 @@
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "imu_listener");
-  AprilTagTrackerInterface ap;
+  AprilTagTrackerInterface ap ("pose_estimate", .1);
   ros::NodeHandle n;
   while (ros::ok())
   {

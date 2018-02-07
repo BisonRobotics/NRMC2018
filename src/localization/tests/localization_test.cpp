@@ -6,6 +6,7 @@
 #include "wheel_params/wheel_params.h"
 #include "lp_research/lpresearchimu.h"
 #include "tf2_ros/transform_broadcaster.h"
+#include "tf2/LinearMath/Quaternion.h"
 float velocity_left = 0.0f;
 float velocity_right = 0.0f;
 
@@ -44,7 +45,7 @@ geometry_msgs::TransformStamped create_tf(double x, double y, double theta)
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "localization_tester");
-  AprilTagTrackerInterface *aprilTags = new AprilTagTrackerInterface();
+  AprilTagTrackerInterface *aprilTags = new AprilTagTrackerInterface("pose_estimate", .1);
   LpResearchImu *lpResearchImu = new LpResearchImu("imu");
   ros::NodeHandle n;
   ros::Rate r(100);
