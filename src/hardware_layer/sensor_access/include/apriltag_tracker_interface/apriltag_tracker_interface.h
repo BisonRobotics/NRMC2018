@@ -2,14 +2,12 @@
 #define PROJECT_APRILTAG_TRACKER_INTERFACE_H
 
 #include <sensor_access/pos_sensor_interface.h>
-#include <tf2/LinearMath/Transform.h>
-#include <tf2_ros/transform_listener.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-
+#include <geometry_msgs/PoseStamped.h>
+#include <ros/ros.h>
 class AprilTagTrackerInterface : public PosSensorInterface
 {
 public:
-  AprilTagTrackerInterface(void);
+  AprilTagTrackerInterface(std::string topic, double timeout);
   ~AprilTagTrackerInterface();
   double getX() override;
   double getY() override;
@@ -18,13 +16,18 @@ public:
   ReadableSensors::ReadStatus receiveData() override;
 
 private:
-  tf2_ros::Buffer tfBuffer;
-  tf2_ros::TransformListener *tfListener;
-
+  ros::Subscriber sub;
+    ros::Publisher pub;
+  ros::NodeHandle nh_;
+  bool is_floating;
+  void callback(const geometry_msgs::PoseStamped::ConstPtr &msg);
   double x;
   double y;
   double theta;
-  tf2::Stamped<tf2::Transform> map_to_position_estimate_tf;
+  double qtToTheta (geometry_msgs::Quaternion);
+  ros::Duration timeout;
+  ros::Time last_time;
+  void updateIsFloating ();
 };
 
 #endif  // PROJECT_APRILTAG_TRACKER_INTERFACE_H

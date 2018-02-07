@@ -1,10 +1,11 @@
 #include "apriltag_tracker_interface/apriltag_tracker_interface.h"
-#include "ros/ros.h"
+
 
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "imu_listener");
-  AprilTagTrackerInterface ap;
+  AprilTagTrackerInterface ap ("/position_sensor/pose_estimate", .3);
+  ros::Rate loop_rate (50);
   ros::NodeHandle n;
   while (ros::ok())
   {
@@ -16,6 +17,11 @@ int main(int argc, char **argv)
     {
       ROS_INFO("No Data received");
     }
+
+    if (ap.isFloating ()){
+      ROS_INFO ("is floating");
+    }
+    loop_rate.sleep ();
     ros::spinOnce();
   }
 }
