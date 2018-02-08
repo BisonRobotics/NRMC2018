@@ -1,1 +1,0 @@
-The requirements for the bucket control software are:
