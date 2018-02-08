@@ -52,8 +52,8 @@ int main(int argc, char **argv)
   tf2_ros::TransformBroadcaster br;
   ros::Subscriber sub = n.subscribe("joy", 30, callback);
   TeleopInterface teleopInterface(.5f);
-  SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0.0f, 0.0f, 0.0f, teleopInterface.bl, teleopInterface.br,
-                                teleopInterface.fl, teleopInterface.fr, lpResearchImu, aprilTags,
+  SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0.0, 0.0, 0.0, teleopInterface.fl, teleopInterface.fr,
+                                teleopInterface.br, teleopInterface.bl, lpResearchImu, aprilTags,
                                 SuperLocalizer_default_gains);
   ros::Time last_time = ros::Time::now();
   LocalizerInterface::stateVector stateVector;
