@@ -2,7 +2,7 @@
 #include <waypoint_controller/waypoint_controller_helper.h>
 #include <cmath>
 
-#define POSITIONTOL .30f
+#define POSITIONTOL .50f
 #define GOALREACHEDDIST .10f
 #define ANGLETOL .2f
 #define SPEED_CONST .2
@@ -15,6 +15,9 @@ double dist(double A, double B, double C, double D)
 {
   return sqrt((A - C) * (A - C) + (B - D) * (B - D));
 }
+
+void modifyNavQueue2RecoverFromPathError(); //queue modifications if outside of POSITIONTOL
+void modifyNavQueue2RecoverFromGoalOvershoot(); //queue modifcations if goal has been overshot
 
 WaypointController::WaypointController(double axelLength, double maxSafeSpeed, pose initialPose, iVescAccess *fl,
                                        iVescAccess *fr, iVescAccess *br, iVescAccess *bl, double gaurenteedDt, WaypointControllerNs::waypointControllerGains gains)
@@ -47,6 +50,8 @@ WaypointController::WaypointController(double axelLength, double maxSafeSpeed, p
   ETpLowPassGain = gains.etplpgain;
   WheelSpeedPGain = gains.wheelspeedgain;
   WheelAlpha = gains.wheelalpha;
+
+  navigationQueue.clear();
 
   // control states
   clearControlStates();
@@ -236,12 +241,12 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
       }
       if ( !approx(dist2Path,0,POSITIONTOL) ) //fell off of path (to the side most likely)
       {
-         //modifyNavQueue2RecoverFromPathError();
+         modifyNavQueue2RecoverFromPathError();
          returnStatus = Status::ALLBAD;// for now, keep old implementation of just raising warning
       }
       if ( dist2endOnPath < -GOALREACHEDDIST) //overshot path and drove past goal (but still might be close to path)
       {
-         //modifyNavQueue2RecoverFromGoalOvershoot();
+         modifyNavQueue2RecoverFromGoalOvershoot();
          returnStatus = Status::ALLBAD;// for now, keep old implementation of just raising warning
       }
     }
@@ -294,4 +299,30 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
     this->haltAndAbort();
     return Status::GOALREACHED;  // gotta get out of here
   }
+}
+
+void modifyNavQueue2RecoverFromPathError()
+{
+  //should plan a maneuver to last known cpp 
+  //and insert this before the current maneuver (that was blown)
+  //and switch to this new maneuver
+  //when the new maneuver completes, the robot will switch to the blown one
+  //and continue where it left off
+    waypointWithManeuvers newWaypoint;
+    newWaypoint.initialPose = currRobotPose;
+    newWaypoint.terminalPose = theCPP; //last known good CPP
+    newWaypoint.mans = WaypointControllerHelper::waypoint2maneuvers(currRobotPose, waypoint);
+
+    std::vector<waypointWithManeuvers>::iterator it;
+    it = navigationQueue.begin();
+    navigationQueue.insert(it, newWaypoint);
+    currManeuverIndex =0;
+
+}
+
+void modifyNavQueue2RecoverFromGoalOvershoot()
+{
+  //should just consider the current maneuver achieved and begin to attempt the next manuever
+  doingManeuver = false;
+  currManeuverIndex++;
 }
