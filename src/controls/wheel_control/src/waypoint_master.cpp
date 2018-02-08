@@ -199,6 +199,7 @@ int main(int argc, char **argv)
   std::vector<std::pair<double, double> > waypoint_set;
   SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0, 0, 0, fl, fr, br, bl, imu, pos, SuperLocalizer_default_gains);
 
+
   LocalizerInterface::stateVector stateVector;
   ros::Subscriber haltsub = node.subscribe("halt", 100, haltCallback);
   ros::Publisher mode_pub = node.advertise<std_msgs::String>("drive_controller_status", 1000);
@@ -254,10 +255,30 @@ int main(int argc, char **argv)
   WaypointController wc =
       WaypointController(ROBOT_AXLE_LENGTH, ROBOT_MAX_SPEED, currPose, fl, fr, br, bl, 1.0 / UPDATE_RATE_HZ,
                          waypoint_default_gains);
+    ROS_INFO ("Top");
+    ROS_INFO ("Xposgain : %.4f", SuperLocalizer_default_gains.x_pos);
+    ROS_INFO ("Yposgain : %.4f", SuperLocalizer_default_gains.y_pos);
+    ROS_INFO ("Thetagain : %.4f", SuperLocalizer_default_gains.theta);
+    ROS_INFO ("Xvelgain : %.4f", SuperLocalizer_default_gains.x_vel);
+    ROS_INFO ("Yvelgain : %.4f", SuperLocalizer_default_gains.y_vel);
+    ROS_INFO ("Omegagain : %.4f", SuperLocalizer_default_gains.omega);
+    ROS_INFO ("Xaccelgain : %.4f", SuperLocalizer_default_gains.x_accel);
+    ROS_INFO ("Yaccelgain : %.4f", SuperLocalizer_default_gains.y_accel);
+    ROS_INFO ("Alphagain : %.4f", SuperLocalizer_default_gains.alpha);
+
+    ROS_INFO ("eplpgain : %.4f", waypoint_default_gains.eplpgain);
+    ROS_INFO ("eplpalpha : %.4f", waypoint_default_gains.eplpalpha);
+    ROS_INFO ("eppgain : %.4f", waypoint_default_gains.eppgain);
+    ROS_INFO ("epdgain : %.4f", waypoint_default_gains.epdgain);
+    ROS_INFO ("etpgain : %.4f", waypoint_default_gains.etpgain);
+    ROS_INFO ("etdgain : %.4f", waypoint_default_gains.etdgain);
+    ROS_INFO ("epplpgain : %.4f", waypoint_default_gains.epplpgain);
+    ROS_INFO ("etplpgain : %.4f", waypoint_default_gains.etplpgain);
+    ROS_INFO ("wheelspeedgain : %.4f", waypoint_default_gains.wheelspeedgain);
   WaypointController::Status wcStat;
   std_msgs::String msg;
   std::stringstream ss;
-  geometry_msgs::PoseStamped poser;
+ // geometry_msgs::PoseStamped poser;
   firstTime = true;
   while (ros::ok())
   {
