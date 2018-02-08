@@ -7,7 +7,7 @@
 #define CUTOFFDIST4DOUBLEARC .01
 #define CPPEQUALTOL .05
 
-int sign(double A)
+int WaypointControllerHelper::sign(double A) //MUST BE INT
 {
   return (A >= 0 ? 1 : -1);
 }

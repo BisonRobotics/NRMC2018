@@ -16,12 +16,6 @@ double dist(double A, double B, double C, double D)
   return sqrt((A - C) * (A - C) + (B - D) * (B - D));
 }
 
-double sign(double A)
-{
-  return (A >= 0 ? 1.0 : -1.0);
-}
-
-
 WaypointController::WaypointController(double axelLength, double maxSafeSpeed, pose initialPose, iVescAccess *fl,
                                        iVescAccess *fr, iVescAccess *br, iVescAccess *bl, double gaurenteedDt, WaypointControllerNs::waypointControllerGains gains)
 {
@@ -52,6 +46,7 @@ WaypointController::WaypointController(double axelLength, double maxSafeSpeed, p
   EPpLowPassGain = gains.epplpgain;
   ETpLowPassGain = gains.etplpgain;
   WheelSpeedPGain = gains.wheelspeedgain;
+  WheelAlpha = gains.wheelalpha;
 
   // control states
   clearControlStates();
@@ -69,6 +64,7 @@ pose WaypointController::getCPP()  // DEBUG
 {
   return theCPP;
 }
+
 unsigned int WaypointController::getCurrManeuverIndex()  // DEBUG
 {
   return currManeuverIndex;
@@ -116,6 +112,9 @@ void WaypointController::clearControlStates()
 
   LvelCmd = 0;
   RvelCmd = 0;
+
+  LvelCmdPrev = LvelCmd;
+  RvelCmdPrev = RvelCmd;
 }
 
 void WaypointController::haltAndAbort()
@@ -201,7 +200,7 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
         // else the end pose is from the last maneuverEnd through the current maneuver
       }
       std::pair<double, double> myPair =
-          WaypointControllerHelper::speedAndRadius2WheelVels(SPEED_CONST * maxSpeed * sign(currMan.distance), 
+          WaypointControllerHelper::speedAndRadius2WheelVels(SPEED_CONST * maxSpeed * WaypointControllerHelper::sign(currMan.distance),
                                                              currMan.radius, axelLen, maxSpeed);
       // LeftWheelSetSpeed = myPair.first;
       // RightWheelSetSpeed = myPair.second;
@@ -236,7 +235,7 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
     }
     // do control system calculations
     if (currMan.radius > 0)
-    {  // signed turn radius, positice means turn left
+    {  // WaypointControllerHelper::signed turn radius, positive means turn left
       EPpEst = currMan.radius - dist(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
     }
     else
@@ -257,12 +256,18 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
     EPpDerivFiltEst = (EPpLowPass - EPpLowPassPrev) / dt;
     ETpDerivFiltEst = WaypointControllerHelper::anglediff(ETpLowPass, ETpLowPassPrev) / dt;  // order?
 
-    LvelCmd = LvelCmd + sign(currMan.distance) * 
-              ((EPpGain * EPpEst + EPdGain * EPpDerivFiltEst + EPlpGain * EPLowerPass) + sign(currMan.distance) *
+    LvelCmdPrev = LvelCmd;
+    RvelCmdPrev = RvelCmd;
+
+    LvelCmd = LvelCmd + WaypointControllerHelper::sign(currMan.distance) *
+              ((EPpGain * EPpEst + EPdGain * EPpDerivFiltEst + EPlpGain * EPLowerPass) + WaypointControllerHelper::sign(currMan.distance) *
                (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) - WheelSpeedPGain * (LvelCmd - LeftWheelSetSpeed)) * dt;
-    RvelCmd = RvelCmd - sign(currMan.distance) *
-              ((EPpGain * EPpEst + EPdGain * EPpDerivFiltEst + EPlpGain * EPLowerPass) + sign(currMan.distance) * 
+    RvelCmd = RvelCmd - WaypointControllerHelper::sign(currMan.distance) *
+              ((EPpGain * EPpEst + EPdGain * EPpDerivFiltEst + EPlpGain * EPLowerPass) + WaypointControllerHelper::sign(currMan.distance) *
                (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) - WheelSpeedPGain * (RvelCmd - RightWheelSetSpeed)) * dt;
+
+    LvelCmd = WheelAlpha * LvelCmd + (1.0-WheelAlpha) * LvelCmdPrev;
+    RvelCmd = WheelAlpha * RvelCmd + (1.0-WheelAlpha) * RvelCmdPrev;
 
     front_left_wheel->setLinearVelocity(LvelCmd);
     back_left_wheel->setLinearVelocity(LvelCmd);

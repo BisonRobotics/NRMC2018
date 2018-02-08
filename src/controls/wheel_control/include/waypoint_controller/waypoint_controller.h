@@ -20,6 +20,7 @@ namespace WaypointControllerNs {
         double epplpgain;
         double etplpgain;
         double wheelspeedgain;
+        double wheelalpha;
     }waypointControllerGains;
 
 
@@ -27,14 +28,15 @@ namespace WaypointControllerNs {
 
  static constexpr WaypointControllerNs::waypointControllerGains waypoint_default_gains = {
         .eplpgain = 0.0,
-        .eplpalpha = 1.005e-5,
+        .eplpalpha = 0,
         .eppgain = 0,
         .epdgain=.75,
         .etpgain = 0,
         .etdgain = .2,
-        .epplpgain = 1.005e-2,
-        .etplpgain = 1.005e-2,
-        .wheelspeedgain  = 0
+        .epplpgain = 0,
+        .etplpgain = 0,
+        .wheelspeedgain  = 0,
+        .wheelalpha = .5
 };
 
 
@@ -78,6 +80,8 @@ private:
   double EPpEst, ETpEst;
   double WheelSpeedPGain;
   double LvelCmd, RvelCmd;
+  double LvelCmdPrev, RvelCmdPrev;
+  double WheelAlpha;
   double LeftWheelSetSpeed, RightWheelSetSpeed;
   unsigned int currManeuverIndex;
   bool doingManeuver;
