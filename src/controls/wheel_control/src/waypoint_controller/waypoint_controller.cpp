@@ -3,8 +3,8 @@
 #include <cmath>
 
 #define POSITIONTOL .30f
+#define GOALREACHEDDIST .10f
 #define ANGLETOL .2f
-#define BADLINE .3f
 #define SPEED_CONST .2
 bool approx(double A, double B, double T)
 {
@@ -173,6 +173,7 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
   // navQueue has some elements in it
   // these elements consist of starting and terminal poses along with the maneuvers to get from A to B
 
+  Status returnStatus = Status::ALLGOOD;
   if (navigationQueue.size() > 0)  // places to go, there are waypoints in the navigationQueue
   {
     if (!doingManeuver)  // maneuver is completed or one has not yet been started, need to calculate end point and base
@@ -187,7 +188,7 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
         // update is called, this function will return GOALREACHED and stop the robot
       }
       currMan = navigationQueue.at(0).mans.at(currManeuverIndex);  // set current maneuver
-
+      theCPP = WaypointControllerHelper::findCPP(robotPose, currMan);  // closest pose on path
       if (currManeuverIndex == 0)
       {  // if this is the first maneuver on the stack for this waypoint
         maneuverEnd =
@@ -214,25 +215,37 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
     }
     else  // doing a maneuver, need to see if robot has completed it
     {
+      /*
       if (approx(dist(robotPose.x, robotPose.y, maneuverEnd.x, maneuverEnd.y), 0, POSITIONTOL))
       {  // reached the end of this maneuver
         doingManeuver = false;
         currManeuverIndex++;
         return Status::ALLGOOD;  // next time function is called, maneuver will update
+      }*/
+      theCPP = WaypointControllerHelper::findCPP(robotPose, currMan);  // closest pose on path
+      dist2endOnPath = currMan.radius*WaypointControllerHelper::anglediff(theCPP.theta, maneuverEnd.theta);
+      dist2endAbs =  dist(robotPose.x, robotPose.y, maneuverEnd.x, maneuverEnd.y);
+      dist2Path = dist(robotPose.x, robotPose.y, maneuverEnd.x, maneuverEnd.y);
+
+      if (approx(dist2endOnPath,0, GOALREACHEDDIST) && approx(dist2endAbs,0,GOALREACHEDDIST)) //reached waypoint in a good way (on the end point)
+      {
+        doingManeuver = false;
+        currManeuverIndex++;
+        return Status::ALLGOOD;  // next time function is called, maneuver will update and either start next maneuver or stop
+                                 // if it was the last one
+      }
+      if ( !approx(dist2Path,0,POSITIONTOL) ) //fell off of path (to the side most likely)
+      {
+         //modifyNavQueue2RecoverFromPathError();
+         returnStatus = Status::ALLBAD;// for now, keep old implementation of just raising warning
+      }
+      if ( dist2endOnPath < -GOALREACHEDDIST) //overshot path and drove past goal (but still might be close to path)
+      {
+         //modifyNavQueue2RecoverFromGoalOvershoot();
+         returnStatus = Status::ALLBAD;// for now, keep old implementation of just raising warning
       }
     }
-    theCPP = WaypointControllerHelper::findCPP(robotPose, currMan);  // closest pose on path
 
-    // figure out if we are in tolerance or not
-    Status returnStatus;
-    if (approx(dist(robotPose.x, robotPose.y, theCPP.x, theCPP.y), 0, BADLINE))
-    {
-      returnStatus = Status::ALLGOOD;
-    }
-    else
-    {
-      returnStatus = Status::ALLBAD;
-    }
     // do control system calculations
     if (currMan.radius > 0)
     {  // WaypointControllerHelper::signed turn radius, positive means turn left
