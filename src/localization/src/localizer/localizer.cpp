@@ -84,6 +84,10 @@ Localizer::UpdateStatus Localizer::updateStateVector(double dt)
   state_vector.x_vel = d_pos_world(0) / dt;
   state_vector.y_vel = d_pos_world(1) / dt;
   state_vector.omega = d_theta / dt;
+
+  state_vector.y_accel = 0; //no information about this, unless we did a derivative
+  state_vector.x_accel = 0;
+  state_vector.alpha   = 0;
   return Localizer::UpdateStatus::UPDATE_SUCCESS;
 }
 
