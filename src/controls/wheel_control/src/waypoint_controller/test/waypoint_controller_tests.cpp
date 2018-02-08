@@ -19,7 +19,7 @@ TEST(WaypointControllerTests, instantiateAndAddWaypointReturnsPoints)
   NiceMock<MockVescAccess> fl;
   pose wcInitial = {.x = 0, .y = 0, .theta = 0 };
   pose theWay = {.x = 3, .y = 1, .theta = M_PI_2 };
-  WaypointController wc = WaypointController(.5f, .5f, wcInitial, &fl, &fr, &br, &bl, .02);
+  WaypointController wc = WaypointController(.5f, .5f, wcInitial, &fl, &fr, &br, &bl, .02, waypoint_default_gains);
   std::vector<std::pair<double, double> > returnPoints = wc.addWaypoint(theWay, wcInitial);
   EXPECT_TRUE(returnPoints.size() > 0);
 }
@@ -32,7 +32,7 @@ TEST(WaypointControllerTests, updateReturnsAStatus)
   NiceMock<MockVescAccess> fl;
   pose wcInitial = {.x = 0, .y = 0, .theta = 0 };
   pose theWay = {.x = 3, .y = 1, .theta = M_PI_2 };
-  WaypointController wc = WaypointController(.5f, .5f, wcInitial, &fl, &fr, &br, &bl, .02);
+  WaypointController wc = WaypointController(.5f, .5f, wcInitial, &fl, &fr, &br, &bl, .02, waypoint_default_gains);
   WaypointController::Status returnStatus = wc.update(wcInitial, .01);
 
   EXPECT_TRUE(returnStatus == WaypointController::Status::ALLGOOD ||
@@ -56,7 +56,7 @@ TEST(WaypointControllerTests, ableToAddWaypoint_FrontThenRight)
 
   pose wcInitial = {.x = 0, .y = 0, .theta = 0 };
   pose theWay = {.x = 3, .y = 0, .theta = 0 };
-  WaypointController wc = WaypointController(.5f, .5f, wcInitial, fl, fr, br, bl, .01);
+  WaypointController wc = WaypointController(.5f, .5f, wcInitial, fl, fr, br, bl, .01, waypoint_default_gains);
 
   wc.addWaypoint(theWay, wcInitial);
   pose currPose;
@@ -88,7 +88,7 @@ TEST(WaypointControllerTests, ableToAddWaypoint_BackAndLeft2Turn)
   iVescAccess *br = (sim.getBRVesc());
   iVescAccess *bl = (sim.getBLVesc());
 
-  WaypointController wc = WaypointController(.5f, .5f, wcInitial, fl, fr, br, bl, .01);
+  WaypointController wc = WaypointController(.5f, .5f, wcInitial, fl, fr, br, bl, .01, waypoint_default_gains);
 
   wc.addWaypoint(theWay, wcInitial);
   pose currPose;
