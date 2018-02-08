@@ -86,6 +86,8 @@ private:
   unsigned int currManeuverIndex;
   bool doingManeuver;
 
+  double dist2endOnPath, dist2endAbs, dist2Path;
+
   pose maneuverEnd;
   maneuver currMan;
   pose theCPP;
