@@ -23,7 +23,7 @@ double sign(double A)
 
 
 WaypointController::WaypointController(double axelLength, double maxSafeSpeed, pose initialPose, iVescAccess *fl,
-                                       iVescAccess *fr, iVescAccess *br, iVescAccess *bl, double gaurenteedDt)
+                                       iVescAccess *fr, iVescAccess *br, iVescAccess *bl, double gaurenteedDt, WaypointControllerNs::waypointControllerGains gains)
 {
   axelLen = axelLength;
   maxSpeed = maxSafeSpeed;
@@ -31,7 +31,7 @@ WaypointController::WaypointController(double axelLength, double maxSafeSpeed, p
   front_right_wheel = fr;
   back_right_wheel = br;
   back_left_wheel = bl;
-
+/*
   EPlpGain = 0;  //.0012;
   EPlpAlpha = 2 * M_PI * gaurenteedDt * .00008 / (2 * M_PI * gaurenteedDt * .00008 + 1);
 
@@ -42,6 +42,16 @@ WaypointController::WaypointController(double axelLength, double maxSafeSpeed, p
   EPpLowPassGain = 2 * M_PI * gaurenteedDt * .1608 / (2 * M_PI * gaurenteedDt * .1608 + 1);
   ETpLowPassGain = 2 * M_PI * gaurenteedDt * .1608 / (2 * M_PI * gaurenteedDt * .1608 + 1);
   WheelSpeedPGain = 0;  //.009;
+*/
+  EPlpGain = gains.eplpgain;
+  EPlpAlpha = gains.eplpalpha;
+  EPpGain = gains.eppgain;
+  EPdGain = gains.epdgain;
+  ETpGain = gains.etpgain;
+  ETdGain = gains.etdgain;
+  EPpLowPassGain = gains.epplpgain;
+  ETpLowPassGain = gains.etplpgain;
+  WheelSpeedPGain = gains.wheelspeedgain;
 
   // control states
   clearControlStates();

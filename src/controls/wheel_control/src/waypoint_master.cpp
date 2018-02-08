@@ -252,7 +252,8 @@ int main(int argc, char **argv)
   */
   // initialize waypoint controller
   WaypointController wc =
-      WaypointController(ROBOT_AXLE_LENGTH, ROBOT_MAX_SPEED, currPose, fl, fr, br, bl, 1.0 / UPDATE_RATE_HZ);
+      WaypointController(ROBOT_AXLE_LENGTH, ROBOT_MAX_SPEED, currPose, fl, fr, br, bl, 1.0 / UPDATE_RATE_HZ,
+                         waypoint_default_gains);
   WaypointController::Status wcStat;
   std_msgs::String msg;
   std::stringstream ss;
