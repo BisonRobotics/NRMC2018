@@ -51,7 +51,10 @@ public:
   {
     ALLGOOD,
     GOALREACHED,
-    ALLBAD
+    OVERSHOT,
+    OFFPATH,
+    CANTPLAN,
+    ISSTUCK
   };
   WaypointController(double axelLength, double maxSafeSpeed, pose initialPose, iVescAccess *fl, iVescAccess *fr,
                      iVescAccess *br, iVescAccess *bl, double gaurenteedDt, WaypointControllerNs::waypointControllerGains gains);
@@ -63,6 +66,7 @@ public:
   pose getManeuverEnd();                                    // DEBUG
   double getETpEstimate();                                  // DEBUG
   double getEPpEstimate();                                  // DEBUG
+  double getDist2endOnPath();                               // DEBUG
   std::pair<double, double> getSetSpeeds();                 // DEBUG
   std::pair<double, double> getCmdSpeeds();  // DEBUG
 
@@ -70,6 +74,9 @@ public:
   void clearControlStates();
 
 private:
+  void modifyNavQueue2RecoverFromPathError(pose RobotPose, pose theCPP);
+  void modifyNavQueue2RecoverFromGoalOvershoot();
+  void halt();
   std::vector<waypointWithManeuvers> navigationQueue;
   iVescAccess *front_left_wheel, *front_right_wheel, *back_right_wheel, *back_left_wheel;
   double axelLen, maxSpeed;

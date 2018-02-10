@@ -399,8 +399,8 @@ pose WaypointControllerHelper::findCPP(pose robotPose, maneuver curManeuver)
   double thetatangent;
   pose CPP;
   thetatangent = atan2(robotPose.y - curManeuver.yc, robotPose.x - curManeuver.xc);
-  CPP.theta = thetatangent + M_PI_2 * sign(curManeuver.radius);
-  CPP.theta = WaypointControllerHelper::anglediff(CPP.theta, 0);
+  CPP.theta = WaypointControllerHelper::anglediff(thetatangent, -M_PI_2 * sign(curManeuver.radius));
+  //CPP.theta = WaypointControllerHelper::anglediff(CPP.theta, 0);
 
   CPP.x = std::abs(curManeuver.radius) * cos(thetatangent) + curManeuver.xc;
   CPP.y = std::abs(curManeuver.radius) * sin(thetatangent) + curManeuver.yc;
