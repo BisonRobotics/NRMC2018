@@ -1,11 +1,14 @@
 #include <waypoint_controller/waypoint_controller.h>
 #include <waypoint_controller/waypoint_controller_helper.h>
+#define _USE_MATH_DEFINES
 #include <cmath>
 
-#define POSITIONTOL .20f //should be well above noise floor of localization
+#define POSITIONTOL .20f //should be well above noise floor of localization and wide enough
+                         //for robot to make a corrective maneuver/zero point turn in
 #define GOALREACHEDDIST .050f //should be about the size of the noise floor of localization
+                              //this also determines how far you can overshoot a goal
 #define ANGLETOL .2f
-#define SPEED_CONST .3
+#define SPEED_CONST .3 //average speed for the wheels in linear m/s
 bool approx(double A, double B, double T)
 {
   return ((A > B - T && A < B + T) ? true : false);
@@ -25,7 +28,7 @@ WaypointController::WaypointController(double axelLength, double maxSafeSpeed, p
   front_right_wheel = fr;
   back_right_wheel = br;
   back_left_wheel = bl;
-
+/*
   EPlpGain = 0;  //.0012;
   EPlpAlpha = 2 * M_PI * gaurenteedDt * .00008 / (2 * M_PI * gaurenteedDt * .00008 + 1);
 
@@ -36,17 +39,17 @@ WaypointController::WaypointController(double axelLength, double maxSafeSpeed, p
   EPpLowPassGain = 2 * M_PI * gaurenteedDt * .1608 / (2 * M_PI * gaurenteedDt * .1608 + 1);
   ETpLowPassGain = 2 * M_PI * gaurenteedDt * .1608 / (2 * M_PI * gaurenteedDt * .1608 + 1);
   WheelSpeedPGain = 0;  //.0;
-
-//  EPlpGain = gains.eplpgain;
-//  EPlpAlpha = gains.eplpalpha;
-//  EPpGain = gains.eppgain;
-//  EPdGain = gains.epdgain;
-//  ETpGain = gains.etpgain;
- // ETdGain = gains.etdgain;
-//  EPpLowPassGain = gains.epplpgain;
-//  ETpLowPassGain = gains.etplpgain;
-//  WheelSpeedPGain = gains.wheelspeedgain;
-  WheelAlpha = .8;//gains.wheelalpha;
+*/
+  EPlpGain = gains.eplpgain;
+  EPlpAlpha = gains.eplpalpha;
+  EPpGain = gains.eppgain;
+  EPdGain = gains.epdgain;
+  ETpGain = gains.etpgain;
+  ETdGain = gains.etdgain;
+  EPpLowPassGain = gains.epplpgain;
+  ETpLowPassGain = gains.etplpgain;
+  WheelSpeedPGain = gains.wheelspeedgain;
+  WheelAlpha = gains.wheelalpha;
 
   // control states
   clearControlStates();
@@ -222,13 +225,6 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
     }
     else  // doing a maneuver, need to see if robot has completed it
     {
-      /*
-      if (approx(dist(robotPose.x, robotPose.y, maneuverEnd.x, maneuverEnd.y), 0, POSITIONTOL))
-      {  // reached the end of this maneuver
-        doingManeuver = false;
-        currManeuverIndex++;
-        return Status::ALLGOOD;  // next time function is called, maneuver will update
-      }*/
       theCPP = WaypointControllerHelper::findCPP(robotPose, currMan);  // closest pose on path
       dist2endOnPath = WaypointControllerHelper::sign(currMan.distance)*currMan.radius*(WaypointControllerHelper::anglediff(maneuverEnd.theta, theCPP.theta));
       dist2endAbs =  dist(robotPose.x, robotPose.y, maneuverEnd.x, maneuverEnd.y);
@@ -265,8 +261,10 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
     {
       EPpEst = currMan.radius + dist(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
     }
+    //Do we want hysteresis on the ETpEst? this might prevent an oscillation
     ETpEst = WaypointControllerHelper::anglediff(robotPose.theta,
                                                  theCPP.theta);  // order?  // positive error means turn left
+
 
     EPpLowPassPrev = EPpLowPass;
     EPpLowPass = EPpLowPassGain * EPpEst + (1 - EPpLowPassGain) * EPpLowPassPrev;
