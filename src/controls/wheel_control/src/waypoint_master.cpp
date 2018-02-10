@@ -405,7 +405,7 @@ int main(int argc, char **argv)
         line_strip2.color.b -= (line_strip2.color.b<=0.0) ? -1 : .1;
         line_strip2.color.r += (line_strip2.color.r>=1.0) ? 0  : .1;
     }
-      path_marker_pub.publish(line_strip2);
+      wholeQueue_pub.publish(line_strip2);
 
 
 
