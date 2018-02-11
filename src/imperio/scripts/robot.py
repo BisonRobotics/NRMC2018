@@ -104,8 +104,8 @@ class robot(object):
         try:
             #TODO : Add localization stuff here when it become available
             #(self.location, self.pose) = self.tf.lookupTransform('/map', '/base_link', rospy.Time(0))
-            self.pose = (0,0)
-            self.location = (0,0,0)
+            self.location = (0,0)
+            self.pose = (0,0,0)
             return (self.location, self.pose)
 
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):

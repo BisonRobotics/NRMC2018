@@ -2,8 +2,8 @@
 """ Time the duration of the competition limit and publish to timesUp
 
 Author: James Madison University
-Date: 11/11/2017
-Version: 1
+Date: 2/11/2018
+Version: 2
 
 """
 

@@ -3,20 +3,17 @@
 Move the robot to desired location.
 
 Author: Nicole Maguire - James Madison University
-Date: 11/26/2017
-Version: 2
+Date: 2/11/2018
+Version: 3
 """
 
 import math
 import rospy
-from astar import *
 import map_utils
 import time
 import RRT
-import matplotlib.pyplot as plt
 from robot import *
 
-# TODO : Currently an issue trying to import a custom message, no module named .msg
 from imperio.msg import GlobalWaypoints
 from imperio.msg import DriveStatus
 from nav_msgs.msg import OccupancyGrid
@@ -47,8 +44,10 @@ class GlobalPlanner(object):
         """
         self.waypoints_publisher = rospy.Publisher('/global_planner_goal', GlobalWaypoints, queue_size=1)
         self.draw_points_publisher = rospy.Publisher('/draw_points', GlobalWaypoints, queue_size=1)
+
         rospy.Subscriber('/drive_controller_status', DriveStatus, self.drive_status_callback)
         rospy.Subscriber('/map', OccupancyGrid, self.map_callback)
+
         self.robot = robot
         self.occupancy_grid = None
         self.movement_status = MovementStatus.HAS_REACHED_GOAL
@@ -74,6 +73,7 @@ class GlobalPlanner(object):
         :param goal: the global goal (based on the overall map) as (x,y)
         :return: a boolean of it the robot has reached the goal, None for a fatal error
         """
+
         if self.movement_status == MovementStatus.CANNOT_PLAN_PATH:
             return None
         if self.movement_status == MovementStatus.MOVING:
@@ -87,10 +87,10 @@ class GlobalPlanner(object):
             self.movement_status == MovementStatus.WAITING
             return False
         print("Imperio: Occupancy Grid Exists")
+
         waypoints = self.find_waypoints(goal)
         oriented_waypoints = self.calculate_orientation(waypoints)
-
-        print("Path found : {}".format(oriented_waypoints))
+        print("Imperio: Path found : {}".format(oriented_waypoints))
 
         self.publish_waypoints(oriented_waypoints)
         return False
@@ -103,26 +103,12 @@ class GlobalPlanner(object):
         """
         (location, pose) = self.robot.localize()
 
-        #TODO : No . . . fix this when you get localization pinned down
-        if location == None:
-            location = [0,0]
-
-        #TODO : Issue getting the location
-        #Using this now just for testing
-        location = (1,1)
-        goal = (2,6)
-
         print("Starting the path planner")
         saved_time = time.time()
-
-        #TODO : Below is for testing, remove for final code and pick sorting alg
-        #results = aStar_xy(location, goal, self.occupancy_grid)
-        #results = random_point.path_planner(location, goal, self.occupancy_grid)
-        #print("Path Planner : Hardcoded for testing purposes")
-        #results = [(0,1),(1,1), (1,2),(1,3),(1,4)]
         results = RRT.path_planning(location, goal, self.occupancy_grid)
         print("Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
 
+        #Used for visualizing the waypoint path
         message = GlobalWaypoints()
         pose_array = []
         for point in results:
@@ -132,6 +118,7 @@ class GlobalPlanner(object):
 
         message.pose_array = pose_array
         self.draw_points_publisher.publish(message)
+
         return results
 
     def publish_waypoints(self, waypoints):
@@ -161,16 +148,13 @@ class GlobalPlanner(object):
         """
         errorThreshold = rospy.get_param('/location_accuracy')
 
-        #TODO : clean this up
         goal_x, goal_y = goal
-
         (location, pose) = self.robot.localize()
 
         if location == None:
             print("Imperio: Unable to localize the robot")
             #TODO recovery behavior for localization fail
             return False
-
 
         loc_x = location[0]
         loc_y = location[1]
@@ -194,7 +178,7 @@ class GlobalPlanner(object):
         :return: array of waypoints with orientation
         """
 
-        #TODO : FIX THIS
+        # TODO : Currently a very simple holder method, wanted to make improvement a seperate commit
         oriented_waypoints = []
 
         for i in range(1, len(waypoints)):
@@ -229,22 +213,6 @@ class GlobalPlanner(object):
             oriented_waypoints.append(single)
 
         return oriented_waypoints
-
-    #TODO : CAN BE REMOVED, ONLY FOR TESTING/DEBUGGING
-    def draw_tree(self, waypoints):
-        if halt_for_visualization == False:
-            return
-
-        for x in range(1, len(waypoints)):
-            x1, y1 = waypoints[x - 1]
-            x2, y2 = waypoints[x]
-            plt.plot([x1, x2], [y1, y2])
-
-        # configure plot axises
-        plt.xlim(-1, 11)
-        plt.ylim(-1, 11)
-
-        plt.show()
 
 
 

@@ -1,21 +1,25 @@
-"""
-Path Planning Sample Code with Randamized Rapidly-Exploring Random Trees (RRT)
+""" Path planning using RRT with options for different types of path smoothign
+
+Author: James Madison University
+Date: 2/11/2018
+Version: 1
 """
 
 import matplotlib.pyplot as plt
+import scipy.interpolate as si
+import numpy as np
 import random
 import math
 import copy
 
-halt_for_visualization = True
+halt_for_visualization = False
 
 class RRT():
     """
     Class for RRT Planning
     """
 
-    def __init__(self, start, goal, obstacleList,
-                 randAreaX, randAreaY, expandDis=1.0, goalSampleRate=5, maxIter=500):
+    def __init__(self, start, goal, map, randAreaX, randAreaY):
         """
         Setting Parameter
 
@@ -29,10 +33,10 @@ class RRT():
         self.end = Node(goal[0], goal[1])
         self.minrand_x, self.maxrand_x = randAreaX
         self.minrand_y, self.maxrand_y = randAreaY
-        self.expandDis = expandDis
-        self.goalSampleRate = goalSampleRate
-        self.maxIter = maxIter
-        self.obstacleList = obstacleList
+        self.expandDis = 1.0
+        self.goalSampleRate = 5
+        self.maxIter = 500
+        self.map = map
 
     def planning(self):
         """
@@ -60,7 +64,7 @@ class RRT():
             newNode.y += self.expandDis * math.sin(theta)
             newNode.parent = nind
 
-            if not self.collision_check(newNode, self.obstacleList):
+            if not self.collision_check(newNode, self.map):
                 continue
 
             self.nodeList.append(newNode)
@@ -70,7 +74,6 @@ class RRT():
             dy = newNode.y - self.end.y
             d = math.sqrt(dx * dx + dy * dy)
             if d <= self.expandDis:
-                print("Goal!!")
                 break
 
         path = [[self.end.x, self.end.y]]
@@ -93,7 +96,8 @@ class RRT():
         threshold = .7
         #convert the node to a space in the cell
         row, col = map.cell_index(node.x, node.y)
-        #There was an error, this point shouldn't be possible
+
+        #check that space is in bounds of map
         row_max = map.height - 1
         col_max = map.width - 1
         if row > row_max or col > col_max:
@@ -101,28 +105,12 @@ class RRT():
             print("out of bounds")
             return False
 
-        #check that there isn't anything in the grid
-        #TODO : the current testing settup are inverted occupancy grids
+        #check that there isn't anything in that grid space
+        #TODO : the current testing settup are inverted occupancy grids, check on ones coming from robot
         if map.grid[row][col] > threshold:
-            #print("OBSTACLE")
-            #print(node.x, node.y)
             return True
         else:
-            print("Not Clear")
             return False
-
-        return True
-
-    #TODO : make this work with obstacles
-        for (ox, oy, size) in obstacleList:
-            dx = ox - node.x
-            dy = oy - node.y
-            d = math.sqrt(dx * dx + dy * dy)
-            if d <= size:
-                return False  # collision
-
-        return True  # safe
-
 
 class Node():
     """
@@ -135,37 +123,34 @@ class Node():
         self.parent = None
 
 def get_path_length(path):
-    le = 0
+    length = 0
     for i in range(len(path) - 1):
         dx = path[i + 1][0] - path[i][0]
         dy = path[i + 1][1] - path[i][1]
         d = math.sqrt(dx * dx + dy * dy)
-        le += d
+        length += d
 
-    return le
+    return length
 
 
 def get_target_point(path, targetL):
-    le = 0
+    length = 0
     ti = 0
-    lastPairLen = 0
+    last_pair_len = 0
     for i in range(len(path) - 1):
         dx = path[i + 1][0] - path[i][0]
         dy = path[i + 1][1] - path[i][1]
         d = math.sqrt(dx * dx + dy * dy)
-        le += d
-        if le >= targetL:
+        length += d
+        if length >= targetL:
             ti = i - 1
-            lastPairLen = d
+            last_pair_len = d
             break
 
-    partRatio = (le - targetL) / lastPairLen
-    #  print(partRatio)
-    #  print((ti,len(path),path[ti],path[ti+1]))
+    part_ratio = (length - targetL) / last_pair_len
 
-    x = path[ti][0] + (path[ti + 1][0] - path[ti][0]) * partRatio
-    y = path[ti][1] + (path[ti + 1][1] - path[ti][1]) * partRatio
-    #  print((x,y))
+    x = path[ti][0] + (path[ti + 1][0] - path[ti][0]) * part_ratio
+    y = path[ti][1] + (path[ti + 1][1] - path[ti][1]) * part_ratio
 
     return [x, y, ti]
 
@@ -202,6 +187,7 @@ def path_smoothing(path, maxIter, obstacleList):
     le = get_path_length(path)
 
     for i in range(maxIter):
+        #TODO : Never gets from A to B straight, check random for any issues
         # Sample two points
         pickPoints = [random.uniform(0, le), random.uniform(0, le)]
         pickPoints.sort()
@@ -239,29 +225,47 @@ def path_smoothing(path, maxIter, obstacleList):
 
 def path_planning(start, goal, map):
     print("Start RRT path planning")
-    #TODO : Add the obstacles in
 
     min_x, min_y = map.cell_position(0,0)
     max_x, max_y = map.cell_position(map.width - 1, map.height - 1)
 
-    obstacleList = map
-    # Set Initial parameters
-    area_x, area_y = map.cell_position(map.width, map.height)
-    rrt = RRT(start=start, goal=goal,
-              randAreaX=[min_x, max_x], randAreaY=[min_y, max_y], obstacleList=obstacleList)
+    rrt = RRT(start, goal, map, [min_x, max_x], [min_y, max_y])
     path = rrt.planning()
     draw_tree(path, map)
-    smooth_path = path_smoothing(path, 1000, obstacleList)
+
+    """ Save for further testing
+    
+    smooth_path = path_smoothing(path, 1000, map)
     #draw_tree(smooth_path, map)
 
-    #TODO : Add path smoothing in with obstacles
-    #smooth_path.reverse()
-    #return smooth_path
+    #Testing the BSpline
+    xlist = []
+    ylist = []
+    for point in path:
+        x,y = point
+        xlist.append(x)
+        ylist.append(y)
+
+    sampling_number = 100
+    x = np.array(xlist)
+    y = np.array(ylist)
+    rx, ry = bspline_path(x, y, sampling_number)
+
+    plt.xlim(min_y, max_y)
+    plt.ylim(min_y, max_y)
+    plt.plot(rx, ry, 'r', label="B-spline path")
+    plt.show()
+
+    comb = []
+    for i in range(0, len(rx)):
+        comb.append((rx[i], ry[i]))
+    draw_tree(comb, map)
+    """
 
     path.reverse()
     return path
 
-   #TODO : CAN BE REMOVED, ONLY FOR TESTING/DEBUGGING
+
 def draw_tree(waypoints, map):
     if halt_for_visualization == False:
         return
@@ -274,16 +278,30 @@ def draw_tree(waypoints, map):
     min_x, min_y = map.cell_position(0, 0)
     max_x, max_y = map.cell_position(map.width - 1, map.height - 1)
 
-    '''obstacle_grid = map
-    for col in range(0, obstacle_grid.width - 1):
-        for row in range(0, obstacle_grid.height - 1):
-            if obstacle_grid.grid[row][col] < .7:
-                x, y = obstacle_grid.cell_position(row, col)
-                plt.plot(x, y)
-                '''
-
     #to keep things in scale
     plt.xlim(min_y, max_y)
     plt.ylim(min_y, max_y)
 
     plt.show()
+
+def bspline_path(x,y, sn):
+    N = 3
+    t = range(len(x))
+    x_tup = si.splrep(t, x, k=N)
+    y_tup = si.splrep(t, y, k=N)
+
+    x_list = list(x_tup)
+    xl = x.tolist()
+    x_list[1] = xl + [0.0, 0.0, 0.0, 0.0]
+
+    y_list = list(y_tup)
+    yl = y.tolist()
+    y_list[1] = yl + [0.0, 0.0, 0.0, 0.0]
+
+    ipl_t = np.linspace(0.0, len(x) - 1, sn)
+    rx = si.splev(ipl_t, x_list)
+    ry = si.splev(ipl_t, y_list)
+
+
+    return rx, ry
+

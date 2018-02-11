@@ -73,7 +73,7 @@ class ImperioControl(object):
         Navigates the robot to the area where it will dig
         """
         # Goal is currently just dummy data
-        goal = (5, 8)
+        goal = (3, 6)
         result = self.planner.navigate_to_goal(goal)
         if result == None:
             self.robot.change_state(RobotState.HALT)

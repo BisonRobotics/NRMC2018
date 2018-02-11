@@ -2,10 +2,12 @@
 <launch>
 
 
-<!-- node name="competition_timer" pkg="imperio" type="competition_timer.py"/ -->
+<node name="competition_timer" pkg="imperio" type="competition_timer.py"/>
+
 <!-- commented out the dashboard for development, remove for actual launch -->
 <!-- node name="dashboard" pkg="imperio" type="dashboardLaunch.bash"/ -->
 
+<!-- launches the map server from map found in imperio data folder -->
 <arg name="map_file" default="$(find imperio)/data/costmap.yaml"/>
 <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
 
