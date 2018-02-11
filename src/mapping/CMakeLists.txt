@@ -128,6 +128,9 @@ include_directories(
 add_executable (static_transforms_publisher src/static_transforms_publisher.cpp)
 target_link_libraries (static_transforms_publisher ${catkin_LIBRARIES})
 
+
+add_executable (transforms_publisher src/transforms_publisher.cpp)
+target_link_libraries (transforms_publisher ${catkin_LIBRARIES})
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/mapping.cpp
