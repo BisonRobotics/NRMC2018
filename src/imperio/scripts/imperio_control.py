@@ -24,14 +24,14 @@ class ImperioControl(object):
         Initializes the imperio node
         """
         self.node = rospy.init_node('imperio')
-        rospy.Subscriber('/oh_shit', Bool, self.ohShitCallback)
+        rospy.Subscriber('/halt_autonomy', Bool, self.haltAutonomyCallback)
         rospy.Subscriber('/times_up', Bool, self.timerCallback)
 
         self.robot = robot(self.node)
         self.planner = GlobalPlanner(self.robot)
         self.run()
 
-    def ohShitCallback(self, bool_msg):
+    def haltAutonomyCallback(self, bool_msg):
         """
         Callback for the oh_shit topic, when the user wants to turn off Imperio
         No matter what the message is, if this topic is publised to, it will Halt the robot
