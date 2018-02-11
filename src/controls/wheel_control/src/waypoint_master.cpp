@@ -13,7 +13,7 @@
 // after iterating through the available waypoints, either choose the
 // furthest valid one (could just pick the first one that works)
 
-#define SIMULATING 0
+#define SIMULATING 1
 // one for simulating, 0 for real deal
 
 #include <ros/ros.h>
@@ -21,6 +21,7 @@
 #include <tf2_ros/transform_broadcaster.h>
 
 #include <waypoint_controller/waypoint_controller.h>
+#include <waypoint_controller/waypoint_controller_helper.h>
 #include <waypoint_controller/waypoint_with_maneuvers.h>
 
 #include <geometry_msgs/Pose2D.h>
@@ -130,7 +131,7 @@ geometry_msgs::TransformStamped create_sim_tf(double x, double y, double theta)
   tfStamp.transform.rotation.w = q.w();
   return tfStamp;
 }
-#endif 
+#endif
 
 
 
@@ -204,6 +205,8 @@ int main(int argc, char **argv)
   ros::Subscriber haltsub = node.subscribe("halt", 100, haltCallback);
   ros::Publisher mode_pub = node.advertise<std_msgs::String>("drive_controller_status", 1000);
   ros::Publisher path_marker_pub = node.advertise<visualization_msgs::Marker>("waypoint_path", 10000);
+  ros::Publisher wholeQueue_pub = node.advertise<visualization_msgs::Marker>("whole_queue", 100);
+
   visualization_msgs::Marker line_strip;
   line_strip.action = visualization_msgs::Marker::ADD;
   line_strip.pose.orientation.w = 1;
@@ -212,6 +215,16 @@ int main(int argc, char **argv)
   line_strip.color.g = 1;
   line_strip.color.a = 1;
   line_strip.header.frame_id = "/map";
+
+  visualization_msgs::Marker line_strip2;
+  line_strip2.action = visualization_msgs::Marker::ADD;
+  line_strip2.pose.orientation.w = 1;
+  line_strip2.type = visualization_msgs::Marker::LINE_STRIP;
+  line_strip2.scale.x = .1;
+  line_strip2.color.b = 1;
+  line_strip2.color.a = 1;
+  line_strip2.header.frame_id = "/map";
+
   geometry_msgs::Point vis_point;
   // hang here until someone knows where we are
   ROS_INFO("Going into wait loop for localizer");
@@ -327,13 +340,6 @@ int main(int argc, char **argv)
       line_strip.points.clear();
       for (auto const& waypoint : waypoint_set)
       {
-//	poser.header.stamp = ros::Time::now ();
-//	poser.header.seq++;
-//	poser.header.frame_id = "map";
-//	poser.pose.position.x = waypoint.first;
-//	poser.pose.position.y = waypoint.second;
-//	poser.pose.position.z = 0.0f;
-//	pose_pub.publish (poser);
         vis_point.x = waypoint.first;
         vis_point.y = waypoint.second;
         vis_point.z = .4;
@@ -356,10 +362,15 @@ int main(int argc, char **argv)
     // maybe integrate error with some decay
 
     // print status also post to topic /drive_controller_status
-    if (wcStat == WaypointController::Status::ALLBAD)
+    if (wcStat == WaypointController::Status::OFFPATH)
+    {
+      ROS_WARN("Mode : -1");
+      ss << "Mode : OFFPATH";
+    }
+    if (wcStat == WaypointController::Status::OVERSHOT)
     {
       ROS_WARN("Mode : 0");
-      ss << "Mode : Bad";
+      ss << "Mode : OVERSHOT";
     }
     else if (wcStat == WaypointController::Status::ALLGOOD)
     {
@@ -377,6 +388,26 @@ int main(int argc, char **argv)
     // print some info
     navigationQueue = wc.getNavigationQueue();
     theCPP = wc.getCPP();
+    //iterate through navigationqueue elements
+    line_strip2.points.clear();
+    line_strip2.color.r = 0;
+    line_strip2.color.b = 1;
+    for (auto const& myMan : navigationQueue)
+    {
+        waypoint_set = WaypointControllerHelper::waypointWithManeuvers2points(myMan);
+        for (auto const& waypoint : waypoint_set)
+        {
+          vis_point.x = waypoint.first;
+          vis_point.y = waypoint.second;
+          vis_point.z = .2;
+          line_strip2.points.push_back(vis_point);
+        }
+        line_strip2.color.b -= (line_strip2.color.b<=0.0) ? -1 : .1;
+        line_strip2.color.r += (line_strip2.color.r>=1.0) ? 0  : .1;
+    }
+      wholeQueue_pub.publish(line_strip2);
+
+
 
     ROS_INFO("CPPx : %.4f", theCPP.x);
     ROS_INFO ("CPPy : %.4f", theCPP.y);
@@ -386,6 +417,8 @@ int main(int argc, char **argv)
     ROS_INFO("CurPy : %.4f", currPose.y);
     ROS_INFO("CurPth : %.4f", currPose.theta);
 
+    ROS_INFO("Dist2endOnPath : %.4f", wc.getDist2endOnPath());
+
     ROS_INFO("EtpEstimate : %.4f", wc.getETpEstimate());
     ROS_INFO("EppEstimate : %.4f", wc.getEPpEstimate());
 
@@ -393,6 +426,8 @@ int main(int argc, char **argv)
     ROS_INFO ("SetSpeed2 : %.4f", wc.getSetSpeeds().second);
     ROS_INFO("CmdSpeed1 : %.4f", wc.getCmdSpeeds().first);
     ROS_INFO ("CmdSpeed2 : %.4f", wc.getCmdSpeeds().second);
+
+    ROS_INFO("currMan Index : %d", wc.getCurrManeuverIndex());
 
     if (navigationQueue.size() > 0) {
         ROS_INFO ("NavManSize : %d", (int) navigationQueue.at(0).mans.size());
