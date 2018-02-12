@@ -34,18 +34,31 @@ int main(int argc, char** argv){
   servo_joint_to_optical_link_tf.transform.rotation.z = q.getZ();
   servo_joint_to_optical_link_tf.transform.rotation.w = q.getW();
 
-  q.setRPY(-M_PI_2, 0, -M_PI_2);
+  q.setRPY(0, 0, -M_PI_2);
   geometry_msgs::TransformStamped camera_to_base_link;
   camera_to_base_link.header.seq = 0;
   camera_to_base_link.header.frame_id = "base_link";
   camera_to_base_link.child_frame_id = "camera_depth_optical_frame";
-  camera_to_base_link.transform.translation.x = 9.0e-3;
+  camera_to_base_link.transform.translation.x = .4191;
   camera_to_base_link.transform.translation.y = 0.0;
   camera_to_base_link.transform.translation.z = 25.0e-3;
   camera_to_base_link.transform.rotation.x = q.getX();
   camera_to_base_link.transform.rotation.y = q.getY();
   camera_to_base_link.transform.rotation.z = q.getZ();
   camera_to_base_link.transform.rotation.w = q.getW();
+
+  q.setRPY(0, 0, -M_PI_2);
+  geometry_msgs::TransformStamped depth_frame_to_optical; 
+  depth_frame_to_optical.header.seq = 0;
+  depth_frame_to_optical.header.frame_id = "camera_depth_optical_frame";
+  depth_frame_to_optical.child_frame_id = "camera_depth_frame";
+  depth_frame_to_optical.transform.translation.x = 0.0001;
+  depth_frame_to_optical.transform.translation.y = 0.0;
+  depth_frame_to_optical.transform.translation.z = 0.0;
+  depth_frame_to_optical.transform.rotation.x = q.getX();
+  depth_frame_to_optical.transform.rotation.y = q.getY();
+  depth_frame_to_optical.transform.rotation.z = q.getZ();
+  depth_frame_to_optical.transform.rotation.w = q.getW();
 
 
 
@@ -101,7 +114,7 @@ int main(int argc, char** argv){
   base_link_to_servo_base_link_tf.transform.rotation.z = q.getZ();
   base_link_to_servo_base_link_tf.transform.rotation.w = q.getW();
 
-  ros::Rate rate(60);
+  ros::Rate rate(100);
   while(ros::ok())
   {
     servo_joint_to_optical_link_tf.header.stamp = ros::Time::now();
@@ -111,6 +124,7 @@ int main(int argc, char** argv){
     map_to_tag03_tf.header.stamp = ros::Time::now();
     map_to_tag01_tf.header.stamp = ros::Time::now();
     camera_to_base_link.header.stamp = ros::Time::now ();
+    depth_frame_to_optical.header.stamp = ros::Time::now ();
 
     servo_joint_to_optical_link_tf.header.seq++;
     //servo_base_link_to_servo_joint_tf.header.seq++;
@@ -119,7 +133,8 @@ int main(int argc, char** argv){
     map_to_tag03_tf.header.seq++;
     map_to_tag01_tf.header.seq++;
     camera_to_base_link.header.seq++;
-
+    depth_frame_to_optical.header.seq++;
+    
     br->sendTransform(servo_joint_to_optical_link_tf);
     //br.sendTransform(servo_base_link_to_servo_joint_tf);
     br->sendTransform(map_to_tag04_tf);
@@ -127,6 +142,7 @@ int main(int argc, char** argv){
     br->sendTransform(map_to_tag01_tf);
     br->sendTransform(base_link_to_servo_base_link_tf);
     br->sendTransform(camera_to_base_link);
+    br->sendTransform (depth_frame_to_optical);
     ros::spinOnce();
     rate.sleep();
   }

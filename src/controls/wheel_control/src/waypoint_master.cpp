@@ -13,7 +13,7 @@
 // after iterating through the available waypoints, either choose the
 // furthest valid one (could just pick the first one that works)
 
-#define SIMULATING 1
+#define SIMULATING 0
 // one for simulating, 0 for real deal
 
 #include <ros/ros.h>
@@ -187,7 +187,7 @@ int main(int argc, char **argv)
   iVescAccess *bl = new VescAccess(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
                                    MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
 
-  PosSensorInterface *pos = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .3);
+  PosSensorInterface *pos = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .07);
   ImuSensorInterface *imu = new LpResearchImu("imu");
 #endif
 
