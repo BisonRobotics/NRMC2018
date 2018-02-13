@@ -4,12 +4,12 @@
 #include <readable_sensors/readable_sensors.h>
 #include <super_localizer/super_localizer_helper.h>
 
-#define XRESGAIN .025f // trust sensors -> higher gain
-#define YRESGAIN .025f
+#define XRESGAIN .1f // trust sensors -> higher gain
+#define YRESGAIN .10f
 #define THETARESGAIN .025f
-#define DXRESGAIN .25f
-#define DYRESGAIN .25f
-#define OMEGARESGAIN .05f
+#define DXRESGAIN .025f
+#define DYRESGAIN .025f
+#define OMEGARESGAIN .025f
 
 class SuperLocalizer : public LocalizerInterface::LocalizerInterface_c
 {
