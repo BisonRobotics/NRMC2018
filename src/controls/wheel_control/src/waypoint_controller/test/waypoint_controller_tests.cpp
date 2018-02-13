@@ -37,7 +37,10 @@ TEST(WaypointControllerTests, updateReturnsAStatus)
 
   EXPECT_TRUE(returnStatus == WaypointController::Status::ALLGOOD ||
               returnStatus == WaypointController::Status::GOALREACHED ||
-              returnStatus == WaypointController::Status::ALLBAD);
+              returnStatus == WaypointController::Status::OVERSHOT ||
+              returnStatus == WaypointController::Status::OFFPATH ||
+              returnStatus == WaypointController::Status::CANTPLAN ||
+              returnStatus == WaypointController::Status::ISSTUCK);
 }
 
 TEST(WaypointControllerTests, ableToAddWaypoint_FrontThenRight)
