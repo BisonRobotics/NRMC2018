@@ -116,8 +116,18 @@ void WaypointController::clearControlStates()
   LvelCmd = 0;
   RvelCmd = 0;
 
+  EPfiIndex =0;
+  EPfi2Index =0;
+  memset(EPfi, 0, sizeof(double)*EPFISIZE);
+  memset(EPfi2, 0, sizeof(double)*EPFISIZE);
+  EPfiSum =0;
+  EPfi2Sum =0;
+
+
   LvelCmdPrev = LvelCmd;
   RvelCmdPrev = RvelCmd;
+
+  
 }
 
 void WaypointController::haltAndAbort()

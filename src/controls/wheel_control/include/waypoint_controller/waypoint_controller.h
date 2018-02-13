@@ -11,6 +11,8 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #define DT_THAT_SHALL_BE_USED .02
+#define EPFISIZE 100
+#define EPFI2SIZE 100
 
 namespace WaypointControllerNs {
     typedef struct waypointGains_s {
@@ -22,8 +24,13 @@ namespace WaypointControllerNs {
         double etdgain;
         double epplpgain;
         double etplpgain;
+        double epfisize;
+        double epfi2size;
+        double epfigain;
+        double epfi2gain;
         double wheelspeedgain;
         double wheelalpha;
+        double epfithresh;
     }waypointControllerGains;
 
 
@@ -39,8 +46,13 @@ namespace WaypointControllerNs {
         .etdgain = -25,//.8,
         .epplpgain = 2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 / (2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 + 1),
         .etplpgain = 2 * M_PI * DT_THAT_SHALL_BE_USED* .1608 / (2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 + 1),
+        .epfisize = EPFISIZE,
+        .epfi2size = EPFI2SIZE,
+        .epfigain = 1500,
+        .epfi2gain = 1000,
         .wheelspeedgain  = 0,
-        .wheelalpha = .5
+        .wheelalpha = .5,
+        .epfithresh = .05
         /*DNFW*/
 };
 
@@ -95,6 +107,13 @@ private:
   double LvelCmdPrev, RvelCmdPrev;
   double WheelAlpha;
   double LeftWheelSetSpeed, RightWheelSetSpeed;
+
+  double EPfi[EPFISIZE];
+  double EPfi2[EPFI2SIZE];
+  double EPfiSum;
+  double EPfi2Sum;
+  int EPfiIndex;
+  int EPfi2Index;
   unsigned int currManeuverIndex;
   bool doingManeuver;
 
