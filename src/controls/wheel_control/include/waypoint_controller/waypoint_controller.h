@@ -79,7 +79,7 @@ public:
   void clearControlStates();
 
 private:
-  void modifyNavQueue2RecoverFromPathError(pose RobotPose, pose theCPP);
+  void modifyNavQueue2RecoverFromPathError(pose RobotPose, pose manEnd);
   void modifyNavQueue2RecoverFromGoalOvershoot();
   void halt();
   std::vector<waypointWithManeuvers> navigationQueue;

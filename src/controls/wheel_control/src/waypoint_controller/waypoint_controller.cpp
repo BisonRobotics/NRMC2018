@@ -239,7 +239,7 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
       }
       if ( std::abs(dist2Path) > POSITIONTOL)  //fell off of path (to the side most likely)
       {
-         modifyNavQueue2RecoverFromPathError(robotPose, theCPP);//generate new maneuver and load it into navigation queue
+         modifyNavQueue2RecoverFromPathError(robotPose, maneuverEnd);//generate new maneuver and load it into navigation queue
          halt();
          return Status::OFFPATH; //this also resets the current maneuver
       }
@@ -309,17 +309,14 @@ double WaypointController::getDist2endOnPath()
   return dist2endOnPath;
 }
 
-void WaypointController::modifyNavQueue2RecoverFromPathError(pose RobotPose, pose theCPP)
+void WaypointController::modifyNavQueue2RecoverFromPathError(pose RobotPose, pose manEnd)
 {
-  //should plan a maneuver to last known cpp
-  //and insert this before the current maneuver (that was blown)
-  //and switch to this new maneuver
-  //when the new maneuver completes, the robot will switch to the blown one
-  //and continue where it left off
+  //should plan a maneuver to end of blown maneuver
+  //and dump the blown one
     waypointWithManeuvers newWaypoint;
     newWaypoint.initialPose = RobotPose;
-    newWaypoint.terminalPose = theCPP; //last known good CPP
-    newWaypoint.mans = WaypointControllerHelper::waypoint2maneuvers(RobotPose, theCPP);
+    newWaypoint.terminalPose = manEnd;
+    newWaypoint.mans = WaypointControllerHelper::waypoint2maneuvers(RobotPose, manEnd);
 
     std::vector<waypointWithManeuvers>::iterator it;
     it = navigationQueue.begin();
