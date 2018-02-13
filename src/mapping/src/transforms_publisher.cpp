@@ -34,7 +34,7 @@ int main(int argc, char** argv){
   servo_joint_to_optical_link_tf.transform.rotation.z = q.getZ();
   servo_joint_to_optical_link_tf.transform.rotation.w = q.getW();
 
-  q.setRPY(0, 0, -M_PI_2);
+  q.setRPY(0, 0, 0);
   geometry_msgs::TransformStamped camera_to_base_link;
   camera_to_base_link.header.seq = 0;
   camera_to_base_link.header.frame_id = "base_link";
@@ -47,7 +47,7 @@ int main(int argc, char** argv){
   camera_to_base_link.transform.rotation.z = q.getZ();
   camera_to_base_link.transform.rotation.w = q.getW();
 
-  q.setRPY(0, 0, -M_PI_2);
+  q.setRPY(0, 0, 0);
   geometry_msgs::TransformStamped depth_frame_to_optical; 
   depth_frame_to_optical.header.seq = 0;
   depth_frame_to_optical.header.frame_id = "camera_depth_optical_frame";
