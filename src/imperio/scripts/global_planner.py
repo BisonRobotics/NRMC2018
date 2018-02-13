@@ -107,6 +107,7 @@ class GlobalPlanner(object):
         saved_time = time.time()
         results = RRT.path_planning(location, goal, self.occupancy_grid)
         print("Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
+        print("Unoriented path found: {}".format(results))
 
         #Used for visualizing the waypoint path
         message = GlobalWaypoints()
@@ -177,42 +178,37 @@ class GlobalPlanner(object):
         :param waypoints: array of waypoints
         :return: array of waypoints with orientation
         """
+        # Check if none or one waypoint
+        if (len(waypoints) == 0):
+            return []
 
-        # TODO : Currently a very simple holder method, wanted to make improvement a seperate commit
+        if (len(waypoints) == 1):
+            #TODO : final orientation will be passed as param from control (more logistics/strategy/testing needed)
+            final_orientation = math.degrees(math.atan2(waypoints[0][1], waypoints[0][0]))
+            return [[waypoints[0][0], waypoints[0][1], final_orientation]]
+
+        # Use atan2 from math to calculate the orientation
         oriented_waypoints = []
 
         for i in range(1, len(waypoints)):
-            x1, y1 = waypoints[i -1]
+            x1, y1 = waypoints[i - 1]
             x2, y2 = waypoints[i]
 
-            orientation = 0
-            #moving to the right
-            if x2 > x1:
-                orientation = 90
-
-            #moving the the left
-            if x1 > x2:
-                orientation = 270
-
-            #moving up the map
-            if y2 > y1:
-                orientation = 0
-
-            #moving down the map
-            if y1 > y2:
-                orientation = 180
+            orientation = math.degrees(math.atan2((y2 - y1), (x2 - x1)))
 
             single = [x1, y1, orientation]
             oriented_waypoints.append(single)
 
-        #still need to add the last waypoint
+        # still need to add the last waypoint
         if len(waypoints) > 1:
             final_waypoint = waypoints[len(waypoints) - 1]
-            final_orientation = 180
+            final_orientation = oriented_waypoints[len(oriented_waypoints) - 1][2]
             single = [final_waypoint[0], final_waypoint[1], final_orientation]
             oriented_waypoints.append(single)
 
         return oriented_waypoints
+
+
 
 
 
