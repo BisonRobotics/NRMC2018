@@ -35,7 +35,7 @@ TEST(LocalizerHelperTests, CanSub)
   EXPECT_NEAR(v3.y_accel, 1.0, .01);
   EXPECT_NEAR(v3.alpha, 1.0, .01);
 }
-
+/*
 TEST(LocalizerHelperTests, CanAddFromModelWithOutIMU)
 {
   LocalizerInterface::stateVector v1 = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 };
@@ -69,7 +69,7 @@ TEST(LocalizerHelperTests, CanAddFromModelWithIMU)
   EXPECT_NEAR(v3.y_accel, v1.y_accel, .01);
   EXPECT_NEAR(v3.alpha, v1.alpha, .01);
 }
-
+*/
 TEST(LocalizerHelperTests, CanMultiply)
 {
   LocalizerInterface::stateVector v1 = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 };
