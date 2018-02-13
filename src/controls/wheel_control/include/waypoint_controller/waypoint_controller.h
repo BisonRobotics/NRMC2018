@@ -32,15 +32,15 @@ namespace WaypointControllerNs {
  static constexpr WaypointControllerNs::waypointControllerGains waypoint_default_gains = {
         /*DNFW*/
         .eplpgain = 0.0,
-        .eplpalpha = 2 * M_PI * DT_THAT_SHALL_BE_USED * .00008 / (2 * M_PI * DT_THAT_SHALL_BE_USED * .00008 + 1),
-        .eppgain = 0,
-        .epdgain=.55,
-        .etpgain = 0,
-        .etdgain = .8,
+        .eplpalpha = 0,//2 * M_PI * DT_THAT_SHALL_BE_USED * .00008 / (2 * M_PI * DT_THAT_SHALL_BE_USED * .00008 + 1),
+        .eppgain = 30,
+        .epdgain= -10,//.55,
+        .etpgain = 60,
+        .etdgain = -25,//.8,
         .epplpgain = 2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 / (2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 + 1),
         .etplpgain = 2 * M_PI * DT_THAT_SHALL_BE_USED* .1608 / (2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 + 1),
         .wheelspeedgain  = 0,
-        .wheelalpha = .8
+        .wheelalpha = .5
         /*DNFW*/
 };
 

@@ -45,10 +45,10 @@ geometry_msgs::TransformStamped create_tf(double x, double y, double theta)
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "localization_tester");
-  AprilTagTrackerInterface *aprilTags = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .1);
+  AprilTagTrackerInterface *aprilTags = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .07);
   LpResearchImu *lpResearchImu = new LpResearchImu("imu");
   ros::NodeHandle n;
-  ros::Rate r(100);
+  ros::Rate r(50);
   tf2_ros::TransformBroadcaster br;
   ros::Subscriber sub = n.subscribe("joy", 30, callback);
   TeleopInterface teleopInterface(.5f);

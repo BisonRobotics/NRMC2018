@@ -10,7 +10,7 @@ AprilTagTrackerInterface::AprilTagTrackerInterface(std::string topic, double tim
   x = 0.0;
   y = 0.0;
   theta = 0.0;
-  is_floating = false;
+  is_floating = true;
   this->timeout = ros::Duration (timeout);
 }
 
@@ -39,6 +39,7 @@ void AprilTagTrackerInterface::updateIsFloating (){
   msg.data = (unsigned char) is_floating;
   pub.publish(msg);
 
+//is_floating = true;
 }
 
 
@@ -46,12 +47,16 @@ ReadableSensors::ReadStatus AprilTagTrackerInterface::receiveData()
 {
 
   updateIsFloating();
-
+  ReadableSensors::ReadStatus retval;
   if (is_floating){
-    return ReadableSensors::ReadStatus::READ_FAILED;
+    retval = ReadableSensors::ReadStatus::READ_FAILED;
+    ROS_INFO ("Floating sensor");
   } else {
-    return ReadableSensors::ReadStatus::READ_SUCCESS;
+    retval = ReadableSensors::ReadStatus::READ_SUCCESS;
+    ROS_INFO ("Not floating");
   }
+  //is_floating = true;
+  return retval;
 }
 
 
@@ -64,6 +69,8 @@ void AprilTagTrackerInterface::callback(const geometry_msgs::PoseStamped::ConstP
   this->y = msg->pose.position.y;
   this->theta = qtToTheta(msg->pose.orientation);
   last_time = ros::Time::now ();
+  is_floating = false;
+  ROS_INFO ("received estimate");
 }
 
 bool AprilTagTrackerInterface::isFloating()
