@@ -13,7 +13,7 @@
 // after iterating through the available waypoints, either choose the
 // furthest valid one (could just pick the first one that works)
 
-#define SIMULATING 0
+#define SIMULATING 1
 // one for simulating, 0 for real deal
 
 #include <ros/ros.h>
