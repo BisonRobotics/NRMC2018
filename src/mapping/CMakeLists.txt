@@ -129,7 +129,8 @@ include_directories(
 add_executable (static_transforms_publisher src/static_transforms_publisher.cpp)
 target_link_libraries (static_transforms_publisher ${catkin_LIBRARIES})
 
-
+add_executable (costmap_2d_node src/costmap_2d_node.cpp)
+target_link_libraries(costmap_2d_node ${catkin_LIBRARIES})
 add_executable (transforms_publisher src/transforms_publisher.cpp)
 target_link_libraries (transforms_publisher ${catkin_LIBRARIES})
 ## Declare a C++ library

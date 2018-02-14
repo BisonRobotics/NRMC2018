@@ -1,5 +1,13 @@
 plugins: 
   - {name: static_map,  type: "costmap_2d::StaticLayer"}
-  - {name: obstacles, type: "costmap_2d::ObstacleLayer"}
+  - {name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
 publish_frequency: 1.0
 footprint: [[-1.0, -1.0],[-1.0,1.0],[1.0, -1.0],[1.0, 1.0]]
+obstacle_layer:
+  observation_sources: point_cloud_sensor
+  point_cloud_sensor:
+    data_type: LaserScan
+    sensor_frame: /camera_depth_frame
+    clearing: true
+    marking: true
+    topic: /scan
