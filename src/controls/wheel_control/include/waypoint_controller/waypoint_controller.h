@@ -102,11 +102,18 @@ private:
   double EPpLowPass, EPpLowPassPrev, ETpLowPass, ETpLowPassPrev, EPpDerivFiltEst, ETpDerivFiltEst, EPLowerPass,
       EPLowerPassPrev;
   double EPpEst, ETpEst;
+
+  //TODO replace gains with a gains struct
   double WheelSpeedPGain;
   double LvelCmd, RvelCmd;
   double LvelCmdPrev, RvelCmdPrev;
   double WheelAlpha;
   double LeftWheelSetSpeed, RightWheelSetSpeed;
+  double EPfiGain;
+  double EPfi2Gain;
+  double EPfiThresh;
+  double EPfiSize;
+  double EPfi2Size;
 
   double EPfi[EPFISIZE];
   double EPfi2[EPFI2SIZE];

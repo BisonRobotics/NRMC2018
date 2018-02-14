@@ -50,6 +50,12 @@ WaypointController::WaypointController(double axelLength, double maxSafeSpeed, p
   ETpLowPassGain = gains.etplpgain;
   WheelSpeedPGain = gains.wheelspeedgain;
   WheelAlpha = gains.wheelalpha;
+  EPfiThresh = gains.epfithresh;
+
+  EPfiGain = gains.epfigain;
+  EPfi2Gain = gains.epfi2gain;
+  EPfiSize = gains.epfisize;
+  EPfi2Size = gains.epfi2size;
 
   // control states
   clearControlStates();
@@ -118,8 +124,8 @@ void WaypointController::clearControlStates()
 
   EPfiIndex =0;
   EPfi2Index =0;
-  memset(EPfi, 0, sizeof(double)*EPFISIZE);
-  memset(EPfi2, 0, sizeof(double)*EPFISIZE);
+  memset(EPfi,  0, sizeof(double)*EPFISIZE);
+  memset(EPfi2, 0, sizeof(double)*EPFI2SIZE);
   EPfiSum =0;
   EPfi2Sum =0;
 
@@ -287,6 +293,15 @@ WaypointController::Status WaypointController::update(pose robotPose, double dt)
     EPpDerivFiltEst = (EPpLowPass - EPpLowPassPrev) / dt;
     ETpDerivFiltEst = WaypointControllerHelper::anglediff(ETpLowPass, ETpLowPassPrev) / dt;  // order?
 
+    double sumadjust = -EPfi[EPfiIndex];
+    EPfi[EPfiIndex] = abs(EPpEst) > EPfiThresh ? EPpEst : 0;
+    sumadjust += EPfi[EPfiIndex];
+    EPfiSum = sumadjust *dt;
+
+    //under construction
+    //sumadjust = -EPfi2[EPfi2Index];
+    //EPfi2[EPfi2Index] = abs(EPfiSum) > EPfiThresh ? EPfiSum
+    
     LvelCmdPrev = LvelCmd;
     RvelCmdPrev = RvelCmd;
 
