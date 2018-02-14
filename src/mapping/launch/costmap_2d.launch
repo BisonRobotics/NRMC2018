@@ -1,0 +1,7 @@
+<launch>
+  <rosparam file="$(find mapping)/yaml/minimal.yaml" command="load" ns="/costmap_2d_node/costmap"/>
+ <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find imperio)/data/costmap.yaml"/>
+ --> <node name="costmap_2d_node" pkg="mapping" type="costmap_2d_node"/>
+  <include file="$(find mapping)/launch/tf_pubs.launch"/>
+
+</launch>

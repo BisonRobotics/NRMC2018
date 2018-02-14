@@ -56,6 +56,7 @@
   <build_depend>roscpp</build_depend>
   <build_depend>openni2_launch</build_depend>
   <build_depend>gmapping</build_depend>
+  <build_depend>costmap_2d</build_depend>
   <build_export_depend>depth_image_proc</build_export_depend>
   <build_export_depend>hector_mapping</build_export_depend>
   <build_export_depend>nav_msgs</build_export_depend>
@@ -71,6 +72,7 @@
   <exec_depend>realsense_ros_camera</exec_depend>
   <exec_depend>openni2_launch</exec_depend>
   <exec_depend>gmapping</exec_depend>
+  <exec_depend>costmap_2d</exec_depend>
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->
