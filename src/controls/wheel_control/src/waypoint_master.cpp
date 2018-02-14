@@ -38,6 +38,7 @@
 #include <sensor_msgs/JointState.h>
 
 #include <visualization_msgs/Marker.h>
+#include <imperio/DriveStatus.h>
 
 #ifndef SIMULATING
 #error You must define a value (1/0) for SIMULATING
@@ -203,11 +204,12 @@ int main(int argc, char **argv)
 
   LocalizerInterface::stateVector stateVector;
   ros::Subscriber haltsub = node.subscribe("halt", 100, haltCallback);
-  ros::Publisher mode_pub = node.advertise<std_msgs::String>("drive_controller_status", 1000);
+  ros::Publisher mode_pub = node.advertise<imperio::DriveStatus>("drive_controller_status", 1000);
   ros::Publisher path_marker_pub = node.advertise<visualization_msgs::Marker>("waypoint_path", 10000);
   ros::Publisher wholeQueue_pub = node.advertise<visualization_msgs::Marker>("whole_queue", 100);
-
+  imperio::DriveStatus status_msg;
   visualization_msgs::Marker line_strip;
+    status_msg.header.seq = 0;
   line_strip.action = visualization_msgs::Marker::ADD;
   line_strip.pose.orientation.w = 1;
   line_strip.type = visualization_msgs::Marker::LINE_STRIP;
@@ -257,13 +259,7 @@ int main(int argc, char **argv)
     ros::spinOnce();
     rate.sleep();
   }
-  // populate currPose from localization data
-  /*  currPose.x = transformStamped.transform.translation.x; //-1.0f * transform.getOrigin().x();
-    currPose.y = transformStamped.transform.translation.y; //-1.0f * transform.getOrigin().y();
-    tf2::Quaternion tempQuat(transformStamped.transform.rotation.x, transformStamped.transform.rotation.y,
-                        transformStamped.transform.rotation.z, transformStamped.transform.rotation.w);
-    currPose.theta = tempQuat.getAngle() - M_PI;//-transform.getRotation().getAngle();
-  */
+
   // initialize waypoint controller
   WaypointController wc =
       WaypointController(ROBOT_AXLE_LENGTH, ROBOT_MAX_SPEED, currPose, fl, fr, br, bl, 1.0 / UPDATE_RATE_HZ,
@@ -330,10 +326,11 @@ int main(int argc, char **argv)
     jsMessage.velocity[2] = br->getLinearVelocity();
     jsMessage.velocity[3] = bl->getLinearVelocity();
 
-      ROS_INFO ("FrontLeftVel : %.4f", jsMessage.velocity[0] );
-      ROS_INFO ("FrontRightVel : %.4f", jsMessage.velocity[1]);
-      ROS_INFO ("BackRightVel : %.4f", jsMessage.velocity[2]);
-      ROS_INFO ("BackLeftVel : %.4f", jsMessage.velocity[3]);
+    ROS_INFO ("FrontLeftVel : %.4f", jsMessage.velocity[0] );
+    ROS_INFO ("FrontRightVel : %.4f", jsMessage.velocity[1]);
+    ROS_INFO ("BackRightVel : %.4f", jsMessage.velocity[2]);
+    ROS_INFO ("BackLeftVel : %.4f", jsMessage.velocity[3]);
+
     if (newWaypointHere)
     {
       waypoint_set = wc.addWaypoint(newWaypoint, currPose);
@@ -347,9 +344,11 @@ int main(int argc, char **argv)
       }
       path_marker_pub.publish(line_strip);
       newWaypointHere = false;
-        ROS_INFO ("NewWaypoint : 1");
-    } else {
-        ROS_INFO ("NewWaypoint : 0");
+      ROS_INFO ("NewWaypoint : 1");
+    }
+    else
+    {
+      ROS_INFO ("NewWaypoint : 0");
     }
 
     // update controller
@@ -360,31 +359,40 @@ int main(int argc, char **argv)
     // TODO
     // check if we are stuck by comparing commanded velocity to actual
     // maybe integrate error with some decay
-
+    status_msg.has_reached_goal.data = 0;
+      status_msg.in_motion.data = 0;
+      status_msg.cannot_plan_path.data = 0;
+      status_msg.is_stuck.data = 0;
+      status_msg.header.stamp = ros::Time::now ();
+      status_msg.header.seq++;
     // print status also post to topic /drive_controller_status
     if (wcStat == WaypointController::Status::OFFPATH)
     {
       ROS_WARN("Mode : -1");
       ss << "Mode : OFFPATH";
+        status_msg.cannot_plan_path.data = 0;
     }
     if (wcStat == WaypointController::Status::OVERSHOT)
     {
       ROS_WARN("Mode : 0");
       ss << "Mode : OVERSHOT";
+       status_msg.in_motion.data = 1;
     }
     else if (wcStat == WaypointController::Status::ALLGOOD)
     {
       ROS_INFO("Mode : 1");
       ss << "Mode: Good";
+        status_msg.in_motion.data = 1;
     }
     else if (wcStat == WaypointController::Status::GOALREACHED)
     {
       ROS_INFO("Mode : 2");
       wc.haltAndAbort();
       ss << "Mode: Chillin";
+        status_msg.has_reached_goal.data = 1;
     }
-    msg.data = ss.str();
-    mode_pub.publish(msg);
+    mode_pub.publish(status_msg);
+
     // print some info
     navigationQueue = wc.getNavigationQueue();
     theCPP = wc.getCPP();
