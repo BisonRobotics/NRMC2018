@@ -64,7 +64,7 @@ class RRT():
             newNode.y += self.expandDis * math.sin(theta)
             newNode.parent = nind
 
-            if not self.collision_check(newNode, self.map):
+            if not collision_check(newNode, self.map):
                 continue
 
             self.nodeList.append(newNode)
@@ -91,26 +91,6 @@ class RRT():
                  ** 2 for node in nodeList]
         minind = dlist.index(min(dlist))
         return minind
-
-    def collision_check(self, node, map):
-        threshold = .7
-        #convert the node to a space in the cell
-        row, col = map.cell_index(node.x, node.y)
-
-        #check that space is in bounds of map
-        row_max = map.height - 1
-        col_max = map.width - 1
-        if row > row_max or col > col_max:
-            print(row, col)
-            print("out of bounds")
-            return False
-
-        #check that there isn't anything in that grid space
-        #TODO : the current testing settup are inverted occupancy grids, check on ones coming from robot
-        if map.grid[row][col] > threshold:
-            return True
-        else:
-            return False
 
 class Node():
     """
@@ -154,32 +134,54 @@ def get_target_point(path, targetL):
 
     return [x, y, ti]
 
+def collision_check(node, map):
+    threshold = .7
+    #convert the node to a space in the cell
+    row, col = map.cell_index(node.x, node.y)
 
-def line_collision_check(first, second, obstacleList):
+    #check that space is in bounds of map
+    row_max = map.height - 1
+    col_max = map.width - 1
+    if row > row_max or col > col_max:
+        print(row, col)
+        print("out of bounds")
+        return False
+
+    #check that there isn't anything in that grid space
+    #TODO : the current testing settup are inverted occupancy grids, check on ones coming from robot
+    if map.grid[row][col] > threshold:
+        return True
+    else:
+        return False
+
+
+def line_collision_check(first, second, map):
     # Line Equation
-    #TODO : Make this work with obstacles
-    return True
+
+    check = .1
 
     x1 = first[0]
     y1 = first[1]
     x2 = second[0]
     y2 = second[1]
 
-    try:
-        a = y2 - y1
-        b = -(x2 - x1)
-        c = y2 * (x2 - x1) - x2 * (y2 - y1)
-    except ZeroDivisionError:
-        return False
+    total_distance = math.sqrt((x2-x1)**2 + (y2-y1)**2)
+    check_distance = check
 
-    for (ox, oy, size) in obstacleList:
-        d = abs(a * ox + b * oy + c) / (math.sqrt(a * a + b * b))
-        if d <= (size):
+    while check_distance < total_distance:
+        ratio = check_distance/total_distance
+
+        x_check = ((1 - ratio)*x1 + ratio * x2)
+        y_check = ((1 - ratio)*y1 + ratio * y2)
+
+        if collision_check(Node(x_check, y_check), map) == False:
+            print("line collision check obstacle")
             return False
+        check_distance += check
 
-    #  print("OK")
+    return True
 
-    return True  # OK
+
 
 def path_smoothing(path, maxIter, obstacleList):
     #  print("PathSmoothing")
@@ -233,11 +235,10 @@ def path_planning(start, goal, map):
     path = rrt.planning()
     draw_tree(path, map)
 
-    """ Save for further testing
-    
     smooth_path = path_smoothing(path, 1000, map)
-    #draw_tree(smooth_path, map)
+    draw_tree(smooth_path, map)
 
+    """ Save for further testing
     #Testing the BSpline
     xlist = []
     ylist = []
@@ -262,8 +263,8 @@ def path_planning(start, goal, map):
     draw_tree(comb, map)
     """
 
-    path.reverse()
-    return path
+    smooth_path.reverse()
+    return smooth_path
 
 
 def draw_tree(waypoints, map):
