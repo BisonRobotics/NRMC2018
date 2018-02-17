@@ -22,6 +22,8 @@ public:
   double getY();
   double getTheta();
 
+  LocalizerInterface::stateVector getStates();
+
 private:
   SimVesc *fl;
   SimVesc *fr;
