@@ -16,7 +16,7 @@ int main(int argc, char** argv)
 
   geometry_msgs::Pose2D wp1;
   wp1.x = 2;
-  wp1.y = 0;
+  wp1.y = 1;
   wp1.theta = 0;
   geometry_msgs::Pose2D wp2;
   wp2.x = 4;
@@ -28,7 +28,7 @@ int main(int argc, char** argv)
 
   wpmsg.pose_array = waypoints;
 
-  double xcounter = 5;
+  double xcounter = 3;
 
   while (ros::ok())
   {

@@ -22,7 +22,7 @@ int main(int argc, char** argv)
 
   geometry_msgs::Pose2D wpmsg;
 
-  ros::Rate rate(5.0);
+  ros::Rate rate(10.0);
 
   while (ros::ok())
   {
@@ -35,11 +35,16 @@ int main(int argc, char** argv)
         wpmsg.theta = wp.theta;
 
         pub.publish(wpmsg);
+
+        ros::spinOnce();
+        rate.sleep();
       }
       waypoints.clear();
     }
-
-    ros::spinOnce();
-    rate.sleep();
+    else
+    {
+       ros::spinOnce();
+       rate.sleep();
+    }
   }
 }
