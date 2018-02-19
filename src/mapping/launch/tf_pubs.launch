@@ -1,8 +1,5 @@
 <launch>
-  <node name="blc" pkg="tf" type="static_transform_publisher" args="0.5 0 0 0 0 0 /base_link /camera_link 100"/>
-  <node name="ccd" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /camera_link /camera_depth_frame 100"/>
-  <node name="cdof" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /camera_link /camera_depth_optical_frame 100"/>
-  <node name="crf" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /camera_link /camera_rgb_frame 100"/>
-  <node name="crof" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /camera_link /camera_rgb_optical_frame 100"/>
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find realsense_ros_camera)/urdf/test_zr300_camera.urdf.xacro'" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
   <node name="tf_repub" pkg="mapping" type="transforms_publisher"/>
 </launch>
