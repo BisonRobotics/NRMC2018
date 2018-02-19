@@ -1,0 +1,5 @@
+<launch>
+    <include file="$(find mapping)/launch/costmap_2d.launch"/>
+    <include file="$(find mapping)/launch/spoof_bl.launch"/>
+    <include file="$(find mapping)/launch/tf_pubs.launch"/>
+</launch>
