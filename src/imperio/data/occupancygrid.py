@@ -86,18 +86,19 @@ if len (sys.argv) == 4:
         pixels_per_meter = 1.0/resolution
     except ValueError:
         print ("parameter one was not a float")
+        quit ()
 
     try:
         file_name = sys.argv[2]
     except:
         print ("Error in argument 2: filename")
-
+        quit ()
     try:
       seed = long (sys.argv[3])
       random.seed (seed)
     except:
       print ("error in argument 4: seed")
-
+      quit ()
     height_in_pixels = int(pixels_per_meter * arena_height_in_meters)
     width_in_pixels = int(pixels_per_meter * arena_width_in_meters)
     obstacle_start_in_pixels = int(start_height * pixels_per_meter)
