@@ -20,7 +20,7 @@ obstacle_layer:
     static_map: false
     rolling_window: false
     observation_persistence: 0.0
-    obstacle_range: 7.0
+    obstacle_range: 5.0
     min_obstacle_height: .1
     max_obstacle_height: .3
 
