@@ -256,3 +256,6 @@ TSWLatexianTemp*
 *.s#?
 *.b#?
 *.l#?
+
+# auto generated bmp files
+src/imperio/data/*bmp
