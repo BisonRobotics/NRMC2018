@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib
   std_msgs
   vesc_access 
-  localization
+  #localization
   geometry_msgs
   visualization_msgs
   new_sim
