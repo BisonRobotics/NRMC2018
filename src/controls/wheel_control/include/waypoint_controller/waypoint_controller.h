@@ -7,23 +7,24 @@
 #include <waypoint_controller/pose.h>
 #include <waypoint_controller/maneuver.h>
 #include <waypoint_controller/waypoint_with_maneuvers.h>
+#include <localizer/localizer_interface.h>
 
 #define _USE_MATH_DEFINES
 #include <cmath>
 #define DT_THAT_SHALL_BE_USED .02
+#define EPFISIZE 100
+#define EPFI2SIZE 100
 
 namespace WaypointControllerNs {
     typedef struct waypointGains_s {
-        double eplpgain;
-        double eplpalpha;
         double eppgain;
         double epdgain;
         double etpgain;
         double etdgain;
         double epplpgain;
         double etplpgain;
-        double wheelspeedgain;
         double wheelalpha;
+        double wheelerrorgain;
     }waypointControllerGains;
 
 
@@ -31,16 +32,14 @@ namespace WaypointControllerNs {
 
  static constexpr WaypointControllerNs::waypointControllerGains waypoint_default_gains = {
         /*DNFW*/
-        .eplpgain = 0.0,
-        .eplpalpha = 0,//2 * M_PI * DT_THAT_SHALL_BE_USED * .00008 / (2 * M_PI * DT_THAT_SHALL_BE_USED * .00008 + 1),
         .eppgain = 30,
         .epdgain= -10,//.55,
         .etpgain = 60,
         .etdgain = -25,//.8,
         .epplpgain = 2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 / (2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 + 1),
         .etplpgain = 2 * M_PI * DT_THAT_SHALL_BE_USED* .1608 / (2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 + 1),
-        .wheelspeedgain  = 0,
-        .wheelalpha = .5
+        .wheelalpha = .1,
+        .wheelerrorgain = 10
         /*DNFW*/
 };
 
@@ -64,7 +63,7 @@ public:
   WaypointController(double axelLength, double maxSafeSpeed, pose initialPose, iVescAccess *fl, iVescAccess *fr,
                      iVescAccess *br, iVescAccess *bl, double gaurenteedDt, WaypointControllerNs::waypointControllerGains gains);
   std::vector<std::pair<double, double> > addWaypoint(pose waypoint, pose currRobotPose);
-  Status update(pose robotPose, double dt);
+  Status update(LocalizerInterface::stateVector stateVector, double dt);
   std::vector<waypointWithManeuvers> getNavigationQueue();  // DEBUG
   pose getCPP();                                            // DEBUG
   unsigned int getCurrManeuverIndex();                      // DEBUG
@@ -79,22 +78,24 @@ public:
   void clearControlStates();
 
 private:
-  void modifyNavQueue2RecoverFromPathError(pose RobotPose, pose theCPP);
+  void modifyNavQueue2RecoverFromPathError(pose RobotPose, pose manEnd);
   void modifyNavQueue2RecoverFromGoalOvershoot();
   void halt();
   std::vector<waypointWithManeuvers> navigationQueue;
   iVescAccess *front_left_wheel, *front_right_wheel, *back_right_wheel, *back_left_wheel;
   double axelLen, maxSpeed;
-  double EPpGain, EPdGain, ETpGain, ETdGain, EPpLowPassGain, ETpLowPassGain, EPlpGain,
-      EPlpAlpha;  // path and theta error gains
-  double EPpLowPass, EPpLowPassPrev, ETpLowPass, ETpLowPassPrev, EPpDerivFiltEst, ETpDerivFiltEst, EPLowerPass,
-      EPLowerPassPrev;
+  double EPpGain, EPdGain, ETpGain, ETdGain, EPpLowPassGain, ETpLowPassGain; // path and theta error gains
+  double EPpLowPass, EPpLowPassPrev, ETpLowPass, ETpLowPassPrev, EPpDerivFiltEst, ETpDerivFiltEst;
   double EPpEst, ETpEst;
-  double WheelSpeedPGain;
+
+  //TODO replace gains with a gains struct
   double LvelCmd, RvelCmd;
   double LvelCmdPrev, RvelCmdPrev;
   double WheelAlpha;
+  double WheelErrorGain;
+  double LWheelError, RWheelError;
   double LeftWheelSetSpeed, RightWheelSetSpeed;
+
   unsigned int currManeuverIndex;
   bool doingManeuver;
 

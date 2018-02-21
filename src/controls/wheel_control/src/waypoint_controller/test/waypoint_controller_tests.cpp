@@ -26,14 +26,17 @@ TEST(WaypointControllerTests, instantiateAndAddWaypointReturnsPoints)
 
 TEST(WaypointControllerTests, updateReturnsAStatus)
 {
-  NiceMock<MockVescAccess> br;
-  NiceMock<MockVescAccess> bl;
-  NiceMock<MockVescAccess> fr;
-  NiceMock<MockVescAccess> fl;
+  SimRobot sim(.5f, 0, 0, 0, 16);
+
+  iVescAccess *fl = (sim.getFLVesc());
+  iVescAccess *fr = (sim.getFRVesc());
+  iVescAccess *br = (sim.getBRVesc());
+  iVescAccess *bl = (sim.getBLVesc());
+
   pose wcInitial = {.x = 0, .y = 0, .theta = 0 };
-  pose theWay = {.x = 3, .y = 1, .theta = M_PI_2 };
-  WaypointController wc = WaypointController(.5f, .5f, wcInitial, &fl, &fr, &br, &bl, .02, waypoint_default_gains);
-  WaypointController::Status returnStatus = wc.update(wcInitial, .01);
+  pose theWay = {.x = 3, .y = 0, .theta = 0 };
+  WaypointController wc = WaypointController(.5f, .5f, wcInitial, fl, fr, br, bl, .01, waypoint_default_gains);
+  WaypointController::Status returnStatus = wc.update(sim.getStates(), .01);
 
   EXPECT_TRUE(returnStatus == WaypointController::Status::ALLGOOD ||
               returnStatus == WaypointController::Status::GOALREACHED ||
@@ -68,7 +71,7 @@ TEST(WaypointControllerTests, ableToAddWaypoint_FrontThenRight)
     currPose.x = sim.getX();
     currPose.y = sim.getY();
     currPose.theta = sim.getTheta();
-    wc.update(currPose, .01);
+    wc.update(sim.getStates(), .01);
     sim.update(.01);
     ASSERT_NEAR(wc.getETpEstimate(), 0, 4) << "loop index: " << loop << "\nSim Robot Pose:\n"
                                            << "X: " << sim.getX() << "\nY: " << sim.getY() << "\nTh: " << sim.getTheta()
@@ -100,7 +103,7 @@ TEST(WaypointControllerTests, ableToAddWaypoint_BackAndLeft2Turn)
     currPose.x = sim.getX();
     currPose.y = sim.getY();
     currPose.theta = sim.getTheta();
-    wc.update(currPose, .01);
+    wc.update(sim.getStates(), .01);
     sim.update(.01);
     ASSERT_NEAR(wc.getETpEstimate(), 0, 4) << "loop index: " << loop << "\nSim Robot Pose:\n"
                                            << "X: " << sim.getX() << "\nY: " << sim.getY() << "\nTh: " << sim.getTheta()

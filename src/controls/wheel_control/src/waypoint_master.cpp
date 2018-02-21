@@ -13,7 +13,7 @@
 // after iterating through the available waypoints, either choose the
 // furthest valid one (could just pick the first one that works)
 
-#define SIMULATING 0
+#define SIMULATING 1
 // one for simulating, 0 for real deal
 
 #include <ros/ros.h>
@@ -62,37 +62,18 @@ bool halt = false;
 
 void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 {
-  // this callback will flag that there is a new waypoint if there are no future
-  // or current maneuvers. If thera are future maneuvers then
-  // this callback will quick check to see if the new waypoint will generate a
-  // better manuever than the current planned maneuvers.
-  // better is defined as X distance travelled per maneuver distance
+  //if (newWaypointHere ==false) //only take new data if ready
+  //{
+      pose potentialWaypoint;
+      potentialWaypoint.x = msg->x;
+      potentialWaypoint.y = msg->y;
+      potentialWaypoint.theta = msg->theta;
 
-  // when checking potential maneuvers against the costmap, if a
-  // maneuver would violate the costmap, it is replaced with a caveman maneuver.
-  // a caveman maneuver (turn in place, go fwd, turn in place) is guarenteed safe.
+      newWaypoint.x = msg->x;
+      newWaypoint.y = msg->y;
+      newWaypoint.theta = msg->theta;
+  //}
 
-  // will need waypoint_controlelr_helper waypoint to maneuvers
-  // get future goodness
-  // dump future maneuvers
-  // get terminal pose of current maneuver
-
-  // if no future maneuvers, add this one
-  // else
-  // get terminal pose of current maneuver
-  // waypoint to maneuvers of terminal pose and potential waypoint
-  // get goodness of this maneuver
-  // compare the goodnesses
-  // either keep the current plan or dump it and switch to the new one
-
-  pose potentialWaypoint;
-  potentialWaypoint.x = msg->x;
-  potentialWaypoint.y = msg->y;
-  potentialWaypoint.theta = msg->theta;
-
-  newWaypoint.x = msg->x;
-  newWaypoint.y = msg->y;
-  newWaypoint.theta = msg->theta;
   newWaypointHere = true;
 }
 
@@ -147,7 +128,7 @@ int main(int argc, char **argv)
 
   ros::NodeHandle node;
 
-  ros::Subscriber sub = node.subscribe("additional_waypoint", 1, newGoalCallback);
+  ros::Subscriber sub = node.subscribe("additional_waypoint", 100, newGoalCallback);
   ros::Publisher jspub = node.advertise<sensor_msgs::JointState>("wheel_joints", 500);
   sensor_msgs::JointState jsMessage;
   jsMessage.name.push_back("front_left");
@@ -275,15 +256,13 @@ int main(int argc, char **argv)
     ROS_INFO ("Yaccelgain : %.4f", SuperLocalizer_default_gains.y_accel);
     ROS_INFO ("Alphagain : %.4f", SuperLocalizer_default_gains.alpha);
 
-    ROS_INFO ("eplpgain : %.4f", waypoint_default_gains.eplpgain);
-    ROS_INFO ("eplpalpha : %.4f", waypoint_default_gains.eplpalpha);
     ROS_INFO ("eppgain : %.4f", waypoint_default_gains.eppgain);
     ROS_INFO ("epdgain : %.4f", waypoint_default_gains.epdgain);
     ROS_INFO ("etpgain : %.4f", waypoint_default_gains.etpgain);
     ROS_INFO ("etdgain : %.4f", waypoint_default_gains.etdgain);
     ROS_INFO ("epplpgain : %.4f", waypoint_default_gains.epplpgain);
     ROS_INFO ("etplpgain : %.4f", waypoint_default_gains.etplpgain);
-    ROS_INFO ("wheelspeedgain : %.4f", waypoint_default_gains.wheelspeedgain);
+    ROS_INFO ("wheelalpha : %.4f", waypoint_default_gains.wheelalpha);
   WaypointController::Status wcStat;
   std_msgs::String msg;
   std::stringstream ss;
@@ -321,6 +300,13 @@ int main(int argc, char **argv)
     currPose.x = stateVector.x_pos;
     currPose.y = stateVector.y_pos;
     currPose.theta = stateVector.theta;
+    //can we infer effective wheel velocities (the velocity of the wheel if we were moving
+    //                                         how we are, but no slip)
+    //need to estimate speed and turn radius
+    //speed is easy, just norm of velocities
+    //turn radius...  ddistance / dtheta?
+    //turn radius =  speed*dt / alpha * dt ;  //do we want to average this? over a second maybe?
+    //also be sure to clamp radius at something (1000)
     jsMessage.velocity[0] = fl->getLinearVelocity();
     jsMessage.velocity[1] = fr->getLinearVelocity();
     jsMessage.velocity[2] = br->getLinearVelocity();
@@ -354,7 +340,7 @@ int main(int argc, char **argv)
     // update controller
 
 
-    wcStat = wc.update(currPose, loopTime.toSec());
+    wcStat = wc.update(stateVector, loopTime.toSec());
 
     // TODO
     // check if we are stuck by comparing commanded velocity to actual

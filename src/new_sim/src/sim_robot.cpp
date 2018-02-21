@@ -87,3 +87,8 @@ double SimRobot::getTheta()
 {
   return deadReck->getStateVector().theta;
 }
+
+LocalizerInterface::stateVector SimRobot::getStates()
+{
+    return deadReck->getStateVector();
+}
