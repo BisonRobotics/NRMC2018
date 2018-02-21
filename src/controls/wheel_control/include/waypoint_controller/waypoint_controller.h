@@ -12,8 +12,6 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #define DT_THAT_SHALL_BE_USED .02
-#define EPFISIZE 100
-#define EPFI2SIZE 100
 
 namespace WaypointControllerNs {
     typedef struct waypointGains_s {
