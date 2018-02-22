@@ -12,6 +12,6 @@ class OutriggerController
   bool isDeployed();
   bool isRetracted();
 private:
-  bool isDeployed, isRetracted;
+  bool deployed, retracted;
   iVescAccess *l, *r;
-}
+};

@@ -5,13 +5,13 @@ OutriggerController::OutriggerController(iVescAccess *lVesc, iVescAccess *rVesc)
   l = lVesc;
   r = rVesc;
 
-  isDeployed =false;
-  isRetracted = true;
+  deployed =false;
+  retracted = true;
 }
 
 void OutriggerController::deploy()
 {
-  isRetracted = false;
+  retracted = false;
   //TODO replace with real values
   l->setLinearVelocity(.5);
   r->setLinearVelocity(.5);
@@ -19,13 +19,13 @@ void OutriggerController::deploy()
 
 void OutriggerController::retract()
 {
-  isDeployed = false;
+  deployed = false;
   //TODO replace with real values
   l->setLinearVelocity(-.5);
   r->setLinearVelocity(-.5);
 }
 
-void OutriggerController::update(double dt);
+void OutriggerController::update(double dt)
 {
   //TODO poll vescs for limit switch status/feedback here
   //update is deployed/retracted status
@@ -33,10 +33,10 @@ void OutriggerController::update(double dt);
 
 bool OutriggerController::isDeployed()
 {
-  return isDeployed;
+  return deployed;
 }
 
 bool OutriggerController::isRetracted()
 {
-  return isRetracted;
+  return retracted;
 }

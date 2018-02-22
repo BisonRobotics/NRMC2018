@@ -50,6 +50,8 @@ include_directories(${new_sim_INCLUDE_DIRS})
 ## Declare a C++ library
 
 add_library(backhoe_controller_lib src/backhoe_controller/backhoe_controller.cpp)
+add_library(outrigger_controller_lib src/outrigger_controller/outrigger_controller.cpp)
+add_library(bucket_controller_lib src/bucket_controller/bucket_controller.cpp)
 
 #add_executable(central_drive_server src/central_drive_server.cpp)
 
