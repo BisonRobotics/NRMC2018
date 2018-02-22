@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>backhoe_control</name>
+  <name>dig_control</name>
   <version>0.0.0</version>
-  <description>The backhoe_control package</description>
+  <description>The dig_control package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

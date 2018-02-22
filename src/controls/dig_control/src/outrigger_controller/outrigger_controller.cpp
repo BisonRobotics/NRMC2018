@@ -29,6 +29,17 @@ void OutriggerController::update(double dt)
 {
   //TODO poll vescs for limit switch status/feedback here
   //update is deployed/retracted status
+  if (l->getLimitSwitchState() == nsVescAccess::limitSwitchState::bottomOfMotion
+     && r->getLimitSwitchState() == nsVescAccess::limitSwitchState::bottomOfMotion)
+  {
+      deployed = true;
+  }
+  else if (l->getLimitSwitchState() == nsVescAccess::limitSwitchState::topOfMotion
+     && r->getLimitSwitchState() == nsVescAccess::limitSwitchState::topOfMotion)
+  {
+      retracted = true;
+  }
+
 }
 
 bool OutriggerController::isDeployed()

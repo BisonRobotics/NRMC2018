@@ -1,0 +1,3 @@
+<launch>
+  <node name="the_hoe_master" pkg="dig_control" type="hoe_master" />
+</launch>

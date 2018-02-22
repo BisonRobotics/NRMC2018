@@ -54,6 +54,7 @@ int main(int argc, char **argv)
 
 #endif
 
+    outriggerC.update(.02);
     if (outriggerC.isRetracted())
     {
         ROS_INFO("DEPLOYING");
@@ -64,6 +65,14 @@ int main(int argc, char **argv)
         ROS_INFO("RETRACTING");
         outriggerC.retract();
     }
+
+#if SIMULATING_DIGGING == 1
+    ROS_INFO("OUTRIGGERS AT: %f", outriggers.getPosL());
+    ROS_INFO("OUTRIGGERS AT: %f", outriggers.getPosR());
+
+    ROS_INFO("LIMIT AT %d", (int)outriggerRightVesc->getLimitSwitchState());
+    ROS_INFO("LIMIT AT %d", (int)outriggerLeftVesc->getLimitSwitchState());
+#endif
 
     ros::spinOnce();
     rate.sleep();
