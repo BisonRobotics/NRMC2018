@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   pluginlib
   genmsg 
   actionlib_msgs 
+  message_generation
   actionlib
   std_msgs
   vesc_access 
@@ -23,9 +24,22 @@ link_directories (
 /usr/src/gmock/build
 )
 
+## Generate actions in the 'action' folder
+add_action_files(
+   DIRECTORY action
+   FILES central_drive.action
+ )
+
+## Generate added messages and services with any dependencies listed here
+generate_messages(
+   DEPENDENCIES
+   actionlib_msgs   std_msgs
+ )
+
+
 catkin_package(
     INCLUDE_DIRS include
-    CATKIN_DEPENDS roscpp 
+    CATKIN_DEPENDS roscpp actionlib actionlib_msgs message_generation rospy std_msgs
     #DEPENDS EIGEN3
 )
 
@@ -36,6 +50,31 @@ include_directories(${new_sim_INCLUDE_DIRS})
 ## Declare a C++ library
 
 add_library(backhoe_controller_lib src/backhoe_controller/backhoe_controller.cpp)
+
+add_executable(central_drive_server src/central_drive_server.cpp)
+
+target_link_libraries(
+  central_drive_server
+  ${catkin_LIBRARIES}
+)
+
+add_dependencies(
+  central_drive_server
+  ${backhoe_control_EXPORTED_TARGETS}
+)
+
+add_executable(central_drive_client src/central_drive_client.cpp)
+
+target_link_libraries(
+  central_drive_client
+  ${catkin_LIBRARIES}
+)
+
+add_dependencies(
+  central_drive_client
+  ${backhoe_control_EXPORTED_TARGETS}
+)
+
 
 ## Tests
 
