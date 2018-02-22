@@ -10,7 +10,7 @@ public:
   float getTorque(void) override;
 
   void update(double dt);  // use gain in PI loop to bring velocity to set vel
-
+  nsVescAccess::limitSwitchState getLimitSwitchState (void);
 private:
   float vel;
   float setVel;

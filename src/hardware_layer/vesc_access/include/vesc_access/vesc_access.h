@@ -23,7 +23,7 @@ public:
   float getTorqueLimit(void);
   float getTorque(void);
   float getLinearVelocity(void);
-
+  nsVescAccess::limitSwitchState getLimitSwitchState (void);
 private:
   void setTorqueLimit(float newtown_meters);
   void setLinearVelocityLimit(float meters_per_second);

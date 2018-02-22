@@ -1,6 +1,6 @@
 plugins: 
-  #- {name: static_map,  type: "costmap_2d::StaticLayer"}
-  - {name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
+  - {name: static_map,  type: "costmap_2d::StaticLayer"}
+  #- {name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
   - {name: inflation, type: "costmap_2d::InflationLayer"}
 publish_frequency: 1.0
 footprint: [[-1.0, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0]]
