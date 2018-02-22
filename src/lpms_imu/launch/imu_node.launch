@@ -1,0 +1,7 @@
+<launch>
+<node name="imu_node" pkg="lpms_imu" type="lpms_imu_node">
+  <param name="clamp_val_x" value=".008"/>
+  <param name="clamp_val_y" value=".008"/>
+  <param name="clamp_val_om" value=".002"/>
+</node>
+</launch>
