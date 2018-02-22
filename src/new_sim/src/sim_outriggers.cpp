@@ -9,6 +9,16 @@ SimOutriggers::SimOutriggers(double initialPosL, double initialPosR)
   posR = initialPosR;
 }
 
+iVescAccess* SimOutriggers::getLVesc()
+{
+    return l;
+}
+
+iVescAccess* SimOutriggers::getRVesc()
+{
+    return r;
+}
+
 void SimOutriggers::update(double dt)
 {
   l->update(dt);
@@ -17,20 +27,20 @@ void SimOutriggers::update(double dt)
   posL += l->getLinearVelocity() *dt;
   posR += r->getLinearVelocity() *dt;
 
-  if (posL < 0) 
+  if (posL < 0)
   {
      posL =0;
      l->setLinearVelocity(0);
      l->setLimitSwitchState(nsVescAccess::limitSwitchState::topOfMotion);
   }
-  else if (posL > .1778) 
+  else if (posL > .1778)
   {
      posL = .1778;
      l->setLinearVelocity(0);
      l->setLimitSwitchState(nsVescAccess::limitSwitchState::bottomOfMotion);
   }
 
-  if (posR < 0) 
+  if (posR < 0)
   {
      posR =0;
      r->setLinearVelocity(0);

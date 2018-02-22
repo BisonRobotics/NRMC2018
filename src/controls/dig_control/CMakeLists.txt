@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.2)
 project(backhoe_control)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
@@ -43,7 +43,7 @@ catkin_package(
     #DEPENDS EIGEN3
 )
 
-include_directories (include ${catkin_INCLUDE_DIRS} )
+include_directories(include ${catkin_INCLUDE_DIRS} )
 include_directories(${GTEST_INCLUDE_DIRS})
 include_directories(${vesc_access_INCLUDE_DIRS})
 include_directories(${new_sim_INCLUDE_DIRS})
@@ -52,6 +52,33 @@ include_directories(${new_sim_INCLUDE_DIRS})
 add_library(backhoe_controller_lib src/backhoe_controller/backhoe_controller.cpp)
 add_library(outrigger_controller_lib src/outrigger_controller/outrigger_controller.cpp)
 add_library(bucket_controller_lib src/bucket_controller/bucket_controller.cpp)
+
+#message(WARNING "$ENV{NRMC_SIM_BUILD}")
+
+if ("$ENV{NRMC_SIM_BUILD}" STREQUAL "TRUE")
+  add_definitions(-DSIMULATING_DIGGING=1)
+  message(WARNING "BUILDING FOR SIMULATED DIGGING")
+elseif("$ENV{NRMC_SIM_BUILD}" STREQUAL "FALSE")
+  add_definitions(-DSIMULATING_DIGGING=0)
+  message(WARNING "BUILDING FOR PHYSICAL DIGGING")
+else ("$ENV{NRMC_SIM_BUILD}" STREQUAL "TRUE")
+  message( FATAL_ERROR "You must define an environment variable {NRMC_SIM_BUILD} as TRUE/FALSE." )
+endif("$ENV{NRMC_SIM_BUILD}" STREQUAL "TRUE")
+
+add_executable(hoe_master src/hoe_master.cpp)
+add_dependencies(hoe_master 
+  backhoe_controller_lib
+  outrigger_controller_lib
+  bucket_controller_lib
+  sim_robot
+)
+target_link_libraries(hoe_master 
+  ${new_sim_LIBRARIES} 
+  ${catkin_LIBRARIES}
+  backhoe_controller_lib
+  outrigger_controller_lib
+  bucket_controller_lib
+)
 
 #add_executable(central_drive_server src/central_drive_server.cpp)
 

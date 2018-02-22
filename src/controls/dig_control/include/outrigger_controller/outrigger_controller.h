@@ -3,6 +3,7 @@
 
 class OutriggerController
 {
+public:
   OutriggerController(iVescAccess *lVesc, iVescAccess *rVesc);
 
   void deploy();
