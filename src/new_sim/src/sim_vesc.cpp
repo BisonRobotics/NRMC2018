@@ -1,6 +1,7 @@
 #include <vesc_access/ivesc_access.h>
 #include "sim_robot/sim_vesc.h"
 #include "sensor_msgs/JointState.h"
+#include "../../hardware_layer/vesc_access/include/vesc_access/ivesc_access.h"
 
 SimVesc::SimVesc(double Pgain, double Igain, double velo_factor)
 {
@@ -42,4 +43,8 @@ float SimVesc::getTorque(void)
 void SimVesc::setTorque(float current)
 {
   // not implemented
+}
+
+nsVescAccess::limitSwitchState SimVesc::getLimitSwitchState (void){
+  return nsVescAccess::limitSwitchState::inTransit;
 }
