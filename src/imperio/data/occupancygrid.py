@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import sys
 import random
-
+import imutils
 
 start_height = 1.5
 obstacle_height = 2.94
@@ -28,7 +28,7 @@ number_of_rocks = 3
 
 max_cost = 255
 
-crater_cost = int(max_cost*.67)
+crater_cost = max_cost
 rock_cost = max_cost
 
 def is_spot_filled (array, radius, x, y):
@@ -157,8 +157,9 @@ if len (sys.argv) == 4:
                     blank_costmap = fill_location(blank_costmap, radius, rock_cost, x_location, y_location)
                     break
     add_walls(blank_costmap, 2,width_in_pixels,height_in_pixels)
-    renormalize_list(blank_costmap, 0, 255)
-    cv2.imwrite (file_name+'.bmp', blank_costmap)
+#    rows, cols = blank_costmap.shape
+    dst = imutils.rotate_bound (blank_costmap, 180)
+    cv2.imwrite (file_name+'.bmp', dst)
 
 
 else:
