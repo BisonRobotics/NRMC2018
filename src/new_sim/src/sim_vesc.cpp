@@ -43,3 +43,7 @@ void SimVesc::setTorque(float current)
 {
   // not implemented
 }
+
+nsVescAccess::limitSwitchState SimVesc::getLimitSwitchState (void){
+  return nsVescAccess::limitSwitchState::inTransit;
+}
