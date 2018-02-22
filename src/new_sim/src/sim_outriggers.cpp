@@ -21,6 +21,7 @@ void SimOutriggers::update(double dt)
   {
      posL =0;
      l->setLinearVelocity(0);
+     //also update simVesc's limit switch return status
   }
   else if (posL > .1778) 
   {
