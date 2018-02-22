@@ -10,6 +10,7 @@ SimVesc::SimVesc(double Pgain, double Igain, double velo_factor)
   setVel = 0;
   errI = 0;
   velocity_factor = velo_factor;
+  limitSwitch = nsVescAccess::limitSwitchState::inTransit;
 }
 
 void SimVesc::update(double dt)
@@ -44,6 +45,11 @@ void SimVesc::setTorque(float current)
   // not implemented
 }
 
+void SimVesc::setLimitSwitchState(nsVescAccess::limitSwitchState state)
+{
+  limitSwitch = state;
+}
+
 nsVescAccess::limitSwitchState SimVesc::getLimitSwitchState (void){
-  return nsVescAccess::limitSwitchState::inTransit;
+  return limitSwitch;
 }

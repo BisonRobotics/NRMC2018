@@ -18,4 +18,5 @@ private:
   double vesc_Pgain;
   double vesc_Igain;
   double velocity_factor;
+  nsVescAccess::limitSwitchState limitSwitch;
 };
