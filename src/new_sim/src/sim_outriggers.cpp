@@ -27,6 +27,9 @@ void SimOutriggers::update(double dt)
   posL += l->getLinearVelocity() *dt;
   posR += r->getLinearVelocity() *dt;
 
+  l->setLimitSwitchState(nsVescAccess::limitSwitchState::inTransit);
+  r->setLimitSwitchState(nsVescAccess::limitSwitchState::inTransit);
+
   if (posL < 0)
   {
      posL =0;

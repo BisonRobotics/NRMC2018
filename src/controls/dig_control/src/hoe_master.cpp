@@ -35,6 +35,8 @@ int main(int argc, char **argv)
   SimOutriggers outriggers( 0, 0);
   iVescAccess *outriggerRightVesc = outriggers.getRVesc();
   iVescAccess *outriggerLeftVesc = outriggers.getLVesc();
+  //SimBucket
+  //SimBackhoe
 
 #else
 //INITIALIZE REAL VESC OBJECTS
@@ -72,6 +74,8 @@ int main(int argc, char **argv)
 
     ROS_INFO("LIMIT AT %d", (int)outriggerRightVesc->getLimitSwitchState());
     ROS_INFO("LIMIT AT %d", (int)outriggerLeftVesc->getLimitSwitchState());
+
+    //TODO publish markers to a topic
 #endif
 
     ros::spinOnce();
