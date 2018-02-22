@@ -51,29 +51,29 @@ include_directories(${new_sim_INCLUDE_DIRS})
 
 add_library(backhoe_controller_lib src/backhoe_controller/backhoe_controller.cpp)
 
-add_executable(central_drive_server src/central_drive_server.cpp)
+#add_executable(central_drive_server src/central_drive_server.cpp)
 
-target_link_libraries(
-  central_drive_server
-  ${catkin_LIBRARIES}
-)
+#target_link_libraries(
+#  central_drive_server
+#  ${catkin_LIBRARIES}
+#)
 
-add_dependencies(
-  central_drive_server
-  ${backhoe_control_EXPORTED_TARGETS}
-)
+#add_dependencies(
+#  central_drive_server
+#  ${backhoe_control_EXPORTED_TARGETS}
+#)
 
-add_executable(central_drive_client src/central_drive_client.cpp)
+#add_executable(central_drive_client src/central_drive_client.cpp)
 
-target_link_libraries(
-  central_drive_client
-  ${catkin_LIBRARIES}
-)
+#target_link_libraries(
+#  central_drive_client
+#  ${catkin_LIBRARIES}
+#)
 
-add_dependencies(
-  central_drive_client
-  ${backhoe_control_EXPORTED_TARGETS}
-)
+#add_dependencies(
+#  central_drive_client
+#  ${backhoe_control_EXPORTED_TARGETS}
+#)
 
 
 ## Tests
