@@ -11,7 +11,7 @@ public:
   MOCK_METHOD1(setTorque, void(float newton_meters));
   MOCK_METHOD0(getLinearVelocity, float(void));
   MOCK_METHOD0(getTorque, float(void));
-    MOCK_METHOD0 (getLimitSwitchState, nsVescAccess::limitSwitchState(void));
+  MOCK_METHOD0 (getLimitSwitchState, nsVescAccess::limitSwitchState(void));
 };
 
 #endif
