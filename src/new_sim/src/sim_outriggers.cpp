@@ -21,23 +21,26 @@ void SimOutriggers::update(double dt)
   {
      posL =0;
      l->setLinearVelocity(0);
-     //also update simVesc's limit switch return status
+     l->setLimitSwitchState(nsVescAccess::limitSwitchState::topOfMotion);
   }
   else if (posL > .1778) 
   {
-       posL = .1778;
-       l->setLinearVelocity(0);
+     posL = .1778;
+     l->setLinearVelocity(0);
+     l->setLimitSwitchState(nsVescAccess::limitSwitchState::bottomOfMotion);
   }
 
   if (posR < 0) 
   {
      posR =0;
      r->setLinearVelocity(0);
+     r->setLimitSwitchState(nsVescAccess::limitSwitchState::topOfMotion);
   }
   else if (posR > .1778)
   {
       posR = .1778;
       r->setLinearVelocity(0);
+      r->setLimitSwitchState(nsVescAccess::limitSwitchState::bottomOfMotion);
   }
 }
 

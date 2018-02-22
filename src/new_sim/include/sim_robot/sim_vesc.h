@@ -11,6 +11,7 @@ public:
 
   void update(double dt);  // use gain in PI loop to bring velocity to set vel
   nsVescAccess::limitSwitchState getLimitSwitchState (void);
+  void setLimitSwitchState (nsVescAccess::limitSwitchState state);
 private:
   float vel;
   float setVel;
