@@ -1,47 +1,35 @@
 #include <backhoe_controller/backhoe_controller.h>
 #include <bucket_controller/bucket_controller.h>
 #include <outrigger_controller/outrigger_controller.h>
-
-
-//#define SIMULATING_DIGGING 1
-
 #include <ros/ros.h>
-
-#include <vesc_access/ivesc_access.h>
 #include <vesc_access/vesc_access.h>
-
 //TODO backhoe params
-
 #include <visualization_msgs/Marker.h>
-
-#ifndef SIMULATING_DIGGING
-#error You must define a value (1/0) for SIMULATING_DIGGING
-#endif
-
-#if SIMULATING_DIGGING == 1
 #include <sim_robot/sim_outriggers.h>
-
-#else
-#error Who do you think you are?
-#endif
 
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "the_backhoe_master");
 
-  ros::NodeHandle node;
+  ros::NodeHandle node  ("~");
+    bool simulating;
+    if(!node.param("simulating_digging", simulating, true)){
+        ROS_WARN ("simulating_digging was not found, assumed simulating");
+    }
 
-#if SIMULATING_DIGGING == 1
-  SimOutriggers outriggers( 0, 0);
-  iVescAccess *outriggerRightVesc = outriggers.getRVesc();
-  iVescAccess *outriggerLeftVesc = outriggers.getLVesc();
-  //SimBucket
-  //SimBackhoe
+    iVescAccess *outriggerRightVesc;
+    iVescAccess *outriggerLeftVesc;
 
-#else
-//INITIALIZE REAL VESC OBJECTS
-
-#endif
+    SimOutriggers outriggers(0, 0);
+    if (simulating) {
+        outriggerRightVesc = outriggers.getRVesc();
+        outriggerLeftVesc = outriggers.getLVesc();
+        //SimBucket
+        //SimBackhoe
+    } else {
+        ROS_WARN ("No good option for failure");
+        return -1;
+    }
 
   OutriggerController outriggerC(outriggerLeftVesc, outriggerRightVesc);
 
@@ -50,11 +38,10 @@ int main(int argc, char **argv)
 
   while (ros::ok())
   {
-#if SIMULATING_DIGGING == 1
-    outriggers.update(.02);
-    //update marker too
-
-#endif
+    if (simulating) {
+        outriggers.update(.02);
+        //update marker too
+    }
 
     outriggerC.update(.02);
     if (outriggerC.isRetracted())
@@ -68,15 +55,15 @@ int main(int argc, char **argv)
         outriggerC.retract();
     }
 
-#if SIMULATING_DIGGING == 1
-    ROS_INFO("OUTRIGGERS AT: %f", outriggers.getPosL());
-    ROS_INFO("OUTRIGGERS AT: %f", outriggers.getPosR());
+    if (simulating) {
+        ROS_INFO("OUTRIGGERS AT: %f", outriggers.getPosL());
+        ROS_INFO("OUTRIGGERS AT: %f", outriggers.getPosR());
 
-    ROS_INFO("LIMIT AT %d", (int)outriggerRightVesc->getLimitSwitchState());
-    ROS_INFO("LIMIT AT %d", (int)outriggerLeftVesc->getLimitSwitchState());
-
+        ROS_INFO("LIMIT AT %d", (int) outriggerRightVesc->getLimitSwitchState());
+        ROS_INFO("LIMIT AT %d", (int) outriggerLeftVesc->getLimitSwitchState());
+    }
     //TODO publish markers to a topic
-#endif
+
 
     ros::spinOnce();
     rate.sleep();
