@@ -13,24 +13,40 @@ int main(int argc, char **argv)
 
   ros::NodeHandle node  ("~");
   bool simulating;
-  if(!node.param("simulating_digging", simulating, true)){
-      ROS_WARN ("simulating_digging was not found, assumed simulating");
+  if (node.hasParam("simulating_digging"))
+  {
+    node.getParam("simulating_digging", simulating);
+    if (simulating) {ROS_WARN ("\nRUNNING DIGGING AS SIMULATION\n");}
+    else {ROS_WARN ("\nRUNNING DIGGING AS PHYSICAL\n");}
+  }
+  else
+  {
+    ROS_ERROR ("\n\nsimulating_digging param not defined! aborting.\n\n");
+    return -1;
   }
 
   iVescAccess *outriggerRightVesc;
   iVescAccess *outriggerLeftVesc;
 
-  SimOutriggers outriggers(0, 0);
-  if (simulating) {
-    outriggerRightVesc = outriggers.getRVesc();
-    outriggerLeftVesc = outriggers.getLVesc();
+  //these should not be initialized if we are not simulating
+  SimOutriggers * outriggerSimulation;
+  if (simulating) 
+  {
+    outriggerSimulation = new SimOutriggers(0,0);
+    outriggerRightVesc = outriggerSimulation->getRVesc();
+    outriggerLeftVesc = outriggerSimulation->getLVesc();
         //SimBucket
         //SimBackhoe
-  } else {
-    ROS_WARN ("No good option for failure");
-    return -1;
+  } 
+  else 
+  {
+    outriggerSimulation = NULL; //dont call anything related to this.
+
+    //initialize real vescs here
+
   }
 
+  //pass vescs (sim or physical) to controllers
   OutriggerController outriggerC(outriggerLeftVesc, outriggerRightVesc);
 
   ros::Rate rate(50.0);
@@ -38,8 +54,14 @@ int main(int argc, char **argv)
 
   while (ros::ok())
   {
-    outriggers.update(.02);
+    if (simulating) //update simulations if neccesary
+    {
+      outriggerSimulation->update(.02);
+    }
+    //update controlelrs
     outriggerC.update(.02);
+
+    //controller logic
     if (outriggerC.isRetracted())
     {
       ROS_INFO("DEPLOYING");
@@ -51,12 +73,19 @@ int main(int argc, char **argv)
       outriggerC.retract();
     }
 
-    if (simulating) {
-      ROS_INFO("OUTRIGGERS AT: %f", outriggers.getPosL());
-      ROS_INFO("OUTRIGGERS AT: %f", outriggers.getPosR());
+
+    //display output if simulating
+    if (simulating) 
+    {
+      ROS_INFO("SIM OUTRIGGERS AT: %f", outriggerSimulation->getPosL());
+      ROS_INFO("SIM OUTRIGGERS AT: %f", outriggerSimulation->getPosR());
 
       ROS_INFO("LIMIT AT %d", (int) outriggerRightVesc->getLimitSwitchState());
       ROS_INFO("LIMIT AT %d", (int) outriggerLeftVesc->getLimitSwitchState());
+    }
+    else
+    {
+      //display output for physical
     }
     //TODO publish markers to a topic
 
