@@ -12,13 +12,14 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   actionlib
   std_msgs
-  vesc_access 
-  #localization
   geometry_msgs
   visualization_msgs
-  new_sim
-  imperio
 )
+
+find_package (vesc_access REQUIRED)
+find_package (new_sim REQUIRED)
+find_package (imperio REQUIRED)
+
 
 link_directories (
 /usr/src/gmock/build

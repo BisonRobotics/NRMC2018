@@ -5,9 +5,6 @@ add_compile_options(-std=c++11)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  vesc_access
-  sensor_access
-  localization
 )
 
 find_package (vesc_access REQUIRED)
