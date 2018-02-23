@@ -45,14 +45,17 @@ void SimVesc::setTorque(float current)
   // not implemented
 }
 
-nsVescAccess::limitSwitchState SimVesc::getLimitSwitchState (void){
+nsVescAccess::limitSwitchState SimVesc::getLimitSwitchState (void)
+{
   return nsVescAccess::limitSwitchState::inTransit;
 }
 
-float SimVesc::getPotPosition(void) {
+float SimVesc::getPotPosition(void)
+{
   return pot_pos;
 }
 
-void SimVesc::setPotPosition(float pos) {
+void SimVesc::setPotPosition(float pos)
+{
   this->pot_pos = pos;
 }
