@@ -27,3 +27,13 @@ double SimBackhoe::getWrTheta()
 {
   return wrTh;
 }
+
+iVescAccess * SimBackhoe::getShoulderVesc()
+{
+  return sh;
+}
+
+iVescAccess * SimBackhoe::getWristVesc()
+{
+  return wr;
+}

@@ -2,6 +2,7 @@
 
 class SimBucket
 {
+public:
   SimBucket();
   iVescAccess *getBigConveyorVesc();
   iVescAccess *getLittleConveyorVesc();

@@ -4,41 +4,57 @@
 
 BackhoeController::BackhoeController(double initialShoulderTheta, double initialWristTheta, iVescAccess *shVesc, iVescAccess *wrVesc)
 {
-    shoulderSetPoint = initialShoulderTheta;
-    shoulderAngleEst = initialShoulderTheta;
-    sh = shVesc;
+  shoulderSetpoint = initialShoulderTheta;
+  shoulderAngleEst = initialShoulderTheta;
+  isShoulderAtSetpoint = true;
+  sh = shVesc;
 
-    wristSetPoint = initialWristTheta;
-    wristAngleEst = initialWristTheta;
-    wr = wrVesc;
+  wristSetpoint = initialWristTheta;
+  wristAngleEst = initialWristTheta;
+  isWristAtSetpoint = true;
+  wr = wrVesc;
 }
 
-void BackhoeController::setShoulderSetPoint(double angle)
+void BackhoeController::setShoulderSetpoint(double angle)
 {
-    shoulderSetPoint = angle;
+  shoulderSetpoint = angle;
 }
 
-void BackhoeController::setWristSetPoint(double angle)
+void BackhoeController::setWristSetpoint(double angle)
 {
-    wristSetPoint = angle;
+  wristSetpoint = angle;
 }
 
 void BackhoeController::update(double dt)
 {
   shoulderAngleEst += sh->getLinearVelocity() * dt;
-  double error = shoulderSetPoint - shoulderAngleEst;
+  double error = shoulderSetpoint - shoulderAngleEst;
   //TODO change this constant to something like a gain
   if (error > .2) error =.2;
   else if (error < -.2) error = -.2;
   //TODO change this constant to a gain
   sh->setLinearVelocity(.5 * error);
+  //TODO change cutoff to parameter/gain
+  isShoulderAtSetpoint = (error < .05);
 
   wristAngleEst += wr->getLinearVelocity() * dt;
-  error = wristSetPoint - wristAngleEst;
+  error = wristSetpoint - wristAngleEst;
   //TODO change this constant to something like a gain
   if (error > .2) error =.2;
   else if (error < -.2) error = -.2;
   //TODO change this constant to a gain
   wr->setLinearVelocity(.5 * error);
+  //TODO change cutoff to parameter/gain
+  isWristAtSetpoint = (error < .04);
 
+}
+
+bool BackhoeController::shoulderAtSetpoint()
+{
+  return isShoulderAtSetpoint;
+}
+
+bool BackhoeController::wristAtSetpoint()
+{
+  return isWristAtSetpoint;
 }

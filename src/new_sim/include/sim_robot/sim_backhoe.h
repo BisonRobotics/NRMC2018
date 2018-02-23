@@ -4,18 +4,17 @@
 class SimBackhoe
 {
 public:
-    SimBackhoe(double shoulderTheta, double wristTheta);
-    iVescAccess *getShVesc();
-    iVescAccess *getWrVesc();
+  SimBackhoe(double shoulderTheta, double wristTheta);
+  void update(double dt);
+  double getShTheta();
+  double getWrTheta();
 
-    void update(double dt);
-    double getShTheta();
-    double getWrTheta();
-
+  iVescAccess * getShoulderVesc();
+  iVescAccess * getWristVesc();
 private:
-    SimVesc *sh;
-    SimVesc *wr;
+  SimVesc *sh;
+  SimVesc *wr;
 
-    double shTh;
-    double wrTh;
+  double shTh;
+  double wrTh;
 };

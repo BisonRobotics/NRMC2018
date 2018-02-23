@@ -3,6 +3,7 @@
 
 class BucketController
 {
+public:
   BucketController(iVescAccess *bigConveyorVesc, iVescAccess *littleConveyorVesc, iVescAccess *sifterVesc);
 
   void turnBigConveyorOn();

@@ -13,3 +13,18 @@ void SimBucket::update(double dt)
  // Could eventually read vesc speeds and update an
  // isRunning bool for each vesc, but not really necessary
 }
+
+iVescAccess * SimBucket::getBigConveyorVesc()
+{
+  return bc;
+}
+
+iVescAccess * SimBucket::getLittleConveyorVesc()
+{
+  return lc;
+}
+
+iVescAccess * SimBucket::getSifterVesc()
+{
+  return sf;
+}

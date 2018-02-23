@@ -1,3 +1,6 @@
+#ifndef SIM_VESC_H
+#define SIM_VESC_H
+
 #include <vesc_access/ivesc_access.h>
 
 class SimVesc : public iVescAccess
@@ -23,3 +26,5 @@ private:
   nsVescAccess::limitSwitchState limitSwitch;
   double pot_pos;
 };
+
+#endif
