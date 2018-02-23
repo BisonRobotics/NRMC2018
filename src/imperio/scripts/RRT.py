@@ -330,9 +330,9 @@ def calculate_path_score(path):
         b = path[i]
         c = path[i+1]
 
-        ab_dist = abs(distance(a, b))
-        ac_dist = abs(distance(a, c))
-        bc_dist = abs(distance(b, c))
+        ab_dist = distance(a, b)
+        ac_dist = distance(a, c)
+        bc_dist = distance(b, c)
 
         #If the line is not a straight line
         if ab_dist + bc_dist - ac_dist > 0.01:
@@ -351,7 +351,7 @@ def calculate_path_score(path):
 def distance(point_a, point_b):
     x1, y1 = point_a[0], point_a[1]
     x2, y2 = point_b[0], point_b[1]
-    return math.sqrt((x2-x1)**2 + (y2-y1)**2)
+    return abs(math.sqrt((x2-x1)**2 + (y2-y1)**2))
 
 
 
