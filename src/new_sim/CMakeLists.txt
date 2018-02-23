@@ -38,6 +38,7 @@ add_library(support_libs
   src/sim_pos.cpp
   src/sim_vesc.cpp
   src/sim_backhoe.cpp
+  src/sim_bucket.cpp
   src/sim_outriggers.cpp
 )
 

@@ -118,12 +118,19 @@ int main(int argc, char **argv)
         {
            backhoeC.setWristSetpoint(2.0);
         }
+        bucketC.turnBigConveyorOn();
+        bucketC.turnLittleConveyorOn();
+        bucketC.turnSifterOn();
     }
     if (backhoeC.shoulderAtSetpoint() && backhoeC.wristAtSetpoint())
     {
        ROS_INFO("RETURNING BACKHOE");
        backhoeC.setShoulderSetpoint(0.0);
        backhoeC.setWristSetpoint(0.0);
+
+       bucketC.turnBigConveyorOff();
+       bucketC.turnLittleConveyorOff();
+       bucketC.turnSifterOff();
     }
 
 
