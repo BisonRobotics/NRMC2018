@@ -13,7 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   nav_msgs
   pointcloud_to_laserscan
   roscpp
-  #realsense_ros_camera
+  realsense_ros_camera
   tf2
   geometry_msgs
   gmapping
