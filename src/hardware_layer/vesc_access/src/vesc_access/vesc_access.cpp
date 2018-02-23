@@ -208,6 +208,12 @@ void VescAccess::setPolePairs(unsigned int pole_pairs)
   }
 }
 
-nsVescAccess::limitSwitchState VescAccess::getLimitSwitchState (void){
+nsVescAccess::limitSwitchState VescAccess::getLimitSwitchState (void)
+{
   return nsVescAccess::limitSwitchState::inTransit;
+}
+
+float VescAccess::getPotPosition(void)
+{
+   return 0.0;
 }

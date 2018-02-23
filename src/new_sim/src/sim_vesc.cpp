@@ -10,6 +10,7 @@ SimVesc::SimVesc(double Pgain, double Igain, double velo_factor)
   setVel = 0;
   errI = 0;
   velocity_factor = velo_factor;
+  pot_pos = 0.0;
 }
 
 void SimVesc::update(double dt)
@@ -44,6 +45,17 @@ void SimVesc::setTorque(float current)
   // not implemented
 }
 
-nsVescAccess::limitSwitchState SimVesc::getLimitSwitchState (void){
+nsVescAccess::limitSwitchState SimVesc::getLimitSwitchState (void)
+{
   return nsVescAccess::limitSwitchState::inTransit;
+}
+
+float SimVesc::getPotPosition(void)
+{
+  return pot_pos;
+}
+
+void SimVesc::setPotPosition(float pos)
+{
+  this->pot_pos = pos;
 }
