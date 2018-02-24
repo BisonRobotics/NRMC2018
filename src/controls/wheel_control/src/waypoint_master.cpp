@@ -111,7 +111,7 @@ int main(int argc, char **argv)
   // read ros param for simulating
   ros::init(argc, argv, "my_tf2_listener");
 
-  ros::NodeHandle node;
+  ros::NodeHandle node("~");
 
   bool simulating;
   if (node.hasParam("simulating_driving"))
