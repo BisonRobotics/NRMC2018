@@ -43,7 +43,6 @@ class GlobalPlanner(object):
         :param robot: the robot object the planner will be moving
         """
         self.waypoints_publisher = rospy.Publisher('/global_planner_goal', GlobalWaypoints, queue_size=1)
-        self.draw_points_publisher = rospy.Publisher('/draw_points', GlobalWaypoints, queue_size=1)
 
         rospy.Subscriber('/drive_controller_status', DriveStatus, self.drive_status_callback)
         rospy.Subscriber('/map', OccupancyGrid, self.map_callback)
@@ -105,20 +104,9 @@ class GlobalPlanner(object):
 
         print("Starting the path planner")
         saved_time = time.time()
-        results = RRT.path_planning(location, goal, self.occupancy_grid)
+        results = RRT.find_best_rrt_path(location, goal, self.occupancy_grid, 20)
         print("Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
         print("Unoriented path found: {}".format(results))
-
-        #Used for visualizing the waypoint path
-        message = GlobalWaypoints()
-        pose_array = []
-        for point in results:
-            msg = Pose2D()
-            msg.x, msg.y = point
-            pose_array.append(msg)
-
-        message.pose_array = pose_array
-        self.draw_points_publisher.publish(message)
 
         return results
 

@@ -1,4 +1,4 @@
-""" Path planning using RRT with options for different types of path smoothign
+""" Path planning using RRT with options for different types of path smoothing
 
 Author: James Madison University
 Date: 2/11/2018
@@ -143,8 +143,7 @@ def collision_check(node, map):
     row_max = map.height - 1
     col_max = map.width - 1
     if row > row_max or col > col_max:
-        print(row, col)
-        print("out of bounds")
+        #Out of bounds
         return False
 
     #check that there isn't anything in that grid space
@@ -158,14 +157,14 @@ def collision_check(node, map):
 def line_collision_check(first, second, map):
     # Line Equation
 
-    check = .1
+    check = .05
 
     x1 = first[0]
     y1 = first[1]
     x2 = second[0]
     y2 = second[1]
 
-    total_distance = math.sqrt((x2-x1)**2 + (y2-y1)**2)
+    total_distance = distance(first, second)
     check_distance = check
 
     while check_distance < total_distance:
@@ -175,7 +174,6 @@ def line_collision_check(first, second, map):
         y_check = ((1 - ratio)*y1 + ratio * y2)
 
         if collision_check(Node(x_check, y_check), map) == False:
-            print("line collision check obstacle")
             return False
         check_distance += check
 
@@ -223,20 +221,25 @@ def path_smoothing(path, maxIter, obstacleList):
 
     return path
 
+def remove_redundant(path):
+    minimal_path = [path[0]]
+    for i in range(1, len(path)):
+        if path[i] != path[i-1]:
+            minimal_path.append(path[i])
+    return minimal_path
+
 
 
 def path_planning(start, goal, map):
-    print("Start RRT path planning")
-
     min_x, min_y = map.cell_position(0,0)
     max_x, max_y = map.cell_position(map.width - 1, map.height - 1)
 
     rrt = RRT(start, goal, map, [min_x, max_x], [min_y, max_y])
     path = rrt.planning()
-    draw_tree(path, map)
+    #draw_tree(path, map)
 
-    smooth_path = path_smoothing(path, 1000, map)
-    draw_tree(smooth_path, map)
+    smooth_path = remove_redundant(path_smoothing(path, 1000, map))
+    #draw_tree(smooth_path, map)
 
     """ Save for further testing
     #Testing the BSpline
@@ -303,6 +306,56 @@ def bspline_path(x,y, sn):
     rx = si.splev(ipl_t, x_list)
     ry = si.splev(ipl_t, y_list)
 
-
     return rx, ry
+
+def find_best_rrt_path(start, goal, map, num_paths):
+    print("Finding best RRT path out of %s paths" % num_paths)
+    lowest_path_score = 9999999999
+    lowest_path = None
+    for i in range(0, num_paths):
+        path = path_planning(start, goal, map)
+        path_score = calculate_path_score(path)
+        if path_score < lowest_path_score:
+            lowest_path_score = path_score
+            lowest_path = path
+        print("{}/{} completed".format(i+1, num_paths))
+
+    return lowest_path
+
+def calculate_path_score(path):
+    angular_score = 0
+    for i in range(1, len(path) - 1):
+        #Using the points a, b, c to find angle from ab to bc
+        a = path[i-1]
+        b = path[i]
+        c = path[i+1]
+
+        ab_dist = distance(a, b)
+        ac_dist = distance(a, c)
+        bc_dist = distance(b, c)
+
+        #If the line is not a straight line
+        if ab_dist + bc_dist - ac_dist > 0.01:
+           try:
+               angle = math.acos((bc_dist**2 - ac_dist**2 + ab_dist**2)/(2*bc_dist*ab_dist))
+           except ValueError:
+                print("ab {} bc {} ac {}".format(ab_dist, bc_dist, ac_dist))
+        else:
+            angle = math.pi
+
+        angular_score += abs(math.pi - angle) ** 2
+    angular_score = angular_score/len(path)
+    point_num_score = len(path)
+    return angular_score + point_num_score
+
+def distance(point_a, point_b):
+    x1, y1 = point_a[0], point_a[1]
+    x2, y2 = point_b[0], point_b[1]
+    return abs(math.sqrt((x2-x1)**2 + (y2-y1)**2))
+
+
+
+
+
+
 
