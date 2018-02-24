@@ -8,9 +8,11 @@
 <!-- node name="dashboard" pkg="imperio" type="dashboardLaunch.bash"/ -->
 
 <!-- launches the map server from map found in imperio data folder -->
-<arg name="map_file" default="$(find mapping)/data/costmap.yaml"/>
+<!--<arg name="map_file" default="$(find mapping)/data/costmap_autonomy.yaml"/>
 <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
+-->
 
+<include file="$(find mapping)/launch/costmap_autonomy.launch"/>
 <node name="imperio_marker_vis" pkg="imperio" type="path_vis.py"/>
 <node name="imperio" pkg="imperio" type="imperio_control.py"/>
 
