@@ -37,7 +37,6 @@
 #include <visualization_msgs/Marker.h>
 #include <imperio/DriveStatus.h>
 
-
 #include <sim_robot/sim_robot.h>
 
 #include <lp_research/lpresearchimu.h>
@@ -109,7 +108,7 @@ void haltCallback(const std_msgs::Empty::ConstPtr &msg)
 
 int main(int argc, char **argv)
 {
-  //read ros param for simulating
+  // read ros param for simulating
   ros::init(argc, argv, "my_tf2_listener");
 
   ros::NodeHandle node;
@@ -154,39 +153,38 @@ int main(int argc, char **argv)
 
   std::vector<waypointWithManeuvers> navigationQueue;
 
-  SimRobot* sim;
+  SimRobot *sim;
   iVescAccess *fl, *fr, *br, *bl;
   ImuSensorInterface *imu;
   PosSensorInterface *pos;
 
+  if (simulating == true)
+  {
+    sim = new SimRobot(ROBOT_AXLE_LENGTH, .5, .5, 0);
+    fl = (sim->getFLVesc());
+    fr = (sim->getFRVesc());
+    br = (sim->getBRVesc());
+    bl = (sim->getBLVesc());
 
-if (simulating == true)
-{
-  sim = new SimRobot(ROBOT_AXLE_LENGTH, .5, .5, 0);
-  fl = (sim->getFLVesc());
-  fr = (sim->getFRVesc());
-  br = (sim->getBRVesc());
-  bl = (sim->getBLVesc());
+    imu = sim->getImu();
+    pos = sim->getPos();
+  }
+  else
+  {
+    sim = NULL;  // Make no reference to the sim if not simulating
+    char *can_name = (char *)WHEEL_CAN_NETWORK;
+    fl = new VescAccess(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
+                        WHEEL_TORQUE_CONSTANT, can_name, 1);
+    fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
+                        MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
+    br = new VescAccess(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
+                        MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
+    bl = new VescAccess(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
+                        WHEEL_TORQUE_CONSTANT, can_name, 1);
 
-  imu = sim->getImu();
-  pos = sim->getPos();
-}
-else
-{
-  sim = NULL; //Make no reference to the sim if not simulating
-  char *can_name = (char *)WHEEL_CAN_NETWORK;
-  fl = new VescAccess(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
-                                   MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-  fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO,
-                                   MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-  br = new VescAccess(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO,
-                                   MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-  bl = new VescAccess(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
-                                   MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-
-  pos = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .07);
-  imu = new LpResearchImu("imu");
-}
+    pos = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .07);
+    imu = new LpResearchImu("imu");
+  }
 
   // initialize the localizer here
   ros::Time lastTime;
@@ -245,10 +243,10 @@ else
       currTime = ros::Time::now();
       loopTime = (currTime - lastTime);
     }
-  if (simulating)
-  {
-    sim->update((loopTime).toSec());
-  }
+    if (simulating)
+    {
+      sim->update((loopTime).toSec());
+    }
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
@@ -301,12 +299,12 @@ else
       loopTime = currTime - lastTime;
     }
     ROS_INFO("Looptime : %.5f", loopTime.toSec());
-  if (simulating)
-  {
-    sim->update(loopTime.toSec());
+    if (simulating)
+    {
+      sim->update(loopTime.toSec());
 
-    tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
-  }
+      tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
+    }
 
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
