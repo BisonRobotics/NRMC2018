@@ -1,6 +1,6 @@
 image: costmap.bmp
 resolution: .01
-origin: [7.38, -1.47, 1.5708]
+origin: [0, -1.47, 0]
 occupied_thresh: .70
 free_thresh: .3
 negate: 1
