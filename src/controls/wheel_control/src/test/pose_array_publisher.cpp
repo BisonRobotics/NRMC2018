@@ -30,7 +30,7 @@ int main(int argc, char** argv)
   //std::uniform_real_distribution<double> dist(-M_PI, M_PI);
   std::normal_distribution<double> dist{0, M_PI_4};
   double randomTheta;
-  double waypointDist = 1.0;
+  double waypointDist = .5;
 
   for (int num=0; num<10;num++)
   {
