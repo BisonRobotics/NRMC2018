@@ -2,6 +2,10 @@
 #include <imperio/GlobalWaypoints.h>
 #include <geometry_msgs/Pose2D.h>
 
+#include <random>
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "waypoint_filter");
@@ -15,40 +19,50 @@ int main(int argc, char** argv)
   ros::Rate rate(.05);
 
   geometry_msgs::Pose2D wp1;
-  wp1.x = 2;
-  wp1.y = 1;
+  wp1.x = 1.5;
+  wp1.y = 0;
   wp1.theta = 0;
-  geometry_msgs::Pose2D wp2;
-  wp2.x = 4;
-  wp2.y = .25;
-  wp2.theta = 0;
 
   waypoints.push_back(wp1);
-  waypoints.push_back(wp2);
+
+  std::random_device rd;
+  std::mt19937 mt(rd());
+  //std::uniform_real_distribution<double> dist(-M_PI, M_PI);
+  std::normal_distribution<double> dist{0, M_PI_4};
+  double randomTheta;
+  double waypointDist = 1.0;
+
+  for (int num=0; num<10;num++)
+  {
+    randomTheta = dist(mt);
+    wp1.theta += randomTheta;
+    if (wp1.theta > M_PI) wp1.theta -= M_PI;
+    else if (wp1.theta < -M_PI) wp1.theta += M_PI;
+    wp1.x += waypointDist * cos(wp1.theta);
+    wp1.y += waypointDist * sin(wp1.theta);
+    waypoints.push_back(wp1);
+  }
 
   wpmsg.pose_array = waypoints;
-
-  double xcounter = 3;
 
   while (ros::ok())
   {
     wpmsg.pose_array = waypoints;
-    ROS_INFO("Publishing waypoints:\nX: %f\nY: %f\n, Th: %f\n\nX: %f\nY: %f\n, Th: %f", wp1.x, wp1.y, wp1.theta, wp2.x,
-             wp2.y, wp2.theta);
     pub.publish(wpmsg);
 
-    wp1.x = xcounter;
-    wp1.y = -1;
-    wp1.theta = 0;
-    xcounter += 1;
-    wp2.x = xcounter;
-    wp2.y = 1;
-    wp2.theta = 0;
-    xcounter += 1;
 
     waypoints.clear();
-    waypoints.push_back(wp1);
-    waypoints.push_back(wp2);
+
+    for (int num=0; num<10;num++)
+    {
+      randomTheta = dist(mt);
+      wp1.theta += randomTheta;
+      if (wp1.theta > M_PI) wp1.theta -= M_PI;
+      else if (wp1.theta < -M_PI) wp1.theta += M_PI;
+      wp1.x += waypointDist * cos(wp1.theta);
+      wp1.y += waypointDist * sin(wp1.theta);
+      waypoints.push_back(wp1);
+    }
 
     ros::spinOnce();
     rate.sleep();
