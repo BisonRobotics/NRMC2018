@@ -1,7 +1,8 @@
 <launch>
-  <node name="position_controller" pkg="wheel_control" type="waypoint_master"/>
+  <node name="waypoint_streamer" pkg="wheel_control" type="waypoint_filter" />
+  <node name="position_controller" pkg="wheel_control" type="waypoint_master">
+    <param name="simulating_driving" type="bool" value="false"/>
+  </node>
   <include file="$(find lpms_imu)/launch/imu_node.launch"/>
-<!--  <node pkg="mapping" type="transform_publisher" name="tf_repub"/>
--->
 
 </launch>
