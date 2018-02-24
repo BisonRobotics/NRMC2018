@@ -1,6 +1,5 @@
 #include "sim_robot/sim_vesc.h"
 
-
 class SimBackhoe
 {
 public:
@@ -9,8 +8,9 @@ public:
   double getShTheta();
   double getWrTheta();
 
-  iVescAccess * getShoulderVesc();
-  iVescAccess * getWristVesc();
+  iVescAccess *getShoulderVesc();
+  iVescAccess *getWristVesc();
+
 private:
   SimVesc *sh;
   SimVesc *wr;

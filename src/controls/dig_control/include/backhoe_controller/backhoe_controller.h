@@ -6,8 +6,8 @@ class BackhoeController
 public:
   BackhoeController(double initialShoulderTheta, double initialWristTheta, iVescAccess *shVesc, iVescAccess *wrVesv);
 
-  //TODO, return status on update based on operation (see waypoint controller)
-  //Add gains similar to waypoint controller/ localizer
+  // TODO, return status on update based on operation (see waypoint controller)
+  // Add gains similar to waypoint controller/ localizer
 
   void setShoulderSetpoint(double angle);
   void setWristSetpoint(double angle);

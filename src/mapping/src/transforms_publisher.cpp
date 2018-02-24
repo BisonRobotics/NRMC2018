@@ -4,16 +4,17 @@
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
-static tf2_ros::TransformBroadcaster *br;
+static tf2_ros::TransformBroadcaster* br;
 
 void transformsCallback(const geometry_msgs::TransformStamped::ConstPtr& transform)
 {
   geometry_msgs::TransformStamped synced_transform = *transform;
-  synced_transform.header.stamp = ros::Time::now(); // Don't use this technique for anything other than visuals
+  synced_transform.header.stamp = ros::Time::now();  // Don't use this technique for anything other than visuals
   br->sendTransform(synced_transform);
 }
 
-int main(int argc, char** argv){
+int main(int argc, char** argv)
+{
   ros::init(argc, argv, "transforms_publisher");
   ros::NodeHandle nh;
   br = new tf2_ros::TransformBroadcaster();
@@ -46,7 +47,6 @@ int main(int argc, char** argv){
   camera_to_base_link.transform.rotation.y = q.getY();
   camera_to_base_link.transform.rotation.z = q.getZ();
   camera_to_base_link.transform.rotation.w = q.getW();
-
 
   q.setRPY(M_PI_2, 0.0, M_PI_2);
   geometry_msgs::TransformStamped map_to_tag04_tf;
@@ -101,28 +101,26 @@ int main(int argc, char** argv){
   base_link_to_servo_base_link_tf.transform.rotation.w = q.getW();
 
   ros::Rate rate(100);
-  while(ros::ok())
+  while (ros::ok())
   {
     servo_joint_to_optical_link_tf.header.stamp = ros::Time::now();
-    //servo_base_link_to_servo_joint_tf.header.stamp = ros::Time::now();
+    // servo_base_link_to_servo_joint_tf.header.stamp = ros::Time::now();
     base_link_to_servo_base_link_tf.header.stamp = ros::Time::now();
     map_to_tag04_tf.header.stamp = ros::Time::now();
     map_to_tag03_tf.header.stamp = ros::Time::now();
     map_to_tag01_tf.header.stamp = ros::Time::now();
-    camera_to_base_link.header.stamp = ros::Time::now ();
-
+    camera_to_base_link.header.stamp = ros::Time::now();
 
     servo_joint_to_optical_link_tf.header.seq++;
-    //servo_base_link_to_servo_joint_tf.header.seq++;
+    // servo_base_link_to_servo_joint_tf.header.seq++;
     base_link_to_servo_base_link_tf.header.seq++;
     map_to_tag04_tf.header.seq++;
     map_to_tag03_tf.header.seq++;
     map_to_tag01_tf.header.seq++;
     camera_to_base_link.header.seq++;
 
-    
     br->sendTransform(servo_joint_to_optical_link_tf);
-    //br.sendTransform(servo_base_link_to_servo_joint_tf);
+    // br.sendTransform(servo_base_link_to_servo_joint_tf);
     br->sendTransform(map_to_tag04_tf);
     br->sendTransform(map_to_tag03_tf);
     br->sendTransform(map_to_tag01_tf);

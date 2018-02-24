@@ -19,7 +19,7 @@ std::vector<std::pair<double, double> > waypointWithManeuvers2points(waypointWit
 
 double anglediff(double x, double y);
 
-int sign(double A); //MUST BE INT
+int sign(double A);  // MUST BE INT
 
 pose reflectWaypointAroundRobot(pose waypoint, pose robot);
 

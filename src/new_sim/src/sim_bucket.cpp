@@ -9,22 +9,22 @@ SimBucket::SimBucket()
 
 void SimBucket::update(double dt)
 {
- // Do nothing for now!
- // Could eventually read vesc speeds and update an
- // isRunning bool for each vesc, but not really necessary
+  // Do nothing for now!
+  // Could eventually read vesc speeds and update an
+  // isRunning bool for each vesc, but not really necessary
 }
 
-iVescAccess * SimBucket::getBigConveyorVesc()
+iVescAccess *SimBucket::getBigConveyorVesc()
 {
   return bc;
 }
 
-iVescAccess * SimBucket::getLittleConveyorVesc()
+iVescAccess *SimBucket::getLittleConveyorVesc()
 {
   return lc;
 }
 
-iVescAccess * SimBucket::getSifterVesc()
+iVescAccess *SimBucket::getSifterVesc()
 {
   return sf;
 }

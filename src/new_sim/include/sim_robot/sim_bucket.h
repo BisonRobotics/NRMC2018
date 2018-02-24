@@ -9,6 +9,7 @@ public:
   iVescAccess *getSifterVesc();
 
   void update(double dt);
+
 private:
   SimVesc *bc;
   SimVesc *lc;

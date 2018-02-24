@@ -12,6 +12,7 @@ public:
   void turnLittleConveyorOff();
   void turnSifterOn();
   void turnSifterOff();
+
 private:
   iVescAccess *bc, *lc, *sf;
 };

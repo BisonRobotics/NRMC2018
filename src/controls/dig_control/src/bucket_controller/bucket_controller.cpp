@@ -1,10 +1,11 @@
 #include "bucket_controller/bucket_controller.h"
 
-BucketController::BucketController(iVescAccess *bigConveyorVesc, iVescAccess *littleConveyorVesc, iVescAccess *sifterVesc)
+BucketController::BucketController(iVescAccess *bigConveyorVesc, iVescAccess *littleConveyorVesc,
+                                   iVescAccess *sifterVesc)
 {
   bc = bigConveyorVesc;
   lc = littleConveyorVesc;
-  sf = sifterVesc; 
+  sf = sifterVesc;
 }
 
 void BucketController::turnBigConveyorOn()

@@ -10,7 +10,7 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "costmap_node");
   tf::TransformListener tf(ros::Duration(10));
   costmap_2d::Costmap2DROS lcr("costmap", tf);
-  lcr.start ();
+  lcr.start();
   ros::spin();
 
   return (0);

@@ -2,7 +2,8 @@
 #include <vesc_access/vesc_access.h>
 #include <vesc_access/ivesc_access.h>
 
-BackhoeController::BackhoeController(double initialShoulderTheta, double initialWristTheta, iVescAccess *shVesc, iVescAccess *wrVesc)
+BackhoeController::BackhoeController(double initialShoulderTheta, double initialWristTheta, iVescAccess *shVesc,
+                                     iVescAccess *wrVesc)
 {
   shoulderSetpoint = initialShoulderTheta;
   shoulderAngleEst = initialShoulderTheta;
@@ -29,24 +30,27 @@ void BackhoeController::update(double dt)
 {
   shoulderAngleEst += sh->getLinearVelocity() * dt;
   double error = shoulderSetpoint - shoulderAngleEst;
-  //TODO change this constant to something like a gain
-  if (error > .2) error =.2;
-  else if (error < -.2) error = -.2;
-  //TODO change this constant to a gain
+  // TODO change this constant to something like a gain
+  if (error > .2)
+    error = .2;
+  else if (error < -.2)
+    error = -.2;
+  // TODO change this constant to a gain
   sh->setLinearVelocity(.5 * error);
-  //TODO change cutoff to parameter/gain
+  // TODO change cutoff to parameter/gain
   isShoulderAtSetpoint = (error < .05);
 
   wristAngleEst += wr->getLinearVelocity() * dt;
   error = wristSetpoint - wristAngleEst;
-  //TODO change this constant to something like a gain
-  if (error > .2) error =.2;
-  else if (error < -.2) error = -.2;
-  //TODO change this constant to a gain
+  // TODO change this constant to something like a gain
+  if (error > .2)
+    error = .2;
+  else if (error < -.2)
+    error = -.2;
+  // TODO change this constant to a gain
   wr->setLinearVelocity(.5 * error);
-  //TODO change cutoff to parameter/gain
+  // TODO change cutoff to parameter/gain
   isWristAtSetpoint = (error < .04);
-
 }
 
 bool BackhoeController::shoulderAtSetpoint()

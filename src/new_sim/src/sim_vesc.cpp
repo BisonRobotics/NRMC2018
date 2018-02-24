@@ -16,7 +16,7 @@ SimVesc::SimVesc(double Pgain, double Igain, double velo_factor)
 
 void SimVesc::update(double dt)
 {
-  //note I gain not implemented
+  // note I gain not implemented
   double err = vel - setVel;
   vel += (-vesc_Pgain) * err * dt;
 }
@@ -46,7 +46,7 @@ void SimVesc::setLimitSwitchState(nsVescAccess::limitSwitchState state)
   limitSwitch = state;
 }
 
-nsVescAccess::limitSwitchState SimVesc::getLimitSwitchState (void)
+nsVescAccess::limitSwitchState SimVesc::getLimitSwitchState(void)
 {
   return limitSwitch;
 }

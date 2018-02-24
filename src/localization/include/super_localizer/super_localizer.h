@@ -4,7 +4,7 @@
 #include <readable_sensors/readable_sensors.h>
 #include <super_localizer/super_localizer_helper.h>
 
-#define XRESGAIN .1f // trust sensors -> higher gain
+#define XRESGAIN .1f  // trust sensors -> higher gain
 #define YRESGAIN .10f
 #define THETARESGAIN .025f
 #define DXRESGAIN .025f

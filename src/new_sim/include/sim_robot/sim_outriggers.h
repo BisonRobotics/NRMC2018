@@ -3,16 +3,17 @@
 class SimOutriggers
 {
 public:
-    SimOutriggers(double initialPosL, double initialPosR);
-    iVescAccess *getLVesc();
-    iVescAccess *getRVesc();
+  SimOutriggers(double initialPosL, double initialPosR);
+  iVescAccess *getLVesc();
+  iVescAccess *getRVesc();
 
-    void update(double dt);
-    double getPosL();
-    double getPosR();
+  void update(double dt);
+  double getPosL();
+  double getPosR();
+
 private:
-    SimVesc *l;
-    SimVesc *r;
+  SimVesc *l;
+  SimVesc *r;
 
-    double posL, posR;
+  double posL, posR;
 };

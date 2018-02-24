@@ -62,16 +62,16 @@ bool halt = false;
 
 void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 {
-  //if (newWaypointHere ==false) //only take new data if ready
+  // if (newWaypointHere ==false) //only take new data if ready
   //{
-      pose potentialWaypoint;
-      potentialWaypoint.x = msg->x;
-      potentialWaypoint.y = msg->y;
-      potentialWaypoint.theta = msg->theta;
+  pose potentialWaypoint;
+  potentialWaypoint.x = msg->x;
+  potentialWaypoint.y = msg->y;
+  potentialWaypoint.theta = msg->theta;
 
-      newWaypoint.x = msg->x;
-      newWaypoint.y = msg->y;
-      newWaypoint.theta = msg->theta;
+  newWaypoint.x = msg->x;
+  newWaypoint.y = msg->y;
+  newWaypoint.theta = msg->theta;
   //}
 
   newWaypointHere = true;
@@ -114,8 +114,6 @@ geometry_msgs::TransformStamped create_sim_tf(double x, double y, double theta)
   return tfStamp;
 }
 #endif
-
-
 
 void haltCallback(const std_msgs::Empty::ConstPtr &msg)
 {
@@ -182,7 +180,6 @@ int main(int argc, char **argv)
   std::vector<std::pair<double, double> > waypoint_set;
   SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0, 0, 0, fl, fr, br, bl, imu, pos, SuperLocalizer_default_gains);
 
-
   LocalizerInterface::stateVector stateVector;
   ros::Subscriber haltsub = node.subscribe("halt", 100, haltCallback);
   ros::Publisher mode_pub = node.advertise<imperio::DriveStatus>("drive_controller_status", 1000);
@@ -190,7 +187,7 @@ int main(int argc, char **argv)
   ros::Publisher wholeQueue_pub = node.advertise<visualization_msgs::Marker>("whole_queue", 100);
   imperio::DriveStatus status_msg;
   visualization_msgs::Marker line_strip;
-    status_msg.header.seq = 0;
+  status_msg.header.seq = 0;
   line_strip.action = visualization_msgs::Marker::ADD;
   line_strip.pose.orientation.w = 1;
   line_strip.type = visualization_msgs::Marker::LINE_STRIP;
@@ -242,36 +239,35 @@ int main(int argc, char **argv)
   }
 
   // initialize waypoint controller
-  WaypointController wc =
-      WaypointController(ROBOT_AXLE_LENGTH, ROBOT_MAX_SPEED, currPose, fl, fr, br, bl, 1.0 / UPDATE_RATE_HZ,
-                         waypoint_default_gains);
-    ROS_INFO ("Top");
-    ROS_INFO ("Xposgain : %.4f", SuperLocalizer_default_gains.x_pos);
-    ROS_INFO ("Yposgain : %.4f", SuperLocalizer_default_gains.y_pos);
-    ROS_INFO ("Thetagain : %.4f", SuperLocalizer_default_gains.theta);
-    ROS_INFO ("Xvelgain : %.4f", SuperLocalizer_default_gains.x_vel);
-    ROS_INFO ("Yvelgain : %.4f", SuperLocalizer_default_gains.y_vel);
-    ROS_INFO ("Omegagain : %.4f", SuperLocalizer_default_gains.omega);
-    ROS_INFO ("Xaccelgain : %.4f", SuperLocalizer_default_gains.x_accel);
-    ROS_INFO ("Yaccelgain : %.4f", SuperLocalizer_default_gains.y_accel);
-    ROS_INFO ("Alphagain : %.4f", SuperLocalizer_default_gains.alpha);
+  WaypointController wc = WaypointController(ROBOT_AXLE_LENGTH, ROBOT_MAX_SPEED, currPose, fl, fr, br, bl,
+                                             1.0 / UPDATE_RATE_HZ, waypoint_default_gains);
+  ROS_INFO("Top");
+  ROS_INFO("Xposgain : %.4f", SuperLocalizer_default_gains.x_pos);
+  ROS_INFO("Yposgain : %.4f", SuperLocalizer_default_gains.y_pos);
+  ROS_INFO("Thetagain : %.4f", SuperLocalizer_default_gains.theta);
+  ROS_INFO("Xvelgain : %.4f", SuperLocalizer_default_gains.x_vel);
+  ROS_INFO("Yvelgain : %.4f", SuperLocalizer_default_gains.y_vel);
+  ROS_INFO("Omegagain : %.4f", SuperLocalizer_default_gains.omega);
+  ROS_INFO("Xaccelgain : %.4f", SuperLocalizer_default_gains.x_accel);
+  ROS_INFO("Yaccelgain : %.4f", SuperLocalizer_default_gains.y_accel);
+  ROS_INFO("Alphagain : %.4f", SuperLocalizer_default_gains.alpha);
 
-    ROS_INFO ("eppgain : %.4f", waypoint_default_gains.eppgain);
-    ROS_INFO ("epdgain : %.4f", waypoint_default_gains.epdgain);
-    ROS_INFO ("etpgain : %.4f", waypoint_default_gains.etpgain);
-    ROS_INFO ("etdgain : %.4f", waypoint_default_gains.etdgain);
-    ROS_INFO ("epplpgain : %.4f", waypoint_default_gains.epplpgain);
-    ROS_INFO ("etplpgain : %.4f", waypoint_default_gains.etplpgain);
-    ROS_INFO ("wheelalpha : %.4f", waypoint_default_gains.wheelalpha);
+  ROS_INFO("eppgain : %.4f", waypoint_default_gains.eppgain);
+  ROS_INFO("epdgain : %.4f", waypoint_default_gains.epdgain);
+  ROS_INFO("etpgain : %.4f", waypoint_default_gains.etpgain);
+  ROS_INFO("etdgain : %.4f", waypoint_default_gains.etdgain);
+  ROS_INFO("epplpgain : %.4f", waypoint_default_gains.epplpgain);
+  ROS_INFO("etplpgain : %.4f", waypoint_default_gains.etplpgain);
+  ROS_INFO("wheelalpha : %.4f", waypoint_default_gains.wheelalpha);
   WaypointController::Status wcStat;
   std_msgs::String msg;
   std::stringstream ss;
- // geometry_msgs::PoseStamped poser;
+  // geometry_msgs::PoseStamped poser;
   firstTime = true;
   while (ros::ok())
   {
-      ROS_INFO ("\n");
-      ROS_INFO ("Top");
+    ROS_INFO("\n");
+    ROS_INFO("Top");
     // update localizer here
     if (firstTime)
     {
@@ -300,28 +296,28 @@ int main(int argc, char **argv)
     currPose.x = stateVector.x_pos;
     currPose.y = stateVector.y_pos;
     currPose.theta = stateVector.theta;
-    //can we infer effective wheel velocities (the velocity of the wheel if we were moving
+    // can we infer effective wheel velocities (the velocity of the wheel if we were moving
     //                                         how we are, but no slip)
-    //need to estimate speed and turn radius
-    //speed is easy, just norm of velocities
-    //turn radius...  ddistance / dtheta?
-    //turn radius =  speed*dt / alpha * dt ;  //do we want to average this? over a second maybe?
-    //also be sure to clamp radius at something (1000)
+    // need to estimate speed and turn radius
+    // speed is easy, just norm of velocities
+    // turn radius...  ddistance / dtheta?
+    // turn radius =  speed*dt / alpha * dt ;  //do we want to average this? over a second maybe?
+    // also be sure to clamp radius at something (1000)
     jsMessage.velocity[0] = fl->getLinearVelocity();
     jsMessage.velocity[1] = fr->getLinearVelocity();
     jsMessage.velocity[2] = br->getLinearVelocity();
     jsMessage.velocity[3] = bl->getLinearVelocity();
 
-    ROS_INFO ("FrontLeftVel : %.4f", jsMessage.velocity[0] );
-    ROS_INFO ("FrontRightVel : %.4f", jsMessage.velocity[1]);
-    ROS_INFO ("BackRightVel : %.4f", jsMessage.velocity[2]);
-    ROS_INFO ("BackLeftVel : %.4f", jsMessage.velocity[3]);
+    ROS_INFO("FrontLeftVel : %.4f", jsMessage.velocity[0]);
+    ROS_INFO("FrontRightVel : %.4f", jsMessage.velocity[1]);
+    ROS_INFO("BackRightVel : %.4f", jsMessage.velocity[2]);
+    ROS_INFO("BackLeftVel : %.4f", jsMessage.velocity[3]);
 
     if (newWaypointHere)
     {
       waypoint_set = wc.addWaypoint(newWaypoint, currPose);
       line_strip.points.clear();
-      for (auto const& waypoint : waypoint_set)
+      for (auto const &waypoint : waypoint_set)
       {
         vis_point.x = waypoint.first;
         vis_point.y = waypoint.second;
@@ -330,15 +326,14 @@ int main(int argc, char **argv)
       }
       path_marker_pub.publish(line_strip);
       newWaypointHere = false;
-      ROS_INFO ("NewWaypoint : 1");
+      ROS_INFO("NewWaypoint : 1");
     }
     else
     {
-      ROS_INFO ("NewWaypoint : 0");
+      ROS_INFO("NewWaypoint : 0");
     }
 
     // update controller
-
 
     wcStat = wc.update(stateVector, loopTime.toSec());
 
@@ -346,66 +341,64 @@ int main(int argc, char **argv)
     // check if we are stuck by comparing commanded velocity to actual
     // maybe integrate error with some decay
     status_msg.has_reached_goal.data = 0;
-      status_msg.in_motion.data = 0;
-      status_msg.cannot_plan_path.data = 0;
-      status_msg.is_stuck.data = 0;
-      status_msg.header.stamp = ros::Time::now ();
-      status_msg.header.seq++;
+    status_msg.in_motion.data = 0;
+    status_msg.cannot_plan_path.data = 0;
+    status_msg.is_stuck.data = 0;
+    status_msg.header.stamp = ros::Time::now();
+    status_msg.header.seq++;
     // print status also post to topic /drive_controller_status
     if (wcStat == WaypointController::Status::OFFPATH)
     {
       ROS_WARN("Mode : -1");
       ss << "Mode : OFFPATH";
-        status_msg.cannot_plan_path.data = 0;
+      status_msg.cannot_plan_path.data = 0;
     }
     if (wcStat == WaypointController::Status::OVERSHOT)
     {
       ROS_WARN("Mode : 0");
       ss << "Mode : OVERSHOT";
-       status_msg.in_motion.data = 1;
+      status_msg.in_motion.data = 1;
     }
     else if (wcStat == WaypointController::Status::ALLGOOD)
     {
       ROS_INFO("Mode : 1");
       ss << "Mode: Good";
-        status_msg.in_motion.data = 1;
+      status_msg.in_motion.data = 1;
     }
     else if (wcStat == WaypointController::Status::GOALREACHED)
     {
       ROS_INFO("Mode : 2");
       wc.haltAndAbort();
       ss << "Mode: Chillin";
-        status_msg.has_reached_goal.data = 1;
+      status_msg.has_reached_goal.data = 1;
     }
     mode_pub.publish(status_msg);
 
     // print some info
     navigationQueue = wc.getNavigationQueue();
     theCPP = wc.getCPP();
-    //iterate through navigationqueue elements
+    // iterate through navigationqueue elements
     line_strip2.points.clear();
     line_strip2.color.r = 0;
     line_strip2.color.b = 1;
-    for (auto const& myMan : navigationQueue)
+    for (auto const &myMan : navigationQueue)
     {
-        waypoint_set = WaypointControllerHelper::waypointWithManeuvers2points(myMan);
-        for (auto const& waypoint : waypoint_set)
-        {
-          vis_point.x = waypoint.first;
-          vis_point.y = waypoint.second;
-          vis_point.z = .2;
-          line_strip2.points.push_back(vis_point);
-        }
-        line_strip2.color.b -= (line_strip2.color.b<=0.0) ? -1 : .1;
-        line_strip2.color.r += (line_strip2.color.r>=1.0) ? 0  : .1;
+      waypoint_set = WaypointControllerHelper::waypointWithManeuvers2points(myMan);
+      for (auto const &waypoint : waypoint_set)
+      {
+        vis_point.x = waypoint.first;
+        vis_point.y = waypoint.second;
+        vis_point.z = .2;
+        line_strip2.points.push_back(vis_point);
+      }
+      line_strip2.color.b -= (line_strip2.color.b <= 0.0) ? -1 : .1;
+      line_strip2.color.r += (line_strip2.color.r >= 1.0) ? 0 : .1;
     }
-      wholeQueue_pub.publish(line_strip2);
-
-
+    wholeQueue_pub.publish(line_strip2);
 
     ROS_INFO("CPPx : %.4f", theCPP.x);
-    ROS_INFO ("CPPy : %.4f", theCPP.y);
-    ROS_INFO ("CPPth : %.4f", theCPP.theta);
+    ROS_INFO("CPPy : %.4f", theCPP.y);
+    ROS_INFO("CPPth : %.4f", theCPP.theta);
 
     ROS_INFO("CurPx : %.4f", currPose.x);
     ROS_INFO("CurPy : %.4f", currPose.y);
@@ -417,67 +410,71 @@ int main(int argc, char **argv)
     ROS_INFO("EppEstimate : %.4f", wc.getEPpEstimate());
 
     ROS_INFO("SetSpeed1 : %.4f", wc.getSetSpeeds().first);
-    ROS_INFO ("SetSpeed2 : %.4f", wc.getSetSpeeds().second);
+    ROS_INFO("SetSpeed2 : %.4f", wc.getSetSpeeds().second);
     ROS_INFO("CmdSpeed1 : %.4f", wc.getCmdSpeeds().first);
-    ROS_INFO ("CmdSpeed2 : %.4f", wc.getCmdSpeeds().second);
+    ROS_INFO("CmdSpeed2 : %.4f", wc.getCmdSpeeds().second);
 
     ROS_INFO("currMan Index : %d", wc.getCurrManeuverIndex());
 
-    if (navigationQueue.size() > 0) {
-        ROS_INFO ("NavManSize : %d", (int) navigationQueue.at(0).mans.size());
+    if (navigationQueue.size() > 0)
+    {
+      ROS_INFO("NavManSize : %d", (int)navigationQueue.at(0).mans.size());
 
-        ROS_INFO ("NavMan0rad : %.4f", navigationQueue.at(0).mans.at(0).radius);
-        ROS_INFO ("NavMan0nxc : %.4f", navigationQueue.at(0).mans.at(0).xc);
-        ROS_INFO ("NavMan0yc : %.4f", navigationQueue.at(0).mans.at(0).yc);
-        ROS_INFO ("NavMan0dist : %.4f", navigationQueue.at(0).mans.at(0).distance);
-        if (navigationQueue.at(0).mans.size() >= 2) {
-            ROS_INFO ("NavMan1rad : %.4f", navigationQueue.at(0).mans.at(1).radius);
-            ROS_INFO ("NavMan1nxc : %.4f", navigationQueue.at(0).mans.at(1).xc);
-            ROS_INFO ("NavMan1yc : %.4f", navigationQueue.at(0).mans.at(1).yc);
-            ROS_INFO ("NavMan1dist : %.4f", navigationQueue.at(0).mans.at(1).distance);
-        } else {
-            ROS_INFO ("NavMan1rad : %.4f", 0.0);
-            ROS_INFO ("NavMan1nxc : %.4f", 0.0);
-            ROS_INFO ("NavMan1yc : %.4f", 0.0);
-            ROS_INFO ("NavMan1dist : %.4f", 0.0);
-        }
-        pose manEnd = wc.getManeuverEnd();
-        ROS_INFO("CurrManEndx : %.4f", manEnd.x);
-        ROS_INFO("CurrManEndy : %.4f", manEnd.y);
-        ROS_INFO("CurrManEndTh : %.4f", manEnd.theta);
+      ROS_INFO("NavMan0rad : %.4f", navigationQueue.at(0).mans.at(0).radius);
+      ROS_INFO("NavMan0nxc : %.4f", navigationQueue.at(0).mans.at(0).xc);
+      ROS_INFO("NavMan0yc : %.4f", navigationQueue.at(0).mans.at(0).yc);
+      ROS_INFO("NavMan0dist : %.4f", navigationQueue.at(0).mans.at(0).distance);
+      if (navigationQueue.at(0).mans.size() >= 2)
+      {
+        ROS_INFO("NavMan1rad : %.4f", navigationQueue.at(0).mans.at(1).radius);
+        ROS_INFO("NavMan1nxc : %.4f", navigationQueue.at(0).mans.at(1).xc);
+        ROS_INFO("NavMan1yc : %.4f", navigationQueue.at(0).mans.at(1).yc);
+        ROS_INFO("NavMan1dist : %.4f", navigationQueue.at(0).mans.at(1).distance);
+      }
+      else
+      {
+        ROS_INFO("NavMan1rad : %.4f", 0.0);
+        ROS_INFO("NavMan1nxc : %.4f", 0.0);
+        ROS_INFO("NavMan1yc : %.4f", 0.0);
+        ROS_INFO("NavMan1dist : %.4f", 0.0);
+      }
+      pose manEnd = wc.getManeuverEnd();
+      ROS_INFO("CurrManEndx : %.4f", manEnd.x);
+      ROS_INFO("CurrManEndy : %.4f", manEnd.y);
+      ROS_INFO("CurrManEndTh : %.4f", manEnd.theta);
 
-        ROS_INFO("NavInitPosex : %.4f", navigationQueue.at(0).initialPose.x);
-        ROS_INFO("NavInitPosey : %.4f", navigationQueue.at(0).initialPose.y);
-        ROS_INFO("NavInitPoseth : %.4f", navigationQueue.at(0).initialPose.theta);
+      ROS_INFO("NavInitPosex : %.4f", navigationQueue.at(0).initialPose.x);
+      ROS_INFO("NavInitPosey : %.4f", navigationQueue.at(0).initialPose.y);
+      ROS_INFO("NavInitPoseth : %.4f", navigationQueue.at(0).initialPose.theta);
 
-        ROS_INFO("NavTermPosex : %.4f", navigationQueue.at(0).terminalPose.x);
-        ROS_INFO("NavTermPosey : %.4f", navigationQueue.at(0).terminalPose.y);
-        ROS_INFO("NavTermPoseth : %.4f", navigationQueue.at(0).terminalPose.theta);
-    } else {
-        ROS_INFO ("NavManSize : %d", 0);
+      ROS_INFO("NavTermPosex : %.4f", navigationQueue.at(0).terminalPose.x);
+      ROS_INFO("NavTermPosey : %.4f", navigationQueue.at(0).terminalPose.y);
+      ROS_INFO("NavTermPoseth : %.4f", navigationQueue.at(0).terminalPose.theta);
+    }
+    else
+    {
+      ROS_INFO("NavManSize : %d", 0);
 
-        ROS_INFO ("NavMan0rad : %.4f", 0.0);
-        ROS_INFO ("NavMan0nxc : %.4f", 0.0);
-        ROS_INFO ("NavMan0yc : %.4f", 0.0);
-        ROS_INFO ("NavMan0dist : %.4f", 0.0);
-        ROS_INFO ("NavMan1rad : %.4f", 0.0);
-        ROS_INFO ("NavMan1nxc : %.4f", 0.0);
-        ROS_INFO ("NavMan1yc : %.4f", 0.0);
-        ROS_INFO ("NavMan1dist : %.4f", 0.0);
+      ROS_INFO("NavMan0rad : %.4f", 0.0);
+      ROS_INFO("NavMan0nxc : %.4f", 0.0);
+      ROS_INFO("NavMan0yc : %.4f", 0.0);
+      ROS_INFO("NavMan0dist : %.4f", 0.0);
+      ROS_INFO("NavMan1rad : %.4f", 0.0);
+      ROS_INFO("NavMan1nxc : %.4f", 0.0);
+      ROS_INFO("NavMan1yc : %.4f", 0.0);
+      ROS_INFO("NavMan1dist : %.4f", 0.0);
 
+      ROS_INFO("CurrManEndx : %.4f", 0.0);
+      ROS_INFO("CurrManEndy : %.4f", 0.0);
+      ROS_INFO("CurrManEndTh : %.4f", 0.0);
 
-        ROS_INFO("CurrManEndx : %.4f", 0.0);
-        ROS_INFO("CurrManEndy : %.4f", 0.0);
-        ROS_INFO("CurrManEndTh : %.4f", 0.0);
+      ROS_INFO("NavInitPosex : %.4f", 0.0);
+      ROS_INFO("NavInitPosey : %.4f", 0.0);
+      ROS_INFO("NavInitPoseth : %.4f", 0.0);
 
-        ROS_INFO("NavInitPosex : %.4f", 0.0);
-        ROS_INFO("NavInitPosey : %.4f", 0.0);
-        ROS_INFO("NavInitPoseth : %.4f",0.0);
-
-        ROS_INFO("NavTermPosex : %.4f", 0.0);
-        ROS_INFO("NavTermPosey : %.4f", 0.0);
-        ROS_INFO("NavTermPoseth : %.4f", 0.0);
-
+      ROS_INFO("NavTermPosex : %.4f", 0.0);
+      ROS_INFO("NavTermPosey : %.4f", 0.0);
+      ROS_INFO("NavTermPoseth : %.4f", 0.0);
     }
     if (halt)
     {

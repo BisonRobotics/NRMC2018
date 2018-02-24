@@ -3,12 +3,12 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
-#define POSITIONTOL .80f //should be well above noise floor of localization and wide enough
-                         //for robot to make a corrective maneuver/zero point turn in
-#define GOALREACHEDDIST .100f //should be about the size of the noise floor of localization
-                              //this also determines how far you can overshoot a goal
+#define POSITIONTOL .80f  // should be well above noise floor of localization and wide enough
+// for robot to make a corrective maneuver/zero point turn in
+#define GOALREACHEDDIST .100f  // should be about the size of the noise floor of localization
+// this also determines how far you can overshoot a goal
 #define ANGLETOL .2f
-#define SPEED_CONST .2 //average speed for the wheels in linear m/s
+#define SPEED_CONST .2  // average speed for the wheels in linear m/s
 bool approx(double A, double B, double T)
 {
   return ((A > B - T && A < B + T) ? true : false);
@@ -20,7 +20,8 @@ double dist(double A, double B, double C, double D)
 }
 
 WaypointController::WaypointController(double axelLength, double maxSafeSpeed, pose initialPose, iVescAccess *fl,
-                                       iVescAccess *fr, iVescAccess *br, iVescAccess *bl, double gaurenteedDt, WaypointControllerNs::waypointControllerGains gains)
+                                       iVescAccess *fr, iVescAccess *br, iVescAccess *bl, double gaurenteedDt,
+                                       WaypointControllerNs::waypointControllerGains gains)
 {
   axelLen = axelLength;
   maxSpeed = maxSafeSpeed;
@@ -28,18 +29,18 @@ WaypointController::WaypointController(double axelLength, double maxSafeSpeed, p
   front_right_wheel = fr;
   back_right_wheel = br;
   back_left_wheel = bl;
-/*
-  EPlpGain = 0;  //.0012;
-  EPlpAlpha = 2 * M_PI * gaurenteedDt * .00008 / (2 * M_PI * gaurenteedDt * .00008 + 1);
+  /*
+    EPlpGain = 0;  //.0012;
+    EPlpAlpha = 2 * M_PI * gaurenteedDt * .00008 / (2 * M_PI * gaurenteedDt * .00008 + 1);
 
-  EPpGain = 0;  //0;
-  EPdGain = .55;//.55;
-  ETpGain = 0;  //0;
-  ETdGain = .8; //.8;
-  EPpLowPassGain = 2 * M_PI * gaurenteedDt * .1608 / (2 * M_PI * gaurenteedDt * .1608 + 1);
-  ETpLowPassGain = 2 * M_PI * gaurenteedDt * .1608 / (2 * M_PI * gaurenteedDt * .1608 + 1);
-  WheelSpeedPGain = 0;  //.0;
-*/
+    EPpGain = 0;  //0;
+    EPdGain = .55;//.55;
+    ETpGain = 0;  //0;
+    ETdGain = .8; //.8;
+    EPpLowPassGain = 2 * M_PI * gaurenteedDt * .1608 / (2 * M_PI * gaurenteedDt * .1608 + 1);
+    ETpLowPassGain = 2 * M_PI * gaurenteedDt * .1608 / (2 * M_PI * gaurenteedDt * .1608 + 1);
+    WheelSpeedPGain = 0;  //.0;
+  */
   EPpGain = gains.eppgain;
   EPdGain = gains.epdgain;
   ETpGain = gains.etpgain;
@@ -111,13 +112,11 @@ void WaypointController::clearControlStates()
   LvelCmd = 0;
   RvelCmd = 0;
 
-  LWheelError =0;
-  RWheelError =0;
+  LWheelError = 0;
+  RWheelError = 0;
 
   LvelCmdPrev = LvelCmd;
   RvelCmdPrev = RvelCmd;
-
-
 }
 
 void WaypointController::haltAndAbort()
@@ -186,7 +185,7 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
   pose robotPose;
   robotPose.x = stateVector.x_pos;
   robotPose.y = stateVector.y_pos;
-  robotPose.theta  =stateVector.theta;
+  robotPose.theta = stateVector.theta;
 
   Status returnStatus = Status::ALLGOOD;
   if (navigationQueue.size() > 0)  // places to go, there are waypoints in the navigationQueue
@@ -202,7 +201,7 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
         return Status::ALLGOOD;  // gotta get out of here, if the navigationQueue is empty, then the next time
         // update is called, this function will return GOALREACHED and stop the robot
       }
-      currMan = navigationQueue.at(0).mans.at(currManeuverIndex);  // set current maneuver
+      currMan = navigationQueue.at(0).mans.at(currManeuverIndex);      // set current maneuver
       theCPP = WaypointControllerHelper::findCPP(robotPose, currMan);  // closest pose on path
       if (currManeuverIndex == 0)
       {  // if this is the first maneuver on the stack for this waypoint
@@ -215,9 +214,8 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
         maneuverEnd = WaypointControllerHelper::endOfManeuver(maneuverEnd, currMan);
         // else the end pose is from the last maneuverEnd through the current maneuver
       }
-      std::pair<double, double> myPair =
-          WaypointControllerHelper::speedAndRadius2WheelVels(SPEED_CONST * maxSpeed * WaypointControllerHelper::sign(currMan.distance),
-                                                             currMan.radius, axelLen, maxSpeed);
+      std::pair<double, double> myPair = WaypointControllerHelper::speedAndRadius2WheelVels(
+          SPEED_CONST * maxSpeed * WaypointControllerHelper::sign(currMan.distance), currMan.radius, axelLen, maxSpeed);
       LeftWheelSetSpeed = myPair.first;
       RightWheelSetSpeed = myPair.second;
       // reset control states
@@ -231,30 +229,35 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     else  // doing a maneuver, need to see if robot has completed it
     {
       theCPP = WaypointControllerHelper::findCPP(robotPose, currMan);  // closest pose on path
-      dist2endOnPath = WaypointControllerHelper::sign(currMan.distance)*currMan.radius*(WaypointControllerHelper::anglediff(maneuverEnd.theta, theCPP.theta));
-      dist2endAbs =  dist(robotPose.x, robotPose.y, maneuverEnd.x, maneuverEnd.y);
+      dist2endOnPath = WaypointControllerHelper::sign(currMan.distance) * currMan.radius *
+                       (WaypointControllerHelper::anglediff(maneuverEnd.theta, theCPP.theta));
+      dist2endAbs = dist(robotPose.x, robotPose.y, maneuverEnd.x, maneuverEnd.y);
       dist2Path = dist(robotPose.x, robotPose.y, theCPP.x, theCPP.y);
 
-      if (approx(dist2endOnPath,0, GOALREACHEDDIST) && approx(dist2endAbs,0,GOALREACHEDDIST)) //reached waypoint in a good way (on the end point)
+      if (approx(dist2endOnPath, 0, GOALREACHEDDIST) &&
+          approx(dist2endAbs, 0, GOALREACHEDDIST))  // reached waypoint in a good way (on the end point)
       {
         doingManeuver = false;
         currManeuverIndex++;
-        return Status::ALLGOOD;  // next time function is called, maneuver will update and either start next maneuver or stop
+        return Status::ALLGOOD;  // next time function is called, maneuver will update and either start next maneuver or
+                                 // stop
                                  // if it was the last one
       }
-      if ( std::abs(dist2Path) > POSITIONTOL)  //fell off of path (to the side most likely)
+      if (std::abs(dist2Path) > POSITIONTOL)  // fell off of path (to the side most likely)
       {
-         //modifyNavQueue2RecoverFromPathError(robotPose, maneuverEnd);//generate new maneuver and load it into navigation queue
-         halt();
-         return Status::OFFPATH; //this also resets the current maneuver
+        // modifyNavQueue2RecoverFromPathError(robotPose, maneuverEnd);//generate new maneuver and load it into
+        // navigation queue
+        halt();
+        return Status::OFFPATH;  // this also resets the current maneuver
       }
-      if ( dist2endOnPath < -GOALREACHEDDIST) //overshot path and drove past goal (but still might be close to path)
+      if (dist2endOnPath < -GOALREACHEDDIST)  // overshot path and drove past goal (but still might be close to path)
       {
-         modifyNavQueue2RecoverFromGoalOvershoot(); //mark maneuver as complete
-         return Status::OVERSHOT; //next time function is called, maneuver will update and either start next maneuver or stop
-                                 // if it was the last one.
+        modifyNavQueue2RecoverFromGoalOvershoot();  // mark maneuver as complete
+        return Status::OVERSHOT;  // next time function is called, maneuver will update and either start next maneuver
+                                  // or stop
+        // if it was the last one.
       }
-      //todo: implement cantplan and isstuck
+      // todo: implement cantplan and isstuck
     }
 
     // do control system calculations
@@ -266,10 +269,9 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     {
       EPpEst = currMan.radius + dist(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
     }
-    //Do we want hysteresis on the ETpEst? this might prevent an oscillation
+    // Do we want hysteresis on the ETpEst? this might prevent an oscillation
     ETpEst = WaypointControllerHelper::anglediff(robotPose.theta,
                                                  theCPP.theta);  // order?  // positive error means turn left
-
 
     EPpLowPassPrev = EPpLowPass;
     EPpLowPass = EPpLowPassGain * EPpEst + (1 - EPpLowPassGain) * EPpLowPassPrev;
@@ -286,25 +288,28 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     double radiusEst = (stateVector.omega != 0) ? speedEst / stateVector.omega : 1000;
 
     std::pair<double, double> myPair =
-          WaypointControllerHelper::speedAndRadius2WheelVels(speedEst,radiusEst, axelLen, maxSpeed);
-    double LeftWheelEffectiveSpeed  = myPair.first;
+        WaypointControllerHelper::speedAndRadius2WheelVels(speedEst, radiusEst, axelLen, maxSpeed);
+    double LeftWheelEffectiveSpeed = myPair.first;
     double RightWheelEffectiveSpeed = myPair.second;
     RWheelError = RvelCmd - RightWheelEffectiveSpeed;
     LWheelError = LvelCmd - LeftWheelEffectiveSpeed;
 
+    LvelCmd = LeftWheelSetSpeed +
+              WaypointControllerHelper::sign(currMan.distance) *
+                  ((EPpGain * EPpEst + EPdGain * EPpDerivFiltEst) +
+                   WaypointControllerHelper::sign(currMan.distance) * (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) +
+                   WheelErrorGain * RWheelError) *
+                  dt;
 
-    LvelCmd = LeftWheelSetSpeed + WaypointControllerHelper::sign(currMan.distance) *
-              ((EPpGain * EPpEst + EPdGain * EPpDerivFiltEst)
-               + WaypointControllerHelper::sign(currMan.distance) *(ETpGain * ETpEst + ETdGain * ETpDerivFiltEst)
-               + WheelErrorGain * RWheelError) * dt;
+    RvelCmd = RightWheelSetSpeed -
+              WaypointControllerHelper::sign(currMan.distance) *
+                  ((EPpGain * EPpEst + EPdGain * EPpDerivFiltEst) +
+                   WaypointControllerHelper::sign(currMan.distance) * (ETpGain * ETpEst + ETdGain * ETpDerivFiltEst) -
+                   WheelErrorGain * LWheelError) *
+                  dt;
 
-    RvelCmd = RightWheelSetSpeed - WaypointControllerHelper::sign(currMan.distance) *
-              ((EPpGain * EPpEst + EPdGain * EPpDerivFiltEst)
-               + WaypointControllerHelper::sign(currMan.distance) *(ETpGain * ETpEst + ETdGain * ETpDerivFiltEst)
-               - WheelErrorGain * LWheelError) * dt;
-
-    LvelCmd = WheelAlpha * LvelCmd + (1.0-WheelAlpha) * LvelCmdPrev;
-    RvelCmd = WheelAlpha * RvelCmd + (1.0-WheelAlpha) * RvelCmdPrev;
+    LvelCmd = WheelAlpha * LvelCmd + (1.0 - WheelAlpha) * LvelCmdPrev;
+    RvelCmd = WheelAlpha * RvelCmd + (1.0 - WheelAlpha) * RvelCmdPrev;
 
     front_left_wheel->setLinearVelocity(LvelCmd);
     back_left_wheel->setLinearVelocity(LvelCmd);
@@ -327,29 +332,23 @@ double WaypointController::getDist2endOnPath()
 
 void WaypointController::modifyNavQueue2RecoverFromPathError(pose RobotPose, pose manEnd)
 {
-  //should plan a maneuver to end of blown maneuver
-  //and dump the blown one
-    waypointWithManeuvers newWaypoint;
-    newWaypoint.initialPose = RobotPose;
-    newWaypoint.terminalPose = manEnd;
-    newWaypoint.mans = WaypointControllerHelper::waypoint2maneuvers(RobotPose, manEnd);
+  // should plan a maneuver to end of blown maneuver
+  // and dump the blown one
+  waypointWithManeuvers newWaypoint;
+  newWaypoint.initialPose = RobotPose;
+  newWaypoint.terminalPose = manEnd;
+  newWaypoint.mans = WaypointControllerHelper::waypoint2maneuvers(RobotPose, manEnd);
 
-    std::vector<waypointWithManeuvers>::iterator it;
-    it = navigationQueue.begin();
-    navigationQueue.insert(it, newWaypoint);
-    doingManeuver = false;
-    currManeuverIndex =0;
-
+  std::vector<waypointWithManeuvers>::iterator it;
+  it = navigationQueue.begin();
+  navigationQueue.insert(it, newWaypoint);
+  doingManeuver = false;
+  currManeuverIndex = 0;
 }
 
 void WaypointController::modifyNavQueue2RecoverFromGoalOvershoot()
 {
-  //should just consider the current maneuver achieved and begin to attempt the next manuever
+  // should just consider the current maneuver achieved and begin to attempt the next manuever
   doingManeuver = false;
   currManeuverIndex++;
 }
-
-
-
-
-

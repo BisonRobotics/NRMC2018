@@ -12,6 +12,7 @@ public:
 
   bool isDeployed();
   bool isRetracted();
+
 private:
   bool deployed, retracted;
   iVescAccess *l, *r;
