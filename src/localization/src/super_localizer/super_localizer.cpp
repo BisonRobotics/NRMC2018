@@ -43,9 +43,6 @@ SuperLocalizer::SuperLocalizer(double axleLen, double xi, double yi, double thi,
   this->gainVector = gains;
 }
 
-
-
-
 SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(double dt)
 {
   bool floating = false;
@@ -71,7 +68,8 @@ SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(double dt)
       this->measured.x_accel = cIMU->getX();
       this->measured.y_accel = cIMU->getY();
     }
-    else {
+    else
+    {
       this->measured.x_vel = deadReck->getStateVector().x_vel;
       // unimplemented sensor, set to model value so residual stays 0
       this->measured.y_vel = deadReck->getStateVector().y_vel;
@@ -82,13 +80,12 @@ SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(double dt)
     // get Pos data, This is measured pos
     if (have_pos)
     {
-      floating = pSensor->isFloating(); // this is done this way to prevent accessing a null method on pSensor
+      floating = pSensor->isFloating();  // this is done this way to prevent accessing a null method on pSensor
     }
     else
     {
       floating = true;
     }
-
 
     if (!floating)
     {
@@ -104,14 +101,14 @@ SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(double dt)
       // unimplemented sensor, set to model value so residual stays 0
       this->measured.theta += deadReck->getStateVector().omega * dt;
       // unimplemented sensor, set to model value so residual stays 0
-        //if there is no position sensor, measured begins to integrate dead reck vel's
+      // if there is no position sensor, measured begins to integrate dead reck vel's
     }
 
     // take difference between estimated data and measured data, this is residual
-    this->residual = LocalizerInterface::diff(state_vector, measured); //measured pos
+    this->residual = LocalizerInterface::diff(state_vector, measured);  // measured pos
     // revise estimate by subtracting residual from it * some gain
 
-    LocalizerInterface::stateVector intermediateStateVector = //this is current estimate + model data
+    LocalizerInterface::stateVector intermediateStateVector =  // this is current estimate + model data
         LocalizerInterface::addFromModel(this->state_vector, this->deadReck->getStateVector(), dt, have_imu);
     LocalizerInterface::stateVector intermediate = LocalizerInterface::multiply(this->gainVector, this->residual);
     this->state_vector = LocalizerInterface::diff(intermediateStateVector, intermediate);

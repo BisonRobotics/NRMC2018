@@ -7,7 +7,7 @@
 #define CUTOFFDIST4DOUBLEARC .01
 #define CPPEQUALTOL .05
 
-int WaypointControllerHelper::sign(double A) //MUST BE INT
+int WaypointControllerHelper::sign(double A)  // MUST BE INT
 {
   return (A >= 0 ? 1 : -1);
 }
@@ -186,9 +186,8 @@ std::vector<maneuver> WaypointControllerHelper::oneTurnSolution(pose robotPose, 
 
     double xhalf = (wp.x + xtangent) / 2.0f;
     double yhalf = (wp.y + ytangent) / 2.0f;
-    maneuver2.xc = xhalf + maneuver2.radius*cos(wp.theta+M_PI_2);
-    maneuver2.yc = yhalf + maneuver2.radius*sin(wp.theta+M_PI_2);
-
+    maneuver2.xc = xhalf + maneuver2.radius * cos(wp.theta + M_PI_2);
+    maneuver2.yc = yhalf + maneuver2.radius * sin(wp.theta + M_PI_2);
   }
   else  // turn is second
   {
@@ -400,7 +399,7 @@ pose WaypointControllerHelper::findCPP(pose robotPose, maneuver curManeuver)
   pose CPP;
   thetatangent = atan2(robotPose.y - curManeuver.yc, robotPose.x - curManeuver.xc);
   CPP.theta = WaypointControllerHelper::anglediff(thetatangent, -M_PI_2 * sign(curManeuver.radius));
-  //CPP.theta = WaypointControllerHelper::anglediff(CPP.theta, 0);
+  // CPP.theta = WaypointControllerHelper::anglediff(CPP.theta, 0);
 
   CPP.x = std::abs(curManeuver.radius) * cos(thetatangent) + curManeuver.xc;
   CPP.y = std::abs(curManeuver.radius) * sin(thetatangent) + curManeuver.yc;
@@ -465,24 +464,24 @@ std::pair<double, double> WaypointControllerHelper::speedAndRadius2WheelVels(dou
   // speed is average of wheel velocities: TotalVel = .5*(LeftVel + RightVel)
   // Turn Radius = AxelLen/2 * (LeftVel+RightVel)/(RightVel - LeftVel)
   std::pair<double, double> Vels;
-  if (radius != 0) //todo: add min radius? or does max speed take care of any problems?
+  if (radius != 0)  // todo: add min radius? or does max speed take care of any problems?
   {
-    Vels.first = ((4*radius*speed/AxelLen) - 2*speed)*AxelLen/(radius*4);
-    Vels.second = (2*speed) - Vels.first;
+    Vels.first = ((4 * radius * speed / AxelLen) - 2 * speed) * AxelLen / (radius * 4);
+    Vels.second = (2 * speed) - Vels.first;
 
-    //this scales the max wheel speed to the max speed if necessary
+    // this scales the max wheel speed to the max speed if necessary
     double maxabs = std::max(std::abs(Vels.first), std::abs(Vels.second));
     if (maxabs > maxSpeed)
     {
-      double newspeed = speed * maxSpeed/maxabs; //this then calculates the new scaled speeds
-      Vels.first = ((4*radius*newspeed/AxelLen) - 2*newspeed)*AxelLen/(radius*4);
-      Vels.second = (2*newspeed) - Vels.first;
+      double newspeed = speed * maxSpeed / maxabs;  // this then calculates the new scaled speeds
+      Vels.first = ((4 * radius * newspeed / AxelLen) - 2 * newspeed) * AxelLen / (radius * 4);
+      Vels.second = (2 * newspeed) - Vels.first;
     }
   }
   else
   {
-    Vels.first = -.5*speed;
-    Vels.second = .5*speed; //if doing min radius, multiply these by +/-sign(radius);
+    Vels.first = -.5 * speed;
+    Vels.second = .5 * speed;  // if doing min radius, multiply these by +/-sign(radius);
   }
 
   return Vels;

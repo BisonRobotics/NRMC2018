@@ -43,8 +43,8 @@ int main(int argc, char** argv)
     }
     else
     {
-       ros::spinOnce();
-       rate.sleep();
+      ros::spinOnce();
+      rate.sleep();
     }
   }
 }

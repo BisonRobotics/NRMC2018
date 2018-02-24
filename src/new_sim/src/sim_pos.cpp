@@ -36,12 +36,12 @@ void SimPos::update(double x1, double y1, double theta1)
   theta = theta1;
 }
 
-bool SimPos::isFloating ()
+bool SimPos::isFloating()
 {
   return is_floating;
 }
 
-void SimPos::setIsFloating (bool is_floating)
+void SimPos::setIsFloating(bool is_floating)
 {
   this->is_floating = is_floating;
 }

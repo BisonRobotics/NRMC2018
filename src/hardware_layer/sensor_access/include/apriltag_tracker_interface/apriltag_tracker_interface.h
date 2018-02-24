@@ -12,22 +12,22 @@ public:
   double getX() override;
   double getY() override;
   double getTheta() override;
-  bool isFloating () override;
+  bool isFloating() override;
   ReadableSensors::ReadStatus receiveData() override;
 
 private:
   ros::Subscriber sub;
-    ros::Publisher pub;
+  ros::Publisher pub;
   ros::NodeHandle nh_;
   bool is_floating;
   void callback(const geometry_msgs::PoseStamped::ConstPtr &msg);
   double x;
   double y;
   double theta;
-  double qtToTheta (geometry_msgs::Quaternion);
+  double qtToTheta(geometry_msgs::Quaternion);
   ros::Duration timeout;
   ros::Time last_time;
-  void updateIsFloating ();
+  void updateIsFloating();
 };
 
 #endif  // PROJECT_APRILTAG_TRACKER_INTERFACE_H

@@ -1,0 +1,5 @@
+<launch>
+  <node name="the_hoe_master" pkg="dig_control" type="hoe_master" >
+    <param name="simulating_digging" type="bool" value="true"/>
+  </node>
+</launch>

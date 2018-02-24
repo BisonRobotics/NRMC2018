@@ -37,15 +37,15 @@ LocalizerInterface::stateVector multiply(LocalizerInterface::stateVector lhs, Lo
 LocalizerInterface::stateVector addFromModel(LocalizerInterface::stateVector lhs, LocalizerInterface::stateVector rhs,
                                              double dt, bool imu)
 {
-  //add together current estimate (lhs) and information from dead reck (rhs)
+  // add together current estimate (lhs) and information from dead reck (rhs)
   LocalizerInterface::stateVector ret;
-  ret.x_pos = lhs.x_pos + rhs.x_vel * dt; //integrate velocities from dead reck and add to current estimate
+  ret.x_pos = lhs.x_pos + rhs.x_vel * dt;  // integrate velocities from dead reck and add to current estimate
   ret.y_pos = lhs.y_pos + rhs.y_vel * dt;
   ret.theta = lhs.theta + rhs.omega * dt;
-  ret.x_vel = rhs.x_vel;// + rhs.x_accel * dt; //acceleration from dead reck is 0, but vel has some information
-  ret.y_vel = rhs.y_vel;// + rhs.y_accel * dt;
-  ret.omega = rhs.omega;// + rhs.alpha * dt;
-  ret.alpha = lhs.alpha; //take acceleration data from current estimate because dead reck has no info on this
+  ret.x_vel = rhs.x_vel;  // + rhs.x_accel * dt; //acceleration from dead reck is 0, but vel has some information
+  ret.y_vel = rhs.y_vel;  // + rhs.y_accel * dt;
+  ret.omega = rhs.omega;  // + rhs.alpha * dt;
+  ret.alpha = lhs.alpha;  // take acceleration data from current estimate because dead reck has no info on this
   ret.x_accel = lhs.x_accel;
   ret.y_accel = lhs.y_accel;
   return ret;

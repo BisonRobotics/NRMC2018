@@ -75,6 +75,7 @@
         groups: dialout
     
     - name: remove modemmanager
+      become: yes
       apt:
         name: modemmanager
         state: absent

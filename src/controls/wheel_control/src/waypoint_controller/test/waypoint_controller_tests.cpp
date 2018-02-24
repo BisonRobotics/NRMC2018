@@ -38,12 +38,10 @@ TEST(WaypointControllerTests, updateReturnsAStatus)
   WaypointController wc = WaypointController(.5f, .5f, wcInitial, fl, fr, br, bl, .01, waypoint_default_gains);
   WaypointController::Status returnStatus = wc.update(sim.getStates(), .01);
 
-  EXPECT_TRUE(returnStatus == WaypointController::Status::ALLGOOD ||
-              returnStatus == WaypointController::Status::GOALREACHED ||
-              returnStatus == WaypointController::Status::OVERSHOT ||
-              returnStatus == WaypointController::Status::OFFPATH ||
-              returnStatus == WaypointController::Status::CANTPLAN ||
-              returnStatus == WaypointController::Status::ISSTUCK);
+  EXPECT_TRUE(
+      returnStatus == WaypointController::Status::ALLGOOD || returnStatus == WaypointController::Status::GOALREACHED ||
+      returnStatus == WaypointController::Status::OVERSHOT || returnStatus == WaypointController::Status::OFFPATH ||
+      returnStatus == WaypointController::Status::CANTPLAN || returnStatus == WaypointController::Status::ISSTUCK);
 }
 
 TEST(WaypointControllerTests, ableToAddWaypoint_FrontThenRight)

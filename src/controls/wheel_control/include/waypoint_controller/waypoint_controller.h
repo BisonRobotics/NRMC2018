@@ -12,37 +12,34 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #define DT_THAT_SHALL_BE_USED .02
-#define EPFISIZE 100
-#define EPFI2SIZE 100
 
-namespace WaypointControllerNs {
-    typedef struct waypointGains_s {
-        double eppgain;
-        double epdgain;
-        double etpgain;
-        double etdgain;
-        double epplpgain;
-        double etplpgain;
-        double wheelalpha;
-        double wheelerrorgain;
-    }waypointControllerGains;
-
-
+namespace WaypointControllerNs
+{
+typedef struct waypointGains_s
+{
+  double eppgain;
+  double epdgain;
+  double etpgain;
+  double etdgain;
+  double epplpgain;
+  double etplpgain;
+  double wheelalpha;
+  double wheelerrorgain;
+} waypointControllerGains;
 }
 
- static constexpr WaypointControllerNs::waypointControllerGains waypoint_default_gains = {
-        /*DNFW*/
-        .eppgain = 30,
-        .epdgain= -10,//.55,
-        .etpgain = 60,
-        .etdgain = -25,//.8,
-        .epplpgain = 2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 / (2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 + 1),
-        .etplpgain = 2 * M_PI * DT_THAT_SHALL_BE_USED* .1608 / (2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 + 1),
-        .wheelalpha = .1,
-        .wheelerrorgain = 10
-        /*DNFW*/
+static constexpr WaypointControllerNs::waypointControllerGains waypoint_default_gains = {
+  /*DNFW*/
+  .eppgain = 30,
+  .epdgain = -10,  //.55,
+  .etpgain = 60,
+  .etdgain = -25,  //.8,
+  .epplpgain = 2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 / (2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 + 1),
+  .etplpgain = 2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 / (2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 + 1),
+  .wheelalpha = .1,
+  .wheelerrorgain = 10
+  /*DNFW*/
 };
-
 
 // a manuever is one arc that the robot does
 // it has a radius, a turn center (in world coord)
@@ -61,7 +58,8 @@ public:
     ISSTUCK
   };
   WaypointController(double axelLength, double maxSafeSpeed, pose initialPose, iVescAccess *fl, iVescAccess *fr,
-                     iVescAccess *br, iVescAccess *bl, double gaurenteedDt, WaypointControllerNs::waypointControllerGains gains);
+                     iVescAccess *br, iVescAccess *bl, double gaurenteedDt,
+                     WaypointControllerNs::waypointControllerGains gains);
   std::vector<std::pair<double, double> > addWaypoint(pose waypoint, pose currRobotPose);
   Status update(LocalizerInterface::stateVector stateVector, double dt);
   std::vector<waypointWithManeuvers> getNavigationQueue();  // DEBUG
@@ -72,7 +70,7 @@ public:
   double getEPpEstimate();                                  // DEBUG
   double getDist2endOnPath();                               // DEBUG
   std::pair<double, double> getSetSpeeds();                 // DEBUG
-  std::pair<double, double> getCmdSpeeds();  // DEBUG
+  std::pair<double, double> getCmdSpeeds();                 // DEBUG
 
   void haltAndAbort();
   void clearControlStates();
@@ -84,11 +82,11 @@ private:
   std::vector<waypointWithManeuvers> navigationQueue;
   iVescAccess *front_left_wheel, *front_right_wheel, *back_right_wheel, *back_left_wheel;
   double axelLen, maxSpeed;
-  double EPpGain, EPdGain, ETpGain, ETdGain, EPpLowPassGain, ETpLowPassGain; // path and theta error gains
+  double EPpGain, EPdGain, ETpGain, ETdGain, EPpLowPassGain, ETpLowPassGain;  // path and theta error gains
   double EPpLowPass, EPpLowPassPrev, ETpLowPass, ETpLowPassPrev, EPpDerivFiltEst, ETpDerivFiltEst;
   double EPpEst, ETpEst;
 
-  //TODO replace gains with a gains struct
+  // TODO replace gains with a gains struct
   double LvelCmd, RvelCmd;
   double LvelCmdPrev, RvelCmdPrev;
   double WheelAlpha;
@@ -105,6 +103,5 @@ private:
   maneuver currMan;
   pose theCPP;
 };
-
 
 #endif

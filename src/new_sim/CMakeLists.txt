@@ -5,9 +5,6 @@ add_compile_options(-std=c++11)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  vesc_access
-  sensor_access
-  localization
 )
 
 find_package (vesc_access REQUIRED)
@@ -40,6 +37,9 @@ add_library(support_libs
   src/sim_imu.cpp
   src/sim_pos.cpp
   src/sim_vesc.cpp
+  src/sim_backhoe.cpp
+  src/sim_bucket.cpp
+  src/sim_outriggers.cpp
 )
 
 
