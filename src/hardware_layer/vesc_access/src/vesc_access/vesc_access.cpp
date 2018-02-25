@@ -13,6 +13,7 @@ void VescAccess::initializeMembers(float transmission_ratio, float output_ratio,
   this->read_only = read_only;
   this->minADC = 0;
   this->maxADC = 0x0FFF; // 12 bit ADC
+  this->radians_per_turn = M_PI_2;
   this->rad_per_count = radians_per_turn / (1.0f * (maxADC - minADC));
   this->rad_offset = 0.0;
 }
