@@ -28,11 +28,11 @@ int main(int argc, char** argv)
   std::random_device rd;
   std::mt19937 mt(rd());
   //std::uniform_real_distribution<double> dist(-M_PI, M_PI);
-  std::normal_distribution<double> dist{0, M_PI_4};
+  std::normal_distribution<double> dist{1, M_PI_4};
   double randomTheta;
   double waypointDist = .5;
 
-  for (int num=0; num<10;num++)
+  for (int num=0; num<5;num++)
   {
     randomTheta = dist(mt);
     wp1.theta += randomTheta;
@@ -43,17 +43,17 @@ int main(int argc, char** argv)
     waypoints.push_back(wp1);
   }
 
-  wpmsg.pose_array = waypoints;
-
+  ros::spinOnce();
   while (ros::ok())
   {
     wpmsg.pose_array = waypoints;
+    ros::spinOnce();
     pub.publish(wpmsg);
 
 
     waypoints.clear();
 
-    for (int num=0; num<10;num++)
+    for (int num=0; num<5;num++)
     {
       randomTheta = dist(mt);
       wp1.theta += randomTheta;
