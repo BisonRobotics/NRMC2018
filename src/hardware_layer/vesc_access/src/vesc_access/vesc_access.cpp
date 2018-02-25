@@ -1,6 +1,10 @@
 #include <vesc_access/vesc_access.h>
 #include <math.h>
 
+#define MIN_ADC_READING 0
+#define MAX_ADC_READING 0x3FF   // 10 bits
+
+
 void VescAccess::initializeMembers(float transmission_ratio, float output_ratio, float velocity_limit,
                                    float torque_limit, float torque_constant, unsigned int pole_pairs, bool read_only)
 {
@@ -210,10 +214,26 @@ void VescAccess::setPolePairs(unsigned int pole_pairs)
 
 nsVescAccess::limitSwitchState VescAccess::getLimitSwitchState(void)
 {
-  return nsVescAccess::limitSwitchState::inTransit;
+  nsVescAccess::limitSwitchState state;
+  if (vesc->getForLimit())
+  {
+    state = nsVescAccess::limitSwitchState::topOfMotion;
+  }
+  else if (vesc->getRevLimit())
+  {
+    state = nsVescAccess::limitSwitchState::bottomOfMotion;
+  }
+  else
+  {
+    state = nsVescAccess::limitSwitchState::inTransit;
+  }
+  if (vesc->getRevLimit() && vesc->getForLimit()){
+    throw std::runtime_error("both limit switches activated. Bad News");
+  }
+  return state;
 }
 
 float VescAccess::getPotPosition(void)
 {
-  return 0.0;
+  return vesc->getADC();
 }

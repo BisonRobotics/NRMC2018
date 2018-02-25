@@ -12,6 +12,9 @@ public:
   MOCK_METHOD1(setCurrent, void(float current));
   MOCK_METHOD0(getCurrent, float(void));
   MOCK_METHOD0(getRpm, int(void));
+  MOCK_METHOD0(getADC, int (void));
+  MOCK_METHOD0(getForLimit, bool(void));
+  MOCK_METHOD0(getRevLimit, bool(void));
 };
 
 #endif
