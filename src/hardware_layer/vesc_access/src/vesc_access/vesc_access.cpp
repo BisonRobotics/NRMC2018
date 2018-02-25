@@ -15,7 +15,8 @@ void VescAccess::initializeMembers(float transmission_ratio, float output_ratio,
   this->read_only = read_only;
   this->minADC = 0;
   this->maxADC = 0x0FFF;
-  this->rad_per_count = radians_per_turn/(1.0f*minADC - maxADC);
+  this->rad_per_count = radians_per_turn/(1.0f*(maxADC-minADC));
+  this->rad_offset = 0.0;
 }
 
 VescAccess::VescAccess(float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,

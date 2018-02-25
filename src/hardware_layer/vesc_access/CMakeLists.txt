@@ -81,6 +81,14 @@ target_link_libraries (vesc_access_integration_test
   vesc_access
 )
 
+
+add_executable(vesc_access_pot_limit_test
+        test/vesc_access_pot_limit_test.cpp
+        )
+
+target_link_libraries(vesc_access_pot_limit_test
+        vesc_access)
+
 # Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/vesc_access.cpp
