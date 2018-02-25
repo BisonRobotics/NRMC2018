@@ -1,8 +1,6 @@
 #include <vesc_access/vesc_access.h>
 #include <math.h>
 
-#define MIN_ADC_READING 0
-#define MAX_ADC_READING 0x3FF   // 10 bits
 
 
 void VescAccess::initializeMembers(float transmission_ratio, float output_ratio, float velocity_limit,
@@ -15,6 +13,9 @@ void VescAccess::initializeMembers(float transmission_ratio, float output_ratio,
   setTorqueConstant(torque_constant);
   setPolePairs(pole_pairs);
   this->read_only = read_only;
+  this->minADC = 0;
+  this->maxADC = 0x0FFF;
+  this->rad_per_count = radians_per_turn/(1.0f*minADC - maxADC);
 }
 
 VescAccess::VescAccess(float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
@@ -235,5 +236,5 @@ nsVescAccess::limitSwitchState VescAccess::getLimitSwitchState(void)
 
 float VescAccess::getPotPosition(void)
 {
-  return vesc->getADC();
+  return vesc->getADC()*rad_per_count - rad_offset;
 }
