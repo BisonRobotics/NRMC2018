@@ -8,7 +8,6 @@ Version: 2
 """
 from enum import Enum
 import time
-import tf
 import rospy
 
 from sensor_msgs.msg import LaserScan
@@ -36,7 +35,8 @@ class robot(object):
         """
         self.state = None
         self.change_state(RobotState.OUTBOUND)
-        self.tf = tf.TransformListener(node)
+        #TODO : Fix for localization
+        self.tf = None
         self.location = None
         self.pose = None
         self.laser_scan = None
@@ -101,16 +101,13 @@ class robot(object):
         Localization for the robot
         :return: robot location (x,y) and pose (x,y,theta)
         """
-        try:
-            #TODO : Add localization stuff here when it become available
-            #(self.location, self.pose) = self.tf.lookupTransform('/map', '/base_link', rospy.Time(0))
-            self.location = (0,0)
-            self.pose = (0,0,0)
-            return (self.location, self.pose)
 
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            return (None, None)
+        #TODO : Add localization stuff here when it become available
+        #(self.location, self.pose) = self.tf.lookupTransform('/map', '/base_link', rospy.Time(0))
+        self.location = (0,0)
+        self.pose = (0,0,0)
         return (self.location, self.pose)
+
 
     def dig(self):
         """
