@@ -11,7 +11,7 @@ public:
   void setTorque(float current) override;  // note: not really implemented
   float getLinearVelocity(void) override;
   float getTorque(void) override;  // note: not really implemented
-  void update(double dt);  // use P gain to adjust speed to set speed over time
+  void update(double dt);          // use P gain to adjust speed to set speed over time
   nsVescAccess::limitSwitchState getLimitSwitchState(void) override;
   void setLimitSwitchState(nsVescAccess::limitSwitchState state);
   float getPotPosition(void) override;

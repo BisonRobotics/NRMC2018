@@ -1,8 +1,6 @@
 #include <vesc_access/vesc_access.h>
 #include <math.h>
 
-
-
 void VescAccess::initializeMembers(float transmission_ratio, float output_ratio, float velocity_limit,
                                    float torque_limit, float torque_constant, unsigned int pole_pairs, bool read_only)
 {
@@ -15,7 +13,7 @@ void VescAccess::initializeMembers(float transmission_ratio, float output_ratio,
   this->read_only = read_only;
   this->minADC = 0;
   this->maxADC = 0x0FFF;
-  this->rad_per_count = radians_per_turn/(1.0f*(maxADC-minADC));
+  this->rad_per_count = radians_per_turn / (1.0f * (maxADC - minADC));
   this->rad_offset = 0.0;
 }
 
@@ -229,7 +227,8 @@ nsVescAccess::limitSwitchState VescAccess::getLimitSwitchState(void)
   {
     state = nsVescAccess::limitSwitchState::inTransit;
   }
-  if (vesc->getRevLimit() && vesc->getForLimit()){
+  if (vesc->getRevLimit() && vesc->getForLimit())
+  {
     throw std::runtime_error("both limit switches activated. Bad News");
   }
   return state;
@@ -237,5 +236,5 @@ nsVescAccess::limitSwitchState VescAccess::getLimitSwitchState(void)
 
 float VescAccess::getPotPosition(void)
 {
-  return vesc->getADC()*rad_per_count - rad_offset;
+  return vesc->getADC() * rad_per_count - rad_offset;
 }

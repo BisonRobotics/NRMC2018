@@ -9,8 +9,8 @@ public:
   virtual void setCurrent(float current) = 0;
   virtual float getCurrent(void) = 0;
   virtual int getRpm(void) = 0;
-  virtual int getADC (void) = 0;
-  virtual bool getForLimit (void) =0;
-  virtual bool getRevLimit (void) = 0;
+  virtual int getADC(void) = 0;
+  virtual bool getForLimit(void) = 0;
+  virtual bool getRevLimit(void) = 0;
 };
 #endif
