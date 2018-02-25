@@ -91,7 +91,7 @@ geometry_msgs::TransformStamped create_sim_tf(double x, double y, double theta)
   tfStamp.child_frame_id = "sim_base_link";
   tfStamp.transform.translation.x = x;
   tfStamp.transform.translation.y = y;
-  tfStamp.transform.translation.z = 0.0;
+  tfStamp.transform.translation.z = 0.5;
   tf2::Quaternion q;
   q.setRPY(0, 0, theta);
   tfStamp.transform.rotation.x = q.x();
@@ -304,11 +304,14 @@ int main(int argc, char **argv)
       sim->update(loopTime.toSec());
 
       tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
+      //also publish marker
     }
 
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
+
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+    //also publish marker
 
     currPose.x = stateVector.x_pos;
     currPose.y = stateVector.y_pos;
