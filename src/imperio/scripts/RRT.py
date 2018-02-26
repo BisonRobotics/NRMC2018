@@ -147,7 +147,6 @@ def collision_check(node, map):
         return False
 
     #check that there isn't anything in that grid space
-    #TODO : the current testing settup are inverted occupancy grids, check on ones coming from robot
     if map.grid[row][col] < threshold:
         return True
     else:
