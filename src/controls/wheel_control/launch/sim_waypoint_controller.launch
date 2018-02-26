@@ -1,3 +1,6 @@
 <launch>
-  <node name="position_controller" pkg="wheel_control" type="waypoint_master"/>
+  <node name="waypoint_streamer" pkg="wheel_control" type="waypoint_filter" />
+  <node name="position_controller" pkg="wheel_control" type="waypoint_master">
+    <param name="simulating_driving" type="bool" value="true"/>
+  </node>
 </launch>
