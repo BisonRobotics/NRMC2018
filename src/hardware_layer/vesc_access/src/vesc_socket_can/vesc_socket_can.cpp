@@ -14,7 +14,7 @@ Vesc::Vesc(char *interface, uint8_t controllerID, uint32_t quirks)
   _controllerID = controllerID;
   _quirks = quirks;
   gettimeofday(&_prevmsgtime, NULL);  // initialize _prevmsgtime with something
-  _prevmsgtime.tv_sec -= 1;           // make it in the past to avoid false positives
+  _prevmsgtime.tv_sec -= 1;  // make it in the past to avoid false positives
 }
 
 void Vesc::init_socketCAN(char *ifname)
@@ -168,6 +168,9 @@ void Vesc::processMessages()
           break;
         case CAN_PACKET_STATUS2:
           _tachometer = (*(VESC_status2 *)msg.data).tachometer;
+          _adc = (*(VESC_status2 *)msg.data).adc;
+          _flimit = (*(VESC_status2 *)msg.data).flimit;
+          _rlimit = (*(VESC_status2 *)msg.data).rlimit;
           gettimeofday(&_prevmsgtime, NULL);
           break;
         case CAN_PACKET_STATUS3:
@@ -298,9 +301,28 @@ int timediffms(struct timeval tv, struct timeval last_tv)
     diff.tv_sec = diff.tv_usec = 0;
   return diff.tv_sec * 1000 + diff.tv_usec / 1000;
 }
+
 bool Vesc::isAlive()
 {
   struct timeval now;
   gettimeofday(&now, NULL);
   return timediffms(now, _prevmsgtime) < 100;  // must have received a message in the last 100 ms
+}
+
+bool Vesc::getForLimit()
+{
+  processMessages();
+  return _flimit;
+}
+
+bool Vesc::getRevLimit()
+{
+  processMessages();
+  return _rlimit;
+}
+
+int Vesc::getADC()
+{
+  processMessages();
+  return _adc;
 }
