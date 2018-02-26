@@ -135,7 +135,7 @@ def get_target_point(path, targetL):
     return [x, y, ti]
 
 def collision_check(node, map):
-    threshold = .7
+    threshold = .3
     #convert the node to a space in the cell
     row, col = map.cell_index(node.x, node.y)
 
@@ -148,7 +148,7 @@ def collision_check(node, map):
 
     #check that there isn't anything in that grid space
     #TODO : the current testing settup are inverted occupancy grids, check on ones coming from robot
-    if map.grid[row][col] > threshold:
+    if map.grid[row][col] < threshold:
         return True
     else:
         return False
@@ -233,6 +233,10 @@ def remove_redundant(path):
 def path_planning(start, goal, map):
     min_x, min_y = map.cell_position(0,0)
     max_x, max_y = map.cell_position(map.width - 1, map.height - 1)
+
+    goal_x, goal_y = goal
+    if goal_x > max_x or goal_x < min_x or goal_y > max_y or goal_y < min_y:
+        return []
 
     rrt = RRT(start, goal, map, [min_x, max_x], [min_y, max_y])
     path = rrt.planning()
@@ -323,6 +327,8 @@ def find_best_rrt_path(start, goal, map, num_paths):
     return lowest_path
 
 def calculate_path_score(path):
+    if len(path) == 0:
+        return 0
     angular_score = 0
     for i in range(1, len(path) - 1):
         #Using the points a, b, c to find angle from ab to bc

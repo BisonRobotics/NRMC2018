@@ -108,6 +108,10 @@ class GlobalPlanner(object):
         print("Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
         print("Unoriented path found: {}".format(results))
 
+        if len(results) == 0:
+            #TODO : Enter recovery behavior
+            print("IMPERIO : NO POSSIBLE PATH FOUND")
+
         return results
 
     def publish_waypoints(self, waypoints):
