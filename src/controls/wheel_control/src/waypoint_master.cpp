@@ -13,9 +13,6 @@
 // after iterating through the available waypoints, either choose the
 // furthest valid one (could just pick the first one that works)
 
-#define SIMULATING 1
-// one for simulating, 0 for real deal
-
 #include <ros/ros.h>
 #include <tf2_ros/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
@@ -40,16 +37,10 @@
 #include <visualization_msgs/Marker.h>
 #include <imperio/DriveStatus.h>
 
-#ifndef SIMULATING
-#error You must define a value (1/0) for SIMULATING
-#endif
-
-#if SIMULATING == 1
 #include <sim_robot/sim_robot.h>
-#else
+
 #include <lp_research/lpresearchimu.h>
 #include <apriltag_tracker_interface/apriltag_tracker_interface.h>
-#endif
 
 #include <vector>
 #include <utility>
@@ -62,8 +53,6 @@ bool halt = false;
 
 void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 {
-  // if (newWaypointHere ==false) //only take new data if ready
-  //{
   pose potentialWaypoint;
   potentialWaypoint.x = msg->x;
   potentialWaypoint.y = msg->y;
@@ -72,7 +61,6 @@ void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
   newWaypoint.x = msg->x;
   newWaypoint.y = msg->y;
   newWaypoint.theta = msg->theta;
-  //}
 
   newWaypointHere = true;
 }
@@ -95,7 +83,6 @@ geometry_msgs::TransformStamped create_tf(double x, double y, double theta)
   return tfStamp;
 }
 
-#if SIMULATING == 1
 geometry_msgs::TransformStamped create_sim_tf(double x, double y, double theta)
 {
   geometry_msgs::TransformStamped tfStamp;
@@ -113,7 +100,6 @@ geometry_msgs::TransformStamped create_sim_tf(double x, double y, double theta)
   tfStamp.transform.rotation.w = q.w();
   return tfStamp;
 }
-#endif
 
 void haltCallback(const std_msgs::Empty::ConstPtr &msg)
 {
@@ -122,9 +108,29 @@ void haltCallback(const std_msgs::Empty::ConstPtr &msg)
 
 int main(int argc, char **argv)
 {
+  // read ros param for simulating
   ros::init(argc, argv, "my_tf2_listener");
 
-  ros::NodeHandle node;
+  ros::NodeHandle node("~");
+
+  bool simulating;
+  if (node.hasParam("simulating_driving"))
+  {
+    node.getParam("simulating_driving", simulating);
+    if (simulating)
+    {
+      ROS_WARN("\nRUNNING DRIVING AS SIMULATION\n");
+    }
+    else
+    {
+      ROS_WARN("\nRUNNING DRIVING AS PHYSICAL\n");
+    }
+  }
+  else
+  {
+    ROS_ERROR("\n\nsimulating_driving param not defined! aborting.\n\n");
+    return -1;
+  }
 
   ros::Subscriber sub = node.subscribe("additional_waypoint", 100, newGoalCallback);
   ros::Publisher jspub = node.advertise<sensor_msgs::JointState>("wheel_joints", 500);
@@ -147,29 +153,38 @@ int main(int argc, char **argv)
 
   std::vector<waypointWithManeuvers> navigationQueue;
 
-#if SIMULATING == 1
-  SimRobot sim(ROBOT_AXLE_LENGTH, .5, .5, 0);
-  iVescAccess *fl = (sim.getFLVesc());
-  iVescAccess *fr = (sim.getFRVesc());
-  iVescAccess *br = (sim.getBRVesc());
-  iVescAccess *bl = (sim.getBLVesc());
+  SimRobot *sim;
+  iVescAccess *fl, *fr, *br, *bl;
+  ImuSensorInterface *imu;
+  PosSensorInterface *pos;
 
-  ImuSensorInterface *imu = sim.getImu();
-  PosSensorInterface *pos = sim.getPos();
-#else
-  char *can_name = (char *)WHEEL_CAN_NETWORK;
-  iVescAccess *fl = new VescAccess(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
-                                   MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-  iVescAccess *fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO,
-                                   MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-  iVescAccess *br = new VescAccess(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO,
-                                   MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-  iVescAccess *bl = new VescAccess(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
-                                   MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
+  if (simulating == true)
+  {
+    sim = new SimRobot(ROBOT_AXLE_LENGTH, .5, .5, 0);
+    fl = (sim->getFLVesc());
+    fr = (sim->getFRVesc());
+    br = (sim->getBRVesc());
+    bl = (sim->getBLVesc());
 
-  PosSensorInterface *pos = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .07);
-  ImuSensorInterface *imu = new LpResearchImu("imu");
-#endif
+    imu = sim->getImu();
+    pos = sim->getPos();
+  }
+  else
+  {
+    sim = NULL;  // Make no reference to the sim if not simulating
+    char *can_name = (char *)WHEEL_CAN_NETWORK;
+    fl = new VescAccess(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
+                        WHEEL_TORQUE_CONSTANT, can_name, 1);
+    fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
+                        MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
+    br = new VescAccess(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
+                        MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
+    bl = new VescAccess(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
+                        WHEEL_TORQUE_CONSTANT, can_name, 1);
+
+    pos = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .07);
+    imu = new LpResearchImu("imu");
+  }
 
   // initialize the localizer here
   ros::Time lastTime;
@@ -228,9 +243,10 @@ int main(int argc, char **argv)
       currTime = ros::Time::now();
       loopTime = (currTime - lastTime);
     }
-#if SIMULATING == 1
-    sim.update((loopTime).toSec());
-#endif
+    if (simulating)
+    {
+      sim->update((loopTime).toSec());
+    }
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
@@ -283,11 +299,12 @@ int main(int argc, char **argv)
       loopTime = currTime - lastTime;
     }
     ROS_INFO("Looptime : %.5f", loopTime.toSec());
-#if SIMULATING == 1
-    sim.update(loopTime.toSec());
+    if (simulating)
+    {
+      sim->update(loopTime.toSec());
 
-    tfBroad.sendTransform(create_sim_tf(sim.getX(), sim.getY(), sim.getTheta()));
-#endif
+      tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
+    }
 
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
@@ -362,14 +379,14 @@ int main(int argc, char **argv)
     else if (wcStat == WaypointController::Status::ALLGOOD)
     {
       ROS_INFO("Mode : 1");
-      ss << "Mode: Good";
+      ss << "Mode: ALLGOOD";
       status_msg.in_motion.data = 1;
     }
     else if (wcStat == WaypointController::Status::GOALREACHED)
     {
       ROS_INFO("Mode : 2");
       wc.haltAndAbort();
-      ss << "Mode: Chillin";
+      ss << "Mode: GOALRECHED";
       status_msg.has_reached_goal.data = 1;
     }
     mode_pub.publish(status_msg);

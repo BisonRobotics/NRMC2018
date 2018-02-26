@@ -158,7 +158,7 @@ if len (sys.argv) == 4:
                     break
     add_walls(blank_costmap, 2,width_in_pixels,height_in_pixels)
 #    rows, cols = blank_costmap.shape
-    dst = imutils.rotate_bound (blank_costmap, 180)
+    dst = imutils.rotate_bound (blank_costmap, 270)
     cv2.imwrite (file_name+'.bmp', dst)
 
 

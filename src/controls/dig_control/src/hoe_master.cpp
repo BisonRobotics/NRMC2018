@@ -72,8 +72,8 @@ int main(int argc, char **argv)
   else
   {
     outriggerSimulation = NULL;  // Don't use these pointers.
-    bucketSimulation = NULL;  // This is a physical run.
-    backhoeSimulation = NULL;  // You'll cause exceptions.
+    bucketSimulation = NULL;     // This is a physical run.
+    backhoeSimulation = NULL;    // You'll cause exceptions.
 
     // initialize real vescs here
 

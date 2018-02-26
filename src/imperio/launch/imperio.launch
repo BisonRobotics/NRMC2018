@@ -9,7 +9,7 @@
 
 <!-- launches the map server from mapping package -->
 <include file="$(find mapping)/launch/costmap_autonomy.launch"/>
-
+  
 <node name="imperio_marker_vis" pkg="imperio" type="path_vis.py"/>
 <node name="imperio" pkg="imperio" type="imperio_control.py"/>
 
