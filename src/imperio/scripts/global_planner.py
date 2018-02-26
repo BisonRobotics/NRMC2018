@@ -182,7 +182,7 @@ class GlobalPlanner(object):
             x1, y1 = waypoints[i - 1]
             x2, y2 = waypoints[i]
 
-            orientation = math.degrees(math.atan2((y2 - y1), (x2 - x1)))
+            orientation = math.atan2((y2 - y1), (x2 - x1))
 
             single = [x1, y1, orientation]
             oriented_waypoints.append(single)
