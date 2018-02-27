@@ -37,6 +37,11 @@ private:
   float velocity_limit;
   float torque_limit;
   unsigned int pole_pairs;
+  unsigned int minADC;
+  unsigned int maxADC;
+  float rad_per_count;
+  float rad_offset;
+  float radians_per_turn;
   iVesc *vesc;
   void setTransmissionRatio(float transmission_ratio);
   void setOutputRatio(float output_ratio);

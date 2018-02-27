@@ -1,6 +1,3 @@
-#ifndef __VESC_SOCKET_CAN_H_
-#define __VESC_SOCKET_CAN_H_
-
 #include <iostream>
 // socketcan includes
 #include <stdio.h>
@@ -18,7 +15,7 @@
 #include <linux/can/bcm.h>
 
 #include <sys/time.h>
-#include <vesc_control/ivesc.h>
+#include "vesc_control/ivesc.h"
 
 class Vesc : public iVesc
 {
@@ -64,6 +61,9 @@ private:
   float _tempMotor;
   float _tempPCB;
   bool _encoderIndex;
+  int32_t _adc;
+  bool _flimit;
+  bool _rlimit;
   mc_fault_code _fault_code;
   mc_state _state;
 
@@ -92,7 +92,10 @@ private:
   typedef struct VESC_status2
   {  // 32bits
     int tachometer : 32;
-  } VESC_status2;
+    unsigned adc : 12;
+    unsigned flimit : 1;
+    unsigned rlimit : 1;
+  } __attribute__((packed)) VESC_status2;
 
   // even less updated 10hz
   typedef struct VESC_status3
@@ -199,9 +202,11 @@ public:
   mc_fault_code getFaultCode();
   mc_state getState();
 
+  bool getForLimit();
+  bool getRevLimit();
+  int getADC();
+
   void resetWattHours();
   bool encoderIndexFound();
   bool isAlive();
 };
-
-#endif
