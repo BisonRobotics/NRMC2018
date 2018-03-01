@@ -28,7 +28,7 @@ link_directories (
 ## Generate actions in the 'action' folder
 add_action_files(
    DIRECTORY action
-   FILES Outrigger.action
+   FILES Outrigger.action Dig.action Dump.action
 )
 
 ## Generate added messages and services with any dependencies listed here
@@ -53,7 +53,7 @@ include_directories(${new_sim_INCLUDE_DIRS})
 add_library(backhoe_controller_lib src/backhoe_controller/backhoe_controller.cpp)
 add_library(outrigger_controller_lib src/outrigger_controller/outrigger_controller.cpp)
 add_library(bucket_controller_lib src/bucket_controller/bucket_controller.cpp)
-
+add_library(dig_dump_action_lib src/dig_dump_action/dig_dump_action.cpp)
 
 add_executable(hoe_master src/hoe_master.cpp)
 
@@ -63,6 +63,8 @@ add_dependencies(hoe_master
   bucket_controller_lib
   sim_robot
 )
+
+target_link_libraries(dig_dump_action_lib backhoe_controller_lib bucket_controller_lib ${catkin_LIBRARIES} ${new_sim_LIBRARIES} ${vesc_access_LIBRARIES})
 
 
 target_link_libraries(hoe_master
@@ -82,3 +84,4 @@ target_link_libraries(outrigger_tester ${catkin_LIBRARIES})
 
 add_dependencies (outrigger_tester ${PROJECT_NAME}_gencpp)
 add_dependencies (outrigger_master ${PROJECT_NAME}_gencpp)
+

@@ -20,7 +20,9 @@ void deployOutriggers(const dig_control::OutriggerGoalConstPtr & goal,
   while (outriggerC->isDeployed() == false)
   {
       r.sleep();
-
+    if (!ros::ok()){
+        break;
+    }
     //make loop speed constant, can that be done with ros rate and sleep?
     outriggerC->update(.02);
     if (simulating)
@@ -41,6 +43,9 @@ void retractOutriggers(const dig_control::OutriggerGoalConstPtr & goal,
   {
     //make loop speed constant, can that be done with ros rate and sleep?
     r.sleep ();
+      if (!ros::ok ()){
+          break;
+      }
     outriggerC->update(.02);
     if (simulating)
     {

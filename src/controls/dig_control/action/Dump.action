@@ -1,0 +1,8 @@
+# goal
+float64 angle
+---
+# result
+bool is_error
+float64 weight_in_bucket
+---
+float64 force_on_conveyor

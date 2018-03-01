@@ -28,14 +28,7 @@ VescAccess::VescAccess(float transmission_ratio, float output_ratio, float veloc
 VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_ratio, float velocity_limit,
                        float torque_limit, float torque_constant, char *can_network, unsigned int pole_pairs)
 {
-  try
-  {
-    this->vesc = new Vesc(can_network, VESC_ID);
-  }
-  catch (...)
-  {
-    std::terminate();
-  }
+  this->vesc = new Vesc(can_network, VESC_ID);
   initializeMembers(transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_constant, pole_pairs, false);
 }
 
@@ -51,14 +44,8 @@ VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_r
                        float torque_limit, float torque_constant, char *can_network, unsigned int pole_pairs,
                        bool read_only)
 {
-  try
-  {
-    this->vesc = new Vesc(can_network, VESC_ID);
-  }
-  catch (...)
-  {
-    std::terminate();
-  }
+
+  this->vesc = new Vesc(can_network, VESC_ID);
   initializeMembers(transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_constant, pole_pairs, false);
 }
 
