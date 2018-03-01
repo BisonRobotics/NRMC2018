@@ -21,22 +21,24 @@ void Vesc::init_socketCAN(char *ifname)
 {
   s = socket(PF_CAN, SOCK_RAW | SOCK_NONBLOCK, CAN_RAW);  // create nonblocking raw can socket
   if (s == -1)
-    throw "Unable to create raw CAN socket";
+    throw std::runtime_error("Unable to create raw CAN socket");
   strcpy(ifr.ifr_name, ifname);
-  ioctl(s, SIOCGIFINDEX, &ifr);
+  if(ioctl(s, SIOCGIFINDEX, &ifr)){
+    throw std::runtime_error ("Error creating interface");
+  }
   addr.can_family = AF_CAN;
   addr.can_ifindex = ifr.ifr_ifindex;
 
   int ret = bind(s, (struct sockaddr *)&addr, sizeof(addr));
   if (ret == -1)
-    throw "Unable to bind raw CAN socket";
+    throw std::runtime_error("Unable to bind raw CAN socket");
 
   sbcm = socket(PF_CAN, SOCK_DGRAM, CAN_BCM);
   if (sbcm == -1)
-    throw "Unable to create bcm socket";
+    throw std::runtime_error("Unable to create bcm socket");
   ret = connect(sbcm, (struct sockaddr *)&addr, sizeof(addr));
   if (ret == -1)
-    throw "Unable to connect bcm socket";
+    throw std::runtime_error("Unable to connect bcm socket");
 }
 
 // figure out whether or not a destructor is needed
