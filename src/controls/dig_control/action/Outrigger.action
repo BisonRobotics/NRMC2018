@@ -1,0 +1,8 @@
+#goal definition
+uint32 deploy
+---
+#result definition
+uint32 is_deployed
+---
+#feedback
+float32 unit_deployment_metric # 0 to 1 based on how deployed it is
