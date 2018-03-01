@@ -75,7 +75,7 @@ target_link_libraries(hoe_master
 )
 
 add_executable(outrigger_master src/outrigger_master.cpp)
-target_link_libraries(outrigger_master ${catkin_LIBRARIES})
+target_link_libraries(outrigger_master ${catkin_LIBRARIES} outrigger_controller_lib sim_robot)
 
 add_executable(outrigger_tester src/test/outrigger_tester.cpp)
 target_link_libraries(outrigger_tester ${catkin_LIBRARIES})
