@@ -16,8 +16,11 @@ void deployOutriggers(const dig_control::OutriggerGoalConstPtr & goal,
 {
   //deploy outriggers
   outriggerC->deploy();
+  ros::Rate r(50);
   while (outriggerC->isDeployed() == false)
   {
+      r.sleep();
+
     //make loop speed constant, can that be done with ros rate and sleep?
     outriggerC->update(.02);
     if (simulating)
@@ -32,10 +35,12 @@ void retractOutriggers(const dig_control::OutriggerGoalConstPtr & goal,
              actionlib::SimpleActionServer<dig_control::OutriggerAction> * serv_ptr)
 {
   //deploy outriggers
+    ros::Rate r(50);
   outriggerC->retract();
   while (outriggerC->isRetracted() == false)
   {
     //make loop speed constant, can that be done with ros rate and sleep?
+    r.sleep ();
     outriggerC->update(.02);
     if (simulating)
     {
@@ -47,7 +52,7 @@ void retractOutriggers(const dig_control::OutriggerGoalConstPtr & goal,
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "outriggerAction.h");
+  ros::init(argc, argv, "outrigger_action_server");
   ros::NodeHandle n;
 
   simulating = true; //TODO, read this from rosparam
@@ -72,6 +77,8 @@ int main(int argc, char** argv)
 
   deployServer.start();
   retractServer.start();
-  ros::spin();
+  while (ros::ok ()) {
+    ros::spinOnce();
+  }
   return 0;
 }
