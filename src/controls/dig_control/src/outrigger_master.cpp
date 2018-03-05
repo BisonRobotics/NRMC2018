@@ -77,9 +77,6 @@ int main(int argc, char **argv)
 
   deployServer.start();
   retractServer.start();
-  while (ros::ok())
-  {
-    ros::spinOnce();
-  }
+  ros::spin ();
   return 0;
 }
