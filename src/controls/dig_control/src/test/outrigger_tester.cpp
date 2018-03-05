@@ -5,16 +5,18 @@
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "outrigger_tester");
-  
-  actionlib::SimpleActionClient<dig_control::OutriggerAction> deployClient("deploy_riggers", true); // true -> don't need ros::spin()
+
+  actionlib::SimpleActionClient<dig_control::OutriggerAction> deployClient("deploy_riggers",
+                                                                           true);  // true -> don't need ros::spin()
   deployClient.waitForServer();
-  
-  actionlib::SimpleActionClient<dig_control::OutriggerAction> retractClient("retract_riggers", true); // true -> don't need ros::spin()
+
+  actionlib::SimpleActionClient<dig_control::OutriggerAction> retractClient("retract_riggers",
+                                                                            true);  // true -> don't need ros::spin()
   retractClient.waitForServer();
 
   dig_control::OutriggerGoal goal;
   // Fill in goal here
-  
+
   ROS_INFO("SENDING GOAL");
   deployClient.sendGoal(goal);
   deployClient.waitForResult(ros::Duration(5.0));

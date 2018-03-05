@@ -19,17 +19,25 @@ int main(int argc, char **argv)
 
   while (1)
   {
-    try {
+    try
+    {
       std::cout << "limit: ";
-      if (vesc->getLimitSwitchState() == nsVescAccess::limitSwitchState::inTransit) {
+      if (vesc->getLimitSwitchState() == nsVescAccess::limitSwitchState::inTransit)
+      {
         std::cout << "in transit ";
-      } else if (vesc->getLimitSwitchState() == nsVescAccess::limitSwitchState::bottomOfMotion) {
+      }
+      else if (vesc->getLimitSwitchState() == nsVescAccess::limitSwitchState::bottomOfMotion)
+      {
         std::cout << "bottom of motion ";
-      } else if (vesc->getLimitSwitchState() == nsVescAccess::limitSwitchState::topOfMotion) {
+      }
+      else if (vesc->getLimitSwitchState() == nsVescAccess::limitSwitchState::topOfMotion)
+      {
         std::cout << "Top of motion ";
       }
-    } catch (VescException vescException){
-      vescException.what  ();
+    }
+    catch (VescException vescException)
+    {
+      vescException.what();
     }
     std::cout << std::endl
               << "Pot position: " << vesc->getPotPosition() << std::endl;

@@ -14,13 +14,10 @@ public:
   virtual bool getRevLimit(void) = 0;
 };
 
-
-
-
-
-class VescException : public std::runtime_error {
+class VescException : public std::runtime_error
+{
 public:
-  VescException (const char* msg) : std::runtime_error(msg)
+  VescException(const char* msg) : std::runtime_error(msg)
   {
   }
 };

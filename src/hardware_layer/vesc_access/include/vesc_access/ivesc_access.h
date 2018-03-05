@@ -22,5 +22,4 @@ public:
   virtual float getPotPosition(void) = 0;
 };
 
-
 #endif

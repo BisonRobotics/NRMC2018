@@ -14,7 +14,7 @@ Vesc::Vesc(char *interface, uint8_t controllerID, uint32_t quirks)
   _controllerID = controllerID;
   _quirks = quirks;
   gettimeofday(&_prevmsgtime, NULL);  // initialize _prevmsgtime with something
-  _prevmsgtime.tv_sec -= 1;  // make it in the past to avoid false positives
+  _prevmsgtime.tv_sec -= 1;           // make it in the past to avoid false positives
 }
 
 void Vesc::init_socketCAN(char *ifname)
@@ -24,10 +24,10 @@ void Vesc::init_socketCAN(char *ifname)
   {
     throw VescException("Unable to create raw CAN socket");
   }
-    strcpy(ifr.ifr_name, ifname);
-  if(ioctl(s, SIOCGIFINDEX, &ifr))
+  strcpy(ifr.ifr_name, ifname);
+  if (ioctl(s, SIOCGIFINDEX, &ifr))
   {
-    throw VescException ("Error creating interface");
+    throw VescException("Error creating interface");
   }
   addr.can_family = AF_CAN;
   addr.can_ifindex = ifr.ifr_ifindex;
