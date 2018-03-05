@@ -37,7 +37,7 @@ void retractOutriggers(const dig_control::OutriggerGoalConstPtr &goal,
   // deploy outriggers
   ros::Rate r(50);
   outriggerC->retract();
-  while (!outriggerC->isRetracted() && ros::ok ())
+  while (!outriggerC->isRetracted() && ros::ok())
   {
     // make loop speed constant, can that be done with ros rate and sleep?
     r.sleep();
@@ -77,6 +77,6 @@ int main(int argc, char **argv)
 
   deployServer.start();
   retractServer.start();
-  ros::spin ();
+  ros::spin();
   return 0;
 }

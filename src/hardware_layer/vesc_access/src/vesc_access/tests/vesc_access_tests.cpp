@@ -161,7 +161,6 @@ TEST(VescAccessTests, canSetPolePairs)
   EXPECT_EQ(wrap->getLinearVelocity(), 100.0f);
 }
 
-
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {
