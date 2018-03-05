@@ -1,0 +1,10 @@
+# goal
+float64 angle
+---
+# result
+bool is_error
+float64 weight_harvested
+---
+# feedback
+float64 force_on_linear
+float64 force_on_shoulder

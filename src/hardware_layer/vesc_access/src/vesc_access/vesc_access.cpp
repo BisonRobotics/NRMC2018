@@ -83,7 +83,6 @@ void VescAccess::setLinearVelocity(float meters_per_second)
   float rpm = convertLinearVelocityToRpm(meters_per_second);
   // std::cout << "setting linear" << std::endl;
   this->vesc->setRpm(convertRpmToErpm(rpm));
-
 }
 
 void VescAccess::setTorque(float newton_meters)  // TODO utilize torque constant here

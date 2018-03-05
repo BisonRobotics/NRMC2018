@@ -1,0 +1,8 @@
+<launch>
+ <machine name="ap1" address="192.168.1.102" env-loader="/home/nrmc/env.bash" user="nrmc" default="never" />
+ <machine name="central_machine" address="192.168.1.146" env-loader="/home/nrmc/NRMC2018/central_env_loader.bash" default="true/>
+
+
+ <node machine="ap1" name="apriltag" pkg="apriltag_tracker" type=apriltag_tracker"/>
+
+</launch>
