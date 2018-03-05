@@ -27,17 +27,21 @@ int main(int argc, char** argv)
 
   std::random_device rd;
   std::mt19937 mt(rd());
+
   //std::uniform_real_distribution<double> dist(-M_PI, M_PI);
   std::normal_distribution<double> dist{M_PI_4, .2};
+
   double randomTheta;
   double waypointDist = .5;
 
-  for (int num=0; num<5;num++)
+  for (int num = 0; num < 5; num++)
   {
     randomTheta = dist(mt);
     wp1.theta += randomTheta;
+
     if (wp1.theta > M_PI) wp1.theta -=2.0 * M_PI;
     else if (wp1.theta < -M_PI) wp1.theta += 2.0 * M_PI;
+
     wp1.x += waypointDist * cos(wp1.theta);
     wp1.y += waypointDist * sin(wp1.theta);
     waypoints.push_back(wp1);
@@ -50,15 +54,16 @@ int main(int argc, char** argv)
     ros::spinOnce();
     pub.publish(wpmsg);
 
-
     waypoints.clear();
 
-    for (int num=0; num<5;num++)
+    for (int num = 0; num < 5; num++)
     {
       randomTheta = dist(mt);
       wp1.theta += randomTheta;
+
       if (wp1.theta > M_PI) wp1.theta -= 2.0 * M_PI;
       else if (wp1.theta < -M_PI) wp1.theta += 2.0 * M_PI;
+
       wp1.x += waypointDist * cos(wp1.theta);
       wp1.y += waypointDist * sin(wp1.theta);
       waypoints.push_back(wp1);

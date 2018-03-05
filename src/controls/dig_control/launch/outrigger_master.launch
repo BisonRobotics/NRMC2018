@@ -1,0 +1,4 @@
+<launch>
+  <node name="outrigger_master" pkg="dig_control" type="outrigger_master" >
+  </node>
+</launch>

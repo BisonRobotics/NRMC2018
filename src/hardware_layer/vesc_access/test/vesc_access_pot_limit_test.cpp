@@ -13,24 +13,31 @@ int main(int argc, char **argv)
   float torque_const = 1.0f;
 
   VescAccess *vesc = new VescAccess(0, transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_const,
-                                    (char *)"can0", pole_pairs);
+                                    (char *)"can0", pole_pairs, true);
 
   std::cout << "starting" << std::endl;
 
   while (1)
   {
-    std::cout << "limit: ";
-    if (vesc->getLimitSwitchState() == nsVescAccess::limitSwitchState::inTransit)
+    try
     {
-      std::cout << "in transit ";
+      std::cout << "limit: ";
+      if (vesc->getLimitSwitchState() == nsVescAccess::limitSwitchState::inTransit)
+      {
+        std::cout << "in transit ";
+      }
+      else if (vesc->getLimitSwitchState() == nsVescAccess::limitSwitchState::bottomOfMotion)
+      {
+        std::cout << "bottom of motion ";
+      }
+      else if (vesc->getLimitSwitchState() == nsVescAccess::limitSwitchState::topOfMotion)
+      {
+        std::cout << "Top of motion ";
+      }
     }
-    else if (vesc->getLimitSwitchState() == nsVescAccess::limitSwitchState::bottomOfMotion)
+    catch (VescException vescException)
     {
-      std::cout << "bottom of motion ";
-    }
-    else if (vesc->getLimitSwitchState() == nsVescAccess::limitSwitchState::topOfMotion)
-    {
-      std::cout << "Top of motion ";
+      vescException.what();
     }
     std::cout << std::endl
               << "Pot position: " << vesc->getPotPosition() << std::endl;

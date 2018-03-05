@@ -1,0 +1,16 @@
+<launch>
+  <include file="$(find realsense_ros_camera)/launch/demo_pointcloud_and_laser.launch"/>
+
+  <node pkg="gmapping" type="slam_gmapping" name="mapper">
+    <param name="base_frame" value="base_link"/>
+    <param name="map_frame" value="map"/>
+    <param name="map_update_interval" value=".05"/>
+    <param name="maxUrange" value="6.0"/>
+    <param name="delta" value=".05"/>
+    <param name="linearUpdate" value=".025"/>
+    <param name="angularUpdate" value=".01"/>
+    <param name="particles" value="100"/>
+    <param name="maxRange" value="7"/>
+  </node>
+
+</launch>

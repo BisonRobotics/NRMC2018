@@ -9,9 +9,9 @@ find_package(catkin REQUIRED COMPONENTS
   pluginlib
   genmsg 
   actionlib_msgs 
-  message_generation
   actionlib
   std_msgs
+  message_generation
   geometry_msgs
   visualization_msgs
 )
@@ -28,19 +28,19 @@ link_directories (
 ## Generate actions in the 'action' folder
 add_action_files(
    DIRECTORY action
-   FILES central_drive.action
- )
+   FILES Outrigger.action
+)
 
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
    DEPENDENCIES
-   actionlib_msgs   std_msgs
- )
-
+   actionlib_msgs
+   std_msgs
+)
 
 catkin_package(
     INCLUDE_DIRS include
-    CATKIN_DEPENDS roscpp actionlib actionlib_msgs message_generation rospy std_msgs
+    CATKIN_DEPENDS roscpp actionlib actionlib_msgs message_runtime message_generation rospy std_msgs
     #DEPENDS EIGEN3
 )
 
@@ -74,4 +74,11 @@ target_link_libraries(hoe_master
   ${vesc_access_LIBRARIES}
 )
 
+add_executable(outrigger_master src/outrigger_master.cpp)
+target_link_libraries(outrigger_master ${catkin_LIBRARIES} outrigger_controller_lib sim_robot)
 
+add_executable(outrigger_tester src/test/outrigger_tester.cpp)
+target_link_libraries(outrigger_tester ${catkin_LIBRARIES})
+
+add_dependencies (outrigger_tester ${PROJECT_NAME}_gencpp)
+add_dependencies (outrigger_master ${PROJECT_NAME}_gencpp)
