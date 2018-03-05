@@ -1,6 +1,6 @@
 #include <backhoe_controller/backhoe_controller.h>
 #include <bucket_controller/bucket_controller.h>
-#include <outrigger_controller/outrigger_controller.h>
+
 #include <ros/ros.h>
 #include <vesc_access/vesc_access.h>
 // TODO backhoe params
@@ -81,7 +81,7 @@ int main(int argc, char **argv)
   }
 
   // pass vescs (sim or physical) to controllers
-  OutriggerController outriggerC(outriggerLeftVesc, outriggerRightVesc);
+
   BucketController bucketC(bucketBigConveyorVesc, bucketLittleConveyorVesc, bucketSifterVesc);
   BackhoeController backhoeC(backhoeInitialShoulderTheta, backhoeInitialWristTheta, backhoeShoulderVesc,
                              backhoeWristVesc);
@@ -97,21 +97,9 @@ int main(int argc, char **argv)
       backhoeSimulation->update(1.0 / DIGGING_CONTROL_RATE_HZ);
     }
     // update controlelrs
-    outriggerC.update(1.0 / DIGGING_CONTROL_RATE_HZ);
+
     // bucketC.update(1.0 / DIGGING_CONTROL_RATE_HZ); //don't need to update the bucket
     backhoeC.update(1.0 / DIGGING_CONTROL_RATE_HZ);
-
-    // controller logic
-    if (outriggerC.isRetracted())
-    {
-      ROS_INFO("DEPLOYING");
-      outriggerC.deploy();
-    }
-    if (outriggerC.isDeployed())
-    {
-      ROS_INFO("RETRACTING");
-      outriggerC.retract();
-    }
 
     if (backhoeC.shoulderAtSetpoint())
     {
