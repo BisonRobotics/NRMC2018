@@ -2,7 +2,7 @@
 #include <math.h>
 
 void VescAccess::initializeMembers(float transmission_ratio, float output_ratio, float velocity_limit,
-                                   float torque_limit, float torque_constant, unsigned int pole_pairs, bool read_only)
+                                   float torque_limit, float torque_constant, unsigned int pole_pairs, bool read_only, bool has_limits=false)
 {
   setTransmissionRatio(transmission_ratio);
   setOutputRatio(output_ratio);
@@ -16,6 +16,8 @@ void VescAccess::initializeMembers(float transmission_ratio, float output_ratio,
   this->radians_per_turn = M_PI_2;
   this->rad_per_count = radians_per_turn / (1.0f * (maxADC - minADC));
   this->rad_offset = 0.0;
+  this->has_limits = has_limits;
+
 }
 
 VescAccess::VescAccess(float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
@@ -37,7 +39,7 @@ VescAccess::VescAccess(float transmission_ratio, float output_ratio, float veloc
 {
   this->vesc = vesc;
   initializeMembers(transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_constant, pole_pairs,
-                    read_only);
+                    read_only, false);
 }
 
 VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_ratio, float velocity_limit,
@@ -230,7 +232,9 @@ nsVescAccess::limitSwitchState VescAccess::getLimitSwitchState(void)
   }
   if (vesc->getRevLimit() && vesc->getForLimit())
   {
-    throw VescException("both limit switches activated. Bad News");
+    if (has_limits){
+      throw VescException ("Both limit switches are active");
+    }
   }
   return state;
 }

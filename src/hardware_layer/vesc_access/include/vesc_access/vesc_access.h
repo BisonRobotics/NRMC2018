@@ -52,9 +52,10 @@ private:
   float convertCurrentToTorque(float current);
   float convertErpmToRpm(float erpm);
   bool read_only;
+  bool has_limits;
   float convertRpmToErpm(float rpm);
   void initializeMembers(float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
-                         float torque_constant, unsigned int pole_pairs, bool read_only);
+                         float torque_constant, unsigned int pole_pairs, bool read_only, bool has_limits);
 };
 
 #endif
