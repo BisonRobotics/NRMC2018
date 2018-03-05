@@ -44,11 +44,9 @@ VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_r
                        float torque_limit, float torque_constant, char *can_network, unsigned int pole_pairs,
                        bool has_limits)
 {
-
   this->vesc = new Vesc(can_network, VESC_ID);
   initializeMembers(transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_constant, pole_pairs,
                     has_limits);
-
 }
 
 void VescAccess::setOutputRatio(float output_ratio)
@@ -85,7 +83,6 @@ void VescAccess::setLinearVelocity(float meters_per_second)
   float rpm = convertLinearVelocityToRpm(meters_per_second);
   // std::cout << "setting linear" << std::endl;
   this->vesc->setRpm(convertRpmToErpm(rpm));
-
 }
 
 void VescAccess::setTorque(float newton_meters)  // TODO utilize torque constant here

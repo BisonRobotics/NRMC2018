@@ -11,19 +11,6 @@
 
 #define DIGGING_CONTROL_RATE_HZ 50.0
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "the_backhoe_master");

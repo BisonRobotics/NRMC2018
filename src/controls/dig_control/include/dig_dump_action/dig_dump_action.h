@@ -8,7 +8,8 @@
 #include <bucket_controller/bucket_controller.h>
 #include <backhoe_controller/backhoe_controller.h>
 
-enum dig_state_enum {
+enum dig_state_enum
+{
   dig_idle,
   moving_to_setpoint,
   curling_backhoe,
@@ -17,17 +18,19 @@ enum dig_state_enum {
   returning_backhoe_to_initial
 };
 
-enum dump_state_enum {
+enum dump_state_enum
+{
   dump_idle,
   moving_bucket_to_setpoint,
   actuating_conveyor,
   moving_bucket_to_initial
 };
 
-
-class DigDumpAction {
+class DigDumpAction
+{
 public:
-  DigDumpAction (BackhoeController *backhoe, BucketController *bucket);
+  DigDumpAction(BackhoeController *backhoe, BucketController *bucket);
+
 private:
   ros::NodeHandle nh_;
   actionlib::SimpleActionServer<dig_control::DumpAction> dump_as_;
@@ -46,9 +49,4 @@ private:
   BucketController *bucket;
 };
 
-
-
-
-
-
-#endif //PROJECT_DIG_DUMP_ACTION_H
+#endif  // PROJECT_DIG_DUMP_ACTION_H

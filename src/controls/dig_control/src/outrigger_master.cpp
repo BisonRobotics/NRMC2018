@@ -37,10 +37,9 @@ void retractOutriggers(const dig_control::OutriggerGoalConstPtr &goal,
   outriggerC->retract();
   while (!outriggerC->isRetracted() && ros::ok())
   {
-
-    //make loop speed constant, can that be done with ros rate and sleep?
-    r.sleep ();
-   outriggerC->update(.02);
+    // make loop speed constant, can that be done with ros rate and sleep?
+    r.sleep();
+    outriggerC->update(.02);
     if (simulating)
     {
       outriggerSimulation->update(.02);
