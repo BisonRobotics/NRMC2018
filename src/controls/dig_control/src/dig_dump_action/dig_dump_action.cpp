@@ -39,6 +39,10 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
           break;
         case dig_state_enum::dumping_into_bucket:
           break;
+        case dig_state_enum::returning_backhoe_to_initial:
+          break;
+        case dig_state_enum::dig_error:
+          break;
         default:
           dig_as_.setAborted();
           is_digging = false;
@@ -69,6 +73,8 @@ void DigDumpAction::dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal)
         case dump_state_enum::actuating_conveyor:
           break;
         case dump_state_enum::moving_bucket_to_initial:
+          break;
+        case dump_state_enum::dump_error:
           break;
         default:
           is_dumping = false;

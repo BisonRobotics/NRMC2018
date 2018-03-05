@@ -15,7 +15,8 @@ enum dig_state_enum
   curling_backhoe,
   moving_arm_to_initial,
   dumping_into_bucket,
-  returning_backhoe_to_initial
+  returning_backhoe_to_initial,
+  dig_error
 };
 
 enum dump_state_enum
@@ -23,7 +24,8 @@ enum dump_state_enum
   dump_idle,
   moving_bucket_to_setpoint,
   actuating_conveyor,
-  moving_bucket_to_initial
+  moving_bucket_to_initial,
+  dump_error
 };
 
 class DigDumpAction
