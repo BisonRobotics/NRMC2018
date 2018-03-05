@@ -1,0 +1,6 @@
+<launch>
+ <machine name="ap1" address="192.168.1.102" env-loader="/home/nrmc/env.sh" user="nrmc" password="brnrmc"/>
+
+ <node machine="ap1" name="apriltag" pkg="apriltag_tracker" type=apriltag_tracker"/>
+
+</launch>
