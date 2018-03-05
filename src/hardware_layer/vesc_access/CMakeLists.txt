@@ -51,11 +51,11 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 add_library(vesc_lib
-  src/vesc_socket_can/vesc_socket_can.cpp
+        src/vesc_control/vesc_socket_can.cpp
 )
 add_library (vesc_access
   src/vesc_access/vesc_access.cpp
-  src/vesc_socket_can/vesc_socket_can.cpp
+        src/vesc_control/vesc_socket_can.cpp
 )
 
 
@@ -88,7 +88,11 @@ add_executable(vesc_access_pot_limit_test
 
 target_link_libraries(vesc_access_pot_limit_test
         vesc_access)
+add_executable(vesc_socket_pot_test
+        test/vesc_socket_pot_test.cpp
+        )
 
+target_link_libraries(vesc_socket_pot_test vesc_lib ${catkin_LIBRARIES})
 # Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/vesc_access.cpp
