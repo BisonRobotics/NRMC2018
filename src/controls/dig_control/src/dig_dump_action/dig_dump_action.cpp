@@ -17,7 +17,7 @@ DigDumpAction::DigDumpAction(BackhoeController *backhoe, BucketController *bucke
 
 void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
 {
-  ros::Rate(50);
+  ros::Rate r(50);
   if (is_dumping)
   {
     dig_as_.setAborted();
@@ -27,6 +27,7 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
     is_digging = true;
     while (ros::ok() && is_digging)
     {
+      r.sleep();
       switch (digging_state)
       {
         case dig_state_enum::dig_idle:
@@ -55,6 +56,7 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
 
 void DigDumpAction::dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal)
 {
+  ros::Rate r(50);
   if (is_digging)
   {
     dump_as_.setAborted();
@@ -64,6 +66,7 @@ void DigDumpAction::dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal)
     is_dumping = true;
     while (ros::ok() && is_dumping)
     {
+      r.sleep();
       switch (dumping_state)
       {
         case dump_state_enum::dump_idle:
