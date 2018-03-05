@@ -1,10 +1,10 @@
 [submodule "src/lpms_imu"]
-	path = src/lpms_imu
+	path = src/hardware_layer/lpms_imu
 	url = git@github.com:BisonRobotics/lpms_imu.git
 [submodule "src/timesync"]
-	path = src/timesync
+	path = src/hardware_layer/timesync
 	url = git@github.com:BisonRobotics/timesync.git
 [submodule "src/realsense_samples_ros"]
-	path = src/realsense_samples_ros
+	path = src/hardware_layer/realsense_samples_ros
 	url = git@github.com:BisonRobotics/realsense_samples_ros.git
 
