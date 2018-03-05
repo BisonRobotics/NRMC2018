@@ -13,7 +13,7 @@ int main(int argc, char **argv)
   float torque_const = 1.0f;
 
   VescAccess *vesc = new VescAccess(0, transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_const,
-                                    (char *)"can0", pole_pairs);
+                                    (char *)"can0", pole_pairs, true);
 
   std::cout << "starting" << std::endl;
 

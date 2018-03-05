@@ -8,9 +8,9 @@ class VescAccess : public iVescAccess
 public:
   //    VescAccess (unsigned int VESC_ID, double transmission_ratio, double output_ratio);
   VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
-             float torque_constant, char *can_network, unsigned int pole_pairs, bool read_only);
+             float torque_constant, char *can_network, unsigned int pole_pairs, bool has_limits);
   VescAccess(float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
-             float torque_constant, iVesc *vesc, unsigned int pole_pairs, bool read_only);
+             float torque_constant, iVesc *vesc, unsigned int pole_pairs, bool has_limits);
   VescAccess(float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
              float torque_constant, iVesc *vesc, unsigned int pole_pairs);
   VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
@@ -51,11 +51,10 @@ private:
   float convertRpmToLinearVelocity(int rpm);
   float convertCurrentToTorque(float current);
   float convertErpmToRpm(float erpm);
-  bool read_only;
   bool has_limits;
   float convertRpmToErpm(float rpm);
   void initializeMembers(float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
-                         float torque_constant, unsigned int pole_pairs, bool read_only, bool has_limits);
+                           float torque_constant, unsigned int pole_pairs, bool has_limits);
 };
 
 #endif

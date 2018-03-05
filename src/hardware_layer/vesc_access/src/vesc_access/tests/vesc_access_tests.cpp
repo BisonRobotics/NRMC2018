@@ -1,4 +1,3 @@
-//#include "foo/foo.h"
 // Bring in gtest
 #include <gtest/gtest.h>
 #include <vesc_access/vesc_access.h>
@@ -162,27 +161,6 @@ TEST(VescAccessTests, canSetPolePairs)
   EXPECT_EQ(wrap->getLinearVelocity(), 100.0f);
 }
 
-TEST(VescAccessTests, canBeReadOnlyVelocity)
-{
-  NiceMock<MockVesc> vesc;
-  float output_ratio = 1.0f;
-  float transmission_ratio = 1.0f;
-  float torque_limit = 12.0f;
-  EXPECT_CALL(vesc, setRpm(_)).Times(0);
-  VescAccess *wrap = new VescAccess(transmission_ratio, output_ratio, 30.0f, torque_limit, 0.0f, &vesc, 4, true);
-  wrap->setLinearVelocity(1.0f);
-}
-
-TEST(VescAccessTests, canBeReadOnlyTorque)
-{
-  NiceMock<MockVesc> vesc;
-  float output_ratio = 1.0f;
-  float transmission_ratio = 1.0f;
-  float torque_limit = 12.0f;
-  EXPECT_CALL(vesc, setCurrent(_)).Times(0);
-  VescAccess *wrap = new VescAccess(transmission_ratio, output_ratio, 30.0f, torque_limit, 0.0f, &vesc, 4, true);
-  wrap->setTorque(1.0f);
-}
 
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
