@@ -21,4 +21,5 @@ public:
   virtual nsVescAccess::limitSwitchState getLimitSwitchState(void) = 0;
   virtual float getPotPosition(void) = 0;
 };
+
 #endif

@@ -2,7 +2,7 @@
 #include <math.h>
 
 void VescAccess::initializeMembers(float transmission_ratio, float output_ratio, float velocity_limit,
-                                   float torque_limit, float torque_constant, unsigned int pole_pairs, bool read_only)
+                                   float torque_limit, float torque_constant, unsigned int pole_pairs, bool has_limits)
 {
   setTransmissionRatio(transmission_ratio);
   setOutputRatio(output_ratio);
@@ -10,12 +10,12 @@ void VescAccess::initializeMembers(float transmission_ratio, float output_ratio,
   setLinearVelocityLimit(velocity_limit);
   setTorqueConstant(torque_constant);
   setPolePairs(pole_pairs);
-  this->read_only = read_only;
   this->minADC = 0;
-  this->maxADC = 0x0FFF; // 12 bit ADC
+  this->maxADC = 0x0FFF;  // 12 bit ADC
   this->radians_per_turn = M_PI_2;
   this->rad_per_count = radians_per_turn / (1.0f * (maxADC - minADC));
   this->rad_offset = 0.0;
+  this->has_limits = has_limits;
 }
 
 VescAccess::VescAccess(float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
@@ -33,20 +33,22 @@ VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_r
 }
 
 VescAccess::VescAccess(float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
-                       float torque_constant, iVesc *vesc, unsigned int pole_pairs, bool read_only)
+                       float torque_constant, iVesc *vesc, unsigned int pole_pairs, bool has_limits)
 {
   this->vesc = vesc;
   initializeMembers(transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_constant, pole_pairs,
-                    read_only);
+                    has_limits);
 }
 
 VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_ratio, float velocity_limit,
                        float torque_limit, float torque_constant, char *can_network, unsigned int pole_pairs,
-                       bool read_only)
+                       bool has_limits)
 {
 
   this->vesc = new Vesc(can_network, VESC_ID);
-  initializeMembers(transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_constant, pole_pairs, false);
+  initializeMembers(transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_constant, pole_pairs,
+                    has_limits);
+
 }
 
 void VescAccess::setOutputRatio(float output_ratio)
@@ -69,49 +71,37 @@ void VescAccess::setTransmissionRatio(float transmission_ratio)
 
 void VescAccess::setLinearVelocity(float meters_per_second)
 {
-  if (!read_only)
+  if (fabs(meters_per_second) > this->velocity_limit)
   {
-    if (fabs(meters_per_second) > this->velocity_limit)
+    if (meters_per_second >= 0)
     {
-      if (meters_per_second >= 0)
-      {
-        meters_per_second = velocity_limit;
-      }
-      else
-      {
-        meters_per_second = velocity_limit * -1.0f;
-      }
-    }
-    float rpm = convertLinearVelocityToRpm(meters_per_second);
-    // std::cout << "setting linear" << std::endl;
-    if (this->vesc)
-    {
-      this->vesc->setRpm(convertRpmToErpm(rpm));
+      meters_per_second = velocity_limit;
     }
     else
     {
-      //  std::cout << "vesc not allocated" << std::endl;
+      meters_per_second = velocity_limit * -1.0f;
     }
   }
+  float rpm = convertLinearVelocityToRpm(meters_per_second);
+  // std::cout << "setting linear" << std::endl;
+  this->vesc->setRpm(convertRpmToErpm(rpm));
+
 }
 
 void VescAccess::setTorque(float newton_meters)  // TODO utilize torque constant here
 {
-  if (!read_only)
+  if (fabs(newton_meters) > this->torque_limit)
   {
-    if (fabs(newton_meters) > this->torque_limit)
+    if (newton_meters >= 0)
     {
-      if (newton_meters >= 0)
-      {
-        newton_meters = torque_limit;
-      }
-      else
-      {
-        newton_meters = -1.0f * torque_limit;
-      }
+      newton_meters = torque_limit;
     }
-    this->vesc->setCurrent(convertTorqueToCurrent(newton_meters));
+    else
+    {
+      newton_meters = -1.0f * torque_limit;
+    }
   }
+  this->vesc->setCurrent(convertTorqueToCurrent(newton_meters));
 }
 
 void VescAccess::setTorqueConstant(float torque_constant)
@@ -231,7 +221,10 @@ nsVescAccess::limitSwitchState VescAccess::getLimitSwitchState(void)
   }
   if (vesc->getRevLimit() && vesc->getForLimit())
   {
-    throw std::runtime_error("both limit switches activated. Bad News");
+    if (has_limits)
+    {
+      throw VescException("Both limit switches are active");
+    }
   }
   return state;
 }
