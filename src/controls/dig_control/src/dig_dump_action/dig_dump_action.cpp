@@ -49,7 +49,7 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
             }
           break;
         case dig_state_enum::moving_arm_to_initial: //lifting dug dirt up
-            if (backhoe->wristAtSetpoint())
+            if (backhoe->shoulderAtSetpoint())
             {
                 backhoe->setWristSetpoint(0); //curl it out
                 //TODO: start small conveyor?
