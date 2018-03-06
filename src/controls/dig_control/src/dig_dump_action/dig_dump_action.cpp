@@ -30,17 +30,48 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
       r.sleep();
       switch (digging_state)
       {
-        case dig_state_enum::dig_idle:
+        case dig_state_enum::dig_idle: //not digging, should start here
+          backhoe->setShoulderSetpoint(1); //where we think the ground is (0 should be all the way back, 1 is all the way forward)
+          digging_state = moving_to_setpoint;
           break;
-        case dig_state_enum::moving_to_setpoint:
+        case dig_state_enum::moving_to_setpoint: //going to find the ground
+          if (backhoe->shoulderAtSetpoint())
+          {
+              backhoe->setWristSetpoint(1); //curl it in
+              digging_state = curling_backhoe;
+          }
           break;
-        case dig_state_enum::curling_backhoe:
+        case dig_state_enum::curling_backhoe: //curling wrist into dirt
+            if (backhoe->wristAtSetpoint())
+            {
+                backhoe->setShoulderSetpoint(.3); //lift to angle appropiate for dropping dirt into bucket
+                digging_state = moving_arm_to_initial;
+            }
           break;
-        case dig_state_enum::moving_arm_to_initial:
+        case dig_state_enum::moving_arm_to_initial: //lifting dug dirt up
+            if (backhoe->wristAtSetpoint())
+            {
+                backhoe->setWristSetpoint(0); //curl it out
+                //TODO: start small conveyor?
+                //TODO: start sifter?
+                digging_state = dumping_into_bucket;
+            }
           break;
-        case dig_state_enum::dumping_into_bucket:
+        case dig_state_enum::dumping_into_bucket: //uncurling wrist to release dirt into bucket
+            if (backhoe->wristAtSetpoint())
+            {
+                backhoe->setShoulderSetpoint(.3); //wherever transit should be
+                digging_state = returning_backhoe_to_initial;
+            }
           break;
-        case dig_state_enum::returning_backhoe_to_initial:
+        case dig_state_enum::returning_backhoe_to_initial: //moving back to same position as dig idle
+            if (backhoe->shoulderAtSetpoint())
+            {
+                //TODO stop small conveyor and sifter
+                is_digging = false;
+                digging_state = dig_idle;
+                dig_as_.setSucceeded();
+            }
           break;
         case dig_state_enum::dig_error:
           break;
@@ -70,12 +101,32 @@ void DigDumpAction::dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal)
       switch (dumping_state)
       {
         case dump_state_enum::dump_idle:
+          backhoe->setShoulderSetpoint(0); //move central drive to appropiate spot
+          dumping_state = moving_bucket_to_setpoint;
           break;
         case dump_state_enum::moving_bucket_to_setpoint:
+          if (backhoe->shoulderAtSetpoint())
+          {
+              bucket->turnBigConveyorOn();
+              dumping_state = actuating_conveyor;
+          }
           break;
         case dump_state_enum::actuating_conveyor:
+          //keep conveyor actuated for some time? until some current feedback?
+            if (/*dirt_been_dumped*/ true)
+            {
+              bucket->turnBigConveyorOff();
+              backhoe->setShoulderSetpoint(.3);
+              dumping_state = moving_bucket_to_initial;
+            }
           break;
         case dump_state_enum::moving_bucket_to_initial:
+            if (backhoe->shoulderAtSetpoint())
+            {
+                is_dumping = false;
+                dumping_state = dump_idle;
+                dump_as_.setSucceeded();
+            }
           break;
         case dump_state_enum::dump_error:
           break;
