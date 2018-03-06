@@ -26,6 +26,7 @@
 #include <geometry_msgs/TransformStamped.h>
 #include <std_msgs/Empty.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Float64.h>
 
 #include <vesc_access/ivesc_access.h>
 #include <vesc_access/vesc_access.h>
@@ -134,6 +135,17 @@ int main(int argc, char **argv)
 
   ros::Subscriber sub = node.subscribe("additional_waypoint", 100, newGoalCallback);
   ros::Publisher jspub = node.advertise<sensor_msgs::JointState>("wheel_joints", 500);
+
+  ros::Publisher angleErrorPub = node.advertise<std_msgs::Float64>("angle_error", 30);
+  ros::Publisher simAnglePub = node.advertise<std_msgs::Float64>("sim_angle", 30);
+  ros::Publisher baseAnglePub = node.advertise<std_msgs::Float64>("base_angle", 30);
+
+  std_msgs::Float64 angleErrorMsg;
+  std_msgs::Float64 simAngleMsg;
+  std_msgs::Float64 baseAngleMsg;
+
+
+
   sensor_msgs::JointState jsMessage;
   jsMessage.name.push_back("front_left");
   jsMessage.name.push_back("front_right");
@@ -415,6 +427,19 @@ int main(int argc, char **argv)
       line_strip2.color.r += (line_strip2.color.r >= 1.0) ? 0 : .1;
     }
     wholeQueue_pub.publish(line_strip2);
+
+    //publish wc.getEPpEstimate() as topic
+    //publish sim theta sim->getTheta()
+    //publish base link theta stateVector.theta
+    angleErrorMsg.data = wc.getEPpEstimate();
+    baseAngleMsg.data = stateVector.theta;
+    angleErrorPub.publish(angleErrorMsg);
+    baseAnglePub.publish(baseAngleMsg);
+    if (simulating)
+    {
+        simAngleMsg.data = sim->getTheta();
+        simAnglePub.publish(simAngleMsg);
+    }
 
     ROS_INFO("CPPx : %.4f", theCPP.x);
     ROS_INFO("CPPy : %.4f", theCPP.y);
