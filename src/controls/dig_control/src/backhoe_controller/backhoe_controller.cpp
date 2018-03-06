@@ -1,6 +1,5 @@
 #include <backhoe_controller/backhoe_controller.h>
-#include <vesc_access/vesc_access.h>
-#include <vesc_access/ivesc_access.h>
+
 
 BackhoeController::BackhoeController(double initialShoulderTheta, double initialWristTheta, iVescAccess *shVesc,
                                      iVescAccess *wrVesc)
@@ -14,6 +13,8 @@ BackhoeController::BackhoeController(double initialShoulderTheta, double initial
   wristAngleEst = initialWristTheta;
   isWristAtSetpoint = true;
   wr = wrVesc;
+  bucketTareWeight = 0;
+  backhoeTareWeight = 0;
 }
 
 void BackhoeController::setShoulderSetpoint(double angle)
@@ -61,4 +62,26 @@ bool BackhoeController::shoulderAtSetpoint()
 bool BackhoeController::wristAtSetpoint()
 {
   return isWristAtSetpoint;
+}
+
+double BackhoeController::getWeightInBackhoe()
+{
+  // calculate weight
+  return backhoeTareWeight;
+}
+
+double BackhoeController::getWeightInBucket()
+{
+  return bucketTareWeight;
+}
+
+
+void BackhoeController::tareBackhoe()
+{
+  backhoeTareWeight = 0;
+}
+
+void BackhoeController::tareBucket ()
+{
+  bucketTareWeight = 0;
 }

@@ -14,7 +14,10 @@ public:
   void update(double dt);
   bool shoulderAtSetpoint();
   bool wristAtSetpoint();
-
+  double getWeightInBucket (void);
+  double getWeightInBackhoe (void);
+  void tareBucket (void);
+  void tareBackhoe (void);
 private:
   double shoulderSetpoint;
   double wristSetpoint;
@@ -23,4 +26,6 @@ private:
   iVescAccess *sh, *wr;
   bool isShoulderAtSetpoint;
   bool isWristAtSetpoint;
+  double bucketTareWeight;
+  double backhoeTareWeight;
 };
