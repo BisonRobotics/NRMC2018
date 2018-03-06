@@ -39,8 +39,14 @@ int main(int argc, char** argv)
     randomTheta = dist(mt);
     wp1.theta += randomTheta;
 
-    if (wp1.theta > M_PI) wp1.theta -=2.0 * M_PI;
-    else if (wp1.theta < -M_PI) wp1.theta += 2.0 * M_PI;
+    if (wp1.theta > M_PI)
+    {
+        wp1.theta -=2.0 * M_PI;
+    }
+    else if (wp1.theta < -M_PI)
+    {
+        wp1.theta += 2.0 * M_PI;
+    }
 
     wp1.x += waypointDist * cos(wp1.theta);
     wp1.y += waypointDist * sin(wp1.theta);
