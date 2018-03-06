@@ -62,6 +62,7 @@ add_dependencies(hoe_master
   outrigger_controller_lib
   bucket_controller_lib
   sim_robot
+  dig_dump_action_lib
 )
 
 target_link_libraries(dig_dump_action_lib backhoe_controller_lib bucket_controller_lib ${catkin_LIBRARIES} ${new_sim_LIBRARIES} ${vesc_access_LIBRARIES})
@@ -73,6 +74,7 @@ target_link_libraries(hoe_master
   backhoe_controller_lib
   outrigger_controller_lib
   bucket_controller_lib
+  dig_dump_action_lib
   ${vesc_access_LIBRARIES}
 )
 

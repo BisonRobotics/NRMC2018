@@ -1,3 +1,6 @@
+#ifndef BUCKET_CONTROLLER_H
+#define BUCKET_CONTROLLER_H
+
 #include <vesc_access/vesc_access.h>
 #include <vesc_access/ivesc_access.h>
 
@@ -16,3 +19,5 @@ public:
 private:
   iVescAccess *bc, *lc, *sf;
 };
+
+#endif

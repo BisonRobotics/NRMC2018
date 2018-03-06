@@ -1,3 +1,6 @@
+#ifndef BACKHOE_CONTROLLER_H
+#define BACKHOE_CONTROLLER_H
+
 #include <vesc_access/vesc_access.h>
 #include <vesc_access/ivesc_access.h>
 
@@ -29,3 +32,5 @@ private:
   double bucketTareWeight;
   double backhoeTareWeight;
 };
+
+#endif
