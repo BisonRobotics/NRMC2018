@@ -1,4 +1,6 @@
 #include <super_localizer/super_localizer.h>
+#define _USE_MATH_DEFINES
+#include <cmath>
 
 SuperLocalizer::SuperLocalizer(double axleLen, double xi, double yi, double thi, iVescAccess *frontLeftVesc,
                                iVescAccess *frontRightVesc, iVescAccess *backRightVesc, iVescAccess *backLeftVesc,
@@ -112,6 +114,15 @@ SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(double dt)
         LocalizerInterface::addFromModel(this->state_vector, this->deadReck->getStateVector(), dt, have_imu);
     LocalizerInterface::stateVector intermediate = LocalizerInterface::multiply(this->gainVector, this->residual);
     this->state_vector = LocalizerInterface::diff(intermediateStateVector, intermediate);
+
+    if (this->state_vector.theta > M_PI)
+    {
+      this->state_vector.theta -= 2.0 * M_PI;
+    }
+    else if (this->state_vector.theta < -M_PI)
+    {
+      this->state_vector.theta += 2.0 * M_PI;
+    }
   }
 }
 
