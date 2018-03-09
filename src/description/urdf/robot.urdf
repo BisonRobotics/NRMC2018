@@ -18,6 +18,10 @@
         <color rgba="0.10 0.10 0.10 1"/>
     </material>
 
+    <material name="grey">
+        <color rgba="0.80 0.80 0.80 1"/>
+    </material>
+
     <!-- Define linkages and joints -->
     <link name="base_link" />
         <!--<visual>
@@ -75,6 +79,22 @@
     <xacro:wheel x_name="front" y_name="right" rot="${pi/2}"  y_dir="-1" xdist="0.73025" color="green" />
     <xacro:wheel x_name="back"  y_name="left"  rot="${-pi/2}" y_dir="1"  xdist="0.0455676" color="red"   />
     <xacro:wheel x_name="back"  y_name="right" rot="${pi/2}"  y_dir="-1" xdist="0.0455676" color="green" />
+
+    <link name="central_drive">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/central_drive.stl" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 ${pi/2} ${pi}" />
+            <material name="grey" />
+        </visual>
+    </link>
+
+    <joint name="frame_to_central_drive" type="fixed">
+        <parent link="frame"/>
+        <child link="central_drive"/>
+        <origin xyz="0.64135 -0.098425 0.022225" rpy="0 0 0" />
+    </joint>
 
     <link name="sensor">
         <visual>
