@@ -35,21 +35,18 @@
         </collision>
     </link>-->
 
-    <link name="frame">
-        <visual>
-            <geometry>
-                <box size="1.1938e+00 4.9530e-01 2.5400e-02" />
-            </geometry>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <material name="brown" />
-        </visual>
-        <collision>
-            <geometry>
-                <box size="1.1938e+00 4.9530e-01 2.5400e-02" />
-            </geometry>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-        </collision>
-    </link>
+    <xacro:macro name="frame">
+        <link name="frame">
+            <visual>
+                <geometry>
+                    <mesh filename="package://description/meshes/frame.stl" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+                <material name="brown" />
+            </visual>
+        </link>
+    </xacro:macro>
+    <xacro:frame/>
 
     <joint name="base_link_to_frame" type="fixed">
         <parent link="base_link"/>
@@ -57,33 +54,27 @@
         <origin xyz="0 0 2.0796e-01" rpy="0 0 0" />
     </joint>
 
-    <xacro:macro name="wheel" params="x_name y_name x_dir y_dir color">
+    <xacro:macro name="wheel" params="x_name y_name rot y_dir xdist color">
         <link name="${x_name}_${y_name}_wheel">
             <visual>
                 <geometry>
-                    <cylinder length="1.0160e-01" radius="1.524e-01" />
+                    <mesh filename="package://description/meshes/wheel.stl" />
                 </geometry>
-                <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+                <origin xyz="0 0 0" rpy="${rot} 0 0"/>
                 <material name="${color}"/>
             </visual>
-            <collision>
-                <geometry>
-                    <cylinder length="1.0160e-01" radius="1.524e-01" />
-                </geometry>
-                <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
-            </collision>
         </link>
 
         <joint name="frame_to_${x_name}_${y_name}_wheel" type="fixed">
             <parent link="frame"/>
             <child link="${x_name}_${y_name}_wheel"/>
-            <origin xyz="${x_dir*(3.4290e-01)} ${y_dir*(3.2067e-01)} -5.5512e-02" />
+            <origin xyz="${xdist} ${y_dir*0.3109468} -0.0555752" />
         </joint>
     </xacro:macro>
-    <xacro:wheel x_name="front" y_name="left"  x_dir="1"  y_dir="1"  color="red"   />
-    <xacro:wheel x_name="front" y_name="right" x_dir="1"  y_dir="-1" color="green" />
-    <xacro:wheel x_name="back"  y_name="left"  x_dir="-1" y_dir="1"  color="red"   />
-    <xacro:wheel x_name="back"  y_name="right" x_dir="-1" y_dir="-1" color="green" />
+    <xacro:wheel x_name="front" y_name="left"  rot="${-pi/2}" y_dir="1"  xdist="0.73025" color="red"   />
+    <xacro:wheel x_name="front" y_name="right" rot="${pi/2}"  y_dir="-1" xdist="0.73025" color="green" />
+    <xacro:wheel x_name="back"  y_name="left"  rot="${-pi/2}" y_dir="1"  xdist="0.0455676" color="red"   />
+    <xacro:wheel x_name="back"  y_name="right" rot="${pi/2}"  y_dir="-1" xdist="0.0455676" color="green" />
 
     <link name="sensor">
         <visual>
