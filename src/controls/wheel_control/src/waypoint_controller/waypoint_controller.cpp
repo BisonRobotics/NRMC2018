@@ -284,9 +284,7 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     {
       EPpEst = currMan.radius + dist(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
     }
-    // Do we want hysteresis on the ETpEst? this might prevent an oscillation (wrap around for values > pi or < -pi
     ETpEst = WaypointControllerHelper::anglediff(robotPose.theta, theCPP.theta);
-    //ETpEst = robotPose.theta - theCPP.theta;
     // positive error means turn left
 
     EPpLowPassPrev = EPpLowPass;
