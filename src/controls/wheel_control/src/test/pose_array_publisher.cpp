@@ -8,7 +8,7 @@
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "waypoint_filter");
+  ros::init(argc, argv, "pose_array_publisher");
   ros::NodeHandle node;
 
   ros::Publisher pub = node.advertise<imperio::GlobalWaypoints>("global_planner_goal", 200);
