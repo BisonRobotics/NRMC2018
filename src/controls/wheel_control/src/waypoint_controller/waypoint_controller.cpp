@@ -3,7 +3,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
-#define POSITIONTOL .80f  // should be well above noise floor of localization and wide enough
+#define POSITIONTOL .40f  // should be well above noise floor of localization and wide enough
 // for robot to make a corrective maneuver/zero point turn in
 #define GOALREACHEDDIST .100f  // should be about the size of the noise floor of localization
 // this also determines how far you can overshoot a goal
