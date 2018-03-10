@@ -121,6 +121,7 @@ class GlobalPlanner(object):
         """
         message = GlobalWaypoints()
         pose_array = []
+        waypoints.pop(0)
 
         for point in waypoints:
             msg = Pose2D()

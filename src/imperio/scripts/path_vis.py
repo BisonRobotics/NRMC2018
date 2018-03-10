@@ -34,6 +34,7 @@ class MarkerNode(object):
     def draw_path(self, waypoints):
         """
         publishes markers for the path defined by a set of waypoints
+        assumes that the current location point will not be included in the path given
         :param waypoints: the set of waypoints as Pose2D[]
         """
         path = Marker()
@@ -52,6 +53,12 @@ class MarkerNode(object):
         path.frame_locked = True
 
         points = []
+
+        #TODO : Make this the current location
+        msg = Point()
+        msg.x, msg.y = 0,0
+        points.append(msg)
+
         for point in waypoints:
             msg = Point()
             msg.x = point.x
