@@ -69,6 +69,7 @@ public:
   double getETpEstimate();                                  // DEBUG
   double getEPpEstimate();                                  // DEBUG
   double getDist2endOnPath();                               // DEBUG
+  double getDist2endAbs();                                  // DEBUG
   std::pair<double, double> getSetSpeeds();                 // DEBUG
   std::pair<double, double> getCmdSpeeds();                 // DEBUG
 

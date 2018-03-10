@@ -450,6 +450,8 @@ int main(int argc, char **argv)
     ROS_INFO("CurPth : %.4f", currPose.theta);
 
     ROS_INFO("Dist2endOnPath : %.4f", wc.getDist2endOnPath());
+    ROS_INFO("Dist2endAbs : %.4f", wc.getDist2endAbs());
+
 
     ROS_INFO("EtpEstimate : %.4f", wc.getETpEstimate());
     ROS_INFO("EppEstimate : %.4f", wc.getEPpEstimate());

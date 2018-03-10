@@ -87,6 +87,16 @@ double WaypointController::getEPpEstimate()  // DEBUG
   return EPpEst;
 }
 
+double WaypointController::getDist2endOnPath()
+{
+  return dist2endOnPath;
+}
+
+double WaypointController::getDist2endAbs()
+{
+  return dist2endAbs;
+}
+
 std::pair<double, double> WaypointController::getSetSpeeds()
 {
   return std::pair<double, double>(LeftWheelSetSpeed, RightWheelSetSpeed);
@@ -229,9 +239,14 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     else  // doing a maneuver, need to see if robot has completed it
     {
       theCPP = WaypointControllerHelper::findCPP(robotPose, currMan);  // closest pose on path
+
       dist2endOnPath = WaypointControllerHelper::sign(currMan.distance) * currMan.radius *
                        (WaypointControllerHelper::anglediff(maneuverEnd.theta, theCPP.theta));
       dist2endAbs = dist(robotPose.x, robotPose.y, maneuverEnd.x, maneuverEnd.y);
+      if (currMan.radius > 900) //if straight line path, use abs distance instead
+      {
+          dist2endOnPath = dist2endAbs;
+      }
       dist2Path = dist(robotPose.x, robotPose.y, theCPP.x, theCPP.y);
 
       if (approx(dist2endOnPath, 0, GOALREACHEDDIST) &&
@@ -270,7 +285,7 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
       EPpEst = currMan.radius + dist(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
     }
     // Do we want hysteresis on the ETpEst? this might prevent an oscillation (wrap around for values > pi or < -pi
-    ETpEst = WaypointControllerHelper::anglediff(robotPose.theta, theCPP.theta);  
+    ETpEst = WaypointControllerHelper::anglediff(robotPose.theta, theCPP.theta);
     //ETpEst = robotPose.theta - theCPP.theta;
     // positive error means turn left
 
@@ -324,11 +339,6 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     this->haltAndAbort();
     return Status::GOALREACHED;  // gotta get out of here
   }
-}
-
-double WaypointController::getDist2endOnPath()
-{
-  return dist2endOnPath;
 }
 
 void WaypointController::modifyNavQueue2RecoverFromPathError(pose RobotPose, pose manEnd)
