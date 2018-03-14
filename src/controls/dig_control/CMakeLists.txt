@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   geometry_msgs
   visualization_msgs
+  sensor_msgs
 )
 
 find_package (vesc_access REQUIRED)
@@ -56,6 +57,7 @@ add_library(bucket_controller_lib src/bucket_controller/bucket_controller.cpp)
 add_library(dig_dump_action_lib src/dig_dump_action/dig_dump_action.cpp)
 
 add_executable(hoe_master src/hoe_master.cpp)
+add_executable (dig_teleop src/dig_teleop.cpp)
 
 add_dependencies(hoe_master
   backhoe_controller_lib
@@ -66,7 +68,7 @@ add_dependencies(hoe_master
 )
 
 target_link_libraries(dig_dump_action_lib backhoe_controller_lib bucket_controller_lib ${catkin_LIBRARIES} ${new_sim_LIBRARIES} ${vesc_access_LIBRARIES})
-
+target_link_libraries(dig_teleop ${vesc_access_LIBRARIES} backhoe_controller_lib bucket_controller_lib ${catkin_LIBRARIES})
 
 target_link_libraries(hoe_master
   ${new_sim_LIBRARIES} 
