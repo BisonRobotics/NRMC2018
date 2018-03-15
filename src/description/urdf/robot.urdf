@@ -85,7 +85,7 @@
             <geometry>
                 <mesh filename="package://description/meshes/central_drive.stl" />
             </geometry>
-            <origin xyz="0 0 0" rpy="0 ${pi/2} ${pi}" />
+            <origin xyz="0.1121664 -0.098425 -0.05715" rpy="0 ${pi/2} ${pi}" />
             <material name="grey" />
         </visual>
     </link>
@@ -93,7 +93,7 @@
     <joint name="frame_to_central_drive" type="fixed">
         <parent link="frame"/>
         <child link="central_drive"/>
-        <origin xyz="0.64135 -0.098425 0.022225" rpy="0 0 0" />
+        <origin xyz="0.5291836 0.0 0.079375" rpy="0 0 0" />
     </joint>
 
     <link name="bucket">
@@ -106,12 +106,15 @@
         </visual>
     </link>
 
-    <joint name="frame_to_bucket" type="fixed">
+    <joint name="frame_to_bucket" type="revolute">
         <parent link="frame"/>
         <child link="bucket"/>
         <origin xyz="-0.2286 0.0 0.4318" rpy="0 0 0" />
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="1000.0"/>
     </joint>
 
+    <!--
     <link name="sensor">
         <visual>
             <geometry>
@@ -132,7 +135,7 @@
         <parent link="frame"/>
         <child link="sensor"/>
         <origin xyz="5.0000e-01 0 -1.5796e-01" rpy="0 0 0" />
-    </joint>
+    </joint>-->
 
 </robot>
 
