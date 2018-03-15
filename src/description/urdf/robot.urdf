@@ -96,6 +96,22 @@
         <origin xyz="0.64135 -0.098425 0.022225" rpy="0 0 0" />
     </joint>
 
+    <link name="bucket">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/bucket.stl" />
+            </geometry>
+            <origin xyz="0.0025146 0 -0.5473446" rpy="${pi/2} 0 0" />
+            <material name="grey" />
+        </visual>
+    </link>
+
+    <joint name="frame_to_bucket" type="fixed">
+        <parent link="frame"/>
+        <child link="bucket"/>
+        <origin xyz="-0.2286 0.0 0.4318" rpy="0 0 0" />
+    </joint>
+
     <link name="sensor">
         <visual>
             <geometry>
