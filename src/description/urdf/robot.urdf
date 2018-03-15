@@ -69,10 +69,12 @@
             </visual>
         </link>
 
-        <joint name="frame_to_${x_name}_${y_name}_wheel" type="fixed">
+        <joint name="frame_to_${x_name}_${y_name}_wheel" type="revolute">
             <parent link="frame"/>
             <child link="${x_name}_${y_name}_wheel"/>
             <origin xyz="${xdist} ${y_dir*0.3109468} -0.0555752" />
+            <axis xyz="0 1 0"/>
+            <limit effort="1000.0" lower="-1e9" upper="1e9" velocity="1000.0"/>
         </joint>
     </xacro:macro>
     <xacro:wheel x_name="front" y_name="left"  rot="${-pi/2}" y_dir="1"  xdist="0.73025" color="red"   />
