@@ -3,7 +3,6 @@
   <arg name="gui" default="true" />
   <arg name="rvizconfig" default="$(find description)/config/arena.rviz" />
 
-  <param name="arena_description" command="$(find xacro)/xacro --inorder $(find description)/urdf/arena.urdf" />
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(find description)/urdf/robot.urdf" />
   <param name="use_gui" value="$(arg gui)"/>
 
