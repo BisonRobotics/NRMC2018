@@ -107,7 +107,7 @@ class robot(object):
             print("Imperio : Robot localized to location : {} and pose : {}".format(self.location, self.pose))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             print("IMPERIO ERROR : Robot is not able to localize")
-            #TODO : Add recovery behavior here, (0,0) is only for testing 
+            #TODO : Add recovery behavior here, (0,0) is only for development 
             self.location = (0,0)
             self.pose = (0,0,0)
         return (self.location, self.pose)
