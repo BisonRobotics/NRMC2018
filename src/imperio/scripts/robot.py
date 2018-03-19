@@ -8,6 +8,7 @@ Version: 2
 """
 from enum import Enum
 import time
+import tf
 import rospy
 
 from sensor_msgs.msg import LaserScan
@@ -35,8 +36,7 @@ class robot(object):
         """
         self.state = None
         self.change_state(RobotState.OUTBOUND)
-        #TODO : Fix for localization
-        self.tf = None
+        self.tf = tf.TransformListener(node)
         self.location = None
         self.pose = None
         self.laser_scan = None
@@ -102,10 +102,14 @@ class robot(object):
         :return: robot location (x,y) and pose (x,y,theta)
         """
 
-        #TODO : Add localization stuff here when it become available
-        #(self.location, self.pose) = self.tf.lookupTransform('/map', '/base_link', rospy.Time(0))
-        self.location = (0,0)
-        self.pose = (0,0,0)
+        try:
+            (self.location, self.pose) = self.tf.lookupTransform('/map', '/base_link', rospy.Time(0))
+            print("Imperio : Robot localized to location : {} and pose : {}".format(self.location, self.pose))
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            print("IMPERIO ERROR : Robot is not able to localize")
+            #TODO : Add recovery behavior here, (0,0) is only for testing 
+            self.location = (0,0)
+            self.pose = (0,0,0)
         return (self.location, self.pose)
 
 
