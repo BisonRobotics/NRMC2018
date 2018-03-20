@@ -319,11 +319,6 @@ def parallel_paths(start, goal, map, num_paths):
     args = [start, goal, map, paths]
 
     #Trust me, this is better than a message queue (it's essentially a pipe)
-    nicole_return = mp.Array('d', [sig_num] * 100)
-    marc_return = mp.Array('d', [sig_num] * 100)
-    jacob_return = mp.Array('d', [sig_num] * 100)
-    fworge_return = mp.Array('d', [sig_num] * 100)
-
     ret_val = []
     for i in range(0,4):
         ret_val.append(mp.Array('d', [sig_num] * 100))
@@ -332,8 +327,8 @@ def parallel_paths(start, goal, map, num_paths):
     nicolenotunix = mp.Process(target=rrt_process, args=(args, ret_val[0]))
     dashneptune = mp.Process(target=rrt_process, args=(args, ret_val[1]))
     jacobhuesman = mp.Process(target=rrt_process, args=(args, ret_val[2]))
-    fworge = mp.Process(target=rrt_process, args=(args, ret_val[3]))
-    thread_pool = [nicolenotunix, dashneptune, jacobhuesman, fworge]
+    fworg64 = mp.Process(target=rrt_process, args=(args, ret_val[3]))
+    thread_pool = [nicolenotunix, dashneptune, jacobhuesman, fworg64]
 
     # Start the thread pool
     for thread in thread_pool:
@@ -387,7 +382,6 @@ def list_to_path(array):
             break
         array_path.append((x,y))
     return (score, array_path)
-
 
 def calculate_path_score(path):
     if len(path) == 0:
