@@ -300,7 +300,7 @@ def find_best_rrt_path(start, goal, map, num_paths):
 
     for i in range(0, num_paths):
         args = [start, goal, map]
-        path = path_planning(start, goal, map)
+        path = path_planning(start, goal)
         path_score = calculate_path_score(path)
         if path_score < lowest_path_score:
             lowest_path_score = path_score
