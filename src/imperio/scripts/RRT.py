@@ -299,7 +299,6 @@ def find_best_rrt_path(start, goal, map, num_paths):
     lowest_path = []
 
     for i in range(0, num_paths):
-        args = [start, goal, map]
         path = path_planning(start, goal)
         path_score = calculate_path_score(path)
         if path_score < lowest_path_score:
@@ -308,12 +307,18 @@ def find_best_rrt_path(start, goal, map, num_paths):
 
     return lowest_path
 
-#signaling number to the decoder of the shared states
-sig_num= -42
-
 def parallel_paths(start, goal, map, num_paths):
-    paths = num_paths / 4
-    args = [start, goal, map, paths]
+    num_paths = 4
+    remain = num_paths%4
+    args = []
+    for i in range(0, 4):
+        paths = num_paths/4 if (remain < 1) else (num_paths/4 + 1)
+        remain -= 1
+        arg = [start, goal, map, paths]
+        args.append(arg)
+
+    #Signaling number to the decoder of the shared states
+    sig_num = -42
 
     #Trust me, this is better than a message queue (it's essentially a pipe)
     ret_val = []
@@ -321,10 +326,10 @@ def parallel_paths(start, goal, map, num_paths):
         ret_val.append(mp.Array('d', [sig_num] * 100))
 
     # Create threads, one for each core
-    nicolenotunix = mp.Process(target=rrt_process, args=(args, ret_val[0]))
-    dashneptune = mp.Process(target=rrt_process, args=(args, ret_val[1]))
-    jacobhuesman = mp.Process(target=rrt_process, args=(args, ret_val[2]))
-    fworg64 = mp.Process(target=rrt_process, args=(args, ret_val[3]))
+    nicolenotunix = mp.Process(target=rrt_process, args=(args[0], ret_val[0]))
+    dashneptune = mp.Process(target=rrt_process, args=(args[1], ret_val[1]))
+    jacobhuesman = mp.Process(target=rrt_process, args=(args[2], ret_val[2]))
+    fworg64 = mp.Process(target=rrt_process, args=(args[3], ret_val[3]))
     thread_pool = [nicolenotunix, dashneptune, jacobhuesman, fworg64]
 
     # Start the thread pool
@@ -337,7 +342,7 @@ def parallel_paths(start, goal, map, num_paths):
 
     results = []
     for val in ret_val:
-        results.append(list_to_path(val[:]))
+        results.append(list_to_path(val[:], sig_num))
 
     results = sorted(results, key=operator.itemgetter(0))
     best_score, best_path = results[0]
@@ -348,6 +353,11 @@ def rrt_process(data, ret):
     start, goal, map, paths = data
     lowest_score = 9999999
     lowest_path = None
+
+    if paths == 0:
+        ret[0] = lowest_score
+        return
+
     for i in range(0, paths):
         path = path_planning(start, goal, map)
         path_score = calculate_path_score(path)
@@ -368,7 +378,7 @@ def path_to_array(path):
         path_array.append(y)
     return path_array
 
-def list_to_path(array):
+def list_to_path(array, sig_num):
     score = array[0]
     array_path = []
     for i in range(0, len(array)/2):
