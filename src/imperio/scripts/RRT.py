@@ -308,9 +308,6 @@ def find_best_rrt_path(start, goal, map, num_paths):
 
     return lowest_path
 
-
-mutex = mp.Lock()
-
 #signaling number to the decoder of the shared states
 sig_num= -42
 
