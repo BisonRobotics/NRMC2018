@@ -15,9 +15,14 @@ public:
   void turnLittleConveyorOff();
   void turnSifterOn();
   void turnSifterOff();
-
+  void toggleBigConveyor ();
+  void toggleSifter ();
+  void toggleLittleConveyor ();
 private:
   iVescAccess *bc, *lc, *sf;
+  bool sifter_state;
+  bool little_conveyor_state;
+  bool big_conveyor_state;
 };
 
 #endif

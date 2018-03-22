@@ -51,8 +51,8 @@ void BackhoeController::setWristVelocity(double velocity)
 
 void BackhoeController::update(double dt)
 {
-  UpdateShoulderPosition(dt);
-  UpdateWristPosition(dt);
+  updateShoulderPosition(dt);
+  updateWristPosition(dt);
 
   if (!in_velocity)
   {
@@ -62,12 +62,12 @@ void BackhoeController::update(double dt)
     is_wrist_at_setpoint = (fabs(wrist_set_velocity) < fabs(wrist_setpoint_tolerance));
   }
 
-  SafetyCheck ();
+  safetyCheck();
   wrist_vesc->setLinearVelocity(wrist_gain * wrist_set_velocity);
   shoulder_vesc->setLinearVelocity(shoulder_gain * shoulder_set_velocity);
 }
 
-void BackhoeController::SafetyCheck ()
+void BackhoeController::safetyCheck()
 {
   if (shoulder_set_velocity > 0 && shoulder_angle_estimate > shoulder_safety_angle && wrist_angle_estimate < wrist_safety_angle)
   {
@@ -75,7 +75,12 @@ void BackhoeController::SafetyCheck ()
   }
 }
 
-void BackhoeController::UpdateWristPosition(double dt)
+void BackhoeController::init ()
+{
+
+}
+
+void BackhoeController::updateWristPosition(double dt)
 {
   if (wrist_vesc->getLimitSwitchState()==nsVescAccess::limitSwitchState::bottomOfMotion)
   {
@@ -91,7 +96,7 @@ void BackhoeController::UpdateWristPosition(double dt)
   }
 }
 
-void BackhoeController::UpdateShoulderPosition(double dt)
+void BackhoeController::updateShoulderPosition(double dt)
 {
   if (this->shoulder_vesc->getLimitSwitchState()==nsVescAccess::limitSwitchState::bottomOfMotion)
   {

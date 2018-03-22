@@ -55,8 +55,7 @@ add_library(backhoe_controller_lib src/backhoe_controller/backhoe_controller.cpp
 add_library(outrigger_controller_lib src/outrigger_controller/outrigger_controller.cpp)
 add_library(bucket_controller_lib src/bucket_controller/bucket_controller.cpp)
 add_library(dig_dump_action_lib src/dig_dump_action/dig_dump_action.cpp)
-add_library(teleop_safety src/teleop_safety/teleop_safety.cpp)
-target_link_libraries(teleop_safety ${vesc_access_LIBRARIES})
+
 add_executable(hoe_master src/hoe_master.cpp)
 add_executable (dig_teleop src/dig_teleop.cpp)
 
@@ -69,8 +68,7 @@ add_dependencies(hoe_master
 )
 
 target_link_libraries(dig_dump_action_lib backhoe_controller_lib bucket_controller_lib ${catkin_LIBRARIES} ${new_sim_LIBRARIES} ${vesc_access_LIBRARIES})
-target_link_libraries(dig_teleop ${vesc_access_LIBRARIES} backhoe_controller_lib bucket_controller_lib ${catkin_LIBRARIES} teleop_safety)
-
+target_link_libraries(dig_teleop ${vesc_access_LIBRARIES} backhoe_controller_lib bucket_controller_lib ${catkin_LIBRARIES} outrigger_controller_lib)
 target_link_libraries(hoe_master
   ${new_sim_LIBRARIES} 
   ${catkin_LIBRARIES}

@@ -199,5 +199,10 @@ nsVescAccess::vesc_param_struct_t shoulder_param =
 
 #define ROBOT_AXLE_LENGTH 0.5f
 #define ROBOT_MAX_SPEED 0.5f
+#define LINEAR_ACTUATOR_LENGTH .1778
+#define MINIMUM_CENTRAL_ANGLE  -1.4
+#define MAXIMUM_CENTRAL_ANGLE  1.3
+#define SAFE_CENTRAL_ANGLE      -1.22
+#define SAFE_LINEAR_DISTANCE    .06985
 
 #endif

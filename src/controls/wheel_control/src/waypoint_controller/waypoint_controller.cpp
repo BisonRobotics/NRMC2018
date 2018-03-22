@@ -11,7 +11,7 @@
 #define SPEED_CONST .2  // average speed for the wheels in linear m/s
 bool approx(double A, double B, double T)
 {
-  return ((A > B - T && A < B + T) ? true : false);
+  return (((A > (B - T)) && (A < (B + T))));
 }
 
 double dist(double A, double B, double C, double D)

@@ -20,6 +20,7 @@ public:
   void setWristSetpoint(double angle);
   void setShoulderVelocity (double velocity);
   void setWristVelocity (double velocity);
+  void init ();
   void update(double dt);
   void tareBucket (void);
   void tareBackhoe (void);
@@ -49,9 +50,9 @@ private:
   bool is_shoulder_at_setpoint;
   bool is_wrist_at_setpoint;
   bool in_velocity;
-  void SafetyCheck ();
-  void UpdateWristPosition (double dt);
-  void UpdateShoulderPosition (double dt);
+  void safetyCheck();
+  void updateWristPosition(double dt);
+  void updateShoulderPosition(double dt);
 };
 
 #endif

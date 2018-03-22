@@ -17,22 +17,10 @@ void PositionController::initializeMembers(float velocity)
 
 PositionController::PositionController(float velocity)
 {
-  float max_velocity = MAX_WHEEL_VELOCITY;
-  float max_torque = MAX_WHEEL_TORQUE;
-  float gear_ratio = WHEEL_GEAR_RATIO;
-  float torque_constant = WHEEL_TORQUE_CONSTANT;
-  unsigned int pole_pairs = WHEEL_POLE_PAIRS;
-  float output_ratio = WHEEL_OUTPUT_RATIO;
-  char *name = (char *)WHEEL_CAN_NETWORK;
-  this->front_left_wheel = new VescAccess(FRONT_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
-                                          torque_constant, name, pole_pairs);
-  this->front_right_wheel = new VescAccess(FRONT_RIGHT_WHEEL_ID, -1.0f * gear_ratio, output_ratio, max_velocity,
-                                           max_torque, torque_constant, name, pole_pairs);
-
-  this->back_right_wheel = new VescAccess(BACK_RIGHT_WHEEL_ID, -1.0f * gear_ratio, output_ratio, max_velocity,
-                                          max_torque, torque_constant, name, pole_pairs);
-  this->back_left_wheel = new VescAccess(BACK_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque,
-                                         torque_constant, name, pole_pairs);
+  this->front_left_wheel = new VescAccess(front_left_param);
+  this->front_right_wheel = new VescAccess(front_right_param);
+  this->back_right_wheel = new VescAccess(back_right_param);
+  this->back_left_wheel = new VescAccess(back_left_param);
   initializeMembers(velocity);
   this->internally_alloc = true;
 }

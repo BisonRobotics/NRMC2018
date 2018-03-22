@@ -184,16 +184,10 @@ int main(int argc, char **argv)
   else
   {
     sim = NULL;  // Make no reference to the sim if not simulating
-    char *can_name = (char *)WHEEL_CAN_NETWORK;
-    fl = new VescAccess(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
-                        WHEEL_TORQUE_CONSTANT, can_name, 1);
-    fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
-                        MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-    br = new VescAccess(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
-                        MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-    bl = new VescAccess(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
-                        WHEEL_TORQUE_CONSTANT, can_name, 1);
-
+    fl = new VescAccess(front_left_param);
+    fr = new VescAccess(front_right_param);
+    br = new VescAccess(back_right_param);
+    bl = new VescAccess(back_left_param);
     pos = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .07);
     imu = new LpResearchImu("imu");
   }
