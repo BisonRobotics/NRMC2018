@@ -5,8 +5,6 @@ Date: 2/11/2018
 Version: 1
 """
 
-import matplotlib.pyplot as plt
-import scipy.interpolate as si
 import numpy as np
 import random
 import math
@@ -271,45 +269,6 @@ def path_planning(start, goal, map):
 
     smooth_path.reverse()
     return smooth_path
-
-
-def draw_tree(waypoints, map):
-    if halt_for_visualization == False:
-        return
-    for x in range(1, len(waypoints)):
-        x1, y1 = waypoints[x - 1]
-        x2, y2 = waypoints[x]
-        plt.plot([x1, x2], [y1, y2])
-
-    # configure plot axises
-    min_x, min_y = map.cell_position(0, 0)
-    max_x, max_y = map.cell_position(map.width - 1, map.height - 1)
-
-    #to keep things in scale
-    plt.xlim(min_y, max_y)
-    plt.ylim(min_y, max_y)
-
-    plt.show()
-
-def bspline_path(x,y, sn):
-    N = 3
-    t = range(len(x))
-    x_tup = si.splrep(t, x, k=N)
-    y_tup = si.splrep(t, y, k=N)
-
-    x_list = list(x_tup)
-    xl = x.tolist()
-    x_list[1] = xl + [0.0, 0.0, 0.0, 0.0]
-
-    y_list = list(y_tup)
-    yl = y.tolist()
-    y_list[1] = yl + [0.0, 0.0, 0.0, 0.0]
-
-    ipl_t = np.linspace(0.0, len(x) - 1, sn)
-    rx = si.splev(ipl_t, x_list)
-    ry = si.splev(ipl_t, y_list)
-
-    return rx, ry
 
 def find_best_rrt_path(start, goal, map, num_paths):
     print("Finding best RRT path out of %s paths" % num_paths)
