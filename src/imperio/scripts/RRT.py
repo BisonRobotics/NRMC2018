@@ -308,7 +308,6 @@ def find_best_rrt_path(start, goal, map, num_paths):
     return lowest_path
 
 def parallel_paths(start, goal, map, num_paths):
-    num_paths = 4
     remain = num_paths%4
     args = []
     for i in range(0, 4):
