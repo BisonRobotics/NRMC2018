@@ -86,7 +86,7 @@ int main(int argc, char **argv)
 
   BucketController bucketC(bucketBigConveyorVesc, bucketLittleConveyorVesc, bucketSifterVesc);
   BackhoeController backhoeC(backhoeInitialShoulderTheta, backhoeInitialWristTheta, backhoeShoulderVesc,
-                             backhoeWristVesc);
+                             backhoeWristVesc, .04, .04,.78,-.1, .4,-.1,.7,false,.5, .5);
 
   ros::Rate rate(DIGGING_CONTROL_RATE_HZ);
 

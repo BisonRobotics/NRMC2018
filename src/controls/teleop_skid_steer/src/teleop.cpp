@@ -23,13 +23,10 @@ int main(int argc, char **argv)
 {
   ros::init(argc, argv, "robotteleop");
   ros::NodeHandle n;
-  ROS_INFO("GOT HERE");
   ros::Subscriber joy_sub = n.subscribe("joy", 10, callback);
   ros::Rate loop_rate(100);
-  ROS_INFO("DECLARED LOOP RATE");
   TeleopInterface tele(0.8f);
 
-  ROS_INFO("Declared teleop Interface");
   while (ros::ok())
   {
     tele.update(velocity_left, velocity_right);

@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   geometry_msgs
   visualization_msgs
+  sensor_msgs
 )
 
 find_package (vesc_access REQUIRED)
@@ -56,6 +57,7 @@ add_library(bucket_controller_lib src/bucket_controller/bucket_controller.cpp)
 add_library(dig_dump_action_lib src/dig_dump_action/dig_dump_action.cpp)
 
 add_executable(hoe_master src/hoe_master.cpp)
+add_executable (dig_teleop src/dig_teleop.cpp)
 
 add_dependencies(hoe_master
   backhoe_controller_lib
@@ -66,8 +68,7 @@ add_dependencies(hoe_master
 )
 
 target_link_libraries(dig_dump_action_lib backhoe_controller_lib bucket_controller_lib ${catkin_LIBRARIES} ${new_sim_LIBRARIES} ${vesc_access_LIBRARIES})
-
-
+target_link_libraries(dig_teleop ${vesc_access_LIBRARIES} backhoe_controller_lib bucket_controller_lib ${catkin_LIBRARIES} outrigger_controller_lib)
 target_link_libraries(hoe_master
   ${new_sim_LIBRARIES} 
   ${catkin_LIBRARIES}
@@ -86,4 +87,18 @@ target_link_libraries(outrigger_tester ${catkin_LIBRARIES})
 
 add_dependencies (outrigger_tester ${PROJECT_NAME}_gencpp)
 add_dependencies (outrigger_master ${PROJECT_NAME}_gencpp)
+
+
+
+
+catkin_add_gtest(test_backhoe_controller src/backhoe_controller/test/backhoe_controller_tests.cpp)
+if(TARGET test_backhoe_controller)
+    target_link_libraries(
+            test_backhoe_controller
+            ${catkin_LIBRARIES}
+            backhoe_controller_lib
+            gmock_main
+    )
+    add_dependencies(test_backhoe_controller vesc_access)
+endif()
 
