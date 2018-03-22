@@ -65,12 +65,20 @@ ReadableSensors::ReadStatus AprilTagTrackerInterface::receiveData()
 
 void AprilTagTrackerInterface::callback(const geometry_msgs::PoseStamped::ConstPtr &msg)
 {
-  this->x = msg->pose.position.x;
-  this->y = msg->pose.position.y;
-  this->theta = qtToTheta(msg->pose.orientation);
-  last_time = ros::Time::now();
-  is_floating = false;
-  ROS_INFO("received estimate");
+  double theta = qtToTheta(msg->pose.orientation);
+  if (std::isfinite(theta) && std::isfinite(msg->pose.position.x) && std::isfinite(msg->pose.position.y))
+  {
+    this->x = msg->pose.position.x;
+    this->y = msg->pose.position.y;
+    this->theta = qtToTheta(msg->pose.orientation);
+    last_time = ros::Time::now();
+    is_floating = false;
+    ROS_INFO("received estimate");
+  }
+  else 
+  {
+    ROS_ERROR ("nan in position statement ");
+  }
 }
 
 bool AprilTagTrackerInterface::isFloating()
