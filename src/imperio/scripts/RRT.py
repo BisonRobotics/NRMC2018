@@ -9,8 +9,11 @@ import numpy as np
 import random
 import math
 import copy
+import operator
+import multiprocessing as mp
 
 halt_for_visualization = False
+use_threading = True
 
 class RRT():
     """
@@ -242,47 +245,108 @@ def path_planning(start, goal, map):
     smooth_path = remove_redundant(path_smoothing(path, 1000, map))
     #draw_tree(smooth_path, map)
 
-    """ Save for further testing
-    #Testing the BSpline
-    xlist = []
-    ylist = []
-    for point in path:
-        x,y = point
-        xlist.append(x)
-        ylist.append(y)
-
-    sampling_number = 100
-    x = np.array(xlist)
-    y = np.array(ylist)
-    rx, ry = bspline_path(x, y, sampling_number)
-
-    plt.xlim(min_y, max_y)
-    plt.ylim(min_y, max_y)
-    plt.plot(rx, ry, 'r', label="B-spline path")
-    plt.show()
-
-    comb = []
-    for i in range(0, len(rx)):
-        comb.append((rx[i], ry[i]))
-    draw_tree(comb, map)
-    """
-
     smooth_path.reverse()
     return smooth_path
 
 def find_best_rrt_path(start, goal, map, num_paths):
     print("Finding best RRT path out of %s paths" % num_paths)
+
+    if use_threading:
+        return parallel_paths(start, goal, map, num_paths)
+
     lowest_path_score = 9999999999
-    lowest_path = None
+    lowest_path = []
+
     for i in range(0, num_paths):
-        path = path_planning(start, goal, map)
+        path = path_planning(start, goal)
         path_score = calculate_path_score(path)
         if path_score < lowest_path_score:
             lowest_path_score = path_score
             lowest_path = path
-        print("{}/{} completed".format(i+1, num_paths))
 
     return lowest_path
+
+def parallel_paths(start, goal, map, num_paths):
+    remain = num_paths%4
+    args = []
+    for i in range(0, 4):
+        paths = num_paths/4 if (remain < 1) else (num_paths/4 + 1)
+        remain -= 1
+        arg = [start, goal, map, paths]
+        args.append(arg)
+
+    #Signaling number to the decoder of the shared states
+    sig_num = -42
+
+    #Trust me, this is better than a message queue (it's essentially a pipe)
+    ret_val = []
+    for i in range(0,4):
+        ret_val.append(mp.Array('d', [sig_num] * 100))
+
+    # Create threads, one for each core
+    nicolenotunix = mp.Process(target=rrt_process, args=(args[0], ret_val[0]))
+    dashneptune = mp.Process(target=rrt_process, args=(args[1], ret_val[1]))
+    jacobhuesman = mp.Process(target=rrt_process, args=(args[2], ret_val[2]))
+    fworg64 = mp.Process(target=rrt_process, args=(args[3], ret_val[3]))
+    thread_pool = [nicolenotunix, dashneptune, jacobhuesman, fworg64]
+
+    # Start the thread pool
+    for thread in thread_pool:
+        thread.start()
+
+    # Wait for the threads to finish
+    for thread in thread_pool:
+        thread.join()
+
+    results = []
+    for val in ret_val:
+        results.append(list_to_path(val[:], sig_num))
+
+    results = sorted(results, key=operator.itemgetter(0))
+    best_score, best_path = results[0]
+    return best_path
+
+
+def rrt_process(data, ret):
+    start, goal, map, paths = data
+    lowest_score = 9999999
+    lowest_path = None
+
+    if paths == 0:
+        ret[0] = lowest_score
+        return
+
+    for i in range(0, paths):
+        path = path_planning(start, goal, map)
+        path_score = calculate_path_score(path)
+        if path_score < lowest_score:
+            lowest_path = path
+            lowest_score = path_score
+    path_array = path_to_array(lowest_path)
+    for i in range(0, len(path_array)):
+        ret[i + 1] = path_array[i]
+    ret[0] = lowest_score
+
+
+def path_to_array(path):
+    path_array = []
+    for point in path:
+        x,y = point
+        path_array.append(x)
+        path_array.append(y)
+    return path_array
+
+def list_to_path(array, sig_num):
+    score = array[0]
+    array_path = []
+    for i in range(0, len(array)/2):
+        index = i*2+1
+        x = array[index]
+        y = array[index + 1]
+        if x == sig_num and y == sig_num:
+            break
+        array_path.append((x,y))
+    return (score, array_path)
 
 def calculate_path_score(path):
     if len(path) == 0:
