@@ -88,3 +88,17 @@ target_link_libraries(outrigger_tester ${catkin_LIBRARIES})
 add_dependencies (outrigger_tester ${PROJECT_NAME}_gencpp)
 add_dependencies (outrigger_master ${PROJECT_NAME}_gencpp)
 
+
+
+
+catkin_add_gtest(test_backhoe_controller src/backhoe_controller/test/backhoe_controller_tests.cpp)
+if(TARGET test_backhoe_controller)
+    target_link_libraries(
+            test_backhoe_controller
+            ${catkin_LIBRARIES}
+            backhoe_controller_lib
+            gmock_main
+    )
+    add_dependencies(test_backhoe_controller vesc_access)
+endif()
+

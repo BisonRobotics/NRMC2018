@@ -16,10 +16,10 @@ public:
                     double shoulder_gain, double wrist_gain);
 
   // TODO, return status on update based on operation (see waypoint controller)
-  void setShoulderSetpoint(double angle);
-  void setWristSetpoint(double angle);
-  void setShoulderVelocity (double velocity);
-  void setWristVelocity (double velocity);
+  void setShoulderSetpoint(double angle);     // in rad from horizontal
+  void setWristSetpoint(double distance);     // in m
+  void setShoulderVelocity (double velocity); // in rad/s
+  void setWristVelocity (double velocity);    // in m/s
   void init ();
   void update(double dt);
   void tareBucket (void);
@@ -41,7 +41,7 @@ private:
   double min_backhoe_angle;
   double max_backhoe_angle;
   double shoulder_safety_angle;
-  double wrist_safety_angle;
+  double wrist_safety_distance;
   double shoulder_set_velocity;
   double wrist_set_velocity;
   double shoulder_gain;
@@ -49,7 +49,7 @@ private:
   iVescAccess *shoulder_vesc, *wrist_vesc;
   bool is_shoulder_at_setpoint;
   bool is_wrist_at_setpoint;
-  bool in_velocity;
+  bool in_velocity_control_mode;
   void safetyCheck();
   void updateWristPosition(double dt);
   void updateShoulderPosition(double dt);

@@ -23,10 +23,12 @@ BackhoeController::BackhoeController(double initial_shoulder_theta, double initi
   this->min_backhoe_angle = min_backhoe_angle;
   this->max_backhoe_angle = max_backhoe_angle;
   this->shoulder_safety_angle = shoulder_safety_angle;
-  this->wrist_safety_angle = wrist_safety_distance;
-  this->in_velocity = in_velocity;
+  this->wrist_safety_distance = wrist_safety_distance;
+  this->in_velocity_control_mode = in_velocity;
   this->shoulder_gain = shoulder_gain;
   this->wrist_gain = wrist_gain;
+  this->shoulder_set_velocity = 0.0;
+  this->wrist_set_velocity = 0.0;
 }
 
 void BackhoeController::setShoulderSetpoint(double angle)
@@ -54,7 +56,7 @@ void BackhoeController::update(double dt)
   updateShoulderPosition(dt);
   updateWristPosition(dt);
 
-  if (!in_velocity)
+  if (!in_velocity_control_mode)
   {
     wrist_set_velocity = wrist_setpoint - wrist_angle_estimate;
     shoulder_set_velocity = shoulder_setpoint - shoulder_angle_estimate;
@@ -69,15 +71,31 @@ void BackhoeController::update(double dt)
 
 void BackhoeController::safetyCheck()
 {
-  if (shoulder_set_velocity > 0 && shoulder_angle_estimate > shoulder_safety_angle && wrist_angle_estimate < wrist_safety_angle)
+  if (shoulder_set_velocity < 0 && shoulder_angle_estimate < shoulder_safety_angle && wrist_angle_estimate > wrist_safety_distance)
   {
       shoulder_set_velocity = 0.0;
+      if (wrist_set_velocity > 0){
+        wrist_set_velocity = 0.0;
+      }
   }
 }
 
 void BackhoeController::init ()
 {
-
+  bool at_home = false;
+  static constexpr float drive_torque = 1.0f;
+  do
+  {
+    at_home = wrist_vesc->getLimitSwitchState()!=nsVescAccess::limitSwitchState::inTransit;
+    if (at_home)
+    {
+      wrist_vesc->setTorque(drive_torque);
+    }
+    else
+    {
+      wrist_vesc->setTorque(0.0);
+    }
+  } while (!at_home);
 }
 
 void BackhoeController::updateWristPosition(double dt)
