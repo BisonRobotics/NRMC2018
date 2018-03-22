@@ -2,10 +2,11 @@
 #include <cmath>
 
 BackhoeController::BackhoeController(double initial_shoulder_theta, double initial_wrist_theta, iVescAccess *sh_vesc,
-                                     iVescAccess *wr_vesc, double wrist_setpoint_tolerance, double shoulder_setpoint_tol,
-                                      double top_of_wrist_motion, double min_backhoe_angle, double max_backhoe_angle,
-                                     double shoulder_safety_angle, double wrist_safety_distance, bool in_velocity,
-                                      double shoulder_gain, double wrist_gain)
+                                     iVescAccess *wr_vesc, double wrist_setpoint_tolerance,
+                                     double shoulder_setpoint_tol, double top_of_wrist_motion, double min_backhoe_angle,
+                                     double max_backhoe_angle, double shoulder_safety_angle,
+                                     double wrist_safety_distance, bool in_velocity, double shoulder_gain,
+                                     double wrist_gain)
 {
   this->shoulder_setpoint = initial_shoulder_theta;
   this->shoulder_angle_estimate = initial_shoulder_theta;
@@ -71,22 +72,24 @@ void BackhoeController::update(double dt)
 
 void BackhoeController::safetyCheck()
 {
-  if (shoulder_set_velocity < 0 && shoulder_angle_estimate < shoulder_safety_angle && wrist_angle_estimate > wrist_safety_distance)
+  if (shoulder_set_velocity < 0 && shoulder_angle_estimate < shoulder_safety_angle &&
+      wrist_angle_estimate > wrist_safety_distance)
   {
-      shoulder_set_velocity = 0.0;
-      if (wrist_set_velocity > 0){
-        wrist_set_velocity = 0.0;
-      }
+    shoulder_set_velocity = 0.0;
+    if (wrist_set_velocity > 0)
+    {
+      wrist_set_velocity = 0.0;
+    }
   }
 }
 
-void BackhoeController::init ()
+void BackhoeController::init()
 {
   bool at_home = false;
   static constexpr float drive_torque = 1.0f;
   do
   {
-    at_home = wrist_vesc->getLimitSwitchState()!=nsVescAccess::limitSwitchState::inTransit;
+    at_home = wrist_vesc->getLimitSwitchState() != nsVescAccess::limitSwitchState::inTransit;
     if (at_home)
     {
       wrist_vesc->setTorque(drive_torque);
@@ -100,33 +103,33 @@ void BackhoeController::init ()
 
 void BackhoeController::updateWristPosition(double dt)
 {
-  if (wrist_vesc->getLimitSwitchState()==nsVescAccess::limitSwitchState::bottomOfMotion)
+  if (wrist_vesc->getLimitSwitchState() == nsVescAccess::limitSwitchState::bottomOfMotion)
   {
     wrist_angle_estimate = 0;
   }
-  else if (wrist_vesc->getLimitSwitchState()==nsVescAccess::limitSwitchState::topOfMotion)
+  else if (wrist_vesc->getLimitSwitchState() == nsVescAccess::limitSwitchState::topOfMotion)
   {
     wrist_angle_estimate = top_of_wrist_motion;
   }
   else
   {
-    wrist_angle_estimate += wrist_vesc->getLinearVelocity()*dt;
+    wrist_angle_estimate += wrist_vesc->getLinearVelocity() * dt;
   }
 }
 
 void BackhoeController::updateShoulderPosition(double dt)
 {
-  if (this->shoulder_vesc->getLimitSwitchState()==nsVescAccess::limitSwitchState::bottomOfMotion)
+  if (this->shoulder_vesc->getLimitSwitchState() == nsVescAccess::limitSwitchState::bottomOfMotion)
   {
     shoulder_angle_estimate = min_backhoe_angle;
   }
-  else if (shoulder_vesc->getLimitSwitchState()==nsVescAccess::limitSwitchState::topOfMotion)
+  else if (shoulder_vesc->getLimitSwitchState() == nsVescAccess::limitSwitchState::topOfMotion)
   {
     shoulder_angle_estimate = max_backhoe_angle;
   }
   else
   {
-    shoulder_angle_estimate = shoulder_vesc->getPotPosition(); // transform this if need be
+    shoulder_angle_estimate = shoulder_vesc->getPotPosition();  // transform this if need be
   }
 }
 
@@ -151,13 +154,12 @@ double BackhoeController::getWeightInBucket()
   return bucket_tare_weight;
 }
 
-
 void BackhoeController::tareBackhoe()
 {
   backhoe_tare_weight = 0;
 }
 
-void BackhoeController::tareBucket ()
+void BackhoeController::tareBucket()
 {
   bucket_tare_weight = 0;
 }

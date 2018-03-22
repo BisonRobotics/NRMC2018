@@ -11,19 +11,19 @@ OutriggerController *global_outrigger;
 
 void callback(const sensor_msgs::Joy::ConstPtr &joy)
 {
-  float linear=0.0f;
-  float central=0.0f;
+  float linear = 0.0f;
+  float central = 0.0f;
   bool sifter_toggle = false;
   bool large_conveyor_toggle = false;
   static constexpr float linear_gain = 2.0f;
   static constexpr float central_gain = 1.0f;
 
-  if (joy->buttons[4])              // left bumper is safety
+  if (joy->buttons[4])  // left bumper is safety
   {
-    linear = joy->axes[1]; // left analog up/down
-    central = joy->axes[3]; // right analog up/down
-    sifter_toggle = joy->buttons[0] != 0; // A button
-    large_conveyor_toggle = joy->buttons[1] != 0; // B button
+    linear = joy->axes[1];                         // left analog up/down
+    central = joy->axes[3];                        // right analog up/down
+    sifter_toggle = joy->buttons[0] != 0;          // A button
+    large_conveyor_toggle = joy->buttons[1] != 0;  // B button
 
     if (joy->buttons[2] && !joy->buttons[3])
     {
@@ -33,10 +33,9 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
     {
       global_outrigger->retract();
     }
-
   }
 
-  global_backhoe->setShoulderVelocity(central_gain*central);
+  global_backhoe->setShoulderVelocity(central_gain * central);
   global_backhoe->setWristVelocity(linear_gain * linear);
 
   if (sifter_toggle)
@@ -47,7 +46,6 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
   {
     global_bucket->toggleBigConveyor();
   }
-
 }
 
 int main(int argc, char **argv)
@@ -55,35 +53,34 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "dig_teleop");
   ros::NodeHandle n;
 
-  VescAccess linear_vesc (linear_param, true);
-  VescAccess shoulder_vesc (shoulder_param, true);
-  VescAccess left_outrigger_vesc (left_outrigger_param);
-  VescAccess right_outrigger_vesc (right_outrigger_param);
-  VescAccess sifter_vesc (sifter_param);
-  VescAccess small_conveyor_vesc (small_conveyor_param);
-  VescAccess large_conveyor_vesc (large_conveyor_param);
+  VescAccess linear_vesc(linear_param, true);
+  VescAccess shoulder_vesc(shoulder_param, true);
+  VescAccess left_outrigger_vesc(left_outrigger_param);
+  VescAccess right_outrigger_vesc(right_outrigger_param);
+  VescAccess sifter_vesc(sifter_param);
+  VescAccess small_conveyor_vesc(small_conveyor_param);
+  VescAccess large_conveyor_vesc(large_conveyor_param);
 
-  BackhoeController backhoe (0.0, 0.0, &shoulder_vesc, &linear_vesc, .04, .05, LINEAR_ACTUATOR_LENGTH,
-                             MINIMUM_CENTRAL_ANGLE, MAXIMUM_CENTRAL_ANGLE, SAFE_CENTRAL_ANGLE,
-                             SAFE_LINEAR_DISTANCE, true, .5, .5);
-  BucketController bucket (&large_conveyor_vesc, &small_conveyor_vesc, &sifter_vesc);
+  BackhoeController backhoe(0.0, 0.0, &shoulder_vesc, &linear_vesc, .04, .05, LINEAR_ACTUATOR_LENGTH,
+                            MINIMUM_CENTRAL_ANGLE, MAXIMUM_CENTRAL_ANGLE, SAFE_CENTRAL_ANGLE, SAFE_LINEAR_DISTANCE,
+                            true, .5, .5);
+  BucketController bucket(&large_conveyor_vesc, &small_conveyor_vesc, &sifter_vesc);
 
-  OutriggerController outrigger (&left_outrigger_vesc, &right_outrigger_vesc);
+  OutriggerController outrigger(&left_outrigger_vesc, &right_outrigger_vesc);
   global_backhoe = &backhoe;
   global_bucket = &bucket;
   global_outrigger = &outrigger;
 
   ros::Subscriber joy_sub = n.subscribe("joy_dig", 10, callback);
   ros::Rate r(50);
-  ros::Time initial = ros::Time::now ();
+  ros::Time initial = ros::Time::now();
 
-  while (ros::ok ())
+  while (ros::ok())
   {
-    r.sleep ();
-    ros::spinOnce ();
+    r.sleep();
+    ros::spinOnce();
     backhoe.update((initial - ros::Time::now()).toSec());
     outrigger.update((initial - ros::Time::now()).toSec());
     initial = ros::Time::now();
   }
-
 }

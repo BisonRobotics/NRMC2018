@@ -7,27 +7,26 @@
 class BackhoeController
 {
 public:
-  BackhoeController(double initial_shoulder_theta, double initial_wrist_theta,
-                    iVescAccess *sh_vesc, iVescAccess *wr_vesc,
-                    double wrist_setpoint_tolerance, double shoulder_setpoint_tol,
-                    double top_of_wrist_motion, double min_backhoe_angle,
-                    double max_backhoe_angle, double shoulder_safety_angle,
-                    double wrist_safety_distance, bool in_velocity,
-                    double shoulder_gain, double wrist_gain);
+  BackhoeController(double initial_shoulder_theta, double initial_wrist_theta, iVescAccess *sh_vesc,
+                    iVescAccess *wr_vesc, double wrist_setpoint_tolerance, double shoulder_setpoint_tol,
+                    double top_of_wrist_motion, double min_backhoe_angle, double max_backhoe_angle,
+                    double shoulder_safety_angle, double wrist_safety_distance, bool in_velocity, double shoulder_gain,
+                    double wrist_gain);
 
   // TODO, return status on update based on operation (see waypoint controller)
   void setShoulderSetpoint(double angle);     // in rad from horizontal
   void setWristSetpoint(double distance);     // in m
-  void setShoulderVelocity (double velocity); // in rad/s
-  void setWristVelocity (double velocity);    // in m/s
-  void init ();
+  void setShoulderVelocity(double velocity);  // in rad/s
+  void setWristVelocity(double velocity);     // in m/s
+  void init();
   void update(double dt);
-  void tareBucket (void);
-  void tareBackhoe (void);
-  double getWeightInBucket (void);
-  double getWeightInBackhoe (void);
+  void tareBucket(void);
+  void tareBackhoe(void);
+  double getWeightInBucket(void);
+  double getWeightInBackhoe(void);
   bool shoulderAtSetpoint();
   bool wristAtSetpoint();
+
 private:
   double shoulder_setpoint;
   double wrist_setpoint;

@@ -19,9 +19,9 @@ public:
   VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
              float torque_constant, char *can_network, unsigned int pole_pairs);
 
-  explicit VescAccess (nsVescAccess::vesc_param_struct_t param);
+  explicit VescAccess(nsVescAccess::vesc_param_struct_t param);
 
-  VescAccess (nsVescAccess::vesc_param_struct_t param, bool has_limits);
+  VescAccess(nsVescAccess::vesc_param_struct_t param, bool has_limits);
 
   void setTorque(float newton_meters) override;
   void setLinearVelocity(float meters_per_second) override;
@@ -31,7 +31,7 @@ public:
   float getTorqueLimit(void);
   float getTorque(void) override;
   float getLinearVelocity(void) override;
-  nsVescAccess::limitSwitchState getLimitSwitchState(void)override;
+  nsVescAccess::limitSwitchState getLimitSwitchState(void) override;
   float getPotPosition(void) override;
 
 private:

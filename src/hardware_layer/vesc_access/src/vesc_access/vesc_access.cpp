@@ -50,15 +50,13 @@ VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_r
 }
 
 VescAccess::VescAccess(nsVescAccess::vesc_param_struct_t param, bool has_limits)
-    : VescAccess (param.can_id, param.gear_ratio, param.output_ratio, param.max_velocity, param.max_torque,
-                  param.torque_constant, param.can_network, param.pole_pairs, has_limits)
+  : VescAccess(param.can_id, param.gear_ratio, param.output_ratio, param.max_velocity, param.max_torque,
+               param.torque_constant, param.can_network, param.pole_pairs, has_limits)
 {
-
 }
 
-VescAccess::VescAccess(nsVescAccess::vesc_param_struct_t param) : VescAccess (param, false)
+VescAccess::VescAccess(nsVescAccess::vesc_param_struct_t param) : VescAccess(param, false)
 {
-
 }
 
 void VescAccess::setOutputRatio(float output_ratio)
@@ -242,5 +240,3 @@ float VescAccess::getPotPosition(void)
 {
   return vesc->getADC() * rad_per_count - rad_offset;
 }
-
-

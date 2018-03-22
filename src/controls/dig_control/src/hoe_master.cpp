@@ -40,8 +40,8 @@ int main(int argc, char **argv)
   double backhoeInitialShoulderTheta;
   double backhoeInitialWristTheta;
 
-  //iVescAccess *outriggerRightVesc;
-  //iVescAccess *outriggerLeftVesc;
+  // iVescAccess *outriggerRightVesc;
+  // iVescAccess *outriggerLeftVesc;
   iVescAccess *bucketBigConveyorVesc;
   iVescAccess *bucketLittleConveyorVesc;
   iVescAccess *bucketSifterVesc;
@@ -49,15 +49,15 @@ int main(int argc, char **argv)
   iVescAccess *backhoeWristVesc;
 
   // these should not be initialized if we are not simulating
-  //SimOutriggers *outriggerSimulation;
+  // SimOutriggers *outriggerSimulation;
   SimBucket *bucketSimulation;
   SimBackhoe *backhoeSimulation;
   if (simulating)
   {
     // SimOutrigger
-  //  outriggerSimulation = new SimOutriggers(0, 0);  // initial deployment length
-  //  outriggerRightVesc = outriggerSimulation->getRVesc();
-  //  outriggerLeftVesc = outriggerSimulation->getLVesc();
+    //  outriggerSimulation = new SimOutriggers(0, 0);  // initial deployment length
+    //  outriggerRightVesc = outriggerSimulation->getRVesc();
+    //  outriggerLeftVesc = outriggerSimulation->getLVesc();
     // SimBucket
     bucketSimulation = new SimBucket();
     bucketBigConveyorVesc = bucketSimulation->getBigConveyorVesc();
@@ -73,9 +73,9 @@ int main(int argc, char **argv)
   }
   else
   {
-  //  outriggerSimulation = NULL;  // Don't use these pointers.
-    bucketSimulation = NULL;     // This is a physical run.
-    backhoeSimulation = NULL;    // You'll cause exceptions.
+    //  outriggerSimulation = NULL;  // Don't use these pointers.
+    bucketSimulation = NULL;   // This is a physical run.
+    backhoeSimulation = NULL;  // You'll cause exceptions.
 
     // initialize real vescs here
 
@@ -86,7 +86,7 @@ int main(int argc, char **argv)
 
   BucketController bucketC(bucketBigConveyorVesc, bucketLittleConveyorVesc, bucketSifterVesc);
   BackhoeController backhoeC(backhoeInitialShoulderTheta, backhoeInitialWristTheta, backhoeShoulderVesc,
-                             backhoeWristVesc, .04, .04,.78,-.1, .4,-.1,.7,false,.5, .5);
+                             backhoeWristVesc, .04, .04, .78, -.1, .4, -.1, .7, false, .5, .5);
 
   ros::Rate rate(DIGGING_CONTROL_RATE_HZ);
 
@@ -96,7 +96,7 @@ int main(int argc, char **argv)
   {
     if (simulating)  // update simulations if neccesary
     {
-      //outriggerSimulation->update(1.0 / DIGGING_CONTROL_RATE_HZ);
+      // outriggerSimulation->update(1.0 / DIGGING_CONTROL_RATE_HZ);
       bucketSimulation->update(1.0 / DIGGING_CONTROL_RATE_HZ);
       backhoeSimulation->update(1.0 / DIGGING_CONTROL_RATE_HZ);
     }
