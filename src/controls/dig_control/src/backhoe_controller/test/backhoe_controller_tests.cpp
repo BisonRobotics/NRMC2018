@@ -2,9 +2,9 @@
 #include "backhoe_controller/backhoe_controller.h"
 #include "gmock/gmock.h"
 
-TEST(smoketest, smoketest)
+TEST(backhoe_controller_test, can_be_init)
 {
-  BackhoeController backhoeController()
+  BackhoeController backhoeController ()
 }
 
 int main(int argc, char **argv)
