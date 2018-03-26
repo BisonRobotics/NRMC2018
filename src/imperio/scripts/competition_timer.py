@@ -17,9 +17,15 @@ class CompetitionTimer(object):
         #Gets the time in seconds
         self.start_time = rospy.get_time()
         self.timerPublisher = rospy.Publisher('/times_up', Bool, queue_size=1)
+
         self.time_limit = rospy.get_param('/time_limit') * 60
+        if self.time_limit == None:
+            self.time_limit = 600
         self.times_up_param = rospy.get_param('/turn_around')
+        if self.times_up_param == None:
+            self.times_up_param = 1
         self.turn_around = self.time_limit - self.times_up_param * 60
+        
         self.run_timer()
 
     def publish_turn_around(self):
