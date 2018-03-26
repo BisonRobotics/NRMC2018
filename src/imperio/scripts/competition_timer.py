@@ -18,22 +18,25 @@ class CompetitionTimer(object):
         self.start_time = rospy.get_time()
         self.timerPublisher = rospy.Publisher('/times_up', Bool, queue_size=1)
         self.time_limit = rospy.get_param('/time_limit') * 60
-        self.turn_around = self.time_limit - rospy.get_param('/turn_around') * 60
+        self.times_up_param = rospy.get_param('/turn_around')
+        self.turn_around = self.time_limit - self.times_up_param * 60
         self.run_timer()
 
     def publish_turn_around(self):
-        print("PUBLISH TURN AROUND")
+        print("Competiton Timer : Time to turn around. {} minutes left".format(self.times_up_param))
         turn_around_time = Bool()
         turn_around_time.data = False
         self.timerPublisher.publish(turn_around_time)
 
     def publish_times_up(self):
-        print("PUBLISH TIMES UP")
+        print("Competition Timer : Time is Up. Competition Time: {}".format(self.time_limit/60))
         times_up = Bool()
         times_up.data = True
         self.timerPublisher.publish(times_up)
 
     def run_timer(self):
+        print("Competition Timer : Starting Competition Timer with {} minutes.".format(self.time_limit))
+        print("Competition Timer : Turn around warning will occur {} minutes before the end of competition".format(self.times_up_param))
         turn_around_not_published = True
         times_up_not_published = True
         while not rospy.is_shutdown() and times_up_not_published:
