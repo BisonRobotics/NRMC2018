@@ -81,11 +81,11 @@ class robot(object):
         """
         if self.state == RobotState.OUTBOUND:
             self.change_state(RobotState.DIG)
-        if self.state == RobotState.DIG:
+        elif self.state == RobotState.DIG:
             self.change_state(RobotState.INBOUND)
-        if self.state == RobotState.INBOUND:
+        elif self.state == RobotState.INBOUND:
             self.change_state(RobotState.DEPOSIT)
-        if self.state == RobotState.DEPOSIT:
+        elif self.state == RobotState.DEPOSIT:
             self.change_state(RobotState.OUTBOUND)
 
     def move_base_to_goal(self, goal):
