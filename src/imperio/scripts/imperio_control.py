@@ -80,7 +80,6 @@ class ImperioControl(object):
         if result:
             self.robot.next_state()
 
-
     def navigateInbound(self):
         """
         Navigates the robot back to the collection big
@@ -99,14 +98,12 @@ class ImperioControl(object):
         if dig_regolith(self.robot):
             self.robot.next_state()
 
-
     def deposit(self):
         """
         Deposits the regolith
         """
         if deposit_regolith(self.robot):
             self.robot.next_state()
-
 
     def halt(self):
         """
