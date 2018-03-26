@@ -1,8 +1,7 @@
 <!-- Launch file for autonomy. Author : James Madison University -->
 <launch>
 
-<!-- commented out for testing -->
-<!-- node name="competition_timer" pkg="imperio" type="competition_timer.py"/ -->
+<node name="competition_timer" pkg="imperio" type="competition_timer.py"/>
 
 <!-- commented out the dashboard for development, remove for actual launch -->
 <!-- node name="dashboard" pkg="imperio" type="dashboardLaunch.bash"/ -->
@@ -18,6 +17,7 @@
 
 <!-- time limit (in minutes) should be 10, can be changed for testing purposes -->
 <param name="time_limit" value="10"/>
+<!-- turn around (in minutes) is how many minutes before the competition ends that the robot should turn around -->
 <param name="turn_around" value="1"/>
 <param name="location_accuracy" value="0.1"/>
 
