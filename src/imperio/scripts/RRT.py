@@ -249,7 +249,7 @@ def path_planning(start, goal, map):
     return smooth_path
 
 def find_best_rrt_path(start, goal, map, num_paths):
-    print("Finding best RRT path out of %s paths" % num_paths)
+    print("Imperio : Finding best RRT path out of %s paths" % num_paths)
 
     if use_threading:
         return parallel_paths(start, goal, map, num_paths)
