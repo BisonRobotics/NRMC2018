@@ -40,8 +40,6 @@ int main(int argc, char **argv)
   double backhoeInitialShoulderTheta;
   double backhoeInitialWristTheta;
 
-  //iVescAccess *outriggerRightVesc;
-  //iVescAccess *outriggerLeftVesc;
   iVescAccess *bucketBigConveyorVesc;
   iVescAccess *bucketLittleConveyorVesc;
   iVescAccess *bucketSifterVesc;
@@ -49,15 +47,10 @@ int main(int argc, char **argv)
   iVescAccess *backhoeWristVesc;
 
   // these should not be initialized if we are not simulating
-  //SimOutriggers *outriggerSimulation;
   SimBucket *bucketSimulation;
   SimBackhoe *backhoeSimulation;
   if (simulating)
   {
-    // SimOutrigger
-  //  outriggerSimulation = new SimOutriggers(0, 0);  // initial deployment length
-  //  outriggerRightVesc = outriggerSimulation->getRVesc();
-  //  outriggerLeftVesc = outriggerSimulation->getLVesc();
     // SimBucket
     bucketSimulation = new SimBucket();
     bucketBigConveyorVesc = bucketSimulation->getBigConveyorVesc();
@@ -73,11 +66,11 @@ int main(int argc, char **argv)
   }
   else
   {
-  //  outriggerSimulation = NULL;  // Don't use these pointers.
+    // Don't use these pointers.
     bucketSimulation = NULL;     // This is a physical run.
     backhoeSimulation = NULL;    // You'll cause exceptions.
 
-    // initialize real vescs here
+    // TODO initialize real vescs here
 
     // populate inital backhoe position
   }
@@ -96,29 +89,24 @@ int main(int argc, char **argv)
   {
     if (simulating)  // update simulations if neccesary
     {
-      //outriggerSimulation->update(1.0 / DIGGING_CONTROL_RATE_HZ);
       bucketSimulation->update(1.0 / DIGGING_CONTROL_RATE_HZ);
       backhoeSimulation->update(1.0 / DIGGING_CONTROL_RATE_HZ);
     }
-    // update controlelrs
+    // update controllers
 
-    // bucketC.update(1.0 / DIGGING_CONTROL_RATE_HZ); //don't need to update the bucket
+    //no update method for bucket
     backhoeC.update(1.0 / DIGGING_CONTROL_RATE_HZ);
 
     // display output if simulating
     if (simulating)
     {
-      // ROS_INFO("SIM OUTRIGGERS AT: %f", outriggerSimulation->getPosL());
-      // ROS_INFO("SIM OUTRIGGERS AT: %f", outriggerSimulation->getPosR());
 
-      // ROS_INFO("LIMIT AT %d", (int) outriggerRightVesc->getLimitSwitchState());
-      // ROS_INFO("LIMIT AT %d", (int) outriggerLeftVesc->getLimitSwitchState());
     }
-    else
+    else // display output for physical
     {
-      // display output for physical
+      
     }
-    // TODO publish markers to a topic
+    // TODO publish joint states (?) so URDF can be used
 
     ros::spinOnce();
     rate.sleep();
