@@ -64,6 +64,17 @@ bool BackhoeController::wristAtSetpoint()
   return isWristAtSetpoint;
 }
 
+double BackhoeController::getShoulderTorque()
+{
+  return sh->getTorque();
+}
+
+double BackhoeController::getShoulderVelocity()
+{
+  return sh->getLinearVelocity();
+}
+
+/*
 double BackhoeController::getWeightInBackhoe()
 {
   // calculate weight
@@ -85,3 +96,4 @@ void BackhoeController::tareBucket ()
 {
   bucketTareWeight = 0;
 }
+*/

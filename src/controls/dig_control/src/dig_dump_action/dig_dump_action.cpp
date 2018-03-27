@@ -31,11 +31,22 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
       switch (digging_state)
       {
         case dig_state_enum::dig_idle: //not digging, should start here
-          backhoe->setShoulderSetpoint(1); //where we think the ground is (0 should be all the way back, 1 is all the way forward)
-          digging_state = moving_to_setpoint;
+          backhoe->setShoulderSetpoint(.6); //where we think the ground is (0 should be all the way back, 1 is all the way forward)
+          digging_state = moving_to_ground;
+          weightMetric =0;
           break;
-        case dig_state_enum::moving_to_setpoint: //going to find the ground
+        case dig_state_enum::moving_to_ground:
+          //integrate current during this state
+          weightMetric += backhoe->getShoulderTorque() * backhoe->getShoulderVelocity() * .02;
+          //TODO: report weight metric after this state has passed
           if (backhoe->shoulderAtSetpoint())
+          {
+              backhoe->setShoulderSetpoint(1);
+              digging_state = finding_ground;
+          }
+          break;
+        case dig_state_enum::finding_ground: //going to find the ground
+          if (backhoe->shoulderAtSetpoint()) //replace this line with found ground condition
           {
               backhoe->setWristSetpoint(1); //curl it in
               digging_state = curling_backhoe;

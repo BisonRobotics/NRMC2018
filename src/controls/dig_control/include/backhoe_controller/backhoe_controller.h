@@ -17,10 +17,12 @@ public:
   void update(double dt);
   bool shoulderAtSetpoint();
   bool wristAtSetpoint();
-  double getWeightInBucket (void);
-  double getWeightInBackhoe (void);
-  void tareBucket (void);
-  void tareBackhoe (void);
+  double getShoulderTorque();
+  double getShoulderVelocity();
+  //double getWeightInBucket (void);
+  //double getWeightInBackhoe (void);
+  //void tareBucket (void);
+  //void tareBackhoe (void);
 private:
   double shoulderSetpoint;
   double wristSetpoint;
