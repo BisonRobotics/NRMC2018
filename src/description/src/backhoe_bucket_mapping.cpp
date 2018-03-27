@@ -20,16 +20,17 @@ void jointStatesCallback(const JointState::ConstPtr& msg)
       int current_min_index = 0;
       for (int j = 0; j < 1000; j++)
       {
-        if (fabs(msg->position[i] - (-backhoe_positions[j])) < current_min)
+        double diff = fabs(msg->position[i] - (backhoe_positions[j]));
+        if (diff < current_min)
         {
-          current_min = msg->position[i];
+          current_min = diff;
           current_min_index = j;
         }
       }
       // Output bucket joint state accordingly
       JointState bucket_joint_state;
       bucket_joint_state.name.emplace_back("frame_to_bucket");
-      bucket_joint_state.position.push_back(bucket_positions[current_min_index] - M_PI_2);
+      bucket_joint_state.position.push_back(bucket_positions[current_min_index]);
       bucket_joint_state.effort.push_back(0.0); // TODO Add
       bucket_joint_state.velocity.push_back(0.0); // TODO Add
       bucket_joint_state.header = msg->header;

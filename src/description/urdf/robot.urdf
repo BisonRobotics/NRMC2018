@@ -115,9 +115,11 @@
     <joint name="frame_to_bucket" type="revolute">
         <parent link="frame"/>
         <child link="bucket"/>
-        <origin xyz="-0.2286 0.0 0.4318" rpy="0 0 0" />
+        <origin xyz="-0.2286 0.0 0.4318" rpy="0 -${80/180*pi} 0" />
+        <!--<origin xyz="-0.2286 0.0 0.4318" rpy="0 ${7.1/180*pi} 0" />--> <!-- Mapping to CAD -->
+
         <axis xyz="0 1 0"/>
-        <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="1000.0"/>
+        <limit effort="1000.0" lower="${-2*pi}" upper="${2*pi}" velocity="1000.0"/>
     </joint>
 
     <link name="monoboom">
@@ -133,9 +135,10 @@
     <joint name="central_drive_to_monoboom" type="revolute">
         <parent link="central_drive"/>
         <child link="monoboom"/>
-        <origin xyz="0.0 0.0 0.0" rpy="0 -${pi/2} 0" />
+        <origin xyz="0.0 0.0 0.0" rpy="0 ${pi/2} 0" />
+        <!--<origin xyz="0.0 0.0 0.0" rpy="0 -${(180-47.79)/180*pi} 0" />--><!-- Mapping to CAD -->
         <axis xyz="0 1 0"/>
-        <limit effort="1000.0" lower="-${pi}" upper="0.0" velocity="1000.0"/>
+        <limit effort="1000.0" lower="0.0" upper="3.0" velocity="1000.0"/>
     </joint>
 
     <link name="backhoe_bucket">
@@ -153,7 +156,7 @@
         <child link="backhoe_bucket"/>
         <origin xyz="0.55245 0.0 0.0" rpy="0 -${pi/2} 0" />
         <axis xyz="0 1 0"/>
-        <limit effort="1000.0" lower="-${pi}" upper="${pi}" velocity="1000.0"/>
+        <limit effort="1000.0" lower="-1.32" upper="2.0" velocity="1000.0"/>
     </joint>
 
     <!--
