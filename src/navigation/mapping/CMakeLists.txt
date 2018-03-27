@@ -123,7 +123,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+ include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -131,6 +131,9 @@ add_executable (costmap_2d_node src/costmap_2d_node.cpp)
 target_link_libraries(costmap_2d_node ${catkin_LIBRARIES})
 add_executable (transforms_publisher src/transforms_publisher.cpp)
 target_link_libraries (transforms_publisher ${catkin_LIBRARIES})
+
+add_library (costmap_filter src/mapping_filter/low_pass.cpp)
+target_link_libraries(costmap_filter ${catkin_LIBRARIES})
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/mapping.cpp
