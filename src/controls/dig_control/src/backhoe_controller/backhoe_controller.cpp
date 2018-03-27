@@ -139,7 +139,6 @@ void BackhoeController::safetyCheck()
 
 void BackhoeController::init()
 {
-  bool at_home = false;
   static constexpr float drive_torque = -1.0f;
   wrist_vesc->setTorque (drive_torque);
   while (wrist_vesc->getLimitSwitchState() != nsVescAccess::limitSwitchState::bottomOfMotion);

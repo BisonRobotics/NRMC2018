@@ -43,7 +43,7 @@ public:
   double getWeightInBackhoe(void);
   bool shoulderAtSetpoint();
   bool wristAtSetpoint();
-  bool getIsInit (void){return is_init}
+  bool getIsInit (void){return is_init;}
 private:
   double shoulder_setpoint;
   double wrist_setpoint;
@@ -63,7 +63,8 @@ private:
   double shoulder_gain;
   double wrist_gain;
   double min_wrist_distance;
-  iVescAccess *shoulder_vesc, *wrist_vesc;
+  iVescAccess *shoulder_vesc;
+  iVescAccess *wrist_vesc;
   bool is_shoulder_at_setpoint;
   bool is_wrist_at_setpoint;
   bool in_velocity_control_mode;
