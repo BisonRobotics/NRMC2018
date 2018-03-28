@@ -9,6 +9,8 @@
 #include <sim_robot/sim_bucket.h>
 #include <sim_robot/sim_backhoe.h>
 
+#include <sensor_msgs/JointState.h>
+
 #include "dig_dump_action/dig_dump_action.h"
 
 #define DIGGING_CONTROL_RATE_HZ 50.0
@@ -18,6 +20,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "the_backhoe_master");
 
   ros::NodeHandle node("~");
+  ros::NodeHandle globalNode;
   bool simulating;
   if (node.hasParam("simulating_digging"))
   {
@@ -81,9 +84,11 @@ int main(int argc, char **argv)
   BackhoeController backhoeC(backhoeInitialShoulderTheta, backhoeInitialWristTheta, backhoeShoulderVesc,
                              backhoeWristVesc);
 
-  ros::Rate rate(DIGGING_CONTROL_RATE_HZ);
+  ros::Rate rate(DIGGING_CONTROL_RATE_HZ); //should be 50 Hz
 
   DigDumpAction ddAct(&backhoeC, &bucketC);
+
+  ros::Publisher JsPub = globalNode.advertise<sensor_msgs::JointState>("joint_states", 100);
 
   while (ros::ok())
   {
@@ -98,9 +103,34 @@ int main(int argc, char **argv)
     backhoeC.update(1.0 / DIGGING_CONTROL_RATE_HZ);
 
     // display output if simulating
+    sensor_msgs::JointState robotAngles;
     if (simulating)
     {
+       robotAngles.name.push_back("frame_to_front_left_wheel");
+       robotAngles.name.push_back("frame_to_front_right_wheel");       
+       robotAngles.name.push_back("frame_to_back_left_wheel");       
+       robotAngles.name.push_back("frame_to_back_right_wheel");        
+       robotAngles.position.push_back(0);
+       robotAngles.position.push_back(0);
+       robotAngles.position.push_back(0);
+       robotAngles.position.push_back(0);
+       robotAngles.header.stamp = ros::Time::now();
 
+       //robotAngles.name.push_back("frame_to_bucket");
+       //robotAngles.position.push_back(1 - backhoeSimulation->getShTheta());
+
+       robotAngles.name.push_back("central_drive_to_monoboom");
+       robotAngles.position.push_back(backhoeSimulation->getShTheta());
+
+       robotAngles.name.push_back("monoboom_to_backhoe_bucket");
+       robotAngles.position.push_back(backhoeSimulation->getShTheta());
+
+       //robotAngles.name.push_back("frame_to_bucket");
+       //robotAngles.position.push_back(backhoeSimulation->getShTheta());
+       JsPub.publish(robotAngles);
+       ROS_INFO("joint state published with angle %f \n", backhoeSimulation->getShTheta());
+       //cdAngle.velocity = 0;
+       //cdAngle.effort = 0;
     }
     else // display output for physical
     {

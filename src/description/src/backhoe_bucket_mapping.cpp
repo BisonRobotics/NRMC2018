@@ -45,7 +45,7 @@ int main(int argc, char **argv)
 {
   ros::init(argc, argv, "backhoe_bucket_mapping");
   ros::NodeHandle n;
-  pub = new ros::Publisher(n.advertise<sensor_msgs::JointState>("bucket_joint_states", 1000));
+  pub = new ros::Publisher(n.advertise<sensor_msgs::JointState>("joint_states", 1000));
   ros::Subscriber sub = n.subscribe("joint_states", 1000, jointStatesCallback);
   ros::spin();
 
