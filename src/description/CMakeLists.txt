@@ -28,6 +28,9 @@ catkin_package(
 #  DEPENDS system_lib
 )
 
+link_directories(/usr/src/gmock/build)
+set(GTEST_LIBRARIES gmock_main)
+
 ###########
 ## Build ##
 ###########
