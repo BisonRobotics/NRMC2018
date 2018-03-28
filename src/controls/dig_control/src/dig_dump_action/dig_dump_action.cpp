@@ -38,7 +38,6 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
         case dig_state_enum::moving_to_ground:
           //integrate current during this state
           weightMetric += backhoe->getShoulderTorque() * backhoe->getShoulderVelocity() * .02; //.02 is dt
-          //TODO: report weight metric after this state has passed
           if (backhoe->shoulderAtSetpoint())
           {
               backhoe->setShoulderSetpoint(1);
@@ -64,9 +63,9 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
         case dig_state_enum::moving_arm_to_initial: //lifting dug dirt up
             if (backhoe->shoulderAtSetpoint())
             {
+                //TODO: start small conveyor
+                //TODO: start sifter
                 backhoe->setWristSetpoint(0); //curl it out
-                //TODO: start small conveyor?
-                //TODO: start sifter?
                 digging_state = dumping_into_bucket;
             }
           break;
@@ -92,7 +91,6 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
           dig_as_.setAborted();
           is_digging = false;
           break;
-          // hell: execution should not get here
       }
     }
   }
@@ -147,7 +145,6 @@ void DigDumpAction::dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal)
           is_dumping = false;
           dump_as_.setAborted();
           break;
-          // hell
       }
     }
   }
