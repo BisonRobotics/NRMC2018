@@ -15,14 +15,10 @@ namespace backhoecontroller
   }joint_params_t;
 }
 
-
-
-
-
 class BackhoeController
 {
 public:
-  BackhoeController(iVescAccess *sh_vesc, iVescAccess *wr_vesc, double wrist_setpoint_tolerance, double shoulder_setpoint_tol,
+  BackhoeController(iVescAccess *shoulder_vesc, iVescAccess *wrist_vesc, double wrist_setpoint_tolerance, double shoulder_setpoint_tol,
                     double top_of_wrist_motion, double min_shoulder_angle, double max_shoulder_angle,
                     double shoulder_safety_angle, double wrist_safety_distance, bool in_velocity, double shoulder_gain,
                     double wrist_gain, double min_wrist_distance);

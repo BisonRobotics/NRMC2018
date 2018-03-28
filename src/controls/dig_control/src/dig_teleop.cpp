@@ -61,9 +61,9 @@ int main(int argc, char **argv)
   VescAccess small_conveyor_vesc(small_conveyor_param);
   VescAccess large_conveyor_vesc(large_conveyor_param);
 
-  BackhoeController backhoe(0.0, 0.0, &shoulder_vesc, &linear_vesc, .04, .05, LINEAR_ACTUATOR_LENGTH,
+  BackhoeController backhoe(&shoulder_vesc, &linear_vesc, .04, .05, LINEAR_ACTUATOR_LENGTH,
                             MINIMUM_CENTRAL_ANGLE, MAXIMUM_CENTRAL_ANGLE, SAFE_CENTRAL_ANGLE, SAFE_LINEAR_DISTANCE,
-                            true, .5, .5);
+                            true, .5, .5,0);
   BucketController bucket(&large_conveyor_vesc, &small_conveyor_vesc, &sifter_vesc);
 
   OutriggerController outrigger(&left_outrigger_vesc, &right_outrigger_vesc);

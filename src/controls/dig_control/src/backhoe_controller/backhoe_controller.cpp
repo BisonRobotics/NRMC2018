@@ -1,7 +1,7 @@
 #include <backhoe_controller/backhoe_controller.h>
 #include <cmath>
 
-BackhoeController::BackhoeController(iVescAccess *sh_vesc, iVescAccess *wr_vesc, double wrist_setpoint_tolerance,
+BackhoeController::BackhoeController(iVescAccess *shoulder_vesc, iVescAccess *wrist_vesc, double wrist_setpoint_tolerance,
                                      double shoulder_setpoint_tol, double top_of_wrist_motion, double min_backhoe_angle,
                                      double max_backhoe_angle, double shoulder_safety_angle,
                                      double wrist_safety_distance, bool in_velocity, double shoulder_gain,
@@ -10,11 +10,11 @@ BackhoeController::BackhoeController(iVescAccess *sh_vesc, iVescAccess *wr_vesc,
   this->shoulder_setpoint = 0.0;
   this->shoulder_angle_estimate = 0.0;
   this->is_shoulder_at_setpoint = true;
-  this->shoulder_vesc = sh_vesc;
+  this->shoulder_vesc = shoulder_vesc;
   this->wrist_setpoint = 0.0;
   this->wrist_angle_estimate = 0.0;
   this->is_wrist_at_setpoint = true;
-  this->wrist_vesc = wr_vesc;
+  this->wrist_vesc = wrist_vesc;
   this->bucket_tare_weight = 0;
   this->backhoe_tare_weight = 0;
   this->wrist_setpoint_tolerance = wrist_setpoint_tolerance;

@@ -10,7 +10,7 @@
 #include <sim_robot/sim_backhoe.h>
 
 #include "dig_dump_action/dig_dump_action.h"
-
+#include "wheel_params/wheel_params.h"
 #define DIGGING_CONTROL_RATE_HZ 50.0
 
 int main(int argc, char **argv)
@@ -85,8 +85,9 @@ int main(int argc, char **argv)
   // pass vescs (sim or physical) to controllers
 
   BucketController bucketC(bucketBigConveyorVesc, bucketLittleConveyorVesc, bucketSifterVesc);
-  BackhoeController backhoeC(backhoeInitialShoulderTheta, backhoeInitialWristTheta, backhoeShoulderVesc,
-                             backhoeWristVesc, .04, .04, .78, -.1, .4, -.1, .7, false, .5, .5);
+  BackhoeController backhoeC(backhoeShoulderVesc, backhoeWristVesc, .04, .05, LINEAR_ACTUATOR_LENGTH,
+                            MINIMUM_CENTRAL_ANGLE, MAXIMUM_CENTRAL_ANGLE, SAFE_CENTRAL_ANGLE, SAFE_LINEAR_DISTANCE,
+                            true, .5, .5,0);
 
   ros::Rate rate(DIGGING_CONTROL_RATE_HZ);
 
