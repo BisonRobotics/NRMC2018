@@ -132,8 +132,8 @@ target_link_libraries(costmap_2d_node ${catkin_LIBRARIES})
 add_executable (transforms_publisher src/transforms_publisher.cpp)
 target_link_libraries (transforms_publisher ${catkin_LIBRARIES})
 
-add_library (costmap_filter src/mapping_filter/low_pass.cpp)
-target_link_libraries(costmap_filter ${catkin_LIBRARIES})
+add_library (lowpass_filter src/mapping_filter/low_pass.cpp)
+target_link_libraries(lowpass_filter ${catkin_LIBRARIES})
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/mapping.cpp

@@ -2,6 +2,7 @@ plugins:
   - {name: static_map,  type: "costmap_2d::StaticLayer"}
   - {name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
   - {name: inflation, type: "costmap_2d::InflationLayer"}
+  - {name: low_pass, type: "low_pass_namespace::LowPassLayer"}
 publish_frequency: 1.0
 footprint: [[-1.0, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0]]
 
@@ -10,7 +11,7 @@ inflation:
   cost_scaling_factor: 5.0
 
 
-obstacle_layer:
+low_pass_layer:
   observation_sources: point_cloud_sensor
   point_cloud_sensor:
     data_type: PointCloud2

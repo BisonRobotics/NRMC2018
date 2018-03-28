@@ -1,0 +1,7 @@
+<library path="lib/liblowpass_filter">
+    <class type="low_pass_namespace::LowPassLayer" base_class_type="costmap_2d::Layer">
+        <description>
+            layer that allows multiple frames to be averaged
+        </description>
+    </class>
+</library>
