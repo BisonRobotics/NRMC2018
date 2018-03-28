@@ -20,6 +20,12 @@
     - libopencv-dev
     - librealsense-dev
     - librealsense-utils
+    - libbluetooth-dev
+    - python-numpy
+    - python-pip
+
+- pip:
+    name: imutils
 
 - name: get and unpack imu runtime
   become: no

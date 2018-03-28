@@ -1,5 +1,5 @@
 # based off https://github.com/jalessio/ansible-role-ros
-# run locally with "sudo ansible-playbook -i "localhost," -c local robot_playbook.yml"
+# run locally with "ansible-playbook -i "localhost," -c local robot_playbook.yml"
 ---
 - hosts: localhost
   tasks:
