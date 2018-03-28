@@ -81,6 +81,9 @@ target_link_libraries (vesc_access_integration_test
   vesc_access
 )
 
+add_library(safety_vesc_lib src/safety_vesc/safety_vesc.cpp)
+
+
 
 add_executable(vesc_access_pot_limit_test
         test/vesc_access_pot_limit_test.cpp

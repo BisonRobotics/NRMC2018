@@ -33,8 +33,8 @@ BackhoeController::BackhoeController(iVescAccess *shoulder_vesc, iVescAccess *wr
   this->is_init = false;
 }
 
-BackhoeController::BackhoeController(backhoecontroller::joint_params_t shoulder_params,
-                                     backhoecontroller::joint_params_t wrist_params, bool in_velocity,
+BackhoeController::BackhoeController(safetyvesc::joint_params_t shoulder_params,
+                                     safetyvesc::joint_params_t wrist_params, bool in_velocity,
                                      iVescAccess *shoulder_vesc, iVescAccess *wrist_vesc)
 : BackhoeController (shoulder_vesc, wrist_vesc, wrist_params.setpoint_tolerance, shoulder_params.setpoint_tolerance,
                      wrist_params.maximum_pos, shoulder_params.minimum_pos, shoulder_params.maximum_pos,
