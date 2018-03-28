@@ -3,6 +3,12 @@
 ---
 - hosts: localhost
   tasks:
+    - include: ros_init.yml
+    - name: install ros packages
+      become: yes
+      apt: pkg=ros-kinetic-{{ item }} state=latest update_cache=true
+      with_items:
+        - ros-base
     - include: common_tasks.yml
     - name: add user to dialout
       become: yes
@@ -10,7 +16,6 @@
         name: "{{ ansible_user_id }}"
         append: yes
         groups: dialout
-    
     - name: remove modemmanager
       become: yes
       apt:
