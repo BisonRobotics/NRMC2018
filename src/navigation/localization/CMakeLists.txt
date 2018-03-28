@@ -26,9 +26,9 @@ find_package (teleop_skid_steer REQUIRED)
 #find_package (tf2 REQUIRED)
 #find_package (tf2_geometry_msgs REQUIRED)
 #find_package (tf2_ros REQUIRED)
-link_directories (
-/usr/src/gmock/build
-)
+
+link_directories(/usr/src/gmock/build)
+set(GTEST_LIBRARIES gmock_main)
 
 ###################################
 ## catkin specific configuration ##

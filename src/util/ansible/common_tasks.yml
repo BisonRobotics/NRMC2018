@@ -1,13 +1,5 @@
 # Common tasks for NRMC2018
 ---
-- name: Add ROS repository apt-key
-  become: yes
-  apt_key: keyserver=hkp://ha.pool.sks-keyservers.net:80 id=0xB01FA116
-
-- name: Add ROS repository
-  become: yes
-  apt_repository: repo='deb http://packages.ros.org/ros/ubuntu xenial main' state=present
-
 - name: Add ZR300 key
   become: yes
   apt_key: keyserver=keys.gnupg.net id=0xD6FB2970
@@ -16,26 +8,24 @@
   become: yes
   apt_repository: repo='deb http://realsense-alm-public.s3.amazonaws.com/apt-repo xenial main' state=present
 
-
-- name: add source command to bashrc
-  lineinfile:
-    dest=~/.bashrc
-    line="source /opt/ros/kinetic/setup.bash"
-
 - name: install other packages
   become: yes
   apt: pkg={{ item }} state=latest update_cache=true
   with_items:
     - build-essential
     - google-mock
-    - xclip    
-    - sl   
     - clang-format-3.6
     - can-utils 
     - ssh
     - libopencv-dev
     - librealsense-dev
     - librealsense-utils
+    - libbluetooth-dev
+    - python-numpy
+    - python-pip
+
+- pip:
+    name: imutils
 
 - name: get and unpack imu runtime
   become: no
@@ -49,16 +39,6 @@
   become: yes
   apt:
     deb: ./LpSensor-1.3.5-Linux-x86-64/liblpsensor-1.3.5-Linux.deb
-  
-- name: install ros packages
-  become: yes
-  apt: pkg=ros-kinetic-{{ item }} state=latest update_cache=true
-  with_items:
-    - desktop
-    - catkin 
-    - usb-cam
-    - image-view
-    - tf2-geometry-msgs
 
 - name:  create gmock directory
   become: yes
