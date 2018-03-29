@@ -21,12 +21,8 @@ find_package(catkin REQUIRED COMPONENTS
   imperio
 )
 
-
-
-link_directories (
-/usr/src/gmock/build
-)
-
+link_directories(/usr/src/gmock/build)
+set(GTEST_LIBRARIES gmock_main)
 
 add_action_files(DIRECTORY action FILES 
     distance.action

@@ -21,9 +21,8 @@ find_package (new_sim REQUIRED)
 find_package (imperio REQUIRED)
 
 
-link_directories (
-/usr/src/gmock/build
-)
+link_directories (/usr/src/gmock/build)
+set(GTEST_LIBRARIES gmock_main)
 
 ## Generate actions in the 'action' folder
 add_action_files(
