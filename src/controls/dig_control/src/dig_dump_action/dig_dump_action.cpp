@@ -13,6 +13,7 @@ DigDumpAction::DigDumpAction(BackhoeController *backhoe, BucketController *bucke
   this->dump_as_.start();
   this->bucket = bucket;
   this->backhoe = backhoe;
+  weightMetric =0;
 }
 
 void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
@@ -31,12 +32,19 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
       switch (digging_state)
       {
         case dig_state_enum::dig_idle: //not digging, should start here
-          backhoe->setShoulderSetpoint(.6); //where we think the ground is (0 should be all the way back, 1 is all the way forward)
-          digging_state = moving_to_ground;
-          weightMetric =0;
+          backhoe->setShoulderSetpoint(.3);
+          digging_state = ensure_at_measurement_start;
+        break;
+        case dig_state_enum::ensure_at_measurement_start: 
+          if (backhoe->shoulderAtSetpoint())
+          {
+            backhoe->setShoulderSetpoint(.6); //where we think the ground is (0 should be all the way back, 1 is all the way forward)
+            digging_state = moving_to_ground;
+            weightMetric =0;
+          }
           break;
         case dig_state_enum::moving_to_ground:
-          //integrate current during this state
+          //integrate work moving from measurement start to where we think the ground is
           weightMetric += backhoe->getShoulderTorque() * backhoe->getShoulderVelocity() * .02; //.02 is dt
           if (backhoe->shoulderAtSetpoint())
           {

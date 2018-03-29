@@ -11,6 +11,7 @@
 enum dig_state_enum
 {
   dig_idle,
+  ensure_at_measurement_start,
   moving_to_ground,
   finding_ground,
   curling_backhoe,
