@@ -18,3 +18,4 @@ void BackhoeSafety::updatePosition(double dt)
 {
     this->position_estimate = this->vesc->getPotPosition();
 }
+

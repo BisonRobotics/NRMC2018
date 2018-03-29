@@ -12,6 +12,7 @@ namespace safetyvesc
     double lower_limit_position;
     double upper_limit_position;
   }joint_params_t;
+
 }
 
 
@@ -25,8 +26,10 @@ public:
   virtual bool isInit () = 0;
   virtual bool isAtSetpoint () = 0;
   virtual void init () = 0;
-protected:
   virtual void updatePosition (double dt) = 0;
+  virtual void stop () = 0;
+  virtual double getSafetyPosition () = 0;
+  virtual double getVelocity () = 0;
 };
 
 

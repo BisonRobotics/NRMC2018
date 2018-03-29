@@ -3,20 +3,14 @@
 
 #include <vesc_access/vesc_access.h>
 #include <vesc_access/ivesc_access.h>
-#include "safety_vesc/isafety_vesc.h"
-
+#include "safety_vesc/backhoe_safety.h"
+#include "safety_vesc/linear_safety.h"
 
 
 class BackhoeController
 {
 public:
-  BackhoeController(iVescAccess *shoulder_vesc, iVescAccess *wrist_vesc, double wrist_setpoint_tolerance, double shoulder_setpoint_tol,
-                    double top_of_wrist_motion, double min_shoulder_angle, double max_shoulder_angle,
-                    double shoulder_safety_angle, double wrist_safety_distance, bool in_velocity, double shoulder_gain,
-                    double wrist_gain, double min_wrist_distance);
-
-  BackhoeController (safetyvesc::joint_params_t shoulder_params, safetyvesc::joint_params_t wrist_params,
-                     bool in_velocity, iVescAccess *shoulder_vesc, iVescAccess *wrist_vesc);
+  BackhoeController (iSafetyVesc *backhoeSafety, iSafetyVesc *linearSafety);
 
   // TODO, return status on update based on operation (see waypoint controller)
   void setShoulderSetpoint(double angle);     // in rad from horizontal
@@ -31,35 +25,11 @@ public:
   double getWeightInBackhoe(void);
   bool shoulderAtSetpoint();
   bool wristAtSetpoint();
-  bool getIsInit (void){return is_init;}
+  bool getIsInit (void);
 private:
-  double shoulder_setpoint;
-  double wrist_setpoint;
-  double shoulder_angle_estimate;
-  double wrist_angle_estimate;
-  double bucket_tare_weight;
-  double backhoe_tare_weight;
-  double wrist_setpoint_tolerance;
-  double shoulder_setpoint_tolerance;
-  double top_of_wrist_motion;
-  double min_shoulder_angle;
-  double max_shoulder_angle;
-  double shoulder_safety_angle;
-  double wrist_safety_distance;
-  double shoulder_set_velocity;
-  double wrist_set_velocity;
-  double shoulder_gain;
-  double wrist_gain;
-  double min_wrist_distance;
-  iVescAccess *shoulder_vesc;
-  iVescAccess *wrist_vesc;
-  bool is_shoulder_at_setpoint;
-  bool is_wrist_at_setpoint;
-  bool in_velocity_control_mode;
-  bool is_init;
   void safetyCheck();
-  void updateWristPosition(double dt);
-  void updateShoulderPosition(double dt);
+  iSafetyVesc *backhoe_safety;
+  iSafetyVesc *linear_safety;
 };
 
 #endif

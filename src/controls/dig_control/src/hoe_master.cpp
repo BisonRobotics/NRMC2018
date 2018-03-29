@@ -11,6 +11,10 @@
 
 #include "dig_dump_action/dig_dump_action.h"
 #include "wheel_params/wheel_params.h"
+
+#include "safety_vesc/backhoe_safety.h"
+#include "safety_vesc/linear_safety.h"
+
 #define DIGGING_CONTROL_RATE_HZ 50.0
 
 int main(int argc, char **argv)
@@ -82,12 +86,12 @@ int main(int argc, char **argv)
     // populate inital backhoe position
   }
 
+  LinearSafety linearSafety (linear_joint_params, backhoeWristVesc, false);
+  BackhoeSafety backhoeSafety (central_joint_params, backhoeShoulderVesc, false);
   // pass vescs (sim or physical) to controllers
 
   BucketController bucketC(bucketBigConveyorVesc, bucketLittleConveyorVesc, bucketSifterVesc);
-  BackhoeController backhoeC(backhoeShoulderVesc, backhoeWristVesc, .04, .05, LINEAR_ACTUATOR_LENGTH,
-                            MINIMUM_CENTRAL_ANGLE, MAXIMUM_CENTRAL_ANGLE, SAFE_CENTRAL_ANGLE, SAFE_LINEAR_DISTANCE,
-                            true, .5, .5,0);
+  BackhoeController backhoeC(&backhoeSafety, &linearSafety);
 
   ros::Rate rate(DIGGING_CONTROL_RATE_HZ);
 

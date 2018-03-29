@@ -8,9 +8,7 @@ class LinearSafety : public SafetyVesc
 public:
   LinearSafety (safetyvesc::joint_params_t params, iVescAccess *vesc, bool in_velocity);
   void init ();
-protected:
   void updatePosition (double dt) override;
-private:
 };
 
 

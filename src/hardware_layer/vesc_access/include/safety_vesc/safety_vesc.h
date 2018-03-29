@@ -12,6 +12,10 @@ public:
   bool isInit () override {return is_init;}
   double updateVelocity (void) override;
   bool isAtSetpoint (void) override;
+  double getSafetyPosition () override;
+  double getVelocity () override;
+  double getPosition () override;
+  void stop () override;
 protected:
   void updatePosition (double dt) override;
   safetyvesc::joint_params_t params;

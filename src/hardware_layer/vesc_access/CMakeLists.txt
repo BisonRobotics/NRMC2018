@@ -31,7 +31,7 @@ link_directories (
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES vesc_access
+  LIBRARIES vesc_access safety_vesc
 #  CATKIN_DEPENDS roscpp
 #  DEPENDS system_lib
 )
@@ -60,15 +60,7 @@ add_library (vesc_access
   src/vesc_control/vesc_socket_can.cpp
 )
 
-add_library(safety_vesc_lib src/safety_vesc/safety_vesc.cpp)
-
-
-
-add_library (linear_safety_lib src/safety_vesc/linear_safety.cpp)
-target_link_libraries(linear_safety_lib safety_vesc_lib)
-
-add_library(backhoe_safety_lib src/safety_vesc/backhoe_safety.cpp)
-target_link_libraries(backhoe_safety_lib safety_vesc_lib)
+add_library(safety_vesc src/safety_vesc/safety_vesc.cpp src/safety_vesc/linear_safety.cpp src/safety_vesc/backhoe_safety.cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(vesc_access
@@ -155,8 +147,19 @@ target_link_libraries(vesc_socket_pot_test vesc_lib ${catkin_LIBRARIES})
    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 
+ install(TARGETS  safety_vesc
+   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+ )
+
 ## Mark cpp header files for installation
  install(DIRECTORY include/vesc_access/
+   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+   FILES_MATCHING PATTERN "*.h"
+#   PATTERN ".svn" EXCLUDE
+ )
+ install(DIRECTORY include/safety_vesc/
    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
    FILES_MATCHING PATTERN "*.h"
 #   PATTERN ".svn" EXCLUDE

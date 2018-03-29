@@ -8,7 +8,6 @@ class BackhoeSafety : public SafetyVesc
 public:
     BackhoeSafety (safetyvesc::joint_params_t params, iVescAccess *vesc, bool in_velocity);
     void init () override;
-protected:
     void updatePosition (double dt) override;
 };
 

@@ -68,3 +68,23 @@ void SafetyVesc::updatePosition(double dt)
         }
     }
 }
+
+double SafetyVesc::getSafetyPosition()
+{
+    return this->params.safety_check_pos;
+}
+
+void SafetyVesc::stop()
+{
+   this->set_velocity = 0;
+}
+
+double SafetyVesc::getPosition()
+{
+    return this->position_estimate;
+}
+
+double SafetyVesc::getVelocity ()
+{
+    return set_velocity;
+}

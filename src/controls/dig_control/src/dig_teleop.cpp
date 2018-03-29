@@ -4,6 +4,8 @@
 #include "bucket_controller/bucket_controller.h"
 #include "wheel_params/wheel_params.h"
 #include "outrigger_controller/outrigger_controller.h"
+#include "safety_vesc/backhoe_safety.h"
+#include "safety_vesc/linear_safety.h"
 
 BackhoeController *global_backhoe;
 BucketController *global_bucket;
@@ -61,9 +63,10 @@ int main(int argc, char **argv)
   VescAccess small_conveyor_vesc(small_conveyor_param);
   VescAccess large_conveyor_vesc(large_conveyor_param);
 
-  BackhoeController backhoe(&shoulder_vesc, &linear_vesc, .04, .05, LINEAR_ACTUATOR_LENGTH,
-                            MINIMUM_CENTRAL_ANGLE, MAXIMUM_CENTRAL_ANGLE, SAFE_CENTRAL_ANGLE, SAFE_LINEAR_DISTANCE,
-                            true, .5, .5,0);
+  LinearSafety linearSafety (linear_joint_params,&linear_vesc, true);
+  BackhoeSafety backhoeSafety (central_joint_params, &shoulder_vesc, true);
+  BackhoeController backhoe(&backhoeSafety, &linearSafety);
+
   BucketController bucket(&large_conveyor_vesc, &small_conveyor_vesc, &sifter_vesc);
 
   OutriggerController outrigger(&left_outrigger_vesc, &right_outrigger_vesc);
