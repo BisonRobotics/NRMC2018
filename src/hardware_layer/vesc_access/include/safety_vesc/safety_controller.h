@@ -1,8 +1,20 @@
 #ifndef PROJECT_SAFETY_VESC_H
 #define PROJECT_SAFETY_VESC_H
 
+#include <stdexcept>
 #include "safety_vesc/isafety_controller.h"
 #include "vesc_access/ivesc_access.h"
+
+
+class BackhoeSetPointException : public std::runtime_error
+{
+public:
+  explicit BackhoeSetPointException(std::string msg) : std::runtime_error(msg)
+  {
+  }
+};
+
+
 
 class SafetyController : public iSafetyController {
 public:

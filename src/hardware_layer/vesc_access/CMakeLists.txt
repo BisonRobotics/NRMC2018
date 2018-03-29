@@ -191,7 +191,7 @@ if (TARGET test_vesc_access)
   )
 endif ()
 
-catkin_add_gtest(test_safety_vesc src/safety_vesc/test/safety_vesc_test.cpp)
+catkin_add_gtest(test_safety_vesc src/safety_vesc/test/safety_controller_test.cpp)
 if (TARGET test_safety_vesc)
   target_link_libraries(
           test_safety_vesc

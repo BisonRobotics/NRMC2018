@@ -1,5 +1,6 @@
 #include "safety_vesc/safety_controller.h"
 #include <math.h>
+#include <sstream>
 
 SafetyController::SafetyController(iVescAccess *vesc, safetycontroller::joint_params_t params, bool in_velocity)
 {
@@ -15,7 +16,13 @@ void SafetyController::setPositionSetpoint(double position)
 {
     if (is_init && !in_velocity)
     {
+        if  (position > params.maximum_pos || position < params.minimum_pos){
+            std::stringstream ss;
+            ss << "Out of bounds at : " << position;
+            throw BackhoeSetPointException (ss.str ());
+        }
         this->set_position = position;
+
     }
 }
 
@@ -35,19 +42,20 @@ double SafetyController::updateVelocity(void)
         {
             set_velocity = params.gain*(set_position - position_estimate);
         }
-        if (set_position <= params.minimum_pos && set_velocity < 0)
+
+        if (position_estimate <= (params.minimum_pos + params.limit_switch_safety_margin) && set_velocity < 0)
+        {
+            set_velocity = 0;
+        } else if (position_estimate >= (params.maximum_pos - params.limit_switch_safety_margin) && set_velocity > 0)
         {
             set_velocity = 0;
         }
-        if (set_position >= params.maximum_pos && set_velocity > 0)
-        {
-            set_velocity = 0;
-        }
-        if (set_velocity > params.max_abs_velocity)
+
+        if (set_velocity > fabs(params.max_abs_velocity))
         {
             set_velocity = params.max_abs_velocity;
         }
-        else if (set_velocity < -params.max_abs_velocity)
+        else if (set_velocity < -fabs(params.max_abs_velocity))
         {
             set_velocity = -params.max_abs_velocity;
         }

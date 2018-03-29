@@ -7,11 +7,12 @@ namespace safetycontroller
     double minimum_pos;
     double maximum_pos;
     double safety_check_pos;
+    double gain;
     double setpoint_tolerance;
     double lower_limit_position;
     double upper_limit_position;
-    double gain;
     double max_abs_velocity;
+    double limit_switch_safety_margin;
   }joint_params_t;
 }
 

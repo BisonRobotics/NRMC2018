@@ -168,6 +168,7 @@ nsVescAccess::vesc_param_struct_t shoulder_param = {.max_velocity = MAX_CENTRAL_
 
 #define ROBOT_AXLE_LENGTH 0.5f
 #define ROBOT_MAX_SPEED 0.5f
+
 #define LINEAR_ACTUATOR_LENGTH .1778
 #define MINIMUM_CENTRAL_ANGLE -1.4
 #define MAXIMUM_CENTRAL_ANGLE 1.3
@@ -183,7 +184,8 @@ safetycontroller::joint_params_t linear_joint_params =
         .setpoint_tolerance = .04,
         .lower_limit_position = 0,
         .upper_limit_position = LINEAR_ACTUATOR_LENGTH,
-        .max_abs_velocity =.2
+        .max_abs_velocity =.2,
+        .limit_switch_safety_margin = .01
     };
 
 safetycontroller::joint_params_t central_joint_params =
@@ -195,6 +197,7 @@ safetycontroller::joint_params_t central_joint_params =
         .setpoint_tolerance = 0.04,
         .lower_limit_position = MINIMUM_CENTRAL_ANGLE,
         .upper_limit_position = MAXIMUM_CENTRAL_ANGLE,
-        .max_abs_velocity = .2
+        .max_abs_velocity = .2,
+        .limit_switch_safety_margin = .01
     };
 #endif
