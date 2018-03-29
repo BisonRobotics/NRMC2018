@@ -113,6 +113,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "my_tf2_listener");
 
   ros::NodeHandle node("~");
+  ros::NodeHandle globalNode;
 
   bool simulating;
   if (node.hasParam("simulating_driving"))
@@ -134,7 +135,7 @@ int main(int argc, char **argv)
   }
 
   ros::Subscriber sub = node.subscribe("additional_waypoint", 100, newGoalCallback);
-  ros::Publisher jspub = node.advertise<sensor_msgs::JointState>("wheel_joints", 500);
+  ros::Publisher jspub = globalNode.advertise<sensor_msgs::JointState>("joint_states", 500);
 
   ros::Publisher angleErrorPub = node.advertise<std_msgs::Float64>("angle_error", 30);
   ros::Publisher simAnglePub = node.advertise<std_msgs::Float64>("sim_angle", 30);
@@ -144,17 +145,6 @@ int main(int argc, char **argv)
   std_msgs::Float64 simAngleMsg;
   std_msgs::Float64 baseAngleMsg;
 
-
-
-  sensor_msgs::JointState jsMessage;
-  jsMessage.name.push_back("front_left");
-  jsMessage.name.push_back("front_right");
-  jsMessage.name.push_back("back_right");
-  jsMessage.name.push_back("back_left");
-  jsMessage.velocity.push_back(0.0);
-  jsMessage.velocity.push_back(0.0);
-  jsMessage.velocity.push_back(0.0);
-  jsMessage.velocity.push_back(0.0);
   tf2_ros::Buffer tfBuffer;
   // tf2_ros::TransformListener tfListener(tfBuffer);
   geometry_msgs::TransformStamped transformStamped;
@@ -231,6 +221,8 @@ int main(int argc, char **argv)
   line_strip2.color.b = 1;
   line_strip2.color.a = 1;
   line_strip2.header.frame_id = "/map";
+
+  double wheel_positions[4] = {0};
 
   geometry_msgs::Point vis_point;
   // hang here until someone knows where we are
@@ -335,10 +327,29 @@ int main(int argc, char **argv)
     // turn radius...  ddistance / dtheta?
     // turn radius =  speed*dt / alpha * dt ;  //do we want to average this? over a second maybe?
     // also be sure to clamp radius at something (1000)
-    jsMessage.velocity[0] = fl->getLinearVelocity();
-    jsMessage.velocity[1] = fr->getLinearVelocity();
-    jsMessage.velocity[2] = br->getLinearVelocity();
-    jsMessage.velocity[3] = bl->getLinearVelocity();
+    sensor_msgs::JointState jsMessage;
+
+    jsMessage.name.push_back("frame_to_front_left_wheel");
+    jsMessage.name.push_back("frame_to_front_right_wheel");
+    jsMessage.name.push_back("frame_to_back_right_wheel");
+    jsMessage.name.push_back("frame_to_back_left_wheel");
+
+    jsMessage.header.stamp = ros::Time::now();
+    wheel_positions[0] += fl->getLinearVelocity() / UPDATE_RATE_HZ;
+    wheel_positions[1] += fr->getLinearVelocity() / UPDATE_RATE_HZ;
+    wheel_positions[2] += br->getLinearVelocity() / UPDATE_RATE_HZ;
+    wheel_positions[3] += bl->getLinearVelocity() / UPDATE_RATE_HZ;
+    jsMessage.position.push_back(wheel_positions[0]);
+    jsMessage.position.push_back(wheel_positions[1]);
+    jsMessage.position.push_back(wheel_positions[2]);
+    jsMessage.position.push_back(wheel_positions[3]);
+
+    jsMessage.velocity.push_back(fl->getLinearVelocity());
+    jsMessage.velocity.push_back(fr->getLinearVelocity());
+    jsMessage.velocity.push_back(br->getLinearVelocity());
+    jsMessage.velocity.push_back(bl->getLinearVelocity());
+
+    jspub.publish(jsMessage);
 
     ROS_INFO("FrontLeftVel : %.4f", jsMessage.velocity[0]);
     ROS_INFO("FrontRightVel : %.4f", jsMessage.velocity[1]);
@@ -529,7 +540,6 @@ int main(int argc, char **argv)
       break;
     }
     // ros end stuff
-    jspub.publish(jsMessage);
     ros::spinOnce();
     rate.sleep();
   }
