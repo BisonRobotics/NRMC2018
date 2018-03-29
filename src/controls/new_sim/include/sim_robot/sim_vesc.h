@@ -7,6 +7,7 @@ class SimVesc : public iVescAccess
 {
 public:
   SimVesc(double Pgain, double Igain, double velo);
+  SimVesc(double Pgain, double Igain, double velo_factor, double beginLimit, double endLimit);
   void setLinearVelocity(float meters_per_second) override;
   void setTorque(float current) override;  // note: not really implemented
   float getLinearVelocity(void) override;
@@ -26,6 +27,9 @@ private:
   double velocity_factor;
   nsVescAccess::limitSwitchState limitSwitch;
   double pot_pos;
+  double beginLimit;
+  double endLimit;
+  bool hasLimits;
 };
 
 #endif
