@@ -33,7 +33,7 @@ double SafetyVesc::updateVelocity(void)
     {
         if (!in_velocity)
         {
-            set_velocity = params.gain*(position_estimate - set_position);
+            set_velocity = params.gain*(set_position - position_estimate);
         }
         if (set_position <= params.minimum_pos && set_velocity < 0)
         {

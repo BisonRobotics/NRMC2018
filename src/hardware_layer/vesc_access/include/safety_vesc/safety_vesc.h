@@ -13,15 +13,15 @@ public:
   double updateVelocity (void) override;
   bool isAtSetpoint (void) override;
 protected:
-  virtual void updatePosition (double dt) override;
-private:
+  void updatePosition (double dt) override;
   safetyvesc::joint_params_t params;
   iVescAccess *vesc;
   bool is_init;
+  double position_estimate;
+private:
   double set_position;
   double set_velocity;
   bool in_velocity;
-  double position_estimate;
 };
 
 #endif //PROJECT_SAFETY_VESC_H

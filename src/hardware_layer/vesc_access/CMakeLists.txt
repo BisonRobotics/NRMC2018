@@ -50,15 +50,25 @@ include_directories(
  include
   ${catkin_INCLUDE_DIRS}
 )
+
 add_library(vesc_lib
         src/vesc_control/vesc_socket_can.cpp
 )
+
 add_library (vesc_access
   src/vesc_access/vesc_access.cpp
-        src/vesc_control/vesc_socket_can.cpp
+  src/vesc_control/vesc_socket_can.cpp
 )
 
+add_library(safety_vesc_lib src/safety_vesc/safety_vesc.cpp)
 
+
+
+add_library (linear_safety_lib src/safety_vesc/linear_safety.cpp)
+target_link_libraries(linear_safety_lib safety_vesc_lib)
+
+add_library(backhoe_safety_lib src/safety_vesc/backhoe_safety.cpp)
+target_link_libraries(backhoe_safety_lib safety_vesc_lib)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(vesc_access
@@ -81,9 +91,6 @@ target_link_libraries (vesc_access_integration_test
   vesc_access
 )
 
-add_library(safety_vesc_lib src/safety_vesc/safety_vesc.cpp)
-
-
 
 add_executable(vesc_access_pot_limit_test
         test/vesc_access_pot_limit_test.cpp
@@ -96,6 +103,7 @@ add_executable(vesc_socket_pot_test
         )
 
 target_link_libraries(vesc_socket_pot_test vesc_lib ${catkin_LIBRARIES})
+
 # Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/vesc_access.cpp
