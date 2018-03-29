@@ -94,7 +94,7 @@ double SafetyController::getSafetyPosition()
 
 void SafetyController::stop()
 {
-   this->set_velocity = 0;
+   this->vesc->setLinearVelocity(0);
 }
 
 double SafetyController::getPosition()

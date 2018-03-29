@@ -5,6 +5,7 @@
 #include "gmock/gmock.h"
 
 class MockSafetyController : public iSafetyController{
+public:
     MOCK_METHOD1 (setPositionSetpoint,void(double));
     MOCK_METHOD1 (setVelocitySetpoint, void(double));
     MOCK_METHOD0 (getPosition, double (void));

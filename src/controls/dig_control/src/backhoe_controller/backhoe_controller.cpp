@@ -50,8 +50,8 @@ void BackhoeController::update(double dt)
 
 void BackhoeController::safetyCheck()
 {
-  if (backhoe_safety->getVelocity() < 0 && backhoe_safety->getPosition() < backhoe_safety->getSafetyPosition() &&
-      backhoe_safety->getPosition() > backhoe_safety->getSafetyPosition())
+  if (backhoe_safety->getVelocity() > 0 && backhoe_safety->getPosition() > backhoe_safety->getSafetyPosition() &&
+      linear_safety->getPosition() > linear_safety->getSafetyPosition())
   {
     backhoe_safety->stop();
     if (linear_safety->getVelocity() > 0)

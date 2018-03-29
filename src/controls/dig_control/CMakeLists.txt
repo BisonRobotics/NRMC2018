@@ -99,6 +99,7 @@ if(TARGET test_backhoe_controller)
             backhoe_controller_lib
             gmock_main
             gmock
+            ${safety_access_LIBRARIES}
     )
     add_dependencies(test_backhoe_controller vesc_access)
 endif()

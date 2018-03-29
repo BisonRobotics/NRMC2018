@@ -112,6 +112,15 @@ TEST (safety_vesc_test, throws_exception_on_out_of_bounds_setpoint)
   EXPECT_TRUE (exception_thrown);
 }
 
+
+TEST (safety_vesc_test, stops_on_stop)
+{
+  NiceMock<MockVescAccess>vesc;
+  SafetyController safetyController (&vesc, linear_joint_params, false);
+  EXPECT_CALL (vesc, setLinearVelocity(FloatNear(0,.001)));
+  safetyController.stop();
+}
+
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {
