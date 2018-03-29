@@ -20,6 +20,9 @@ find_package(catkin REQUIRED COMPONENTS
   costmap_2d
 )
 
+link_directories(/usr/src/gmock/build)
+set(GTEST_LIBRARIES gmock_main)
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 

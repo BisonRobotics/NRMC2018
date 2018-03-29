@@ -61,10 +61,13 @@ class GlobalPlanner(object):
         """
         if status_message.has_reached_goal:
             self.movement_status = MovementStatus.HAS_REACHED_GOAL
+            print("Imperio : Movement Status HAS_REACHED_GOAL")
         if status_message.is_stuck:
             self.movement_status = MovementStatus.STUCK
+            print("Imperio : Movement Status STUCK")
         if status_message.cannot_plan_path:
             self.movement_status = CANNOT_PLAN_PATH
+            print("Imperio : Movement Status CANNOT_PLAN_PATH")
 
     def navigate_to_goal(self, goal):
         """
@@ -92,6 +95,7 @@ class GlobalPlanner(object):
         print("Imperio: Path found : {}".format(oriented_waypoints))
 
         self.publish_waypoints(oriented_waypoints)
+        print("Imperio : For Goal {}".format(goal))
         return False
 
     def find_waypoints(self, goal):
@@ -102,11 +106,11 @@ class GlobalPlanner(object):
         """
         (location, pose) = self.robot.localize()
 
-        print("Starting the path planner")
+        print("Imperio : Starting the path planner")
         saved_time = time.time()
         results = RRT.find_best_rrt_path(location, goal, self.occupancy_grid, 20)
-        print("Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
-        print("Unoriented path found: {}".format(results))
+        print("Imperio : Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
+        print("Imperio : Unoriented path found: {}".format(results))
 
         if len(results) == 0:
             #TODO : Enter recovery behavior

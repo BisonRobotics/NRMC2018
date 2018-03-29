@@ -45,6 +45,7 @@ class ImperioControl(object):
         :param bool_msg: Published message
         """
         if bool_msg.data == True:
+            print("Imperio : Out Of Time")
             self.robot.change_state(RobotState.HALT)
 
         if bool_msg.data == False:
@@ -84,7 +85,7 @@ class ImperioControl(object):
         """
         Navigates the robot back to the collection big
         """
-        goal = (0, 0)
+        goal = (.5, .5)
         result =  self.planner.navigate_to_goal(goal)
         if result == None:
             self.robot.change_state(RobotState.HALT)
@@ -125,6 +126,7 @@ class ImperioControl(object):
         """
         What the robot should do when it's running out of time
         """
+        print("Imperio : Almost out of time, changing to inbound mode")
         if self.robot.state == RobotState.DIG:
             self.robot.change_state(RobotState.INBOUND)
 
