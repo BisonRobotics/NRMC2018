@@ -14,12 +14,6 @@ void SimBackhoe::update(double dt)
   sh->update(dt);
   wr->update(dt);
 
-  //TODO update torque given by vesc to simulate adding weight
-  // maybe increase it by a step everytime the angle goes from
-  // one spot and past another?
-
-  // and reset it after going past dump angle?
-
   shTh += sh->getLinearVelocity() * dt;
   wrTh += wr->getLinearVelocity() * dt;
 }

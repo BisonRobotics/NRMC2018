@@ -107,20 +107,7 @@ int main(int argc, char **argv)
     sensor_msgs::JointState robotAngles;
     if (simulating)
     {
-/*
-       robotAngles.name.push_back("frame_to_front_left_wheel");
-       robotAngles.name.push_back("frame_to_front_right_wheel");       
-       robotAngles.name.push_back("frame_to_back_left_wheel");       
-       robotAngles.name.push_back("frame_to_back_right_wheel");        
-       robotAngles.position.push_back(0);
-       robotAngles.position.push_back(0);
-       robotAngles.position.push_back(0);
-       robotAngles.position.push_back(0);
-*/
        robotAngles.header.stamp = ros::Time::now();
-
-       //robotAngles.name.push_back("frame_to_bucket");
-       //robotAngles.position.push_back(1 - backhoeSimulation->getShTheta());
 
        double URDFangle = 0;
        robotAngles.name.push_back("central_drive_to_monoboom");
@@ -138,7 +125,6 @@ int main(int argc, char **argv)
     {
       
     }
-    // TODO publish joint states (?) so URDF can be used
 
     ros::spinOnce();
     rate.sleep();
