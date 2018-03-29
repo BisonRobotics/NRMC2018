@@ -7,7 +7,7 @@ class SimVesc : public iVescAccess
 {
 public:
   SimVesc(double Pgain, double Igain, double velo);
-  SimVesc(double Pgain, double Igain, double velo_factor, double beginLimit, double endLimit);
+  SimVesc(double Pgain, double Igain, double velo_factor, double initialPos, double beginLimit, double endLimit);
   void setLinearVelocity(float meters_per_second) override;
   void setTorque(float current) override;  // note: not really implemented
   float getLinearVelocity(void) override;
