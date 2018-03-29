@@ -3,14 +3,14 @@
 
 #include <vesc_access/vesc_access.h>
 #include <vesc_access/ivesc_access.h>
-#include "safety_vesc/backhoe_safety.h"
-#include "safety_vesc/linear_safety.h"
+#include "safety_vesc/backhoe_safety_controller.h"
+#include "safety_vesc/linear_safety_controller.h"
 
 
 class BackhoeController
 {
 public:
-  BackhoeController (iSafetyVesc *backhoeSafety, iSafetyVesc *linearSafety);
+  BackhoeController (iSafetyController *backhoeSafety, iSafetyController *linearSafety);
 
   // TODO, return status on update based on operation (see waypoint controller)
   void setShoulderSetpoint(double angle);     // in rad from horizontal
@@ -28,8 +28,8 @@ public:
   bool getIsInit (void);
 private:
   void safetyCheck();
-  iSafetyVesc *backhoe_safety;
-  iSafetyVesc *linear_safety;
+  iSafetyController *backhoe_safety;
+  iSafetyController *linear_safety;
 };
 
 #endif

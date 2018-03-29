@@ -1,12 +1,12 @@
 #ifndef PROJECT_SAFETY_VESC_H
 #define PROJECT_SAFETY_VESC_H
 
-#include "safety_vesc/isafety_vesc.h"
+#include "safety_vesc/isafety_controller.h"
 #include "vesc_access/ivesc_access.h"
 
-class SafetyVesc : public iSafetyVesc {
+class SafetyController : public iSafetyController {
 public:
-  SafetyVesc (iVescAccess *vesc, safetyvesc::joint_params_t params, bool in_velocity);
+  SafetyController (iVescAccess *vesc, safetycontroller::joint_params_t params, bool in_velocity);
   void setPositionSetpoint (double position) override;
   void setVelocitySetpoint (double velocity) override;
   bool isInit () override {return is_init;}
@@ -16,9 +16,11 @@ public:
   double getVelocity () override;
   double getPosition () override;
   void stop () override;
-protected:
+  virtual void init () override;
+  virtual double getSetPosition () override;
   void updatePosition (double dt) override;
-  safetyvesc::joint_params_t params;
+protected:
+  safetycontroller::joint_params_t params;
   iVescAccess *vesc;
   bool is_init;
   double position_estimate;

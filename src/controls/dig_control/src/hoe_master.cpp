@@ -12,8 +12,8 @@
 #include "dig_dump_action/dig_dump_action.h"
 #include "wheel_params/wheel_params.h"
 
-#include "safety_vesc/backhoe_safety.h"
-#include "safety_vesc/linear_safety.h"
+#include "safety_vesc/backhoe_safety_controller.h"
+#include "safety_vesc/linear_safety_controller.h"
 
 #define DIGGING_CONTROL_RATE_HZ 50.0
 
@@ -86,8 +86,8 @@ int main(int argc, char **argv)
     // populate inital backhoe position
   }
 
-  LinearSafety linearSafety (linear_joint_params, backhoeWristVesc, false);
-  BackhoeSafety backhoeSafety (central_joint_params, backhoeShoulderVesc, false);
+  LinearSafetyController linearSafety (linear_joint_params, backhoeWristVesc, false);
+  BackhoeSafetyController backhoeSafety (central_joint_params, backhoeShoulderVesc, false);
   // pass vescs (sim or physical) to controllers
 
   BucketController bucketC(bucketBigConveyorVesc, bucketLittleConveyorVesc, bucketSifterVesc);

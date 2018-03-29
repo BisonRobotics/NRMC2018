@@ -1,10 +1,10 @@
 #ifndef PROJECT_MOCK_SAFETY_VESC_H
 #define PROJECT_MOCK_SAFETY_VESC_H
 
-#include "safety_vesc/isafety_vesc.h"
+#include "safety_vesc/isafety_controller.h"
 #include "gmock/gmock.h"
 
-class MockSafetyVesc : public iSafetyVesc{
+class MockSafetyController : public iSafetyController{
     MOCK_METHOD1 (setPositionSetpoint,void(double));
     MOCK_METHOD1 (setVelocitySetpoint, void(double));
     MOCK_METHOD0 (getPosition, double (void));

@@ -1,12 +1,12 @@
 #ifndef PROJECT_LINEAR_SAFETY_H
 #define PROJECT_LINEAR_SAFETY_H
-#include "safety_vesc.h"
+#include "safety_controller.h"
 #include "vesc_access/ivesc_access.h"
 
-class LinearSafety : public SafetyVesc
+class LinearSafetyController : public SafetyController
 {
 public:
-  LinearSafety (safetyvesc::joint_params_t params, iVescAccess *vesc, bool in_velocity);
+  LinearSafetyController (safetycontroller::joint_params_t params, iVescAccess *vesc, bool in_velocity);
   void init ();
   void updatePosition (double dt) override;
 };

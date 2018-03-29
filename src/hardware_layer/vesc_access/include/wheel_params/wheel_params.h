@@ -2,7 +2,7 @@
 #define WHEEL_PARAMS_H
 
 #include "vesc_access/ivesc_access.h"
-#include "safety_vesc/isafety_vesc.h"
+#include "safety_vesc/isafety_controller.h"
 
 #define FRONT_LEFT_WHEEL_ID 4
 #define FRONT_RIGHT_WHEEL_ID 1
@@ -174,7 +174,7 @@ nsVescAccess::vesc_param_struct_t shoulder_param = {.max_velocity = MAX_CENTRAL_
 #define SAFE_CENTRAL_ANGLE -1.22
 #define SAFE_LINEAR_DISTANCE .06985
 
-safetyvesc::joint_params_t linear_joint_params =
+safetycontroller::joint_params_t linear_joint_params =
     {
         .minimum_pos = 0,
         .maximum_pos = LINEAR_ACTUATOR_LENGTH,
@@ -182,10 +182,11 @@ safetyvesc::joint_params_t linear_joint_params =
         .gain = .5,
         .setpoint_tolerance = .04,
         .lower_limit_position = 0,
-        .upper_limit_position = LINEAR_ACTUATOR_LENGTH
+        .upper_limit_position = LINEAR_ACTUATOR_LENGTH,
+        .max_abs_velocity =.2
     };
 
-safetyvesc::joint_params_t central_joint_params =
+safetycontroller::joint_params_t central_joint_params =
     {
         .minimum_pos = MINIMUM_CENTRAL_ANGLE,
         .maximum_pos = MAXIMUM_CENTRAL_ANGLE,
@@ -193,6 +194,7 @@ safetyvesc::joint_params_t central_joint_params =
         .gain = .5,
         .setpoint_tolerance = 0.04,
         .lower_limit_position = MINIMUM_CENTRAL_ANGLE,
-        .upper_limit_position = MAXIMUM_CENTRAL_ANGLE
+        .upper_limit_position = MAXIMUM_CENTRAL_ANGLE,
+        .max_abs_velocity = .2
     };
 #endif

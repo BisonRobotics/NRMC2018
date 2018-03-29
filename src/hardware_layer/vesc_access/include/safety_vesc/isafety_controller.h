@@ -1,22 +1,22 @@
 #ifndef PROJECT_iSAFETY_VESC_H
 #define PROJECT_iSAFETY_VESC_H
 
-namespace safetyvesc
+namespace safetycontroller
 {
   typedef struct joint_params {
     double minimum_pos;
     double maximum_pos;
     double safety_check_pos;
-    double gain;
     double setpoint_tolerance;
     double lower_limit_position;
     double upper_limit_position;
+    double gain;
+    double max_abs_velocity;
   }joint_params_t;
-
 }
 
 
-class iSafetyVesc
+class iSafetyController
 {
 public:
   virtual void setPositionSetpoint (double pos) = 0;
@@ -30,6 +30,7 @@ public:
   virtual void stop () = 0;
   virtual double getSafetyPosition () = 0;
   virtual double getVelocity () = 0;
+  virtual double getSetPosition () = 0;
 };
 
 

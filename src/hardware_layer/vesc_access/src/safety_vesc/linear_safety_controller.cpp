@@ -1,19 +1,19 @@
-#include "safety_vesc/linear_safety.h"
+#include "safety_vesc/linear_safety_controller.h"
 
 
-LinearSafety::LinearSafety(safetyvesc::joint_params_t params, iVescAccess *vesc, bool in_velocity)
-: SafetyVesc::SafetyVesc(vesc, params, in_velocity)
+LinearSafetyController::LinearSafetyController(safetycontroller::joint_params_t params, iVescAccess *vesc, bool in_velocity)
+: SafetyController::SafetyController(vesc, params, in_velocity)
 {
 
 }
 
-void LinearSafety::updatePosition(double dt)
+void LinearSafetyController::updatePosition(double dt)
 {
     this->position_estimate += vesc->getLinearVelocity()*dt;
-    SafetyVesc::updatePosition(dt);
+    SafetyController::updatePosition(dt);
 }
 
-void LinearSafety::init ()
+void LinearSafetyController::init ()
 {
     static constexpr float start_torque = -1.0f;
     this->vesc->setTorque(start_torque);

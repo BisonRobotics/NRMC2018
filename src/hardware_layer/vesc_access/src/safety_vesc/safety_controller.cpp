@@ -1,7 +1,7 @@
-#include "safety_vesc/safety_vesc.h"
+#include "safety_vesc/safety_controller.h"
 #include <math.h>
 
-SafetyVesc::SafetyVesc(iVescAccess *vesc, safetyvesc::joint_params_t params, bool in_velocity)
+SafetyController::SafetyController(iVescAccess *vesc, safetycontroller::joint_params_t params, bool in_velocity)
 {
     this->params = params;
     this->vesc = vesc;
@@ -11,7 +11,7 @@ SafetyVesc::SafetyVesc(iVescAccess *vesc, safetyvesc::joint_params_t params, boo
     this->set_velocity = 0;
 }
 
-void SafetyVesc::setPositionSetpoint(double position)
+void SafetyController::setPositionSetpoint(double position)
 {
     if (is_init && !in_velocity)
     {
@@ -19,7 +19,7 @@ void SafetyVesc::setPositionSetpoint(double position)
     }
 }
 
-void SafetyVesc::setVelocitySetpoint(double velocity)
+void SafetyController::setVelocitySetpoint(double velocity)
 {
     if (is_init && in_velocity)
     {
@@ -27,7 +27,7 @@ void SafetyVesc::setVelocitySetpoint(double velocity)
     }
 }
 
-double SafetyVesc::updateVelocity(void)
+double SafetyController::updateVelocity(void)
 {
     if (is_init)
     {
@@ -43,16 +43,25 @@ double SafetyVesc::updateVelocity(void)
         {
             set_velocity = 0;
         }
+        if (set_velocity > params.max_abs_velocity)
+        {
+            set_velocity = params.max_abs_velocity;
+        }
+        else if (set_velocity < -params.max_abs_velocity)
+        {
+            set_velocity = -params.max_abs_velocity;
+        }
+
         vesc->setLinearVelocity(set_velocity);
     }
 }
 
-bool SafetyVesc::isAtSetpoint(void)
+bool SafetyController::isAtSetpoint(void)
 {
     return fabs(position_estimate) < fabs(params.setpoint_tolerance);
 }
 
-void SafetyVesc::updatePosition(double dt)
+void SafetyController::updatePosition(double dt)
 {
     if (is_init)
     {
@@ -69,22 +78,32 @@ void SafetyVesc::updatePosition(double dt)
     }
 }
 
-double SafetyVesc::getSafetyPosition()
+double SafetyController::getSafetyPosition()
 {
     return this->params.safety_check_pos;
 }
 
-void SafetyVesc::stop()
+void SafetyController::stop()
 {
    this->set_velocity = 0;
 }
 
-double SafetyVesc::getPosition()
+double SafetyController::getPosition()
 {
     return this->position_estimate;
 }
 
-double SafetyVesc::getVelocity ()
+double SafetyController::getVelocity ()
 {
     return set_velocity;
+}
+
+void SafetyController::init ()
+{
+    this->is_init = true;
+}
+
+double SafetyController::getSetPosition()
+{
+    return set_position;
 }

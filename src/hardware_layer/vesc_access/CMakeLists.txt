@@ -60,7 +60,7 @@ add_library (vesc_access
   src/vesc_control/vesc_socket_can.cpp
 )
 
-add_library(safety_vesc src/safety_vesc/safety_vesc.cpp src/safety_vesc/linear_safety.cpp src/safety_vesc/backhoe_safety.cpp)
+add_library(safety_vesc src/safety_vesc/safety_controller.cpp src/safety_vesc/linear_safety_controller.cpp src/safety_vesc/backhoe_safety_controller.cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(vesc_access
@@ -190,5 +190,18 @@ if (TARGET test_vesc_access)
     gmock_main
   )
 endif ()
+
+catkin_add_gtest(test_safety_vesc src/safety_vesc/test/safety_vesc_test.cpp)
+if (TARGET test_safety_vesc)
+  target_link_libraries(
+          test_safety_vesc
+          safety_vesc
+    ${catkin_LIBRARIES}
+    gmock_main
+          gtest
+  )
+endif ()
+
+
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)

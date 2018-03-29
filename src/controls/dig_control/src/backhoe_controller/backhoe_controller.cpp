@@ -1,7 +1,7 @@
 #include <backhoe_controller/backhoe_controller.h>
 #include <cmath>
 
-BackhoeController::BackhoeController(iSafetyVesc *backhoeSafety, iSafetyVesc *linearSafety)
+BackhoeController::BackhoeController(iSafetyController *backhoeSafety, iSafetyController *linearSafety)
 
 {
   this->backhoe_safety = backhoeSafety;
