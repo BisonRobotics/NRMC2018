@@ -1,12 +1,12 @@
 #include "sim_robot/sim_backhoe.h"
 
-SimBackhoe::SimBackhoe(double shouldlerTheta, double wristTheta)
+SimBackhoe::SimBackhoe(double shoulderTheta, double wristTheta)
 {
-  shTh = shouldlerTheta;
+  shTh = shoulderTheta;
   wrTh = wristTheta;
 
-  sh = new SimVesc(16, 0, 1.0);
-  wr = new SimVesc(16, 0, 1.0);
+  sh = new SimVesc(16, 0, 1.0, shoulderTheta, 0, 3.1);
+  wr = new SimVesc(16, 0, 1.0, wristTheta, 0, 3.1);
 }
 
 void SimBackhoe::update(double dt)
