@@ -10,6 +10,7 @@ SafetyController::SafetyController(iVescAccess *vesc, safetycontroller::joint_pa
     this->is_init = false;
     this->set_position = 0;
     this->set_velocity = 0;
+    this->position_estimate =0;
 }
 
 void SafetyController::setPositionSetpoint(double position)

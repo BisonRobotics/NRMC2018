@@ -196,12 +196,34 @@ if (TARGET test_safety_vesc)
   target_link_libraries(
           test_safety_vesc
           safety_vesc
-    ${catkin_LIBRARIES}
-    gmock_main
+          ${catkin_LIBRARIES}
+          gmock_main
           gtest
   )
 endif ()
 
+
+catkin_add_gtest(test_backhoe_safety_vesc src/safety_vesc/test/backhoe_safety_controller_test.cpp)
+if (TARGET test_backhoe_safety_vesc)
+  target_link_libraries(
+          test_backhoe_safety_vesc
+          safety_vesc
+          ${catkin_LIBRARIES}
+          gmock_main
+          gtest
+  )
+endif ()
+
+catkin_add_gtest(test_linear_safety_vesc src/safety_vesc/test/linear_safety_controller_test.cpp)
+if (TARGET test_linear_safety_vesc)
+  target_link_libraries(
+          test_linear_safety_vesc
+          safety_vesc
+          ${catkin_LIBRARIES}
+          gmock_main
+          gtest
+  )
+endif ()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)

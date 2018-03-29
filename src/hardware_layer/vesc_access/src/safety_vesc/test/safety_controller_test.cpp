@@ -110,7 +110,6 @@ TEST (safety_vesc_test, throws_exception_on_out_of_bounds_setpoint)
    exception_thrown = true;
   }
   EXPECT_TRUE (exception_thrown);
-
 }
 
 // Run all the tests that were declared with TEST()
