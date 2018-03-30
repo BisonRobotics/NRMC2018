@@ -20,6 +20,8 @@ void SafetyController::setPositionSetpoint(double position)
         if  (position > params.maximum_pos || position < params.minimum_pos){
             std::stringstream ss;
             ss << "Out of bounds at : " << position;
+            this->set_position = this->position_estimate;
+            this->stop();
             throw BackhoeSetPointException (ss.str ());
         }
         this->set_position = position;

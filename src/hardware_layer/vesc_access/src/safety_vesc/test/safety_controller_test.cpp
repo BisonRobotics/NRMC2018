@@ -103,13 +103,9 @@ TEST (safety_vesc_test, throws_exception_on_out_of_bounds_setpoint)
   NiceMock<MockVescAccess> vesc;
   SafetyController linearSafety (&vesc, linear_joint_params, false);
   linearSafety.init ();
-  bool exception_thrown = false;
-  try {
-   linearSafety.setPositionSetpoint(linear_joint_params.maximum_pos+1.0);
-  } catch (BackhoeSetPointException backhoeSetPointException){
-   exception_thrown = true;
-  }
-  EXPECT_TRUE (exception_thrown);
+  EXPECT_CALL (vesc, setLinearVelocity(FloatNear(0,.001)));
+  ASSERT_THROW(linearSafety.setPositionSetpoint(linear_joint_params.maximum_pos+1.0), BackhoeSetPointException);
+  ASSERT_NEAR (linearSafety.getSetPosition(), linearSafety.getPosition(),.001);
 }
 
 
