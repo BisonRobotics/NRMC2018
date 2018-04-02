@@ -1,87 +1,102 @@
 #include <backhoe_controller/backhoe_controller.h>
+#include <cmath>
 
+BackhoeController::BackhoeController(iSafetyController *backhoeSafety, iSafetyController *linearSafety)
 
-BackhoeController::BackhoeController(double initialShoulderTheta, double initialWristTheta, iVescAccess *shVesc,
-                                     iVescAccess *wrVesc)
 {
-  shoulderSetpoint = initialShoulderTheta;
-  shoulderAngleEst = initialShoulderTheta;
-  isShoulderAtSetpoint = true;
-  sh = shVesc;
-
-  wristSetpoint = initialWristTheta;
-  wristAngleEst = initialWristTheta;
-  isWristAtSetpoint = true;
-  wr = wrVesc;
-  bucketTareWeight = 0;
-  backhoeTareWeight = 0;
+  this->backhoe_safety = backhoeSafety;
+  this->linear_safety = linearSafety;
 }
+
 
 void BackhoeController::setShoulderSetpoint(double angle)
 {
-  shoulderSetpoint = angle;
+  if (getIsInit()) {
+    backhoe_safety->setPositionSetpoint(angle);
+  }
 }
 
 void BackhoeController::setWristSetpoint(double angle)
 {
-  wristSetpoint = angle;
+  if (getIsInit()) {
+    linear_safety->setPositionSetpoint(angle);
+  }
+}
+
+void BackhoeController::setShoulderVelocity(double velocity)
+{
+  if (getIsInit()) {
+    backhoe_safety->setVelocitySetpoint(velocity);
+  }
+}
+
+void BackhoeController::setWristVelocity(double velocity)
+{
+  if (getIsInit()) {
+    linear_safety->setVelocitySetpoint(velocity);
+  }
 }
 
 void BackhoeController::update(double dt)
 {
-  shoulderAngleEst += sh->getLinearVelocity() * dt;
-  double error = shoulderSetpoint - shoulderAngleEst;
-  // TODO change this constant to something like a gain
-  if (error > .2)
-    error = .2;
-  else if (error < -.2)
-    error = -.2;
-  // TODO change this constant to a gain
-  sh->setLinearVelocity(.5 * error);
-  // TODO change cutoff to parameter/gain
-  isShoulderAtSetpoint = (error < .05);
+  if (getIsInit()) {
+    backhoe_safety->updatePosition(dt);
+    linear_safety->updatePosition(dt);
+    safetyCheck();
+    backhoe_safety->updateVelocity();
+    linear_safety->updateVelocity();
+  }
+}
 
-  wristAngleEst += wr->getLinearVelocity() * dt;
-  error = wristSetpoint - wristAngleEst;
-  // TODO change this constant to something like a gain
-  if (error > .2)
-    error = .2;
-  else if (error < -.2)
-    error = -.2;
-  // TODO change this constant to a gain
-  wr->setLinearVelocity(.5 * error);
-  // TODO change cutoff to parameter/gain
-  isWristAtSetpoint = (error < .04);
+void BackhoeController::safetyCheck()
+{
+  if (backhoe_safety->getVelocity() > 0 && backhoe_safety->getPosition() > backhoe_safety->getSafetyPosition() &&
+      linear_safety->getPosition() > linear_safety->getSafetyPosition())
+  {
+    backhoe_safety->stop();
+    if (linear_safety->getVelocity() > 0)
+    {
+      linear_safety->stop();
+    }
+  }
+}
+
+void BackhoeController::init()
+{
+  linear_safety->init ();
+  backhoe_safety->init ();
 }
 
 bool BackhoeController::shoulderAtSetpoint()
 {
-  return isShoulderAtSetpoint;
+  return backhoe_safety->isAtSetpoint();
 }
 
 bool BackhoeController::wristAtSetpoint()
 {
-  return isWristAtSetpoint;
+  return linear_safety->isAtSetpoint();
 }
 
 double BackhoeController::getWeightInBackhoe()
 {
   // calculate weight
-  return backhoeTareWeight;
+  return 0.0;
 }
 
 double BackhoeController::getWeightInBucket()
 {
-  return bucketTareWeight;
+  return 0.0;
 }
-
 
 void BackhoeController::tareBackhoe()
 {
-  backhoeTareWeight = 0;
 }
 
-void BackhoeController::tareBucket ()
+void BackhoeController::tareBucket()
 {
-  bucketTareWeight = 0;
+}
+
+bool BackhoeController::getIsInit()
+{
+  return linear_safety->isInit() && backhoe_safety->isInit();
 }

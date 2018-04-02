@@ -174,16 +174,10 @@ int main(int argc, char **argv)
   else
   {
     sim = NULL;  // Make no reference to the sim if not simulating
-    char *can_name = (char *)WHEEL_CAN_NETWORK;
-    fl = new VescAccess(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
-                        WHEEL_TORQUE_CONSTANT, can_name, 1);
-    fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
-                        MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-    br = new VescAccess(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
-                        MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-    bl = new VescAccess(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
-                        WHEEL_TORQUE_CONSTANT, can_name, 1);
-
+    fl = new VescAccess(front_left_param);
+    fr = new VescAccess(front_right_param);
+    br = new VescAccess(back_right_param);
+    bl = new VescAccess(back_left_param);
     pos = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .07);
     imu = new LpResearchImu("imu");
   }
@@ -308,14 +302,14 @@ int main(int argc, char **argv)
       sim->update(loopTime.toSec());
 
       tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
-      //also publish marker
+      // also publish marker
     }
 
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
 
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
-    //also publish marker
+    // also publish marker
 
     currPose.x = stateVector.x_pos;
     currPose.y = stateVector.y_pos;
@@ -439,17 +433,17 @@ int main(int argc, char **argv)
     }
     wholeQueue_pub.publish(line_strip2);
 
-    //publish wc.getEPpEstimate() as topic
-    //publish sim theta sim->getTheta()
-    //publish base link theta stateVector.theta
+    // publish wc.getEPpEstimate() as topic
+    // publish sim theta sim->getTheta()
+    // publish base link theta stateVector.theta
     angleErrorMsg.data = wc.getEPpEstimate();
     baseAngleMsg.data = stateVector.theta;
     angleErrorPub.publish(angleErrorMsg);
     baseAnglePub.publish(baseAngleMsg);
     if (simulating)
     {
-        simAngleMsg.data = sim->getTheta();
-        simAnglePub.publish(simAngleMsg);
+      simAngleMsg.data = sim->getTheta();
+      simAnglePub.publish(simAngleMsg);
     }
 
     ROS_INFO("CPPx : %.4f", theCPP.x);

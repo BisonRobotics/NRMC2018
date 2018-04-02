@@ -29,7 +29,7 @@ set(GTEST_LIBRARIES gmock_main)
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES vesc_access
+  LIBRARIES vesc_access safety_vesc
 #  CATKIN_DEPENDS roscpp
 #  DEPENDS system_lib
 )
@@ -48,15 +48,17 @@ include_directories(
  include
   ${catkin_INCLUDE_DIRS}
 )
+
 add_library(vesc_lib
         src/vesc_control/vesc_socket_can.cpp
 )
+
 add_library (vesc_access
   src/vesc_access/vesc_access.cpp
-        src/vesc_control/vesc_socket_can.cpp
+  src/vesc_control/vesc_socket_can.cpp
 )
 
-
+add_library(safety_vesc src/safety_vesc/safety_controller.cpp src/safety_vesc/linear_safety_controller.cpp src/safety_vesc/backhoe_safety_controller.cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(vesc_access
@@ -91,6 +93,7 @@ add_executable(vesc_socket_pot_test
         )
 
 target_link_libraries(vesc_socket_pot_test vesc_lib ${catkin_LIBRARIES})
+
 # Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/vesc_access.cpp
@@ -142,8 +145,19 @@ target_link_libraries(vesc_socket_pot_test vesc_lib ${catkin_LIBRARIES})
    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 
+ install(TARGETS  safety_vesc
+   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+ )
+
 ## Mark cpp header files for installation
  install(DIRECTORY include/vesc_access/
+   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+   FILES_MATCHING PATTERN "*.h"
+#   PATTERN ".svn" EXCLUDE
+ )
+ install(DIRECTORY include/safety_vesc/
    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
    FILES_MATCHING PATTERN "*.h"
 #   PATTERN ".svn" EXCLUDE
@@ -174,5 +188,40 @@ if (TARGET test_vesc_access)
     gmock_main
   )
 endif ()
+
+catkin_add_gtest(test_safety_vesc src/safety_vesc/test/safety_controller_test.cpp)
+if (TARGET test_safety_vesc)
+  target_link_libraries(
+          test_safety_vesc
+          safety_vesc
+          ${catkin_LIBRARIES}
+          gmock_main
+          gtest
+  )
+endif ()
+
+
+catkin_add_gtest(test_backhoe_safety_vesc src/safety_vesc/test/backhoe_safety_controller_test.cpp)
+if (TARGET test_backhoe_safety_vesc)
+  target_link_libraries(
+          test_backhoe_safety_vesc
+          safety_vesc
+          ${catkin_LIBRARIES}
+          gmock_main
+          gtest
+  )
+endif ()
+
+catkin_add_gtest(test_linear_safety_vesc src/safety_vesc/test/linear_safety_controller_test.cpp)
+if (TARGET test_linear_safety_vesc)
+  target_link_libraries(
+          test_linear_safety_vesc
+          safety_vesc
+          ${catkin_LIBRARIES}
+          gmock_main
+          gtest
+  )
+endif ()
+
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
