@@ -33,6 +33,8 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
         case dig_state_enum::dig_idle: //not digging, should start here
           backhoe->setShoulderSetpoint(1); //where we think the ground is (0 should be all the way back, 1 is all the way forward)
           digging_state = moving_to_setpoint;
+          bucket->turnSifterOn();
+          bucket->turnLittleConveyorOn();
           break;
         case dig_state_enum::moving_to_setpoint: //going to find the ground
           if (backhoe->shoulderAtSetpoint())
@@ -52,8 +54,6 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
             if (backhoe->shoulderAtSetpoint())
             {
                 backhoe->setWristSetpoint(0); //curl it out
-                //TODO: start small conveyor?
-                //TODO: start sifter?
                 digging_state = dumping_into_bucket;
             }
           break;
@@ -67,7 +67,8 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
         case dig_state_enum::returning_backhoe_to_initial: //moving back to same position as dig idle
             if (backhoe->shoulderAtSetpoint())
             {
-                //TODO stop small conveyor and sifter
+                bucket->turnLittleConveyorOff();
+                bucket->turnSifterOff();
                 is_digging = false;
                 digging_state = dig_idle;
                 dig_as_.setSucceeded();
