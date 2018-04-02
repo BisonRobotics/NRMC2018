@@ -7,20 +7,32 @@ Version: 1
 
 """
 
-from robot import *
+import rospy
+import roslib
+import actionlib
 
-# Tells the robot to dig the regolith
-# Returns boolean of success
-def dig_regolith(robot):
-    robot.dig()
-    return True
+from dig_control.msg import DigAction, DigActionGoal
 
-# Tells the robot to deposit the regolith
-# Returns boolean of success
-def deposit_regolith(robot):
-    robot.deposit()
-    return True
+class RegolithManipulation(object):
+    def __init__(self):
+        self.dig_client = actionlib.SimpleActionClient('dig_server', DigAction)
+        #self.dig_client.wait_for_server()
 
-# The commands to tell the robot to stop moving the hoe
-def halt_regolithm_commands(robot):
-    pass
+    # Tells the robot to dig the regolith
+    # Returns boolean of success
+    def dig_regolith(self, robot):
+        goal = DigActionGoal()
+        #TODO : fill in the goal here
+        self.dig_client.send_goal(goal)
+        #TODO : Wait for the result here?
+        return True
+
+    # Tells the robot to deposit the regolith
+    # Returns boolean of success
+    def deposit_regolith(self, robot):
+        #deposit regolith
+        return True
+
+    # The commands to tell the robot to stop moving the hoe
+    def halt_regolithm_commands(self, robot):
+        pass
