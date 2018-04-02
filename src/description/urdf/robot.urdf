@@ -159,29 +159,38 @@
         <limit effort="1000.0" lower="-1.32" upper="2.0" velocity="1000.0"/>
     </joint>
 
-    <!--
-    <link name="sensor">
+    <link name="right_dynamixel">
         <visual>
             <geometry>
-                <cylinder length="7.0003e-02" radius="2.5e-02" />
+                <mesh filename="package://description/meshes/right_dynamixel.stl" />
             </geometry>
-            <origin xyz="0 0 0" rpy="0 0 0" />
+            <origin xyz="0.0 0.0 0.0" rpy="0 ${-pi/2} ${pi}" />
             <material name="black" />
         </visual>
-        <collision>
-            <geometry>
-                <cylinder length="7.0003e-02" radius="2.5e-02" />
-            </geometry>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-        </collision>
     </link>
 
-    <joint name="frame_to_sensor" type="fixed">
+    <joint name="frame_to_right_dynamixel" type="fixed">
         <parent link="frame"/>
-        <child link="sensor"/>
-        <origin xyz="5.0000e-01 0 -1.5796e-01" rpy="0 0 0" />
-    </joint>-->
+        <child link="right_dynamixel"/>
+        <origin xyz="-0.186436 -0.3137916 0.3756406" rpy="0 0 0" />
+    </joint>
 
+    <link name="left_dynamixel">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/left_dynamixel.stl" />
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0 ${-pi/2} 0" />
+            <material name="black" />
+        </visual>
+    </link>
+
+    <joint name="frame_to_left_dynamixel" type="fixed">
+        <parent link="frame"/>
+        <child link="left_dynamixel"/>
+        <origin xyz="-0.186436 0.3137916 0.3756406" rpy="0 0 0" />
+    </joint>
+    
 </robot>
 
 
