@@ -421,8 +421,10 @@ int main(int argc, char **argv)
       ss << "Mode: GOALRECHED";
       status_msg.has_reached_goal.data = 1;
     }
-    if (!firstTime) {
-      if (areTheseEqual(status_msg, last_msg)) {
+    if (!firstTime)
+    {
+      if (areTheseEqual(status_msg, last_msg))
+      {
         mode_pub.publish(status_msg);
       }
     } else {
