@@ -22,8 +22,26 @@ class InitialPlanner(Planner):
 
     def find_best_starting_goal(self):
         saved_time = time.time()
-        #TODO : need to find the exact y point of the start of the obstacle grid . . .using 2 for now
-        y = 2
+
+        of_start_x = 1.5
+        of_end_x = 4.44
+
+        comp_start = []
+        comp_start.append(self.grid_occupied_score(1))
+        comp_start.append(self.grid_occupied_score(2))
+        comp_start.append(self.grid_occupied_score(3))
+
+        #find part of the obstacle grid with the least amount of occupied space in it
+
 
         print("Imperio : It took {} seconds to find the starting position".format(time.time() - saved_time))
-        return (1,y)
+        return (of_start_x,1)
+
+    def grid_occupied_score(self, region):
+        # -----|-----|-----
+        # --1--|--2--|--3--
+        # -----|-----|-----
+        # -----|-0,0-|-----
+        # ^Regions
+
+         
