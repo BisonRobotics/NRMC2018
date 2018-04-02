@@ -65,7 +65,7 @@ class Planner(object):
             self.movement_status = MovementStatus.STUCK
             print("Imperio : Movement Status STUCK")
         if status_message.cannot_plan_path:
-            self.movement_status = CANNOT_PLAN_PATH
+            self.movement_status = MovementStatus.CANNOT_PLAN_PATH
             print("Imperio : Movement Status CANNOT_PLAN_PATH")
 
     def navigate_to_goal(self, goal):
@@ -135,6 +135,10 @@ class Planner(object):
         :return: a boolean of if the robot is within the threshold
         """
         errorThreshold = rospy.get_param('/location_accuracy')
+        if errorThreshold == None:
+            #TODO : Check with the team for best threshold here
+            errorThreshold = 1
+
 
         goal_x, goal_y = goal
         (location, pose) = self.robot.localize()
@@ -178,8 +182,10 @@ class Planner(object):
         oriented_waypoints = []
 
         for i in range(1, len(waypoints)):
-            x1, y1 = waypoints[i - 1]
-            x2, y2 = waypoints[i]
+            point1 = waypoints[i - 1]
+            point2 = waypoints[i]
+            x1, y1 = point1[0], point1[1]
+            x2, y2 = point2[0], point2[1]
 
             orientation = math.atan2((y2 - y1), (x2 - x1))
 
