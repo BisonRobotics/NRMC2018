@@ -10,6 +10,7 @@ Version: 2
 import rospy
 
 from global_planner import *
+from initial_planner import *
 from regolith_manipulation import *
 from std_msgs.msg import Bool
 
@@ -28,6 +29,7 @@ class ImperioControl(object):
         rospy.Subscriber('/times_up', Bool, self.timerCallback)
 
         self.robot = robot(self.node)
+        self.initial_planner = InitialPlanner(self.robot)
         self.planner = GlobalPlanner(self.robot)
         self.run()
 
@@ -56,7 +58,9 @@ class ImperioControl(object):
         The operation loop for Imperio
         """
         while not self.robot.state == RobotState.HALT and not rospy.is_shutdown():
-            if self.robot.state == RobotState.OUTBOUND:
+            if self.robot.state == RobotState.INITIAL:
+                self.navigateInitialPosition()
+            elif self.robot.state == RobotState.OUTBOUND:
                 self.navigateOutbound()
             elif self.robot.state == RobotState.DIG:
                 self.dig()
@@ -69,11 +73,20 @@ class ImperioControl(object):
             else:
                 self.halt()
 
+    def navigateInitialPosition(self):
+        goal = self.initial_planner.find_best_starting_goal()
+        result = self.initial_planner.navigate_to_goal(goal)
+        if result == None:
+            self.robot.change_state(RobotState.HALT)
+        if result:
+            self.robot.next_state()
+
     def navigateOutbound(self):
         """
         Navigates the robot to the area where it will dig
         """
         # Goal is currently just dummy data
+        #TODO : Find best digging goal
         goal = (6, 0)
         result = self.planner.navigate_to_goal(goal)
         if result == None:

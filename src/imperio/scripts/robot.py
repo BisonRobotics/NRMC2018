@@ -23,6 +23,7 @@ class RobotState(Enum):
     DEPOSIT = 3
     RECOVERY = 4
     HALT = 5
+    INITIAL = 6
 
 class robot(object):
     """
@@ -35,7 +36,7 @@ class robot(object):
         :param node: the ROS node being used
         """
         self.state = None
-        self.change_state(RobotState.OUTBOUND)
+        self.change_state(RobotState.INITIAL)
         self.tf = tf.TransformListener(node)
         self.location = None
         self.pose = None
@@ -64,22 +65,26 @@ class robot(object):
         """
         if state == RobotState.OUTBOUND:
             print("Imperio : OUTBOUND")
-        if state == RobotState.DEPOSIT:
+        elif state == RobotState.DEPOSIT:
             print("Imperio : DEPOSIT")
-        if state == RobotState.INBOUND:
+        elif state == RobotState.INBOUND:
             print("Imperio : INBOUND")
-        if state == RobotState.DIG:
+        elif state == RobotState.DIG:
             print("Imperio : DIG")
-        if state == RobotState.RECOVERY:
+        elif state == RobotState.RECOVERY:
             print("Imperio : RECOVERY BEHAVIOR")
-        if state == RobotState.HALT:
+        elif state == RobotState.HALT:
             print("Imperio : HALT")
+        elif state == RobotState.INITIAL:
+            print("Imperio : Initial Orientation")
 
     def next_state(self):
         """
         Ease Function to change the state to the next expected state
         """
-        if self.state == RobotState.OUTBOUND:
+        if self.state == RobotState.INITIAL:
+            self.change_state(RobotState.OUTBOUND)
+        elif self.state == RobotState.OUTBOUND:
             self.change_state(RobotState.DIG)
         elif self.state == RobotState.DIG:
             self.change_state(RobotState.INBOUND)
