@@ -16,16 +16,17 @@ namespace low_pass_namespace
   {
   public:
     explicit LowPassLayer ();
-    virtual void onInitialize () override;
-    virtual void updateCosts (costmap_2d::Costmap2D& master_grid, int min_i, int min_j, int max_i, int max_j) override;
-    virtual void matchSize () override;
+    ~LowPassLayer();
+    void onInitialize () override;
+    void updateCosts (costmap_2d::Costmap2D& master_grid, int min_i, int min_j, int max_i, int max_j) override;
+    void matchSize () override;
     void updateFilter (int min_i, int min_j, int max_i, int max_j);
   private:
     void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
     dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv;
     static constexpr unsigned int size_of_buffer = 10;
     boost::circular_buffer<char []> buffman;
-    unsigned int map[];
+    unsigned char *map;
 
   };
 }

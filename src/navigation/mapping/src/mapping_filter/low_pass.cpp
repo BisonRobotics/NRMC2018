@@ -15,17 +15,29 @@ namespace low_pass_namespace
 
   }
 
+  LowPassLayer::~LowPassLayer ()
+  {
+    delete dsrv;
+    delete map;
+  }
   void LowPassLayer::onInitialize ()
   {
     ObstacleLayer::onInitialize();
+    ros::NodeHandle nh("~/" + name_);
+    current_ = true;
+    default_value_ = NO_INFORMATION;  // we can change this later if we want
+    dsrv = new dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>(nh);
+    dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>::CallbackType cb
+        = boost::bind (&LowPassLayer::reconfigureCB,this, _1, _2);
+    dsrv->setCallback(cb);
   }
 
   void LowPassLayer::matchSize ()
   {
-    ObstacleLayer::matchSize();
-    delete map;// delete the old map
+    ObstacleLayer::matchSize(); // call the default behavior
+    delete[] map;// delete the old map
     Costmap2D *master = layered_costmap_->getCostmap();
-    map = new unsigned int[master->getSizeInCellsY()*master->getSizeInCellsX()];// reallocate the internal map
+    map = new unsigned char[master->getSizeInCellsY()*master->getSizeInCellsX()];// reallocate the internal map
     buffman.clear();// flush the buffer
   }
 
@@ -66,24 +78,32 @@ namespace low_pass_namespace
     // if we stick with an average, we just have to subtract the last item
     // and add in the first item, but this will allow for a more general filter
     // down the road
+
     for (int i = min_i; i < max_i; i++)
     {
       for (int j = min_j; j < max_j; j++)
       {
         unsigned int index = getIndex(i, j);
-        for (unsigned int ctr; ctr < size_of_buffer; ctr++)
+        unsigned int sum_var = 0;
+        for (unsigned int ctr = 0.+; ctr < size_of_buffer; ctr++)
         {
-          map[index] += buffman[ctr][index];  // add up all maps
+          sum_var += buffman[ctr][index];  // add up all maps
         }
-        map[index] = map[index]/size_of_buffer; // convert to unity gain
-        if (map[index] > costmap_2d::LETHAL_OBSTACLE) // threshold in case of goofy runoff
+        sum_var = map[index]/size_of_buffer; // convert to unity gain
+        if (sum_var > costmap_2d::LETHAL_OBSTACLE) // threshold in case of goofy runoff
         {
           map[index] = costmap_2d::LETHAL_OBSTACLE;
         }
+        else
+        {
+          map[index] = sum_var;
+        }
       }
     }
+  }
 
-
-
+  void LowPassLayer::reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level)
+  {
+    enabled_ = config.enabled;
   }
 }
