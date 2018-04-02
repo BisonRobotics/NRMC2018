@@ -423,7 +423,7 @@ int main(int argc, char **argv)
     }
     if (!firstTime)
     {
-      if (areTheseEqual(status_msg, last_msg))
+      if (!areTheseEqual(status_msg, last_msg))
       {
         mode_pub.publish(status_msg);
       }
