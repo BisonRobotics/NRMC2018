@@ -75,8 +75,12 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
             }
           break;
         case dig_state_enum::dig_error:
+          bucket->turnSifterOff();
+          bucket->turnLittleConveyorOff();
           break;
         default:
+          bucket->turnSifterOff();
+          bucket->turnLittleConveyorOff();
           dig_as_.setAborted();
           is_digging = false;
           break;
