@@ -19,8 +19,6 @@ from imperio.msg import DriveStatus
 from nav_msgs.msg import OccupancyGrid
 from geometry_msgs.msg import Pose2D
 
-halt_for_visualization = False
-
 class MovementStatus(Enum):
     """
     Movement Status is the enum of the different states that the robot can be in for movement.
