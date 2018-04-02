@@ -31,7 +31,7 @@ namespace low_pass_namespace
 
   void LowPassLayer::updateCosts(costmap_2d::Costmap2D &master_grid, int min_i, int min_j, int max_i, int max_j)
   {
-    //ObstacleLayer::updateCosts(master_grid, min_i,min_j, max_i,max_j);
+    // copy the array into the buffer
     char* array = new char [master_grid.getSizeInCellsX()*master_grid.getSizeInCellsY()];
     for (int i = min_i; i < max_i; i++)
     {
@@ -42,18 +42,17 @@ namespace low_pass_namespace
     }
     buffman.push_back (array);
 
-    if (buffman.full())
+    if (buffman.full()) // if we have all of the observations
     {
-      // Do an if here to check if the buffer is full
-      // Do the filtering here
       unsigned char *master_map = master_grid.getCharMap();
-      updateFilter (min_i, min_j, max_i, max_j);
+      updateFilter (min_i, min_j, max_i, max_j);  // run the filter
       for (int i = min_i; i < max_i; i++)
       {
         for (int j = min_j; j < max_j; j++)
         {
           unsigned int index = getIndex(i,j);
           master_map[index] = map[index];
+          // its guaranteed by our filter that map[index] will not exceed 255
         }
       }
     }
@@ -63,7 +62,10 @@ namespace low_pass_namespace
   void LowPassLayer::updateFilter (int min_i, int min_j, int max_i, int max_j)
   {
     // for now we'll do a simple average & threshold
-    // this is particularly inneficient
+    // this is particularly inneficient if we stick with an average
+    // if we stick with an average, we just have to subtract the last item
+    // and add in the first item, but this will allow for a more general filter
+    // down the road
     for (int i = min_i; i < max_i; i++)
     {
       for (int j = min_j; j < max_j; j++)
