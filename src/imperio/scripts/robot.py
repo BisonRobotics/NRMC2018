@@ -93,14 +93,6 @@ class robot(object):
         elif self.state == RobotState.DEPOSIT:
             self.change_state(RobotState.OUTBOUND)
 
-    def move_base_to_goal(self, goal):
-        """
-        How the robot hangles a low level movement command
-        :param goal: the goal (in relation to the robot) to be reaches
-        """
-        #TODO : Publish a twist message for debugging
-        time.sleep(2)
-
     def localize(self):
         """
         Localization for the robot
@@ -112,7 +104,7 @@ class robot(object):
             print("Imperio : Robot localized to location : {} and pose : {}".format(self.location, self.pose))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             print("IMPERIO ERROR : Robot is not able to localize")
-            #TODO : Add recovery behavior here, (0,0) is only for development 
+            # TODO : Add recovery behavior [Jira NRMC2018-329]
             self.location = (0,0,0)
             self.pose = (0,0,0,0)
         return (self.location, self.pose)
