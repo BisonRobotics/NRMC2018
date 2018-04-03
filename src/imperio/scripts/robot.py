@@ -23,6 +23,7 @@ class RobotState(Enum):
     DEPOSIT = 3
     RECOVERY = 4
     HALT = 5
+    INITIAL = 6
 
 class robot(object):
     """
@@ -35,7 +36,7 @@ class robot(object):
         :param node: the ROS node being used
         """
         self.state = None
-        self.change_state(RobotState.OUTBOUND)
+        self.change_state(RobotState.INITIAL)
         self.tf = tf.TransformListener(node)
         self.location = None
         self.pose = None
@@ -64,22 +65,26 @@ class robot(object):
         """
         if state == RobotState.OUTBOUND:
             print("Imperio : OUTBOUND")
-        if state == RobotState.DEPOSIT:
+        elif state == RobotState.DEPOSIT:
             print("Imperio : DEPOSIT")
-        if state == RobotState.INBOUND:
+        elif state == RobotState.INBOUND:
             print("Imperio : INBOUND")
-        if state == RobotState.DIG:
+        elif state == RobotState.DIG:
             print("Imperio : DIG")
-        if state == RobotState.RECOVERY:
+        elif state == RobotState.RECOVERY:
             print("Imperio : RECOVERY BEHAVIOR")
-        if state == RobotState.HALT:
+        elif state == RobotState.HALT:
             print("Imperio : HALT")
+        elif state == RobotState.INITIAL:
+            print("Imperio : Initial Orientation")
 
     def next_state(self):
         """
         Ease Function to change the state to the next expected state
         """
-        if self.state == RobotState.OUTBOUND:
+        if self.state == RobotState.INITIAL:
+            self.change_state(RobotState.OUTBOUND)
+        elif self.state == RobotState.OUTBOUND:
             self.change_state(RobotState.DIG)
         elif self.state == RobotState.DIG:
             self.change_state(RobotState.INBOUND)
@@ -87,14 +92,6 @@ class robot(object):
             self.change_state(RobotState.DEPOSIT)
         elif self.state == RobotState.DEPOSIT:
             self.change_state(RobotState.OUTBOUND)
-
-    def move_base_to_goal(self, goal):
-        """
-        How the robot hangles a low level movement command
-        :param goal: the goal (in relation to the robot) to be reaches
-        """
-        #TODO : Publish a twist message for debugging
-        time.sleep(2)
 
     def localize(self):
         """
@@ -107,7 +104,7 @@ class robot(object):
             print("Imperio : Robot localized to location : {} and pose : {}".format(self.location, self.pose))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             print("IMPERIO ERROR : Robot is not able to localize")
-            #TODO : Add recovery behavior here, (0,0) is only for development 
+            #TODO : Add recovery behavior [Jira NRMC2018-329]
             self.location = (0,0)
             self.pose = (0,0,0)
         return (self.location, self.pose)

@@ -107,6 +107,14 @@ void haltCallback(const std_msgs::Empty::ConstPtr &msg)
   halt = true;
 }
 
+
+bool areTheseEqual (imperio::DriveStatus status1, imperio::DriveStatus status2)
+{
+  return (status1.is_stuck.data == status2.is_stuck.data && status1.cannot_plan_path.data == status2.cannot_plan_path.data &&
+          status1.in_motion.data == status2.in_motion.data && status1.has_reached_goal.data == status2.has_reached_goal.data);
+}
+
+
 int main(int argc, char **argv)
 {
   // read ros param for simulating
@@ -133,6 +141,7 @@ int main(int argc, char **argv)
     ROS_ERROR("\n\nsimulating_driving param not defined! aborting.\n\n");
     return -1;
   }
+
 
   ros::Subscriber sub = node.subscribe("additional_waypoint", 100, newGoalCallback);
   ros::Publisher jspub = globalNode.advertise<sensor_msgs::JointState>("joint_states", 500);
@@ -174,16 +183,10 @@ int main(int argc, char **argv)
   else
   {
     sim = NULL;  // Make no reference to the sim if not simulating
-    char *can_name = (char *)WHEEL_CAN_NETWORK;
-    fl = new VescAccess(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
-                        WHEEL_TORQUE_CONSTANT, can_name, 1);
-    fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
-                        MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-    br = new VescAccess(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
-                        MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-    bl = new VescAccess(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
-                        WHEEL_TORQUE_CONSTANT, can_name, 1);
-
+    fl = new VescAccess(front_left_param);
+    fr = new VescAccess(front_right_param);
+    br = new VescAccess(back_right_param);
+    bl = new VescAccess(back_left_param);
     pos = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .07);
     imu = new LpResearchImu("imu");
   }
@@ -199,10 +202,13 @@ int main(int argc, char **argv)
 
   LocalizerInterface::stateVector stateVector;
   ros::Subscriber haltsub = node.subscribe("halt", 100, haltCallback);
-  ros::Publisher mode_pub = node.advertise<imperio::DriveStatus>("drive_controller_status", 1000);
+  ros::Publisher mode_pub = node.advertise<imperio::DriveStatus>("drive_controller_status", 1000, true);
   ros::Publisher path_marker_pub = node.advertise<visualization_msgs::Marker>("waypoint_path", 10000);
   ros::Publisher wholeQueue_pub = node.advertise<visualization_msgs::Marker>("whole_queue", 100);
+
   imperio::DriveStatus status_msg;
+  imperio::DriveStatus last_msg;
+
   visualization_msgs::Marker line_strip;
   status_msg.header.seq = 0;
   line_strip.action = visualization_msgs::Marker::ADD;
@@ -308,14 +314,14 @@ int main(int argc, char **argv)
       sim->update(loopTime.toSec());
 
       tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
-      //also publish marker
+      // also publish marker
     }
 
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
 
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
-    //also publish marker
+    // also publish marker
 
     currPose.x = stateVector.x_pos;
     currPose.y = stateVector.y_pos;
@@ -415,8 +421,17 @@ int main(int argc, char **argv)
       ss << "Mode: GOALRECHED";
       status_msg.has_reached_goal.data = 1;
     }
-    mode_pub.publish(status_msg);
+    if (!firstTime)
+    {
+      if (!areTheseEqual(status_msg, last_msg))
+      {
+        mode_pub.publish(status_msg);
+      }
+    } else {
+      mode_pub.publish(status_msg);
+    }
 
+    last_msg = status_msg;
     // print some info
     navigationQueue = wc.getNavigationQueue();
     theCPP = wc.getCPP();
@@ -439,17 +454,17 @@ int main(int argc, char **argv)
     }
     wholeQueue_pub.publish(line_strip2);
 
-    //publish wc.getEPpEstimate() as topic
-    //publish sim theta sim->getTheta()
-    //publish base link theta stateVector.theta
+    // publish wc.getEPpEstimate() as topic
+    // publish sim theta sim->getTheta()
+    // publish base link theta stateVector.theta
     angleErrorMsg.data = wc.getEPpEstimate();
     baseAngleMsg.data = stateVector.theta;
     angleErrorPub.publish(angleErrorMsg);
     baseAnglePub.publish(baseAngleMsg);
     if (simulating)
     {
-        simAngleMsg.data = sim->getTheta();
-        simAnglePub.publish(simAngleMsg);
+      simAngleMsg.data = sim->getTheta();
+      simAnglePub.publish(simAngleMsg);
     }
 
     ROS_INFO("CPPx : %.4f", theCPP.x);

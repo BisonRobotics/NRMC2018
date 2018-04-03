@@ -13,6 +13,10 @@
 #include <cmath>
 
 #include "dig_dump_action/dig_dump_action.h"
+#include "wheel_params/wheel_params.h"
+
+#include "safety_vesc/backhoe_safety_controller.h"
+#include "safety_vesc/linear_safety_controller.h"
 
 #define DIGGING_CONTROL_RATE_HZ 50.0
 
@@ -44,18 +48,17 @@ int main(int argc, char **argv)
   double backhoeInitialShoulderTheta;
   double backhoeInitialWristTheta;
 
-  iVescAccess *bucketBigConveyorVesc;
+ iVescAccess *bucketBigConveyorVesc;
   iVescAccess *bucketLittleConveyorVesc;
   iVescAccess *bucketSifterVesc;
   iVescAccess *backhoeShoulderVesc;
   iVescAccess *backhoeWristVesc;
 
-  // these should not be initialized if we are not simulating
-  SimBucket *bucketSimulation;
+ SimBucket *bucketSimulation;
   SimBackhoe *backhoeSimulation;
   if (simulating)
   {
-    // SimBucket
+   // SimBucket
     bucketSimulation = new SimBucket();
     bucketBigConveyorVesc = bucketSimulation->getBigConveyorVesc();
     bucketLittleConveyorVesc = bucketSimulation->getLittleConveyorVesc();
@@ -70,20 +73,16 @@ int main(int argc, char **argv)
   }
   else
   {
-    // Don't use these pointers.
-    bucketSimulation = NULL;     // This is a physical run.
-    backhoeSimulation = NULL;    // You'll cause exceptions.
-
-    // TODO initialize real vescs here
-
-    // populate inital backhoe position
+   bucketSimulation = NULL;   // This is a physical run.
+    backhoeSimulation = NULL;  // You'll cause exceptions.
   }
 
+  LinearSafetyController linearSafety (linear_joint_params, backhoeWristVesc, false);
+  BackhoeSafetyController backhoeSafety (central_joint_params, backhoeShoulderVesc, false);
   // pass vescs (sim or physical) to controllers
 
   BucketController bucketC(bucketBigConveyorVesc, bucketLittleConveyorVesc, bucketSifterVesc);
-  BackhoeController backhoeC(backhoeInitialShoulderTheta, backhoeInitialWristTheta, backhoeShoulderVesc,
-                             backhoeWristVesc);
+  BackhoeController backhoeC(&backhoeSafety, &linearSafety);
 
   ros::Rate rate(DIGGING_CONTROL_RATE_HZ); //should be 50 Hz
 
