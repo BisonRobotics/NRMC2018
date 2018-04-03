@@ -53,7 +53,6 @@ int main(int argc, char **argv)
   iVescAccess *backhoeWristVesc;
 
   // these should not be initialized if we are not simulating
-  // SimOutriggers *outriggerSimulation;
   SimBucket *bucketSimulation;
   SimBackhoe *backhoeSimulation;
   if (simulating)
@@ -80,15 +79,18 @@ int main(int argc, char **argv)
     //  outriggerSimulation = NULL;  // Don't use these pointers.
     bucketSimulation = NULL;   // This is a physical run.
     backhoeSimulation = NULL;  // You'll cause exceptions.
-
+    backhoeShoulderVesc = new VescAccess (shoulder_param, true);
+    backhoeWristVesc = new VescAccess (linear_param, true);
+    bucketLittleConveyorVesc = new VescAccess (small_conveyor_param);
+    bucketBigConveyorVesc = new VescAccess (large_conveyor_param);
+    bucketSifterVesc = new VescAccess (sifter_param);
     // initialize real vescs here
-
-    // populate inital backhoe position
   }
 
   LinearSafetyController linearSafety (linear_joint_params, backhoeWristVesc, false);
   BackhoeSafetyController backhoeSafety (central_joint_params, backhoeShoulderVesc, false);
   // pass vescs (sim or physical) to controllers
+
 
   BucketController bucketC(bucketBigConveyorVesc, bucketLittleConveyorVesc, bucketSifterVesc);
   BackhoeController backhoeC(&backhoeSafety, &linearSafety);
@@ -107,7 +109,6 @@ int main(int argc, char **argv)
     }
     // update controlelrs
 
-    // bucketC.update(1.0 / DIGGING_CONTROL_RATE_HZ); //don't need to update the bucket
     backhoeC.update(1.0 / DIGGING_CONTROL_RATE_HZ);
 
     // display output if simulating
