@@ -42,4 +42,5 @@ class InitialPlanner(Planner):
         return (orientation % math.pi) / (360 / math.pi)
 
     def find_best_starting_goal(self):
+        #Dummy Data
         return (1,1)
