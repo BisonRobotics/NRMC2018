@@ -23,6 +23,7 @@ public:
   void tareBackhoe(void);
   double getWeightInBucket(void);
   double getWeightInBackhoe(void);
+  bool hasHitGround ();
   bool shoulderAtSetpoint();
   bool wristAtSetpoint();
   bool getIsInit (void);
@@ -30,6 +31,7 @@ private:
   void safetyCheck();
   iSafetyController *backhoe_safety;
   iSafetyController *linear_safety;
+  static constexpr float ground_torque = 50.0f;
 };
 
 #endif

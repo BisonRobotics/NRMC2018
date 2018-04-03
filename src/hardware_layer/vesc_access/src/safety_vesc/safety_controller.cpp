@@ -111,10 +111,15 @@ double SafetyController::getVelocity ()
 
 void SafetyController::init ()
 {
-    this->is_init = true;
+    is_init = true;
 }
 
 double SafetyController::getSetPosition()
 {
     return set_position;
+}
+
+float SafetyController::getTorque()
+{
+    return vesc->getTorque();
 }

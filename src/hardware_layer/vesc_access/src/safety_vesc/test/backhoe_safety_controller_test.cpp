@@ -29,6 +29,14 @@ TEST (safety_vesc_test, update_position_calls_potentiometer)
     backhoeSafetyController.updatePosition(0);
 }
 
+TEST (safety_vesc_test, get_torque_consults_the_vesc)
+{
+    NiceMock<MockVescAccess> vesc;
+    BackhoeSafetyController backhoeSafetyController(linear_joint_params, &vesc, false);
+    EXPECT_CALL (vesc, getTorque());
+    backhoeSafetyController.getTorque();
+}
+
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {

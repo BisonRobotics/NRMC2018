@@ -32,6 +32,7 @@ public:
   virtual double getSafetyPosition () = 0;
   virtual double getVelocity () = 0;
   virtual double getSetPosition () = 0;
+  virtual float getTorque () = 0;
 };
 
 
