@@ -20,7 +20,7 @@ class InitialPlanner(Planner):
     def find_waypoints(self, goal):
         x, y, orientation = self.get_robot_location()
 
-        field = 1 if y <= self.field_line else 2
+        field = 1 if y <= 0 else 2
         position = self.get_starting_position(orientation)
         waypoints = hardcoded_paths[position]
 
@@ -39,7 +39,7 @@ class InitialPlanner(Planner):
     def get_starting_position(self, orientation):
         if orientation == 0:
             return 0
-        return (orientation % math.pi) / (360 / math.pi)
+        return (orientation % math.pi) / (math.pi/8)
 
     def find_best_starting_goal(self):
         #Dummy Data
