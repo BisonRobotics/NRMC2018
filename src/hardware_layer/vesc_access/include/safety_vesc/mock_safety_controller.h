@@ -18,6 +18,8 @@ public:
     MOCK_METHOD0 (getSafetyPosition, double (void));
     MOCK_METHOD0 (getVelocity, double(void));
     MOCK_METHOD0 (getSetPosition, double (void));
+    MOCK_METHOD0 (getTorque, float(void));
+    MOCK_METHOD0 (getLinearVelocity, float(void));
 };
 
 
