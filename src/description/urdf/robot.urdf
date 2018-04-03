@@ -190,6 +190,38 @@
         <child link="left_dynamixel"/>
         <origin xyz="-0.186436 0.3137916 0.3756406" rpy="0 0 0" />
     </joint>
+
+    <link name="left_camera_mount">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/camera_mount.stl" />
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+            <material name="grey" />
+        </visual>
+    </link>
+
+    <joint name="left_dynamixel_to_camera_mount" type="fixed">
+        <parent link="left_dynamixel"/>
+        <child link="left_camera_mount"/>
+        <origin xyz="0.000508 0.016256 0.0195072" rpy="0 0 0" />
+    </joint>
+
+    <link name="right_camera_mount">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/camera_mount.stl" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="grey" />
+        </visual>
+    </link>
+
+    <joint name="right_dynamixel_to_camera_mount" type="fixed">
+        <parent link="right_dynamixel"/>
+        <child link="right_camera_mount"/>
+        <origin xyz="0.000508 -0.016256 0.0195072" rpy="0 0 ${pi}" />
+    </joint>
     
 </robot>
 
