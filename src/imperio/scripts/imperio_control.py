@@ -75,7 +75,7 @@ class ImperioControl(object):
                 self.halt()
 
     def navigateInitialPosition(self):
-        if self.starting_goal == None:
+        while self.starting_goal == None:
             self.starting_goal = self.initial_planner.find_best_starting_goal()
         result = self.initial_planner.navigate_to_goal(self.starting_goal)
         if result == None:
