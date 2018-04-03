@@ -34,9 +34,8 @@ void retractOutriggers(const dig_control::OutriggerGoalConstPtr &goal,
   // deploy outriggers
   ros::Rate r(50);
   outriggerC->retract();
-  while (!outriggerC->isRetracted() && ros::ok())
+  while (!outriggerC->isRetracted() && ros::ok()) //is this structure OK? is the ros::ok() check necessary?
   {
-    // make loop speed constant, can that be done with ros rate and sleep?
     r.sleep();
     outriggerC->update(.02);
     if (simulating)
@@ -85,6 +84,7 @@ int main(int argc, char **argv)
   else
   {
     outriggerSimulation = NULL;
+
     outriggerRightVesc = new VescAccess (right_outrigger_param);
     outriggerLeftVesc = new VescAccess (left_outrigger_param);
   }
