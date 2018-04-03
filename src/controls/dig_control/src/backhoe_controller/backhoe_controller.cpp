@@ -103,5 +103,5 @@ bool BackhoeController::getIsInit()
 
 bool BackhoeController::hasHitGround()
 {
-  return fabs(backhoe_safety->getTorque ()) > this->ground_torque;
+  return fabs(backhoe_safety->getTorque ()) > fabs(this->ground_torque);
 }
