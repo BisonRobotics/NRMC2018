@@ -41,9 +41,9 @@ class Planner(object):
         Initializes the global planner
         :param robot: the robot object the planner will be moving
         """
-        self.waypoints_publisher = rospy.Publisher('/global_planner_goal', GlobalWaypoints, queue_size=100, latch=True)
+        self.waypoints_publisher = rospy.Publisher('/position_controller/global_planner_goal', GlobalWaypoints, queue_size=100, latch=True)
 
-        rospy.Subscriber('/drive_controller_status', DriveStatus, self.drive_status_callback)
+        rospy.Subscriber('/position_controller/drive_controller_status', DriveStatus, self.drive_status_callback)
         rospy.Subscriber('/map', OccupancyGrid, self.map_callback)
 
         self.robot = robot
