@@ -34,7 +34,7 @@ class GlobalPlanner(Planner):
         print("Imperio : Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
 
         if len(results) == 0:
-            #TODO : Enter recovery behavior
+            #TODO : Enter recovery behavior [Jira NRMC2018-336]
             print("IMPERIO : NO POSSIBLE PATH FOUND")
 
         return results

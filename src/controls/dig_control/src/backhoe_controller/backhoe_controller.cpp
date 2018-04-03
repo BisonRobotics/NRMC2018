@@ -77,31 +77,23 @@ bool BackhoeController::wristAtSetpoint()
   return linear_safety->isAtSetpoint();
 }
 
-double BackhoeController::getWeightInBackhoe()
+double BackhoeController::getShoulderTorque()
 {
-  // calculate weight
-  return 0.0;
+  return backhoe_safety->getTorque();
 }
 
-double BackhoeController::getWeightInBucket()
+double BackhoeController::getShoulderVelocity()
 {
-  return 0.0;
-}
-
-void BackhoeController::tareBackhoe()
-{
-}
-
-void BackhoeController::tareBucket()
-{
+  return backhoe_safety->getLinearVelocity();
 }
 
 bool BackhoeController::getIsInit()
 {
-  return linear_safety->isInit() && backhoe_safety->isInit();
+ return linear_safety->isInit() && backhoe_safety->isInit();
 }
 
 bool BackhoeController::hasHitGround()
 {
   return fabs(backhoe_safety->getTorque ()) > fabs(this->ground_torque);
 }
+

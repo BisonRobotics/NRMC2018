@@ -19,13 +19,11 @@ public:
   void setWristVelocity(double velocity);     // in m/s
   void init();
   void update(double dt);
-  void tareBucket(void);
-  void tareBackhoe(void);
-  double getWeightInBucket(void);
-  double getWeightInBackhoe(void);
   bool hasHitGround ();
   bool shoulderAtSetpoint();
   bool wristAtSetpoint();
+  double getShoulderTorque();
+  double getShoulderVelocity();
   bool getIsInit (void);
 private:
   void safetyCheck();

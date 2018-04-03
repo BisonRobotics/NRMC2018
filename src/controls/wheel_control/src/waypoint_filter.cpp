@@ -17,7 +17,7 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "waypoint_filter");
   ros::NodeHandle node;
 
-  ros::Subscriber sub = node.subscribe("global_planner_goal", 200, newGoalArrayCallback);
+  ros::Subscriber sub = node.subscribe("position_controller/global_planner_goal", 200, newGoalArrayCallback);
   ros::Publisher pub = node.advertise<geometry_msgs::Pose2D>("position_controller/additional_waypoint", 200);
 
   geometry_msgs::Pose2D wpmsg;
