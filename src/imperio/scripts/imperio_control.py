@@ -88,7 +88,7 @@ class ImperioControl(object):
         Navigates the robot to the area where it will dig
         """
         # Goal is currently just dummy data
-        #TODO : Find best digging goal
+        #TODO : Find best digging goal [Jira NRMC2018-335]
         goal = (6, 0)
         result = self.planner.navigate_to_goal(goal)
         if result == None:

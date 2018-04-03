@@ -187,7 +187,6 @@ def path_smoothing(path, maxIter, obstacleList):
     le = get_path_length(path)
 
     for i in range(maxIter):
-        #TODO : Never gets from A to B straight, check random for any issues
         # Sample two points
         pickPoints = [random.uniform(0, le), random.uniform(0, le)]
         pickPoints.sort()

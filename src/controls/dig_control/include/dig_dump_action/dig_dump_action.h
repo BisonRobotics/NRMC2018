@@ -11,7 +11,9 @@
 enum dig_state_enum
 {
   dig_idle,
-  moving_to_setpoint,
+  ensure_at_measurement_start,
+  moving_to_ground,
+  finding_ground,
   curling_backhoe,
   moving_arm_to_initial,
   dumping_into_bucket,
@@ -49,6 +51,7 @@ private:
   void dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal);
   BackhoeController *backhoe;
   BucketController *bucket;
+  double weightMetric;
 };
 
 #endif  // PROJECT_DIG_DUMP_ACTION_H

@@ -54,7 +54,7 @@ class MarkerNode(object):
 
         points = []
 
-        #TODO : Make this the current location
+        #TODO : Make this the current  [NRMC2018-334]
         msg = Point()
         msg.x, msg.y = 0,0
         points.append(msg)

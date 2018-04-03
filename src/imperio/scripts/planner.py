@@ -41,9 +41,9 @@ class Planner(object):
         Initializes the global planner
         :param robot: the robot object the planner will be moving
         """
-        self.waypoints_publisher = rospy.Publisher('/global_planner_goal', GlobalWaypoints, queue_size=100, latch=True)
+        self.waypoints_publisher = rospy.Publisher('/position_controller/global_planner_goal', GlobalWaypoints, queue_size=100, latch=True)
 
-        rospy.Subscriber('/drive_controller_status', DriveStatus, self.drive_status_callback)
+        rospy.Subscriber('/position_controller/drive_controller_status', DriveStatus, self.drive_status_callback)
         rospy.Subscriber('/map', OccupancyGrid, self.map_callback)
 
         self.robot = robot
@@ -93,7 +93,7 @@ class Planner(object):
         oriented_waypoints = self.calculate_orientation(waypoints)
         print("Imperio: Path found : {}".format(oriented_waypoints))
 
-        #TODO : Add recovery behavior for if this is null
+        #TODO : Add recovery behavior for if this is null [Jira NRMC2018-330]
 
         self.publish_waypoints(oriented_waypoints)
         print("Imperio : For Goal {}".format(goal))
@@ -136,7 +136,7 @@ class Planner(object):
         """
         errorThreshold = rospy.get_param('/location_accuracy')
         if errorThreshold == None:
-            #TODO : Check with the team for best threshold here
+            #TODO : Check with the team for best threshold here [Jira NRMC2018-331]
             errorThreshold = 1
 
 
@@ -145,13 +145,13 @@ class Planner(object):
 
         if location == None:
             print("Imperio: Unable to localize the robot")
-            #TODO recovery behavior for localization fail
+            #TODO recovery behavior for localization fail [Jira NRMC2018-329]
             return False
 
         loc_x = location[0]
         loc_y = location[1]
 
-        # TODO : Check the orientation of the robot
+        # TODO : Check the orientation of the robot [NRMC2018-332]
         abs_distance = math.sqrt((loc_x - goal_x) ** 2 + (loc_y - goal_y) ** 2)
         return  abs_distance < errorThreshold
 
@@ -174,7 +174,7 @@ class Planner(object):
             return []
 
         if (len(waypoints) == 1):
-            #TODO : final orientation will be passed as param from control (more logistics/strategy/testing needed)
+            #TODO : final orientation will be passed as param from control (more logistics/strategy/testing needed) [Jira NRMC2018-333]
             final_orientation = math.degrees(math.atan2(waypoints[0][1], waypoints[0][0]))
             return [[waypoints[0][0], waypoints[0][1], final_orientation]]
 
