@@ -10,7 +10,6 @@ Version: 0
 import time
 import operator
 import math
-import map_utils
 from planner import *
 from harcoded_paths import hardcoded_paths
 
@@ -82,7 +81,7 @@ class InitialPlanner(Planner):
             y = start_y
             while y <= start_y + self.width_thirds:
                 score += self.occupancy_grid.get_cell(x,y)
-                y+= increment
+                y += increment
             x += increment
         return (score, region)
 
