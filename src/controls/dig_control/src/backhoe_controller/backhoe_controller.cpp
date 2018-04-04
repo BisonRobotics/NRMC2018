@@ -92,3 +92,8 @@ bool BackhoeController::getIsInit()
  return linear_safety->isInit() && backhoe_safety->isInit();
 }
 
+bool BackhoeController::hasHitGround()
+{
+  return fabs(backhoe_safety->getTorque ()) > fabs(this->ground_torque);
+}
+

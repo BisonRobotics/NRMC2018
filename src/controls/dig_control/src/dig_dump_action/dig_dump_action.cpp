@@ -59,7 +59,8 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
           break;
         case dig_state_enum::finding_ground: //going to find the ground
           //report and latch weightMetric
-          if (backhoe->shoulderAtSetpoint()) //replace this line with found ground condition
+
+          if (backhoe->hasHitGround())
           {
               backhoe->setWristSetpoint(1); //curl it in
               digging_state = curling_backhoe;
