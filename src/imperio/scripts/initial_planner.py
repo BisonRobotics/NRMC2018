@@ -33,9 +33,6 @@ class InitialPlanner(Planner):
         if field == 2:
             waypoints = self.flip_path(waypoints)
 
-         #Just for testing until the paths are no longer hardcoded
-        waypoints.append(goal)
-
         return waypoints
 
     def flip_path(self, waypoints):
