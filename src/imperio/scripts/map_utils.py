@@ -143,7 +143,7 @@ class Map(object):
         Set the value in the grid cell containing position (x,y).
         x and y are in the map coordinate system
         """
-        row, col = self._cell_index(x, y)
+        row, col = self.cell_index(x, y)
         try:
             self.grid[row, col] = val
         except IndexError:
@@ -154,7 +154,7 @@ class Map(object):
         Get the value from the grid cell containing position (x,y).
         x and y are in the map coordinate system
         """
-        row, col = self._cell_index(x, y)
+        row, col = self.cell_index(x, y)
         try:
             return self.grid[row, col]
         except IndexError:
