@@ -44,7 +44,7 @@ class InitialPlanner(Planner):
     def get_starting_position(self, orientation):
         if orientation == 0:
             return 0
-        return (orientation % math.pi) / (360 / math.pi)
+        return (orientation % math.pi) / (math.pi/8)
 
     def find_best_starting_goal(self):
         if self.occupancy_grid == None:

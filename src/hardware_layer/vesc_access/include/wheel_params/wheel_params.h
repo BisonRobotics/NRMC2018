@@ -165,7 +165,7 @@ nsVescAccess::vesc_param_struct_t shoulder_param = {.max_velocity = MAX_CENTRAL_
                                                     .torque_constant = CENTRAL_DRIVE_TORQUE_CONSTANT,
                                                     WHEEL_CAN_NETWORK,
                                                     .can_id = CENTRAL_DRIVE_ID };
-
+#define NUMBER_OF_MOTORS 11
 #define ROBOT_AXLE_LENGTH 0.5f
 #define ROBOT_MAX_SPEED 0.5f
 

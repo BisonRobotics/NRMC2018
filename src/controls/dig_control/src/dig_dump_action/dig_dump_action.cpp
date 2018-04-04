@@ -32,6 +32,10 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
       switch (digging_state)
       {
         case dig_state_enum::dig_idle: //not digging, should start here
+
+          backhoe->setShoulderSetpoint(1); //where we think the ground is (0 should be all the way back, 1 is all the way forward)
+          bucket->turnSifterOn();
+          bucket->turnLittleConveyorOn();
           backhoe->setShoulderSetpoint(.3);
           digging_state = ensure_at_measurement_start;
         break;
@@ -71,10 +75,8 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
         case dig_state_enum::moving_arm_to_initial: //lifting dug dirt up
             if (backhoe->shoulderAtSetpoint())
             {
-                //TODO: start small conveyor
-                //TODO: start sifter
-                backhoe->setWristSetpoint(0); //curl it out
-                digging_state = dumping_into_bucket;
+              backhoe->setWristSetpoint(0); //curl it out
+              digging_state = dumping_into_bucket;
             }
           break;
         case dig_state_enum::dumping_into_bucket: //uncurling wrist to release dirt into bucket
@@ -87,15 +89,20 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
         case dig_state_enum::returning_backhoe_to_initial: //moving back to same position as dig idle
             if (backhoe->shoulderAtSetpoint())
             {
-                //TODO stop small conveyor and sifter
+                bucket->turnLittleConveyorOff();
+                bucket->turnSifterOff();
                 is_digging = false;
                 digging_state = dig_idle;
                 dig_as_.setSucceeded(dig_result);
             }
           break;
         case dig_state_enum::dig_error:
+          bucket->turnSifterOff();
+          bucket->turnLittleConveyorOff();
           break;
         default:
+          bucket->turnSifterOff();
+          bucket->turnLittleConveyorOff();
           dig_as_.setAborted();
           is_digging = false;
           break;
