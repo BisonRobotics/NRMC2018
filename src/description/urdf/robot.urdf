@@ -159,70 +159,59 @@
         <limit effort="1000.0" lower="-1.32" upper="2.0" velocity="1000.0"/>
     </joint>
 
-    <link name="right_dynamixel">
-        <visual>
-            <geometry>
-                <mesh filename="package://description/meshes/right_dynamixel.stl" />
-            </geometry>
-            <origin xyz="0.0 0.0 0.0" rpy="0 ${-pi/2} ${pi}" />
-            <material name="black" />
-        </visual>
-    </link>
+    <xacro:macro name="node" params="side dir">
+        <link name="${side}_dynamixel">
+            <visual>
+                <geometry>
+                    <mesh filename="package://description/meshes/${side}_dynamixel.stl" />
+                </geometry>
+                <origin xyz="0.0 0.0 0.0" rpy="0 ${-pi/2} ${-pi/2}" />
+                <material name="black" />
+            </visual>
+        </link>
 
-    <joint name="frame_to_right_dynamixel" type="fixed">
-        <parent link="frame"/>
-        <child link="right_dynamixel"/>
-        <origin xyz="-0.186436 -0.3137916 0.3756406" rpy="0 0 0" />
-    </joint>
+        <joint name="frame_to_${side}_dynamixel" type="fixed">
+            <parent link="frame"/>
+            <child link="${side}_dynamixel"/>
+            <origin xyz="-0.186436 ${dir*0.3137916} 0.3756406" rpy="0 0 ${dir*pi/2}" />
+        </joint>
 
-    <link name="left_dynamixel">
-        <visual>
-            <geometry>
-                <mesh filename="package://description/meshes/left_dynamixel.stl" />
-            </geometry>
-            <origin xyz="0.0 0.0 0.0" rpy="0 ${-pi/2} 0" />
-            <material name="black" />
-        </visual>
-    </link>
+        <link name="${side}_camera_mount">
+            <visual>
+                <geometry>
+                    <mesh filename="package://description/meshes/camera_mount.stl" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 0 ${-pi/2}" />
+                <material name="grey" />
+            </visual>
+        </link>
 
-    <joint name="frame_to_left_dynamixel" type="fixed">
-        <parent link="frame"/>
-        <child link="left_dynamixel"/>
-        <origin xyz="-0.186436 0.3137916 0.3756406" rpy="0 0 0" />
-    </joint>
+        <joint name="${side}_dynamixel_to_camera_mount" type="fixed">
+            <parent link="${side}_dynamixel"/>
+            <child link="${side}_camera_mount"/>
+            <origin xyz="0.016256 0.000508 0.0195072" rpy="0 0 0" />
+        </joint>
 
-    <link name="left_camera_mount">
-        <visual>
-            <geometry>
-                <mesh filename="package://description/meshes/camera_mount.stl" />
-            </geometry>
-            <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
-            <material name="grey" />
-        </visual>
-    </link>
+        <link name="${side}_camera">
+            <visual>
+                <geometry>
+                    <mesh filename="package://description/meshes/camera.stl" />
+                </geometry>
+                <origin xyz="0.0 0.0 0.0" rpy="${pi} 0 ${pi/2}" />
+                <material name="black" />
+            </visual>
+        </link>
 
-    <joint name="left_dynamixel_to_camera_mount" type="fixed">
-        <parent link="left_dynamixel"/>
-        <child link="left_camera_mount"/>
-        <origin xyz="0.000508 0.016256 0.0195072" rpy="0 0 0" />
-    </joint>
+        <joint name="${side}_camera_mount_to_camera" type="fixed">
+            <parent link="${side}_camera_mount"/>
+            <child link="${side}_camera"/>
+            <origin xyz="3.952e-3 0 20.5e-3" rpy="0 0 0" />
+        </joint>
+    </xacro:macro>
+    <xacro:node side="right" dir="-1" />
+    <xacro:node side="left" dir="1" />
 
-    <link name="right_camera_mount">
-        <visual>
-            <geometry>
-                <mesh filename="package://description/meshes/camera_mount.stl" />
-            </geometry>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <material name="grey" />
-        </visual>
-    </link>
 
-    <joint name="right_dynamixel_to_camera_mount" type="fixed">
-        <parent link="right_dynamixel"/>
-        <child link="right_camera_mount"/>
-        <origin xyz="0.000508 -0.016256 0.0195072" rpy="0 0 ${pi}" />
-    </joint>
-    
 </robot>
 
 

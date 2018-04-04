@@ -6,6 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /Grid1
+        - /TF1
         - /Map1
       Splitter Ratio: 0.5
     Tree Height: 709
@@ -88,9 +89,21 @@ Visualization Manager:
           Value: true
         front_right_wheel:
           Value: true
+        left_camera:
+          Value: true
+        left_camera_mount:
+          Value: true
+        left_dynamixel:
+          Value: true
         monoboom:
           Value: true
-      Marker Scale: 0.5
+        right_camera:
+          Value: true
+        right_camera_mount:
+          Value: true
+        right_dynamixel:
+          Value: true
+      Marker Scale: 0.200000003
       Name: TF
       Show Arrows: true
       Show Axes: true
@@ -112,6 +125,14 @@ Visualization Manager:
               {}
             front_right_wheel:
               {}
+            left_dynamixel:
+              left_camera_mount:
+                left_camera:
+                  {}
+            right_dynamixel:
+              right_camera_mount:
+                right_camera:
+                  {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -198,7 +219,37 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        left_camera:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_camera_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_dynamixel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         monoboom:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_camera:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_camera_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_dynamixel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -244,25 +295,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 1.60778737
+      Distance: 0.866921425
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.248816699
-        Y: 0.0064799753
-        Z: 0.377272278
+        X: 0.0286033172
+        Y: 0.126435742
+        Z: 0.44336167
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.673583508
+      Pitch: 0.393584281
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.58089972
+      Yaw: 1.88772702
     Saved: ~
 Window Geometry:
   Displays:
