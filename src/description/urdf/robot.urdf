@@ -207,6 +207,13 @@
             <child link="${side}_camera"/>
             <origin xyz="3.952e-3 0 20.5e-3" rpy="0 0 0" />
         </joint>
+
+        <link name="${side}_camera_optical" />
+        <joint name="${side}_camera_optical" type="fixed">
+            <parent link="${side}_camera"/>
+            <child link="${side}_camera_optical"/>
+            <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}" />
+        </joint>
     </xacro:macro>
     <xacro:node side="right" dir="-1" />
     <xacro:node side="left" dir="1" />
