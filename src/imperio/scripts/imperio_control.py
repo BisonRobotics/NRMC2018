@@ -31,7 +31,7 @@ class ImperioControl(object):
         self.robot = robot(self.node)
         self.initial_planner = InitialPlanner(self.robot)
         self.planner = GlobalPlanner(self.robot)
-        self.starting_goal = None
+        self.starting_region = None
         self.run()
 
     def haltAutonomyCallback(self, bool_msg):
@@ -75,9 +75,9 @@ class ImperioControl(object):
                 self.halt()
 
     def navigateInitialPosition(self):
-        while self.starting_goal == None:
-            self.starting_goal = self.initial_planner.find_best_starting_goal()
-        result = self.initial_planner.navigate_to_goal(self.starting_goal)
+        while self.starting_region == None:
+            self.starting_region = self.initial_planner.find_best_starting_goal()
+        result = self.initial_planner.navigate_to_goal(self.starting_region)
         if result == None:
             self.robot.change_state(RobotState.HALT)
         if result:

@@ -27,10 +27,15 @@ class InitialPlanner(Planner):
 
         field = 1 if y <= 0 else 2
         position = self.get_starting_position(orientation)
-        waypoints = hardcoded_paths[position]
+        region = self.starting_y_region(y)
+        waypoints = hardcoded_paths[region][position]
 
         if field == 2:
             waypoints = self.flip_path(waypoints)
+
+         #Just for testing until the paths are no longer hardcoded
+        waypoints.append(goal)
+
         return waypoints
 
     def flip_path(self, waypoints):
@@ -59,14 +64,14 @@ class InitialPlanner(Planner):
 
         #find part of the obstacle grid with the least amount of occupied space in it
         comp_start = sorted(comp_start, key=operator.itemgetter(0))
-        start_y = self.region_starting_y(comp_start[0][1])
+        goal_y = self.region_starting_y(comp_start[0][1])
 
         print("Imperio : It took {} seconds to find the starting position".format(time.time() - saved_time))
-        return (self.obstacle_start_x,start_y)
+        return (self.obstacle_start_x, goal_y)
 
     def grid_occupied_score(self, region):
         # -----|-----|-----
-        # --1--|--2--|--3--
+        # --0--|--1--|--2--
         # -----|-----|-----
         # -----|-0,0-|-----
         # ^Regions
@@ -92,5 +97,13 @@ class InitialPlanner(Planner):
             return 0
         if region == 3:
             return self.width_thirds
+
+    def starting_y_region(self, starting_y):
+        if starting_y == self.region_starting_y(0):
+            return 0
+        if starting_y == self.region_starting_y(1):
+            return 1
+        if starting_y == self.region_starting_y(2):
+            return 2
 
          
