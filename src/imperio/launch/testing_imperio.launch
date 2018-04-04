@@ -1,0 +1,10 @@
+<!-- Launch file for imperio and the testing environment. Author : Nicole Maguire -->
+<launch>
+
+<node pkg="rviz" type="rviz" name="rviz"/>
+
+<include file="$(find mapping)/launch/spoof_bl.launch"/>
+<include file="$(find wheel_control)/launch/sim_waypoint_controller.launch"/>
+<include file="$(find imperio)/launch/imperio.launch"/>
+
+</launch>
