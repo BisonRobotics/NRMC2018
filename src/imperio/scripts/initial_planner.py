@@ -55,9 +55,9 @@ class InitialPlanner(Planner):
         saved_time = time.time()
 
         comp_start = []
+        comp_start.append(self.grid_occupied_score(0))
         comp_start.append(self.grid_occupied_score(1))
         comp_start.append(self.grid_occupied_score(2))
-        comp_start.append(self.grid_occupied_score(3))
 
         #find part of the obstacle grid with the least amount of occupied space in it
         comp_start = sorted(comp_start, key=operator.itemgetter(0))
@@ -79,7 +79,7 @@ class InitialPlanner(Planner):
         increment = .01
         x = self.obstacle_start_x
         while x <= self.obstacle_end_x:
-            start_y = self.width_thirds * -1.5 + (self.width_thirds * (region - 1))
+            start_y = self.width_thirds * -1.5 + (self.width_thirds * region)
             y = start_y
             while y <= start_y + self.width_thirds:
                 score += self.occupancy_grid.get_cell(x,y)
