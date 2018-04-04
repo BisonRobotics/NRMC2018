@@ -11,7 +11,7 @@
 <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
 -->
 
-<include file="$(find mapping)/launch/costmap_autonomy.launch"/>
+<include file="$(find mapping)/launch/costmap_2d.launch"/>
 <node name="imperio_marker_vis" pkg="imperio" type="path_vis.py"/>
 <node name="imperio" pkg="imperio" type="imperio_control.py"/>
 
