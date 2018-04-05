@@ -1,9 +1,8 @@
 #include <dig_control/OutriggerAction.h>
 #include <actionlib/server/simple_action_server.h>
 #include <outrigger_controller/outrigger_controller.h>
-#include <ros/ros.h>
-#include <vesc_access/vesc_access.h>
 #include <sim_robot/sim_outriggers.h>
+#include "wheel_params/wheel_params.h"
 
 SimOutriggers *outriggerSimulation;
 iVescAccess *outriggerRightVesc;
@@ -35,9 +34,8 @@ void retractOutriggers(const dig_control::OutriggerGoalConstPtr &goal,
   // deploy outriggers
   ros::Rate r(50);
   outriggerC->retract();
-  while (!outriggerC->isRetracted() && ros::ok())
+  while (!outriggerC->isRetracted() && ros::ok()) //is this structure OK? is the ros::ok() check necessary?
   {
-    // make loop speed constant, can that be done with ros rate and sleep?
     r.sleep();
     outriggerC->update(.02);
     if (simulating)
@@ -53,7 +51,24 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "outrigger_action_server");
   ros::NodeHandle n;
 
-  simulating = true;  // TODO, read this from rosparam
+
+  if (n.hasParam("simulating_digging"))
+  {
+    n.getParam("simulating_digging", simulating);
+    if (simulating)
+    {
+      ROS_WARN("\nRUNNING DIGGING AS SIMULATION\n");
+    }
+    else
+    {
+      ROS_WARN("\nRUNNING DIGGING AS PHYSICAL\n");
+    }
+  }
+  else
+  {
+    ROS_ERROR("\n\nsimulating_digging param not defined! aborting.\n\n");
+    return -1;
+  }
 
   actionlib::SimpleActionServer<dig_control::OutriggerAction> deployServer(
       n, "deploy_riggers", boost::bind(&deployOutriggers, _1, &deployServer), false);
@@ -69,7 +84,9 @@ int main(int argc, char **argv)
   else
   {
     outriggerSimulation = NULL;
-    // populate real VESCS here
+
+    outriggerRightVesc = new VescAccess (right_outrigger_param);
+    outriggerLeftVesc = new VescAccess (left_outrigger_param);
   }
   outriggerC = new OutriggerController(outriggerLeftVesc, outriggerRightVesc);
 
