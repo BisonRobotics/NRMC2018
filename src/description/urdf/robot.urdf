@@ -146,7 +146,7 @@
             <geometry>
                 <mesh filename="package://description/meshes/backhoe_bucket.stl" />
             </geometry>
-            <origin xyz="0.0 0.0 0.0" rpy="-${pi/2} 0 0" />
+            <origin xyz="0.0 0.0 0.0" rpy="${pi/2} 0 0" />
             <material name="black" />
         </visual>
     </link>
@@ -154,9 +154,9 @@
     <joint name="monoboom_to_backhoe_bucket" type="revolute">
         <parent link="monoboom"/>
         <child link="backhoe_bucket"/>
-        <origin xyz="0.55245 0.0 0.0" rpy="0 -${pi/2} 0" />
+        <origin xyz="0.55245 0.0 0.0" rpy="0 ${5*pi/8} ${pi}" />
         <axis xyz="0 1 0"/>
-        <limit effort="1000.0" lower="-1.32" upper="2.0" velocity="1000.0"/>
+        <limit effort="1000.0" lower="-10" upper="10.0" velocity="1000.0"/>
     </joint>
 
     <xacro:macro name="node" params="side dir">
@@ -218,6 +218,15 @@
     <xacro:node side="right" dir="-1" />
     <xacro:node side="left" dir="1" />
 
+    <link name="monoboom_actuator_link" />
+
+    <joint name="monoboom_actuator" type="prismatic">
+        <parent link="monoboom"/>
+        <child link="monoboom_actuator_link"/>
+        <origin xyz="0.1 0.0 0.0" rpy="0 0 0" />
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" lower="0" upper="0.1778" velocity="1000.0"/>
+    </joint>
 
 </robot>
 

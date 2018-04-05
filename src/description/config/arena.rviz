@@ -93,13 +93,19 @@ Visualization Manager:
           Value: true
         left_camera_mount:
           Value: true
+        left_camera_optical:
+          Value: true
         left_dynamixel:
           Value: true
         monoboom:
           Value: true
+        monoboom_actuator_link:
+          Value: true
         right_camera:
           Value: true
         right_camera_mount:
+          Value: true
+        right_camera_optical:
           Value: true
         right_dynamixel:
           Value: true
@@ -121,6 +127,8 @@ Visualization Manager:
               monoboom:
                 backhoe_bucket:
                   {}
+                monoboom_actuator_link:
+                  {}
             front_left_wheel:
               {}
             front_right_wheel:
@@ -128,11 +136,13 @@ Visualization Manager:
             left_dynamixel:
               left_camera_mount:
                 left_camera:
-                  {}
+                  left_camera_optical:
+                    {}
             right_dynamixel:
               right_camera_mount:
                 right_camera:
-                  {}
+                  right_camera_optical:
+                    {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -229,6 +239,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        left_camera_optical:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         left_dynamixel:
           Alpha: 1
           Show Axes: false
@@ -239,6 +253,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        monoboom_actuator_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         right_camera:
           Alpha: 1
           Show Axes: false
@@ -249,6 +267,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        right_camera_optical:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         right_dynamixel:
           Alpha: 1
           Show Axes: false
@@ -295,25 +317,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 0.866921425
+      Distance: 1.42328131
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.0286033172
-        Y: 0.126435742
-        Z: 0.44336167
+        X: 0.344983995
+        Y: 0.0484689325
+        Z: 0.292408556
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.393584281
+      Pitch: 0.943584502
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.88772702
+      Yaw: 0.954541683
     Saved: ~
 Window Geometry:
   Displays:

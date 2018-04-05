@@ -36,9 +36,9 @@ set(GTEST_LIBRARIES gmock_main)
 ###########
 
 include_directories(${catkin_INCLUDE_DIRS})
-add_executable(backhoe_bucket_mapping src/backhoe_bucket_mapping.cpp)
-add_dependencies(backhoe_bucket_mapping ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(backhoe_bucket_mapping ${catkin_LIBRARIES})
+add_executable(joint_mappings src/joint_mappings.cpp)
+add_dependencies(joint_mappings ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(joint_mappings ${catkin_LIBRARIES})
 
 #############
 ## Testing ##
