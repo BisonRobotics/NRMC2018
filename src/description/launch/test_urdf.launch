@@ -1,0 +1,12 @@
+<launch>
+  <!--
+    Launches the nodes necessary for urdf development
+  -->
+  <arg name="test_urdf" value="true" />
+  <include file="$(find description)/launch/rviz.launch" />
+  <include file="$(find description)/launch/load_robot_and_arena.launch" pass_all_args="true" />
+  <arg name="source_list" default="[bucket_joint_states]"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" >
+    <rosparam param="source_list" subst_value="True">$(arg source_list)</rosparam>
+  </node>
+</launch>
