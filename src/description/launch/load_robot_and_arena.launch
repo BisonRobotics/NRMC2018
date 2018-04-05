@@ -14,4 +14,5 @@
   <node name="joint_mappings" pkg="description" type="joint_mappings" >
       <param name="test_urdf" value="$(arg test_urdf)" />
   </node>
+  <node name="tag_location_publisher" pkg="description" type="tag_location_publisher" />
 </launch>

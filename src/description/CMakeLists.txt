@@ -7,7 +7,7 @@ add_compile_options(-std=c++11)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp std_msgs)
+find_package(catkin REQUIRED COMPONENTS roscpp std_msgs tf2 tf2_ros geometry_msgs)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -39,6 +39,9 @@ include_directories(${catkin_INCLUDE_DIRS})
 add_executable(joint_mappings src/joint_mappings.cpp)
 add_dependencies(joint_mappings ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(joint_mappings ${catkin_LIBRARIES})
+
+add_executable(tag_location_publisher src/tag_location_publisher.cpp)
+target_link_libraries(tag_location_publisher ${catkin_LIBRARIES})
 
 #############
 ## Testing ##
