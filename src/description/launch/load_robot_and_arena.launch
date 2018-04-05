@@ -11,5 +11,7 @@
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(find description)/urdf/robot.urdf test_urdf:=$(arg test_urdf)" />
 
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
-  <node name="joint_mappings" pkg="description" type="joint_mappings"/>
+  <node name="joint_mappings" pkg="description" type="joint_mappings" >
+      <param name="test_urdf" value="$(arg test_urdf)" />
+  </node>
 </launch>

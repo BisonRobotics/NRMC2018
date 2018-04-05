@@ -75,9 +75,18 @@ void jointStatesCallback(const JointState::ConstPtr& msg)
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "backhoe_bucket_mapping");
-  ros::NodeHandle n;
-  pub = new ros::Publisher(n.advertise<sensor_msgs::JointState>("bucket_joint_states", 1000));
-  ros::Subscriber sub = n.subscribe("joint_states", 1000, jointStatesCallback);
+  ros::NodeHandle nh;
+  ros::NodeHandle local_nh("~");
+  bool test_urdf = false;
+  if (local_nh.getParam("test_urdf", test_urdf) && test_urdf)
+  {
+    pub = new ros::Publisher(nh.advertise<sensor_msgs::JointState>("bucket_joint_states", 1000));
+  }
+  else
+  {
+    pub = new ros::Publisher(nh.advertise<sensor_msgs::JointState>("joint_states", 1000));
+  }
+  ros::Subscriber sub = nh.subscribe("joint_states", 1000, jointStatesCallback);
   ros::spin();
 
   return 0;
