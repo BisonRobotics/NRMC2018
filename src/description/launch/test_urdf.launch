@@ -1,14 +1,12 @@
 <launch>
-
-  <arg name="gui" default="true" />
-  <arg name="rvizconfig" default="$(find description)/config/arena.rviz" />
-
-  <param name="arena_description" command="$(find xacro)/xacro --inorder $(find description)/urdf/arena.urdf" />
-  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find description)/urdf/robot.urdf" />
-  <param name="use_gui" value="$(arg gui)"/>
-
-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
-
+  <!--
+    Launches the nodes necessary for urdf development
+  -->
+  <arg name="test_urdf" value="true" />
+  <include file="$(find description)/launch/rviz.launch" />
+  <include file="$(find description)/launch/load_robot_and_arena.launch" pass_all_args="true" />
+  <arg name="source_list" default="[bucket_joint_states]"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" >
+    <rosparam param="source_list" subst_value="True">$(arg source_list)</rosparam>
+  </node>
 </launch>

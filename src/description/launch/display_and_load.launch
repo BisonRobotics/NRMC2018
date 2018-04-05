@@ -1,0 +1,7 @@
+<launch>
+  <!--
+    Loads the robot, arena and related nodes and opens rviz
+  -->
+  <include file="$(find description)/launch/rviz.launch" pass_all_args="true" />
+  <include file="$(find description)/launch/load_robot_and_arena.launch" pass_all_args="true" />
+</launch>

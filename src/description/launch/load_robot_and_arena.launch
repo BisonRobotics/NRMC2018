@@ -1,0 +1,15 @@
+<launch>
+  <!--
+    1. Loads the urdfs for the robot and the arena
+    2. Publishes all joint state based tfs for the robot and arena
+    3. Publishes the joint states that map from other joint states
+      - Backhoe to bucket
+      - Monoboom linear actuator to backhoe curl
+  -->
+  <arg name="test_urdf" default="false" />
+  <param name="arena_description" command="$(find xacro)/xacro --inorder $(find description)/urdf/arena.urdf" />
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find description)/urdf/robot.urdf test_urdf:=$(arg test_urdf)" />
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+  <node name="joint_mappings" pkg="description" type="joint_mappings"/>
+</launch>

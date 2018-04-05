@@ -228,6 +228,16 @@
         <limit effort="1000.0" lower="0" upper="0.1778" velocity="1000.0"/>
     </joint>
 
+    <!-- Add a few static transforms for testing -->
+    <xacro:arg name="test_urdf" default="false"/>
+    <xacro:if value="$(arg test_urdf)">
+        <link name="map" />
+        <joint name="map_to_base_link" type="fixed">
+            <parent link="map"/>
+            <child link="base_link"/>
+            <origin xyz="1.5 -0.5 0" rpy="0 0 ${-pi/8}" />
+        </joint>
+    </xacro:if>
 </robot>
 
 
