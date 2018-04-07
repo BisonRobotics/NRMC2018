@@ -62,6 +62,7 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
 
           if (backhoe->hasHitGround())
           {
+              backhoe->setShoulderSetpoint(.2);
               backhoe->setWristSetpoint(1); //curl it in
               digging_state = curling_backhoe;
           }
