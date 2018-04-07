@@ -52,7 +52,7 @@ namespace low_pass_namespace
         array[getIndex (i,j)] = costmap_[getIndex (i,j)];
       }
     }
-    buffman.push_back (array);
+    buffman.push_back (costmap_);
 
     if (buffman.full()) // if we have all of the observations
     {
@@ -78,17 +78,17 @@ namespace low_pass_namespace
     // if we stick with an average, we just have to subtract the last item
     // and add in the first item, but this will allow for a more general filter
     // down the road
-
     for (int i = min_i; i < max_i; i++)
     {
       for (int j = min_j; j < max_j; j++)
       {
         unsigned int index = getIndex(i, j);
         unsigned int sum_var = 0;
-        for (unsigned int ctr = 0.+; ctr < size_of_buffer; ctr++)
+        for (unsigned int ctr = 0; ctr < size_of_buffer; ctr++)
         {
           sum_var += buffman[ctr][index];  // add up all maps
         }
+
         sum_var = map[index]/size_of_buffer; // convert to unity gain
         if (sum_var > costmap_2d::LETHAL_OBSTACLE) // threshold in case of goofy runoff
         {
