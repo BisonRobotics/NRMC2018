@@ -58,13 +58,13 @@ class Planner(object):
         Callback for when the drive status is published
         :param status_message: the message that was published
         """
-        if status_message.has_reached_goal.data:
+        if status_message.has_reached_goal:
             self.movement_status = MovementStatus.HAS_REACHED_GOAL
             print("Imperio : Movement Status HAS_REACHED_GOAL")
-        if status_message.is_stuck.data:
+        if status_message.is_stuck:
             self.movement_status = MovementStatus.STUCK
             print("Imperio : Movement Status STUCK")
-        if status_message.cannot_plan_path.data:
+        if status_message.cannot_plan_path:
             self.movement_status = MovementStatus.CANNOT_PLAN_PATH
             print("Imperio : Movement Status CANNOT_PLAN_PATH")
 
