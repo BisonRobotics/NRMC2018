@@ -3,14 +3,12 @@
 
 PLUGINLIB_EXPORT_CLASS(low_pass_namespace::LowPassLayer, costmap_2d::Layer)
 
-
 using costmap_2d::LETHAL_OBSTACLE;
 using costmap_2d::NO_INFORMATION;
 
-
 namespace low_pass_namespace
 {
-  LowPassLayer::LowPassLayer () : buffman (this->size_of_buffer)
+  LowPassLayer::LowPassLayer () : buffman ()
   {
 
   }
@@ -20,6 +18,7 @@ namespace low_pass_namespace
     delete dsrv;
     delete map;
   }
+
   void LowPassLayer::onInitialize ()
   {
     ObstacleLayer::onInitialize();
@@ -35,16 +34,42 @@ namespace low_pass_namespace
   void LowPassLayer::matchSize ()
   {
     ObstacleLayer::matchSize(); // call the default behavior
-    delete[] map;// delete the old map
+    delete[] map;               // delete the old map
     Costmap2D *master = layered_costmap_->getCostmap();
     map = new unsigned char[master->getSizeInCellsY()*master->getSizeInCellsX()];// reallocate the internal map
     buffman.clear();// flush the buffer
+    ctr =0;
   }
+
+  void LowPassLayer::insertIntoBuffer (unsigned char array[])
+  {
+    if (buffman.size() < size_of_buffer)
+    {
+      buffman.push_back(array[0]);
+      if (buffman.size () == size_of_buffer)
+      {
+        it = buffman.begin();
+      }
+    }
+    else
+    {
+      buffman.erase(it);
+      buffman.insert(it,array);
+      if (it == buffman.end()){
+        it = buffman.begin();
+      } else
+      {
+        it++;
+      }
+    }
+  }
+
+
 
   void LowPassLayer::updateCosts(costmap_2d::Costmap2D &master_grid, int min_i, int min_j, int max_i, int max_j)
   {
     // copy the array into the buffer
-    char* array = new char [master_grid.getSizeInCellsX()*master_grid.getSizeInCellsY()];
+    unsigned char *array = new unsigned char [master_grid.getSizeInCellsY()*master_grid.getSizeInCellsX()];
     for (int i = min_i; i < max_i; i++)
     {
       for (int j = min_j; j < max_j;j++)
@@ -52,10 +77,10 @@ namespace low_pass_namespace
         array[getIndex (i,j)] = costmap_[getIndex (i,j)];
       }
     }
-    buffman.push_back (costmap_);
 
-    if (buffman.full()) // if we have all of the observations
-    {
+    insertIntoBuffer(array);
+
+    if (buffman.size() >= size_of_buffer){
       unsigned char *master_map = master_grid.getCharMap();
       updateFilter (min_i, min_j, max_i, max_j);  // run the filter
       for (int i = min_i; i < max_i; i++)
@@ -68,6 +93,7 @@ namespace low_pass_namespace
         }
       }
     }
+
     delete[] array;
   }
 
@@ -84,9 +110,9 @@ namespace low_pass_namespace
       {
         unsigned int index = getIndex(i, j);
         unsigned int sum_var = 0;
-        for (unsigned int ctr = 0; ctr < size_of_buffer; ctr++)
+        for (auto my_it = buffman.begin(); my_it != buffman.end(); ++my_it)
         {
-          sum_var += buffman[ctr][index];  // add up all maps
+          sum_var += (*my_it)[index];  // add up all maps
         }
 
         sum_var = map[index]/size_of_buffer; // convert to unity gain

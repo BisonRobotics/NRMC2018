@@ -25,9 +25,11 @@ namespace low_pass_namespace
     void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
     dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv;
     static constexpr unsigned int size_of_buffer = 10;
-    boost::circular_buffer<unsigned char *> buffman;
+    unsigned int ctr;
+    std::list<unsigned char []> buffman;
     unsigned char *map;
-
+    void insertIntoBuffer (const unsigned char array[]);
+    std::list<unsigned char[]>::iterator it;
   };
 }
 
