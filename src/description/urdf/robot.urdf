@@ -238,6 +238,15 @@
             <origin xyz="1.5 -0.5 0" rpy="0 0 ${-pi/8}" />
         </joint>
     </xacro:if>
+
+    <!-- add in the IMU position-->
+    <link name="imu" />
+    <joint name="imu_to_baselink" type="fixed">
+        <parent link="base_link"/>
+        <child link="imu"/>
+        <origin xyz=".54 -.15 0.0" rpy="0 ${-pi/2} ${pi}"/>
+    </joint>
+
 </robot>
 
 
