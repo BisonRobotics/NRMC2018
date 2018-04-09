@@ -117,7 +117,7 @@ nsVescAccess::vesc_param_struct_t small_conveyor_param = {.max_velocity = MAX_SM
                                                           .gear_ratio = SMALL_CONVEYOR_GEAR_RATIO,
                                                           .output_ratio = SMALL_CONVEYOR_OUTPUT_RATIO,
                                                           .pole_pairs = SMALL_CONVEYOR_POLE_PAIRS,
-                                                          .torque_constant = VIBRATOR_TORQUE_CONSTANT,
+                                                          .torque_constant = SMALL_CONVEYOR_TORQUE_CONSTANT,
                                                           WHEEL_CAN_NETWORK,
                                                           .can_id = SMALL_CONVEYOR_ID };
 
