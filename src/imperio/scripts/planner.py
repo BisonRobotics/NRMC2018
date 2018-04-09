@@ -58,7 +58,7 @@ class Planner(object):
         Callback for when the drive status is published
         :param status_message: the message that was published
         """
-        if status_message.is_moving.data:
+        if status_message.in_motion.data:
             self.movement_status = MovementStatus.MOVING
         if status_message.has_reached_goal.data:
             self.movement_status = MovementStatus.HAS_REACHED_GOAL
