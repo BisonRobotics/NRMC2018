@@ -112,7 +112,7 @@ namespace low_pass_namespace
         unsigned int sum_var = 0;
         for (auto my_it = buffman.begin(); my_it != buffman.end(); ++my_it)
         {
-          sum_var += (*my_it)[index];  // add up all maps
+          sum_var += (my_it)[index];  // add up all maps
         }
 
         sum_var = map[index]/size_of_buffer; // convert to unity gain

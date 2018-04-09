@@ -20,6 +20,8 @@ find_package(catkin REQUIRED COMPONENTS
   costmap_2d
 )
 
+find_package (OpenCV)
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -133,7 +135,7 @@ add_executable (transforms_publisher src/transforms_publisher.cpp)
 target_link_libraries (transforms_publisher ${catkin_LIBRARIES})
 
 add_library (lowpass_filter src/mapping_filter/low_pass.cpp)
-target_link_libraries(lowpass_filter ${catkin_LIBRARIES})
+target_link_libraries(lowpass_filter ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/mapping.cpp

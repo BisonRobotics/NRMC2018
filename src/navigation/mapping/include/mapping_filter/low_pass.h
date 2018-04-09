@@ -8,7 +8,7 @@
 #include <costmap_2d/obstacle_layer.h>
 #include <dynamic_reconfigure/server.h>
 #include <boost/circular_buffer.hpp>
-
+#include "opencv2/opencv.hpp"
 
 namespace low_pass_namespace
 {
@@ -26,10 +26,10 @@ namespace low_pass_namespace
     dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv;
     static constexpr unsigned int size_of_buffer = 10;
     unsigned int ctr;
-    std::list<unsigned char []> buffman;
-    unsigned char *map;
+    std::list<cv::Mat> buffman;
+    cv::Mat map;
     void insertIntoBuffer (const unsigned char array[]);
-    std::list<unsigned char[]>::iterator it;
+    std::list<cv::Mat>::iterator it;
   };
 }
 
