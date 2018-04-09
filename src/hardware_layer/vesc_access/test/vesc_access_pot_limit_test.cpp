@@ -2,9 +2,11 @@
 // Created by marcintrosh on 2/24/18.
 //
 #include "vesc_access/vesc_access.h"
+#include "ros/ros.h"
 
 int main(int argc, char **argv)
 {
+  ros::init (argc, argv, "pot_limit_test");
   float transmission_ratio = 1.0f;
   float output_ratio = 1.0f;
   float velocity_limit = 10000.0f;

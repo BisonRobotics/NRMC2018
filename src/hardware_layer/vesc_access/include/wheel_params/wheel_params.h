@@ -74,7 +74,8 @@ nsVescAccess::vesc_param_struct_t front_left_param = {.max_velocity = MAX_WHEEL_
                                                       .pole_pairs = WHEEL_POLE_PAIRS,
                                                       .torque_constant = WHEEL_TORQUE_CONSTANT,
                                                       WHEEL_CAN_NETWORK,
-                                                      .can_id = FRONT_LEFT_WHEEL_ID };
+                                                      .can_id = FRONT_LEFT_WHEEL_ID,
+                                                      .name = "front_left_wheel"};
 
 nsVescAccess::vesc_param_struct_t front_right_param = {.max_velocity = MAX_WHEEL_VELOCITY,
                                                        .max_torque = MAX_WHEEL_TORQUE,
@@ -83,7 +84,8 @@ nsVescAccess::vesc_param_struct_t front_right_param = {.max_velocity = MAX_WHEEL
                                                        .pole_pairs = WHEEL_POLE_PAIRS,
                                                        .torque_constant = WHEEL_TORQUE_CONSTANT,
                                                        WHEEL_CAN_NETWORK,
-                                                       .can_id = FRONT_RIGHT_WHEEL_ID };
+                                                       .can_id = FRONT_RIGHT_WHEEL_ID,
+.name="front_right_wheel"};
 
 nsVescAccess::vesc_param_struct_t back_right_param = {.max_velocity = MAX_WHEEL_VELOCITY,
                                                       .max_torque = MAX_WHEEL_TORQUE,
@@ -92,7 +94,8 @@ nsVescAccess::vesc_param_struct_t back_right_param = {.max_velocity = MAX_WHEEL_
                                                       .pole_pairs = WHEEL_POLE_PAIRS,
                                                       .torque_constant = WHEEL_TORQUE_CONSTANT,
                                                       WHEEL_CAN_NETWORK,
-                                                      .can_id = BACK_RIGHT_WHEEL_ID };
+                                                      .can_id = BACK_RIGHT_WHEEL_ID,
+.name="back_right_wheel"};
 
 nsVescAccess::vesc_param_struct_t back_left_param = {.max_velocity = MAX_WHEEL_VELOCITY,
                                                      .max_torque = MAX_WHEEL_TORQUE,
@@ -101,7 +104,8 @@ nsVescAccess::vesc_param_struct_t back_left_param = {.max_velocity = MAX_WHEEL_V
                                                      .pole_pairs = WHEEL_POLE_PAIRS,
                                                      .torque_constant = WHEEL_TORQUE_CONSTANT,
                                                      WHEEL_CAN_NETWORK,
-                                                     .can_id = BACK_LEFT_WHEEL_ID };
+                                                     .can_id = BACK_LEFT_WHEEL_ID,
+.name="back_left_wheel"};
 
 nsVescAccess::vesc_param_struct_t sifter_param = {.max_velocity = MAX_VIBRATOR_VELOCITY,
                                                   .max_torque = MAX_VIBRATOR_TORQUE,
@@ -110,16 +114,18 @@ nsVescAccess::vesc_param_struct_t sifter_param = {.max_velocity = MAX_VIBRATOR_V
                                                   .pole_pairs = VIBRATOR_POLE_PAIRS,
                                                   .torque_constant = VIBRATOR_TORQUE_CONSTANT,
                                                   WHEEL_CAN_NETWORK,
-                                                  .can_id = VIBRATOR_MOTOR_ID };
+                                                  .can_id = VIBRATOR_MOTOR_ID,
+.name="sifter"};
 
 nsVescAccess::vesc_param_struct_t small_conveyor_param = {.max_velocity = MAX_SMALL_CONVEYOR_VELOCITY,
                                                           .max_torque = MAX_SMALL_CONVEYOR_TORQUE,
                                                           .gear_ratio = SMALL_CONVEYOR_GEAR_RATIO,
                                                           .output_ratio = SMALL_CONVEYOR_OUTPUT_RATIO,
                                                           .pole_pairs = SMALL_CONVEYOR_POLE_PAIRS,
-                                                          .torque_constant = VIBRATOR_TORQUE_CONSTANT,
+                                                          .torque_constant = SMALL_CONVEYOR_TORQUE_CONSTANT,
                                                           WHEEL_CAN_NETWORK,
-                                                          .can_id = SMALL_CONVEYOR_ID };
+                                                          .can_id = SMALL_CONVEYOR_ID,
+.name="small_conveyor"};
 
 nsVescAccess::vesc_param_struct_t large_conveyor_param = {.max_velocity = MAX_LARGE_CONVEYOR_VELOCITY,
                                                           .max_torque = MAX_LARGE_CONVEYOR_TORQUE,
@@ -128,7 +134,8 @@ nsVescAccess::vesc_param_struct_t large_conveyor_param = {.max_velocity = MAX_LA
                                                           .pole_pairs = LARGE_CONVEYOR_POLE_PAIRS,
                                                           .torque_constant = LARGE_CONVEYOR_TORQUE_CONSTANT,
                                                           WHEEL_CAN_NETWORK,
-                                                          .can_id = LARGE_CONVEYOR_ID };
+                                                          .can_id = LARGE_CONVEYOR_ID,
+.name="large_conveyor"};
 
 nsVescAccess::vesc_param_struct_t left_outrigger_param = {.max_velocity = MAX_OUTRIGGER_VELOCITY,
                                                           .max_torque = MAX_OUTRIGGER_TORQUE,
@@ -137,7 +144,7 @@ nsVescAccess::vesc_param_struct_t left_outrigger_param = {.max_velocity = MAX_OU
                                                           .pole_pairs = OUTRIGGER_POLE_PAIRS,
                                                           .torque_constant = OUTRIGGER_TORQUE_CONSTANT,
                                                           WHEEL_CAN_NETWORK,
-                                                          .can_id = LEFT_OUTRIGGER_ID };
+                                                          .can_id = LEFT_OUTRIGGER_ID, .name="left_outrigger" };
 
 nsVescAccess::vesc_param_struct_t right_outrigger_param = {.max_velocity = MAX_OUTRIGGER_VELOCITY,
                                                            .max_torque = MAX_OUTRIGGER_TORQUE,
@@ -146,7 +153,7 @@ nsVescAccess::vesc_param_struct_t right_outrigger_param = {.max_velocity = MAX_O
                                                            .pole_pairs = OUTRIGGER_POLE_PAIRS,
                                                            .torque_constant = OUTRIGGER_TORQUE_CONSTANT,
                                                            WHEEL_CAN_NETWORK,
-                                                           .can_id = RIGHT_OUTRIGGER_ID };
+                                                           .can_id = RIGHT_OUTRIGGER_ID, .name="right_outrigger" };
 
 nsVescAccess::vesc_param_struct_t linear_param = {.max_velocity = MAX_LINEAR_ACTUATOR_VELOCITY,
                                                   .max_torque = MAX_LINEAR_ACTUATOR_TORQUE,
@@ -155,7 +162,7 @@ nsVescAccess::vesc_param_struct_t linear_param = {.max_velocity = MAX_LINEAR_ACT
                                                   .pole_pairs = LINEAR_ACTUATOR_POLE_PAIRS,
                                                   .torque_constant = LINEAR_ACTUATOR_TORQUE_CONSTANT,
                                                   WHEEL_CAN_NETWORK,
-                                                  .can_id = LINEAR_MOTOR_ID };
+                                                  .can_id = LINEAR_MOTOR_ID, .name="linear_actuator" };
 
 nsVescAccess::vesc_param_struct_t shoulder_param = {.max_velocity = MAX_CENTRAL_DRIVE_VELOCITY,
                                                     .max_torque = MAX_CENTRAL_DRIVE_TORQUE,
@@ -164,7 +171,7 @@ nsVescAccess::vesc_param_struct_t shoulder_param = {.max_velocity = MAX_CENTRAL_
                                                     .pole_pairs = CENTRAL_DRIVE_POLE_PAIRS,
                                                     .torque_constant = CENTRAL_DRIVE_TORQUE_CONSTANT,
                                                     WHEEL_CAN_NETWORK,
-                                                    .can_id = CENTRAL_DRIVE_ID };
+                                                    .can_id = CENTRAL_DRIVE_ID, .name="central_drive" };
 #define NUMBER_OF_MOTORS 11
 #define ROBOT_AXLE_LENGTH 0.5f
 #define ROBOT_MAX_SPEED 0.5f

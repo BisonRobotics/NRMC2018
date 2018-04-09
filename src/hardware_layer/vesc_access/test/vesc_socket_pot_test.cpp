@@ -3,14 +3,16 @@
 #include <stdlib.h>
 #define VESC_ID 0
 #define CAN_INTERFACE "can0"
-
+#include "ros/ros.h"
 int main(int argc, char **argv)
 {
-  Vesc motor((char *)"can0", 0, 1);  // TODO: this char* thing is a bit iffy, is this the right way to do it
+  ros::init (argc, argv, "pot_test");
+  Vesc motor((char *)"can0", 0, 1, "pot_test");  // TODO: this char* thing is a bit iffy, is this the right way to do it
   // motor.setCustom(0.1);
   // float current = 0;
   while (1)
   {
+    ros::spinOnce();
     std::cout << std::setprecision(4) << "mcur " << motor.getCurrent() << std::setw(9) << "\tduty "
               << motor.getDutyCycle() << std::setw(9) << "\trpm " << motor.getRpm() << std::setw(9) << "\tpos "
               << motor.getPosition() << std::setw(9) << "\ttach " << motor.getTachometer() << std::setw(9) << "\twatth "
@@ -26,12 +28,5 @@ int main(int argc, char **argv)
     // motor.setCustom(3.14159);
     usleep(50000);
   }
-  // motor.setCurrent(1);
-  // usleep(50000);
-  ////motor.disable();
-  // motor.setCurrent(2);
-  // usleep(50000);
-  // motor.enable();
-  // motor.setCurrent(3);
-  // usleep(50000);
+
 }

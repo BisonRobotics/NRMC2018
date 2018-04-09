@@ -1,6 +1,7 @@
 #ifndef __VESC_ACCESS_INTERFACE_H_
 #define __VESC_ACCESS_INTERFACE_H_
 #include "stdint.h"
+#include <string>
 namespace nsVescAccess
 {
 enum limitSwitchState
@@ -20,6 +21,7 @@ typedef struct vesc_param_struct
   float torque_constant;
   char can_network[10];
   unsigned int can_id;
+  std::string name;
 } vesc_param_struct_t;
 }
 
@@ -32,6 +34,7 @@ public:
   virtual float getTorque(void) = 0;
   virtual nsVescAccess::limitSwitchState getLimitSwitchState(void) = 0;
   virtual float getPotPosition(void) = 0;
+  virtual void setDuty (float d) = 0;
 };
 
 #endif
