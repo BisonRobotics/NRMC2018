@@ -32,6 +32,7 @@ class ImperioControl(object):
         self.initial_planner = InitialPlanner(self.robot)
         self.planner = GlobalPlanner(self.robot)
         self.rm = RegolithManipulation()
+        self.starting_region = None
         self.run()
 
     def haltAutonomyCallback(self, bool_msg):
@@ -75,8 +76,9 @@ class ImperioControl(object):
                 self.halt()
 
     def navigateInitialPosition(self):
-        goal = self.initial_planner.find_best_starting_goal()
-        result = self.initial_planner.navigate_to_goal(goal)
+        while self.starting_region == None:
+            self.starting_region = self.initial_planner.find_best_starting_goal()
+        result = self.initial_planner.navigate_to_goal(self.starting_region)
         if result == None:
             self.robot.change_state(RobotState.HALT)
         if result:
@@ -87,7 +89,7 @@ class ImperioControl(object):
         Navigates the robot to the area where it will dig
         """
         # Goal is currently just dummy data
-        #TODO : Find best digging goal
+        #TODO : Find best digging goal [Jira NRMC2018-335]
         goal = (6, 0)
         result = self.planner.navigate_to_goal(goal)
         if result == None:

@@ -9,6 +9,9 @@
 #include <sim_robot/sim_bucket.h>
 #include <sim_robot/sim_backhoe.h>
 
+#include <sensor_msgs/JointState.h>
+#include <cmath>
+
 #include "dig_dump_action/dig_dump_action.h"
 #include "wheel_params/wheel_params.h"
 
@@ -22,6 +25,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "the_backhoe_master");
 
   ros::NodeHandle node("~");
+  ros::NodeHandle globalNode;
   bool simulating;
   if (node.hasParam("simulating_digging"))
   {
@@ -44,25 +48,21 @@ int main(int argc, char **argv)
   double backhoeInitialShoulderTheta;
   double backhoeInitialWristTheta;
 
-  // iVescAccess *outriggerRightVesc;
-  // iVescAccess *outriggerLeftVesc;
   iVescAccess *bucketBigConveyorVesc;
   iVescAccess *bucketLittleConveyorVesc;
   iVescAccess *bucketSifterVesc;
   iVescAccess *backhoeShoulderVesc;
   iVescAccess *backhoeWristVesc;
 
+
   // these should not be initialized if we are not simulating
-  // SimOutriggers *outriggerSimulation;
   SimBucket *bucketSimulation;
+
+
   SimBackhoe *backhoeSimulation;
   if (simulating)
   {
-    // SimOutrigger
-    //  outriggerSimulation = new SimOutriggers(0, 0);  // initial deployment length
-    //  outriggerRightVesc = outriggerSimulation->getRVesc();
-    //  outriggerLeftVesc = outriggerSimulation->getLVesc();
-    // SimBucket
+   // SimBucket
     bucketSimulation = new SimBucket();
     bucketBigConveyorVesc = bucketSimulation->getBigConveyorVesc();
     bucketLittleConveyorVesc = bucketSimulation->getLittleConveyorVesc();
@@ -77,53 +77,64 @@ int main(int argc, char **argv)
   }
   else
   {
-    //  outriggerSimulation = NULL;  // Don't use these pointers.
     bucketSimulation = NULL;   // This is a physical run.
     backhoeSimulation = NULL;  // You'll cause exceptions.
 
+    backhoeShoulderVesc = new VescAccess (shoulder_param, true);
+    backhoeWristVesc = new VescAccess (linear_param, true);
+    bucketLittleConveyorVesc = new VescAccess (small_conveyor_param);
+    bucketBigConveyorVesc = new VescAccess (large_conveyor_param);
+    bucketSifterVesc = new VescAccess (sifter_param);
     // initialize real vescs here
-
-    // populate inital backhoe position
-  }
+ }
 
   LinearSafetyController linearSafety (linear_joint_params, backhoeWristVesc, false);
   BackhoeSafetyController backhoeSafety (central_joint_params, backhoeShoulderVesc, false);
   // pass vescs (sim or physical) to controllers
 
+
   BucketController bucketC(bucketBigConveyorVesc, bucketLittleConveyorVesc, bucketSifterVesc);
   BackhoeController backhoeC(&backhoeSafety, &linearSafety);
 
-  ros::Rate rate(DIGGING_CONTROL_RATE_HZ);
+  ros::Rate rate(DIGGING_CONTROL_RATE_HZ); //should be 50 Hz
 
   DigDumpAction ddAct(&backhoeC, &bucketC);
+
+  ros::Publisher JsPub = globalNode.advertise<sensor_msgs::JointState>("joint_states", 100);
 
   while (ros::ok())
   {
     if (simulating)  // update simulations if neccesary
     {
-      // outriggerSimulation->update(1.0 / DIGGING_CONTROL_RATE_HZ);
       bucketSimulation->update(1.0 / DIGGING_CONTROL_RATE_HZ);
       backhoeSimulation->update(1.0 / DIGGING_CONTROL_RATE_HZ);
     }
-    // update controlelrs
+    // update controllers
 
-    // bucketC.update(1.0 / DIGGING_CONTROL_RATE_HZ); //don't need to update the bucket
     backhoeC.update(1.0 / DIGGING_CONTROL_RATE_HZ);
 
     // display output if simulating
+    sensor_msgs::JointState robotAngles;
     if (simulating)
     {
-      // ROS_INFO("SIM OUTRIGGERS AT: %f", outriggerSimulation->getPosL());
-      // ROS_INFO("SIM OUTRIGGERS AT: %f", outriggerSimulation->getPosR());
+       robotAngles.header.stamp = ros::Time::now();
 
-      // ROS_INFO("LIMIT AT %d", (int) outriggerRightVesc->getLimitSwitchState());
-      // ROS_INFO("LIMIT AT %d", (int) outriggerLeftVesc->getLimitSwitchState());
+       double URDFangle = 0;
+       robotAngles.name.push_back("central_drive_to_monoboom");
+       URDFangle = (1 -  backhoeSimulation->getShTheta()) * M_PI;
+       robotAngles.position.push_back(URDFangle);
+
+       robotAngles.name.push_back("monoboom_to_backhoe_bucket");
+       URDFangle = (1 - backhoeSimulation->getWrTheta()) * M_PI;
+       robotAngles.position.push_back(URDFangle);
+
+       JsPub.publish(robotAngles);
+       ROS_INFO("joint state published with angle %f \n", backhoeSimulation->getShTheta());
     }
-    else
+    else // display output for physical
     {
-      // display output for physical
+      
     }
-    // TODO publish markers to a topic
 
     ros::spinOnce();
     rate.sleep();

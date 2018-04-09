@@ -12,6 +12,8 @@ using ::testing::Gt;
 using ::testing::NiceMock;
 using ::testing::FloatNear;
 
+
+
 TEST (safety_vesc_test, inits_position_and_velocity_to_zero)
 {
   NiceMock<MockVescAccess> vesc;
@@ -116,6 +118,15 @@ TEST (safety_vesc_test, stops_on_stop)
   EXPECT_CALL (vesc, setLinearVelocity(FloatNear(0,.001)));
   safetyController.stop();
 }
+
+TEST (safety_vesc_test, calls_get_torque)
+{
+  NiceMock <MockVescAccess> vesc;
+  SafetyController safetyController (&vesc, linear_joint_params, false);
+  EXPECT_CALL (vesc, getTorque());
+  safetyController.getTorque();
+}
+
 
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)

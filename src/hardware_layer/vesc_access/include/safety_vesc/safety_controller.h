@@ -28,9 +28,11 @@ public:
   double getVelocity () override;
   double getPosition () override;
   void stop () override;
-  virtual void init () override;
+  void init () override;
   virtual double getSetPosition () override;
   void updatePosition (double dt) override;
+  float getLinearVelocity () {return vesc->getLinearVelocity();}
+  float getTorque () override {return vesc->getTorque();}
 protected:
   safetycontroller::joint_params_t params;
   iVescAccess *vesc;
