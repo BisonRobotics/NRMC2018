@@ -25,7 +25,7 @@ class RegolithManipulation(object):
         print("dig message created")
         self.dig_client.wait_for_server()
         print("finished waiting for the serer")
-        self.ac.send_goal(goal)
+        self.dig_client.send_goal(goal)
         print("goal sent")
         #TODO : Check how long we should do this
         result = self.dig_client.get_goal_status_text()
