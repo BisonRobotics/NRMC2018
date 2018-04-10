@@ -107,12 +107,21 @@ void haltCallback(const std_msgs::Empty::ConstPtr &msg)
   halt = true;
 }
 
+
+bool areTheseEqual (imperio::DriveStatus status1, imperio::DriveStatus status2)
+{
+  return (status1.is_stuck.data == status2.is_stuck.data && status1.cannot_plan_path.data == status2.cannot_plan_path.data &&
+          status1.in_motion.data == status2.in_motion.data && status1.has_reached_goal.data == status2.has_reached_goal.data);
+}
+
+
 int main(int argc, char **argv)
 {
   // read ros param for simulating
   ros::init(argc, argv, "my_tf2_listener");
 
   ros::NodeHandle node("~");
+  ros::NodeHandle globalNode;
 
   bool simulating;
   if (node.hasParam("simulating_driving"))
@@ -133,8 +142,9 @@ int main(int argc, char **argv)
     return -1;
   }
 
+
   ros::Subscriber sub = node.subscribe("additional_waypoint", 100, newGoalCallback);
-  ros::Publisher jspub = node.advertise<sensor_msgs::JointState>("wheel_joints", 500);
+  ros::Publisher jspub = globalNode.advertise<sensor_msgs::JointState>("joint_states", 500);
 
   ros::Publisher angleErrorPub = node.advertise<std_msgs::Float64>("angle_error", 30);
   ros::Publisher simAnglePub = node.advertise<std_msgs::Float64>("sim_angle", 30);
@@ -144,17 +154,6 @@ int main(int argc, char **argv)
   std_msgs::Float64 simAngleMsg;
   std_msgs::Float64 baseAngleMsg;
 
-
-
-  sensor_msgs::JointState jsMessage;
-  jsMessage.name.push_back("front_left");
-  jsMessage.name.push_back("front_right");
-  jsMessage.name.push_back("back_right");
-  jsMessage.name.push_back("back_left");
-  jsMessage.velocity.push_back(0.0);
-  jsMessage.velocity.push_back(0.0);
-  jsMessage.velocity.push_back(0.0);
-  jsMessage.velocity.push_back(0.0);
   tf2_ros::Buffer tfBuffer;
   // tf2_ros::TransformListener tfListener(tfBuffer);
   geometry_msgs::TransformStamped transformStamped;
@@ -184,18 +183,12 @@ int main(int argc, char **argv)
   else
   {
     sim = NULL;  // Make no reference to the sim if not simulating
-    char *can_name = (char *)WHEEL_CAN_NETWORK;
-    fl = new VescAccess(FRONT_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
-                        WHEEL_TORQUE_CONSTANT, can_name, 1);
-    fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
-                        MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-    br = new VescAccess(BACK_RIGHT_WHEEL_ID, WHEEL_GEAR_RATIO, -1.0f * WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY,
-                        MAX_WHEEL_TORQUE, WHEEL_TORQUE_CONSTANT, can_name, 1);
-    bl = new VescAccess(BACK_LEFT_WHEEL_ID, WHEEL_GEAR_RATIO, WHEEL_OUTPUT_RATIO, MAX_WHEEL_VELOCITY, MAX_WHEEL_TORQUE,
-                        WHEEL_TORQUE_CONSTANT, can_name, 1);
-
+    fl = new VescAccess(front_left_param);
+    fr = new VescAccess(front_right_param);
+    br = new VescAccess(back_right_param);
+    bl = new VescAccess(back_left_param);
     pos = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .07);
-    imu = new LpResearchImu("imu");
+    imu = new LpResearchImu("imu_base_link");
   }
 
   // initialize the localizer here
@@ -209,10 +202,13 @@ int main(int argc, char **argv)
 
   LocalizerInterface::stateVector stateVector;
   ros::Subscriber haltsub = node.subscribe("halt", 100, haltCallback);
-  ros::Publisher mode_pub = node.advertise<imperio::DriveStatus>("drive_controller_status", 1000);
+  ros::Publisher mode_pub = node.advertise<imperio::DriveStatus>("drive_controller_status", 1000, true);
   ros::Publisher path_marker_pub = node.advertise<visualization_msgs::Marker>("waypoint_path", 10000);
   ros::Publisher wholeQueue_pub = node.advertise<visualization_msgs::Marker>("whole_queue", 100);
+
   imperio::DriveStatus status_msg;
+  imperio::DriveStatus last_msg;
+
   visualization_msgs::Marker line_strip;
   status_msg.header.seq = 0;
   line_strip.action = visualization_msgs::Marker::ADD;
@@ -231,6 +227,8 @@ int main(int argc, char **argv)
   line_strip2.color.b = 1;
   line_strip2.color.a = 1;
   line_strip2.header.frame_id = "/map";
+
+  double wheel_positions[4] = {0};
 
   geometry_msgs::Point vis_point;
   // hang here until someone knows where we are
@@ -316,14 +314,14 @@ int main(int argc, char **argv)
       sim->update(loopTime.toSec());
 
       tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
-      //also publish marker
+      // also publish marker
     }
 
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
 
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
-    //also publish marker
+    // also publish marker
 
     currPose.x = stateVector.x_pos;
     currPose.y = stateVector.y_pos;
@@ -335,10 +333,29 @@ int main(int argc, char **argv)
     // turn radius...  ddistance / dtheta?
     // turn radius =  speed*dt / alpha * dt ;  //do we want to average this? over a second maybe?
     // also be sure to clamp radius at something (1000)
-    jsMessage.velocity[0] = fl->getLinearVelocity();
-    jsMessage.velocity[1] = fr->getLinearVelocity();
-    jsMessage.velocity[2] = br->getLinearVelocity();
-    jsMessage.velocity[3] = bl->getLinearVelocity();
+    sensor_msgs::JointState jsMessage;
+
+    jsMessage.name.push_back("frame_to_front_left_wheel");
+    jsMessage.name.push_back("frame_to_front_right_wheel");
+    jsMessage.name.push_back("frame_to_back_right_wheel");
+    jsMessage.name.push_back("frame_to_back_left_wheel");
+
+    jsMessage.header.stamp = ros::Time::now();
+    wheel_positions[0] += fl->getLinearVelocity() / UPDATE_RATE_HZ;
+    wheel_positions[1] += fr->getLinearVelocity() / UPDATE_RATE_HZ;
+    wheel_positions[2] += br->getLinearVelocity() / UPDATE_RATE_HZ;
+    wheel_positions[3] += bl->getLinearVelocity() / UPDATE_RATE_HZ;
+    jsMessage.position.push_back(wheel_positions[0]);
+    jsMessage.position.push_back(wheel_positions[1]);
+    jsMessage.position.push_back(wheel_positions[2]);
+    jsMessage.position.push_back(wheel_positions[3]);
+
+    jsMessage.velocity.push_back(fl->getLinearVelocity());
+    jsMessage.velocity.push_back(fr->getLinearVelocity());
+    jsMessage.velocity.push_back(br->getLinearVelocity());
+    jsMessage.velocity.push_back(bl->getLinearVelocity());
+
+    jspub.publish(jsMessage);
 
     ROS_INFO("FrontLeftVel : %.4f", jsMessage.velocity[0]);
     ROS_INFO("FrontRightVel : %.4f", jsMessage.velocity[1]);
@@ -404,8 +421,17 @@ int main(int argc, char **argv)
       ss << "Mode: GOALRECHED";
       status_msg.has_reached_goal.data = 1;
     }
-    mode_pub.publish(status_msg);
+    if (!firstTime)
+    {
+      if (!areTheseEqual(status_msg, last_msg))
+      {
+        mode_pub.publish(status_msg);
+      }
+    } else {
+      mode_pub.publish(status_msg);
+    }
 
+    last_msg = status_msg;
     // print some info
     navigationQueue = wc.getNavigationQueue();
     theCPP = wc.getCPP();
@@ -428,17 +454,17 @@ int main(int argc, char **argv)
     }
     wholeQueue_pub.publish(line_strip2);
 
-    //publish wc.getEPpEstimate() as topic
-    //publish sim theta sim->getTheta()
-    //publish base link theta stateVector.theta
+    // publish wc.getEPpEstimate() as topic
+    // publish sim theta sim->getTheta()
+    // publish base link theta stateVector.theta
     angleErrorMsg.data = wc.getEPpEstimate();
     baseAngleMsg.data = stateVector.theta;
     angleErrorPub.publish(angleErrorMsg);
     baseAnglePub.publish(baseAngleMsg);
     if (simulating)
     {
-        simAngleMsg.data = sim->getTheta();
-        simAnglePub.publish(simAngleMsg);
+      simAngleMsg.data = sim->getTheta();
+      simAnglePub.publish(simAngleMsg);
     }
 
     ROS_INFO("CPPx : %.4f", theCPP.x);
@@ -450,6 +476,8 @@ int main(int argc, char **argv)
     ROS_INFO("CurPth : %.4f", currPose.theta);
 
     ROS_INFO("Dist2endOnPath : %.4f", wc.getDist2endOnPath());
+    ROS_INFO("Dist2endAbs : %.4f", wc.getDist2endAbs());
+
 
     ROS_INFO("EtpEstimate : %.4f", wc.getETpEstimate());
     ROS_INFO("EppEstimate : %.4f", wc.getEPpEstimate());
@@ -527,7 +555,6 @@ int main(int argc, char **argv)
       break;
     }
     // ros end stuff
-    jspub.publish(jsMessage);
     ros::spinOnce();
     rate.sleep();
   }

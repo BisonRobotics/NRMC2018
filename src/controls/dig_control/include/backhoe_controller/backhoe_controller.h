@@ -3,34 +3,33 @@
 
 #include <vesc_access/vesc_access.h>
 #include <vesc_access/ivesc_access.h>
+#include "safety_vesc/backhoe_safety_controller.h"
+#include "safety_vesc/linear_safety_controller.h"
+
 
 class BackhoeController
 {
 public:
-  BackhoeController(double initialShoulderTheta, double initialWristTheta, iVescAccess *shVesc, iVescAccess *wrVesv);
+  BackhoeController (iSafetyController *backhoeSafety, iSafetyController *linearSafety);
 
   // TODO, return status on update based on operation (see waypoint controller)
-  // Add gains similar to waypoint controller/ localizer
-
-  void setShoulderSetpoint(double angle);
-  void setWristSetpoint(double angle);
+  void setShoulderSetpoint(double angle);     // in rad from horizontal
+  void setWristSetpoint(double distance);     // in m
+  void setShoulderVelocity(double velocity);  // in rad/s
+  void setWristVelocity(double velocity);     // in m/s
+  void init();
   void update(double dt);
+  bool hasHitGround ();
   bool shoulderAtSetpoint();
   bool wristAtSetpoint();
-  double getWeightInBucket (void);
-  double getWeightInBackhoe (void);
-  void tareBucket (void);
-  void tareBackhoe (void);
+  double getShoulderTorque();
+  double getShoulderVelocity();
+  bool getIsInit (void);
 private:
-  double shoulderSetpoint;
-  double wristSetpoint;
-  double shoulderAngleEst;
-  double wristAngleEst;
-  iVescAccess *sh, *wr;
-  bool isShoulderAtSetpoint;
-  bool isWristAtSetpoint;
-  double bucketTareWeight;
-  double backhoeTareWeight;
+  void safetyCheck();
+  iSafetyController *backhoe_safety;
+  iSafetyController *linear_safety;
+  static constexpr float ground_torque = 50.0f;
 };
 
 #endif

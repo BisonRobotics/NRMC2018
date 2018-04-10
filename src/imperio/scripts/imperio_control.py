@@ -10,6 +10,7 @@ Version: 2
 import rospy
 
 from global_planner import *
+from initial_planner import *
 from regolith_manipulation import *
 from std_msgs.msg import Bool
 
@@ -28,7 +29,9 @@ class ImperioControl(object):
         rospy.Subscriber('/times_up', Bool, self.timerCallback)
 
         self.robot = robot(self.node)
+        self.initial_planner = InitialPlanner(self.robot)
         self.planner = GlobalPlanner(self.robot)
+        self.starting_region = None
         self.run()
 
     def haltAutonomyCallback(self, bool_msg):
@@ -45,6 +48,7 @@ class ImperioControl(object):
         :param bool_msg: Published message
         """
         if bool_msg.data == True:
+            print("Imperio : Out Of Time")
             self.robot.change_state(RobotState.HALT)
 
         if bool_msg.data == False:
@@ -55,7 +59,9 @@ class ImperioControl(object):
         The operation loop for Imperio
         """
         while not self.robot.state == RobotState.HALT and not rospy.is_shutdown():
-            if self.robot.state == RobotState.OUTBOUND:
+            if self.robot.state == RobotState.INITIAL:
+                self.navigateInitialPosition()
+            elif self.robot.state == RobotState.OUTBOUND:
                 self.navigateOutbound()
             elif self.robot.state == RobotState.DIG:
                 self.dig()
@@ -68,11 +74,21 @@ class ImperioControl(object):
             else:
                 self.halt()
 
+    def navigateInitialPosition(self):
+        while self.starting_region == None:
+            self.starting_region = self.initial_planner.find_best_starting_goal()
+        result = self.initial_planner.navigate_to_goal(self.starting_region)
+        if result == None:
+            self.robot.change_state(RobotState.HALT)
+        if result:
+            self.robot.next_state()
+
     def navigateOutbound(self):
         """
         Navigates the robot to the area where it will dig
         """
         # Goal is currently just dummy data
+        #TODO : Find best digging goal [Jira NRMC2018-335]
         goal = (6, 0)
         result = self.planner.navigate_to_goal(goal)
         if result == None:
@@ -84,7 +100,7 @@ class ImperioControl(object):
         """
         Navigates the robot back to the collection big
         """
-        goal = (0, 0)
+        goal = (.5, .5)
         result =  self.planner.navigate_to_goal(goal)
         if result == None:
             self.robot.change_state(RobotState.HALT)
@@ -125,6 +141,7 @@ class ImperioControl(object):
         """
         What the robot should do when it's running out of time
         """
+        print("Imperio : Almost out of time, changing to inbound mode")
         if self.robot.state == RobotState.DIG:
             self.robot.change_state(RobotState.INBOUND)
 

@@ -6,7 +6,7 @@
         <color rgba="0.45 0.45 0.28 1"/>
     </material>
 
-    <material name="red">
+    <material name="orange">
         <color rgba="0.5 0.24 0.00 1"/>
     </material>
 
@@ -15,7 +15,15 @@
     </material>
 
     <material name="black">
-        <color rgba="0.10 0.10 0.10 1"/>
+        <color rgba="0.30 0.30 0.30 1"/>
+    </material>
+
+    <material name="grey">
+        <color rgba="0.70 0.70 0.70 1"/>
+    </material>
+
+    <material name="gold">
+        <color rgba="0.85490196078 0.64705882352 0.12549019607 1"/>
     </material>
 
     <!-- Define linkages and joints -->
@@ -35,21 +43,18 @@
         </collision>
     </link>-->
 
-    <link name="frame">
-        <visual>
-            <geometry>
-                <box size="1.1938e+00 4.9530e-01 2.5400e-02" />
-            </geometry>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <material name="brown" />
-        </visual>
-        <collision>
-            <geometry>
-                <box size="1.1938e+00 4.9530e-01 2.5400e-02" />
-            </geometry>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-        </collision>
-    </link>
+    <xacro:macro name="frame">
+        <link name="frame">
+            <visual>
+                <geometry>
+                    <mesh filename="package://description/meshes/frame.stl" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+                <material name="grey" />
+            </visual>
+        </link>
+    </xacro:macro>
+    <xacro:frame/>
 
     <joint name="base_link_to_frame" type="fixed">
         <parent link="base_link"/>
@@ -57,54 +62,189 @@
         <origin xyz="0 0 2.0796e-01" rpy="0 0 0" />
     </joint>
 
-    <xacro:macro name="wheel" params="x_name y_name x_dir y_dir color">
+    <xacro:macro name="wheel" params="x_name y_name rot y_dir xdist color">
         <link name="${x_name}_${y_name}_wheel">
             <visual>
                 <geometry>
-                    <cylinder length="1.0160e-01" radius="1.524e-01" />
+                    <mesh filename="package://description/meshes/wheel.stl" />
                 </geometry>
-                <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+                <origin xyz="0 0 0" rpy="${rot} 0 0"/>
                 <material name="${color}"/>
             </visual>
-            <collision>
-                <geometry>
-                    <cylinder length="1.0160e-01" radius="1.524e-01" />
-                </geometry>
-                <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
-            </collision>
         </link>
 
-        <joint name="frame_to_${x_name}_${y_name}_wheel" type="fixed">
+        <joint name="frame_to_${x_name}_${y_name}_wheel" type="revolute">
             <parent link="frame"/>
             <child link="${x_name}_${y_name}_wheel"/>
-            <origin xyz="${x_dir*(3.4290e-01)} ${y_dir*(3.2067e-01)} -5.5512e-02" />
+            <origin xyz="${xdist} ${y_dir*0.3109468} -0.0555752" />
+            <axis xyz="0 1 0"/>
+            <limit effort="1000.0" lower="-1e9" upper="1e9" velocity="1000.0"/>
         </joint>
     </xacro:macro>
-    <xacro:wheel x_name="front" y_name="left"  x_dir="1"  y_dir="1"  color="red"   />
-    <xacro:wheel x_name="front" y_name="right" x_dir="1"  y_dir="-1" color="green" />
-    <xacro:wheel x_name="back"  y_name="left"  x_dir="-1" y_dir="1"  color="red"   />
-    <xacro:wheel x_name="back"  y_name="right" x_dir="-1" y_dir="-1" color="green" />
+    <xacro:wheel x_name="front" y_name="left"  rot="${-pi/2}" y_dir="1"  xdist="0.73025" color="gold"   />
+    <xacro:wheel x_name="front" y_name="right" rot="${pi/2}"  y_dir="-1" xdist="0.73025" color="gold" />
+    <xacro:wheel x_name="back"  y_name="left"  rot="${-pi/2}" y_dir="1"  xdist="0.0455676" color="gold"   />
+    <xacro:wheel x_name="back"  y_name="right" rot="${pi/2}"  y_dir="-1" xdist="0.0455676" color="gold" />
 
-    <link name="sensor">
+    <link name="central_drive">
         <visual>
             <geometry>
-                <cylinder length="7.0003e-02" radius="2.5e-02" />
+                <mesh filename="package://description/meshes/central_drive.stl" />
             </geometry>
-            <origin xyz="0 0 0" rpy="0 0 0" />
+            <origin xyz="0.1121664 -0.098425 -0.05715" rpy="0 ${pi/2} ${pi}" />
             <material name="black" />
         </visual>
-        <collision>
-            <geometry>
-                <cylinder length="7.0003e-02" radius="2.5e-02" />
-            </geometry>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-        </collision>
     </link>
 
-    <joint name="frame_to_sensor" type="fixed">
+    <joint name="frame_to_central_drive" type="fixed">
         <parent link="frame"/>
-        <child link="sensor"/>
-        <origin xyz="5.0000e-01 0 -1.5796e-01" rpy="0 0 0" />
+        <child link="central_drive"/>
+        <origin xyz="0.5291836 0.0 0.079375" rpy="0 0 0" />
+    </joint>
+
+    <link name="bucket">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/bucket.stl" />
+            </geometry>
+            <origin xyz="0.0025146 0 -0.5473446" rpy="${pi/2} 0 0" />
+            <material name="black" />
+        </visual>
+    </link>
+
+    <joint name="frame_to_bucket" type="revolute">
+        <parent link="frame"/>
+        <child link="bucket"/>
+        <origin xyz="-0.2286 0.0 0.4318" rpy="0 -${85/180*pi} 0" /> <!-- What works well -->
+        <!--<origin xyz="-0.2286 0.0 0.4318" rpy="0 -${89.6197/180*pi} 0" />--><!-- What it should be -->
+        <!--<origin xyz="-0.2286 0.0 0.4318" rpy="0 ${7.1/180*pi} 0" />--> <!-- Mapping to CAD -->
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="${-2*pi}" upper="${2*pi}" velocity="1000.0"/>
+    </joint>
+
+    <link name="monoboom">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/monoboom.stl" />
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="-${pi/2} 0 0" />
+            <material name="grey" />
+        </visual>
+    </link>
+
+    <joint name="central_drive_to_monoboom" type="revolute">
+        <parent link="central_drive"/>
+        <child link="monoboom"/>
+        <origin xyz="0.0 0.0 0.0" rpy="0 ${pi/2} 0" />
+        <!--<origin xyz="0.0 0.0 0.0" rpy="0 -${(180-47.79)/180*pi} 0" />--><!-- Mapping to CAD -->
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0.0" upper="3.14" velocity="1000.0"/>
+    </joint>
+
+    <link name="backhoe_bucket">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/backhoe_bucket.stl" />
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="${pi/2} 0 0" />
+            <material name="black" />
+        </visual>
+    </link>
+
+    <joint name="monoboom_to_backhoe_bucket" type="revolute">
+        <parent link="monoboom"/>
+        <child link="backhoe_bucket"/>
+        <origin xyz="0.55245 0.0 0.0" rpy="0 ${5*pi/8} ${pi}" />
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="-10" upper="10.0" velocity="1000.0"/>
+    </joint>
+
+    <xacro:macro name="node" params="side dir">
+        <link name="${side}_dynamixel">
+            <visual>
+                <geometry>
+                    <mesh filename="package://description/meshes/${side}_dynamixel.stl" />
+                </geometry>
+                <origin xyz="0.0 0.0 0.0" rpy="0 ${-pi/2} ${-pi/2}" />
+                <material name="black" />
+            </visual>
+        </link>
+
+        <joint name="frame_to_${side}_dynamixel" type="fixed">
+            <parent link="frame"/>
+            <child link="${side}_dynamixel"/>
+            <origin xyz="-0.186436 ${dir*0.3137916} 0.3756406" rpy="0 0 ${dir*pi/2}" />
+        </joint>
+
+        <link name="${side}_camera_mount">
+            <visual>
+                <geometry>
+                    <mesh filename="package://description/meshes/camera_mount.stl" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 0 ${-pi/2}" />
+                <material name="grey" />
+            </visual>
+        </link>
+
+        <joint name="${side}_dynamixel_to_camera_mount" type="fixed">
+            <parent link="${side}_dynamixel"/>
+            <child link="${side}_camera_mount"/>
+            <origin xyz="0.016256 0.000508 0.0195072" rpy="0 0 0" />
+        </joint>
+
+        <link name="${side}_camera">
+            <visual>
+                <geometry>
+                    <mesh filename="package://description/meshes/camera.stl" />
+                </geometry>
+                <origin xyz="0.0 0.0 0.0" rpy="${pi} 0 ${pi/2}" />
+                <material name="black" />
+            </visual>
+        </link>
+
+        <joint name="${side}_camera_mount_to_camera" type="fixed">
+            <parent link="${side}_camera_mount"/>
+            <child link="${side}_camera"/>
+            <origin xyz="3.952e-3 0 20.5e-3" rpy="0 0 0" />
+        </joint>
+
+        <link name="${side}_camera_optical" />
+        <joint name="${side}_camera_optical" type="fixed">
+            <parent link="${side}_camera"/>
+            <child link="${side}_camera_optical"/>
+            <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}" />
+        </joint>
+    </xacro:macro>
+    <xacro:node side="right" dir="-1" />
+    <xacro:node side="left" dir="1" />
+
+    <link name="monoboom_actuator_link" />
+
+    <joint name="monoboom_actuator" type="prismatic">
+        <parent link="monoboom"/>
+        <child link="monoboom_actuator_link"/>
+        <origin xyz="0.1 0.0 0.0" rpy="0 0 0" />
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" lower="0" upper="0.1778" velocity="1000.0"/>
+    </joint>
+
+    <!-- Add a few static transforms for testing -->
+    <xacro:arg name="test_urdf" default="false"/>
+    <xacro:if value="$(arg test_urdf)">
+        <link name="map" />
+        <joint name="map_to_base_link" type="fixed">
+            <parent link="map"/>
+            <child link="base_link"/>
+            <origin xyz="1.5 -0.5 0" rpy="0 0 ${-pi/8}" />
+        </joint>
+    </xacro:if>
+
+    <!-- add in the IMU position-->
+    <link name="imu" />
+    <joint name="imu_to_baselink" type="fixed">
+        <parent link="base_link"/>
+        <child link="imu"/>
+        <origin xyz=".54 -.15 0.0" rpy="0 ${-pi/2} ${pi}"/>
     </joint>
 
 </robot>

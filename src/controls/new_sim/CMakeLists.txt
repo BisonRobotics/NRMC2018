@@ -11,9 +11,8 @@ find_package (vesc_access REQUIRED)
 find_package (sensor_access REQUIRED)
 find_package (localization REQUIRED)
 
-link_directories (
-/usr/src/gmock/build
-)
+link_directories(/usr/src/gmock/build)
+set(GTEST_LIBRARIES gmock_main)
 
 catkin_package(
   INCLUDE_DIRS include/ 

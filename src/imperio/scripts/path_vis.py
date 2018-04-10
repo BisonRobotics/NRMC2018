@@ -20,7 +20,7 @@ class MarkerNode(object):
         initializes the node
         """
         self.node = rospy.init_node('imperio_marker_utils')
-        rospy.Subscriber('/global_planner_goal', GlobalWaypoints, self.waypoint_callback)
+        rospy.Subscriber('/position_controller/global_planner_goal', GlobalWaypoints, self.waypoint_callback)
         self.waypoint_pub = rospy.Publisher('/waypoint_marker', Marker, queue_size=1000)
         self.path_pub = rospy.Publisher('/path_marker', Marker, queue_size=1000)
         
@@ -54,7 +54,7 @@ class MarkerNode(object):
 
         points = []
 
-        #TODO : Make this the current location
+        #TODO : Make this the current  [NRMC2018-334]
         msg = Point()
         msg.x, msg.y = 0,0
         points.append(msg)

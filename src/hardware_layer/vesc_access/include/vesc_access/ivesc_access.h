@@ -1,6 +1,6 @@
 #ifndef __VESC_ACCESS_INTERFACE_H_
 #define __VESC_ACCESS_INTERFACE_H_
-
+#include "stdint.h"
 namespace nsVescAccess
 {
 enum limitSwitchState
@@ -9,6 +9,18 @@ enum limitSwitchState
   bottomOfMotion,
   inTransit
 };
+
+typedef struct vesc_param_struct
+{
+  float max_velocity;
+  float max_torque;
+  float gear_ratio;
+  float output_ratio;
+  unsigned int pole_pairs;
+  float torque_constant;
+  char can_network[10];
+  unsigned int can_id;
+} vesc_param_struct_t;
 }
 
 class iVescAccess

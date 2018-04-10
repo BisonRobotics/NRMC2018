@@ -13,22 +13,10 @@ TeleopInterface::TeleopInterface(float velocity, iVescAccess *fl, iVescAccess *f
 
 TeleopInterface::TeleopInterface(float velocity)
 {
-  float max_velocity = MAX_WHEEL_VELOCITY;
-  float max_torque = MAX_WHEEL_TORQUE;
-  float gear_ratio = WHEEL_GEAR_RATIO;
-  float torque_constant = WHEEL_TORQUE_CONSTANT;
-  unsigned int pole_pairs = WHEEL_POLE_PAIRS;
-  float output_ratio = WHEEL_OUTPUT_RATIO;
-  char *name = (char *)WHEEL_CAN_NETWORK;
-  this->fl = new VescAccess(FRONT_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque, torque_constant,
-                            name, pole_pairs);
-  this->fr = new VescAccess(FRONT_RIGHT_WHEEL_ID, -1.0f * gear_ratio, output_ratio, max_velocity, max_torque,
-                            torque_constant, name, pole_pairs);
-
-  this->br = new VescAccess(BACK_RIGHT_WHEEL_ID, -1.0f * gear_ratio, output_ratio, max_velocity, max_torque,
-                            torque_constant, name, pole_pairs);
-  this->bl = new VescAccess(BACK_LEFT_WHEEL_ID, gear_ratio, output_ratio, max_velocity, max_torque, torque_constant,
-                            name, pole_pairs);
+  this->fl = new VescAccess(front_left_param);
+  this->fr = new VescAccess(front_right_param);
+  this->br = new VescAccess(back_right_param);
+  this->bl = new VescAccess(back_left_param);
   initializeVars(velocity);
   this->internally_alloc = true;
 }

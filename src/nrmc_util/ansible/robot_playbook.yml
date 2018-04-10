@@ -1,0 +1,23 @@
+# based off https://github.com/jalessio/ansible-role-ros
+# run locally with "ansible-playbook -i "localhost," -c local robot_playbook.yml"
+---
+- hosts: localhost
+  tasks:
+    - include: ros_init.yml
+    - name: install ros packages
+      become: yes
+      apt: pkg=ros-kinetic-{{ item }} state=latest update_cache=true
+      with_items:
+        - ros-base
+    - include: common_tasks.yml
+    - name: add user to dialout
+      become: yes
+      user: 
+        name: "{{ ansible_user_id }}"
+        append: yes
+        groups: dialout
+    - name: remove modemmanager
+      become: yes
+      apt:
+        name: modemmanager
+        state: absent

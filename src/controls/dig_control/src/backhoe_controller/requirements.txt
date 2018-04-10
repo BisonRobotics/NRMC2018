@@ -1,0 +1,3 @@
+Backhoe controller will expose a method to initialize the poisitions of the backhoe and the bucket
+Backhoe controller will not allow linear velocity that is positive if the bucket is not moving downwards and the linear actuator is not within the safety distance
+Backhoe controller will stop the motor at the limits of travel

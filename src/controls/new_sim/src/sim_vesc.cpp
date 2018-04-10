@@ -12,6 +12,22 @@ SimVesc::SimVesc(double Pgain, double Igain, double velo_factor)
   velocity_factor = velo_factor;
   limitSwitch = nsVescAccess::limitSwitchState::inTransit;
   pot_pos = 0.0;
+  hasLimits = false;
+}
+
+SimVesc::SimVesc(double Pgain, double Igain, double velo_factor, double initialPos, double beginLimit, double endLimit)
+{
+  vesc_Pgain = Pgain;
+  vesc_Igain = Igain;
+  vel = 0;
+  setVel = 0;
+  errI = 0;
+  velocity_factor = velo_factor;
+  limitSwitch = nsVescAccess::limitSwitchState::inTransit;
+  pot_pos = initialPos;
+  hasLimits = true;
+  this->beginLimit = beginLimit;
+  this->endLimit = endLimit;
 }
 
 void SimVesc::update(double dt)
@@ -19,6 +35,30 @@ void SimVesc::update(double dt)
   // note I gain not implemented
   double err = vel - setVel;
   vel += (-vesc_Pgain) * err * dt;
+  pot_pos += vel;
+  if (hasLimits)
+  {
+    if (pot_pos > endLimit)
+    {
+      vel =0;
+      setVel =0;
+      limitSwitch = nsVescAccess::limitSwitchState::topOfMotion;
+    }
+    else if (pot_pos < beginLimit)
+    {
+      vel =0;
+      setVel =0;
+      limitSwitch = nsVescAccess::limitSwitchState::bottomOfMotion;
+    }
+    else
+    {
+      limitSwitch = nsVescAccess::limitSwitchState::inTransit;
+    }
+  }
+  else
+  {
+     limitSwitch = nsVescAccess::limitSwitchState::inTransit;
+  }
 }
 
 void SimVesc::setLinearVelocity(float meters_per_second)
@@ -33,7 +73,8 @@ float SimVesc::getLinearVelocity(void)
 
 float SimVesc::getTorque(void)
 {
-  return 0;
+  if (vel >0) return 100;
+  else return -100;
 }
 
 void SimVesc::setTorque(float current)
