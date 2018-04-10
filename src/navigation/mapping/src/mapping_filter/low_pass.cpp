@@ -13,21 +13,12 @@ namespace low_pass_namespace
 
   }
 
-  LowPassLayer::~LowPassLayer ()
-  {
-    delete dsrv;
-  }
-
   void LowPassLayer::onInitialize ()
   {
     ObstacleLayer::onInitialize();
     ros::NodeHandle nh("~/" + name_);
     current_ = true;
     default_value_ = NO_INFORMATION;  // we can change this later if we want
-//    dsrv = new dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>(nh);
-//    dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>::CallbackType cb
-//        = boost::bind (&LowPassLayer::reconfigureCB,this, _1, _2);
- //   dsrv->setCallback(cb);
     enabled_ = true;
   }
 
@@ -45,8 +36,4 @@ namespace low_pass_namespace
     }
   }
 
-  void LowPassLayer::reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level)
-  {
-    enabled_ = config.enabled;
-  }
 }
