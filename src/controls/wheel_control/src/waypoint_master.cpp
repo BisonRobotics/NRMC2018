@@ -263,6 +263,44 @@ int main(int argc, char **argv)
     ros::spinOnce();
     rate.sleep();
   }
+  
+  //zero point turn vescs here before waypoint controller is initialized
+  //get number from topic
+  double topictheta = .5;
+  double topicthetatol = .1;
+  firstTime = true;
+  while (std::abs(WaypointControllerHelper::anglediff(stateVector.theta, topictheta)) > topicthetatol)
+  {
+    double speed = .02 * WaypointControllerHelper::anglediff(stateVector.theta, topictheta);
+
+    fr->setLinearVelocity(-speed);
+    br->setLinearVelocity(-speed);
+    fl->setLinearVelocity(speed);
+    bl->setLinearVelocity(speed);
+
+    if (firstTime)
+    {
+        firstTime = false;
+        currTime = ros::Time::now();
+        lastTime = currTime - idealLoopTime;
+        loopTime = (currTime - lastTime);
+    }
+    else
+    {
+        lastTime = currTime;
+        currTime = ros::Time::now();
+        loopTime = (currTime - lastTime);
+    }
+    if (simulating)
+    {
+        sim->update((loopTime).toSec());
+    }
+    superLocalizer.updateStateVector(loopTime.toSec());
+    stateVector = superLocalizer.getStateVector();
+    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+    ros::spinOnce();
+    rate.sleep();
+  }
 
   // initialize waypoint controller
   WaypointController wc = WaypointController(ROBOT_AXLE_LENGTH, ROBOT_MAX_SPEED, currPose, fl, fr, br, bl,
