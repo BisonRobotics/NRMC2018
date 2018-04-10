@@ -38,10 +38,8 @@ namespace low_pass_namespace
       cv::Mat input = cv::Mat(master_grid.getSizeInCellsX(), master_grid.getSizeInCellsY(), CV_8U, this->costmap_,
                               cv::Mat::AUTO_STEP);
       cv::Mat filtered;
-
       cv::medianBlur(input, filtered, size_of_kern);
 
-     // unsigned char *master_map = master_grid.getCharMap();
       std::memcpy(costmap_, filtered.data, sizeof(unsigned char) * size_of_map);
       ObstacleLayer::updateCosts(master_grid, min_i, min_j, max_i, max_j);
     }
