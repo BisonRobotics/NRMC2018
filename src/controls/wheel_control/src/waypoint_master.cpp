@@ -52,6 +52,10 @@ bool newWaypointHere = false;
 pose newWaypoint;
 bool halt = false;
 
+double topicTheta=0;
+bool thetaHere=false;
+
+
 void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 {
   pose potentialWaypoint;
@@ -105,6 +109,12 @@ geometry_msgs::TransformStamped create_sim_tf(double x, double y, double theta)
 void haltCallback(const std_msgs::Empty::ConstPtr &msg)
 {
   halt = true;
+}
+
+void initialThetaCallback(const std_msgs::Float64::ConstPtr &msg)
+{
+    topicTheta = msg->data;
+    thetaHere = true;
 }
 
 
@@ -232,12 +242,14 @@ int main(int argc, char **argv)
 
   geometry_msgs::Point vis_point;
   // hang here until someone knows where we are
-  ROS_INFO("Going into wait loop for localizer");
+  ROS_INFO("Going into wait loop for localizer and initial theta...");
 
   ros::Rate rate(UPDATE_RATE_HZ);
   ros::Duration idealLoopTime(1.0 / UPDATE_RATE_HZ);
 
-  while (!superLocalizer.getIsDataGood() && ros::ok())
+  ros::Subscriber initialThetaSub = node.subscribe("initialTheta", 100, initialThetaCallback);
+
+  while ((!superLocalizer.getIsDataGood() && ros::ok()) || (ros::ok() && !thetaHere))
   {
     // do initial localization
     if (firstTime)
@@ -256,6 +268,7 @@ int main(int argc, char **argv)
     if (simulating)
     {
       sim->update((loopTime).toSec());
+      tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
     }
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
@@ -265,13 +278,34 @@ int main(int argc, char **argv)
   }
   
   //zero point turn vescs here before waypoint controller is initialized
-  //get number from topic
-  double topictheta = .5;
+  //get number from topic  
   double topicthetatol = .1;
-  firstTime = true;
-  while (std::abs(WaypointControllerHelper::anglediff(stateVector.theta, topictheta)) > topicthetatol)
+  if (node.hasParam("initial_theta_tolerance"))
   {
-    double speed = .02 * WaypointControllerHelper::anglediff(stateVector.theta, topictheta);
+    node.getParam("initial_theta_tolerance", topicthetatol);
+  }
+  else
+  {
+    ROS_ERROR("\n\ninitial_theta_tolerance param not defined! aborting.\n\n");
+    return -1;
+  }
+
+  double zeroPointTurnGain = .02;
+  if (node.hasParam("initial_theta_gain"))
+  {
+    node.getParam("initial_theta_gain",zeroPointTurnGain);
+  }
+  else
+  {
+    ROS_ERROR("\n\ninitial_theta_gain param not defined! aborting.\n\n");
+    return -1;
+  }
+    
+  ROS_INFO("Theta received, going into initial turn.");
+  firstTime = true;
+  while (std::abs(WaypointControllerHelper::anglediff(stateVector.theta, topicTheta)) > topicthetatol)
+  {
+    double speed = zeroPointTurnGain * WaypointControllerHelper::anglediff(stateVector.theta, topicTheta);
 
     fr->setLinearVelocity(-speed);
     br->setLinearVelocity(-speed);
@@ -294,6 +328,7 @@ int main(int argc, char **argv)
     if (simulating)
     {
         sim->update((loopTime).toSec());
+        tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
     }
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
