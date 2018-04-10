@@ -1,8 +1,8 @@
 plugins:
-  - {name: static_map,  type: "costmap_2d::StaticLayer"}
-  - {name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
-  - {name: inflation, type: "costmap_2d::InflationLayer"}
-#  - {name: low_pass, type: "low_pass_namespace::LowPassLayer"}
+#  - {name: static_map,  type: "costmap_2d::StaticLayer"}
+#  - {name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
+#  - {name: inflation, type: "costmap_2d::InflationLayer"}
+  - {name: low_pass, type: "low_pass_namespace::LowPassLayer"}
 publish_frequency: 1.0
 footprint: [[-1.0, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0]]
 
@@ -11,18 +11,18 @@ inflation:
   cost_scaling_factor: 5.0
 
 
-obstacle_layer:
+low_pass:
   observation_sources: point_cloud_sensor
   point_cloud_sensor:
     data_type: PointCloud2
     sensor_frame: /camera_depth_optical_frame
     clearing: true
     marking: true
-    topic: /camera/depth/points
+    topic: /camera/points
     static_map: false
     rolling_window: false
     observation_persistence: 0.0
     obstacle_range: 5.0
-    min_obstacle_height: .1
-    max_obstacle_height: .3
+    min_obstacle_height: .00
+    max_obstacle_height: 1.0
 

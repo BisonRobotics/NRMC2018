@@ -22,7 +22,7 @@ namespace low_pass_namespace
   private:
     void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
     dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv;
-    static constexpr unsigned int size_of_kern = 11;
+    static constexpr unsigned int size_of_kern = 5;
   };
 }
 
