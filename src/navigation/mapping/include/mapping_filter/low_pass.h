@@ -16,7 +16,6 @@ namespace low_pass_namespace
   {
   public:
     explicit LowPassLayer ();
-    ~LowPassLayer();
     void onInitialize () override;
     void updateCosts (costmap_2d::Costmap2D& master_grid, int min_i, int min_j, int max_i, int max_j) override;
   private:
