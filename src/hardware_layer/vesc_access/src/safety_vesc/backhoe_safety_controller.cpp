@@ -8,10 +8,11 @@ BackhoeSafetyController::BackhoeSafetyController(safetycontroller::joint_params_
 }
 
 
-void BackhoeSafetyController::init()
+bool BackhoeSafetyController::init()
 {
     this->position_estimate = this->vesc->getPotPosition ();
     is_init = true;
+    return true;
 }
 
 void BackhoeSafetyController::updatePosition(double dt)

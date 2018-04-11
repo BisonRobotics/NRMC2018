@@ -15,56 +15,72 @@ SafetyController::SafetyController(iVescAccess *vesc, safetycontroller::joint_pa
 
 void SafetyController::setPositionSetpoint(double position)
 {
-    if (is_init && !in_velocity)
+    performIsInit();
+    if (!in_velocity)
     {
         if  (position > params.maximum_pos || position < params.minimum_pos){
             std::stringstream ss;
             ss << "Out of bounds at : " << position;
             this->set_position = this->position_estimate;
             this->stop();
-            throw BackhoeSetPointException (ss.str ());
+            throw BackhoeException (ss.str ());
         }
         this->set_position = position;
-
+    }
+    else
+    {
+        throw BackhoeException ("tried to set position in velocity mode");
     }
 }
 
+void SafetyController::performIsInit ()
+{
+    if (!is_init){
+        this->stop();
+        throw BackhoeException ("controller is not initialized!");
+    }
+}
+
+
 void SafetyController::setVelocitySetpoint(double velocity)
 {
-    if (is_init && in_velocity)
+    performIsInit();
+    if (in_velocity)
     {
         this->set_velocity = velocity;
+    }
+    else
+    {
+        throw BackhoeException ("tried to set velocity in position mode");
     }
 }
 
 double SafetyController::updateVelocity(void)
 {
-    if (is_init)
+    performIsInit();
+    if (!in_velocity)
     {
-        if (!in_velocity)
-        {
-            set_velocity = params.gain*(set_position - position_estimate);
-        }
-
-        if (position_estimate <= (params.minimum_pos + params.limit_switch_safety_margin) && set_velocity < 0)
-        {
-            set_velocity = 0;
-        } else if (position_estimate >= (params.maximum_pos - params.limit_switch_safety_margin) && set_velocity > 0)
-        {
-            set_velocity = 0;
-        }
-
-        if (set_velocity > fabs(params.max_abs_velocity))
-        {
-            set_velocity = params.max_abs_velocity;
-        }
-        else if (set_velocity < -fabs(params.max_abs_velocity))
-        {
-            set_velocity = -params.max_abs_velocity;
-        }
-
-        vesc->setLinearVelocity(set_velocity);
+        set_velocity = params.gain*(set_position - position_estimate);
     }
+
+    if (position_estimate <= (params.minimum_pos + params.limit_switch_safety_margin) && set_velocity < 0)
+    {
+        set_velocity = 0;
+    } else if (position_estimate >= (params.maximum_pos - params.limit_switch_safety_margin) && set_velocity > 0)
+    {
+        set_velocity = 0;
+    }
+
+    if (set_velocity > fabs(params.max_abs_velocity))
+    {
+        set_velocity = params.max_abs_velocity;
+    }
+    else if (set_velocity < -fabs(params.max_abs_velocity))
+    {
+        set_velocity = -params.max_abs_velocity;
+    }
+
+    vesc->setLinearVelocity(set_velocity);
 }
 
 bool SafetyController::isAtSetpoint(void)
@@ -74,18 +90,17 @@ bool SafetyController::isAtSetpoint(void)
 
 void SafetyController::updatePosition(double dt)
 {
-    if (is_init)
+    performIsInit();
+    switch (vesc->getLimitSwitchState())
     {
-        switch (vesc->getLimitSwitchState()) {
-            case nsVescAccess::limitSwitchState::bottomOfMotion:
-                this->position_estimate = params.lower_limit_position;
-                break;
-            case nsVescAccess::limitSwitchState::topOfMotion:
-                this->position_estimate = params.upper_limit_position;
-                break;
-            case nsVescAccess::limitSwitchState::inTransit:
-                break;
-        }
+        case nsVescAccess::limitSwitchState::bottomOfMotion:
+            this->position_estimate = params.lower_limit_position;
+            break;
+        case nsVescAccess::limitSwitchState::topOfMotion:
+           this->position_estimate = params.upper_limit_position;
+           break;
+       case nsVescAccess::limitSwitchState::inTransit:
+           break;
     }
 }
 
@@ -109,9 +124,10 @@ double SafetyController::getVelocity ()
     return set_velocity;
 }
 
-void SafetyController::init ()
+bool SafetyController::init()
 {
     is_init = true;
+    return is_init;
 }
 
 double SafetyController::getSetPosition()

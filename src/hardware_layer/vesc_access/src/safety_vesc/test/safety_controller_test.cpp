@@ -28,8 +28,7 @@ TEST (safety_vesc_test, in_velocity_mode_doesnt_set_position)
   NiceMock<MockVescAccess> vesc;
   SafetyController linearSafety (&vesc, linear_joint_params, true);
   linearSafety.init();
-  linearSafety.setPositionSetpoint(.2);
-  EXPECT_NEAR (linearSafety.getSetPosition(), 0,.001);
+  EXPECT_THROW (linearSafety.setPositionSetpoint(.2), BackhoeException);
 }
 
 
@@ -37,8 +36,7 @@ TEST (safety_vesc_test, in_velocity_doesnt_set_until_init)
 {
   NiceMock<MockVescAccess> vesc;
   SafetyController linearSafety (&vesc, linear_joint_params, true);
-  linearSafety.setVelocitySetpoint(.2);
-  EXPECT_NEAR(linearSafety.getVelocity(),0,.001);
+  ASSERT_THROW(linearSafety.setVelocitySetpoint(.4),BackhoeException);
   linearSafety.init ();
   linearSafety.setVelocitySetpoint(.2);
   EXPECT_NEAR (linearSafety.getVelocity(), .2,.001);
@@ -49,8 +47,7 @@ TEST (safety_vesc_test, in_position_mode_velocity_doesnt_set)
   NiceMock<MockVescAccess> vesc;
   SafetyController linearSafety (&vesc, linear_joint_params, false);
   linearSafety.init ();
-  linearSafety.setVelocitySetpoint(.3);
-  EXPECT_NEAR (linearSafety.getVelocity(), 0,.001);
+  EXPECT_THROW(linearSafety.setVelocitySetpoint(.2), BackhoeException);
 }
 
 TEST (safety_vesc_test, limit_switches_reset_position)
@@ -106,7 +103,7 @@ TEST (safety_vesc_test, throws_exception_on_out_of_bounds_setpoint)
   SafetyController linearSafety (&vesc, linear_joint_params, false);
   linearSafety.init ();
   EXPECT_CALL (vesc, setLinearVelocity(FloatNear(0,.001)));
-  ASSERT_THROW(linearSafety.setPositionSetpoint(linear_joint_params.maximum_pos+1.0), BackhoeSetPointException);
+  ASSERT_THROW(linearSafety.setPositionSetpoint(linear_joint_params.maximum_pos+1.0), BackhoeException);
   ASSERT_NEAR (linearSafety.getSetPosition(), linearSafety.getPosition(),.001);
 }
 

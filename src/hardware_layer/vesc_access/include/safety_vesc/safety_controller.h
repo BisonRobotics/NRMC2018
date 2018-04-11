@@ -6,10 +6,10 @@
 #include "vesc_access/ivesc_access.h"
 
 
-class BackhoeSetPointException : public std::runtime_error
+class BackhoeException : public std::runtime_error
 {
 public:
-  explicit BackhoeSetPointException(std::string msg) : std::runtime_error(msg)
+  explicit BackhoeException(std::string msg) : std::runtime_error(msg)
   {
   }
 };
@@ -28,7 +28,7 @@ public:
   double getVelocity () override;
   double getPosition () override;
   void stop () override;
-  void init () override;
+  bool init() override;
   virtual double getSetPosition () override;
   void updatePosition (double dt) override;
   float getLinearVelocity () {return vesc->getLinearVelocity();}
@@ -42,6 +42,7 @@ private:
   double set_position;
   double set_velocity;
   bool in_velocity;
+  void performIsInit();
 };
 
 #endif //PROJECT_SAFETY_VESC_H

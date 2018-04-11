@@ -32,7 +32,7 @@ public:
 
   virtual bool isAtSetpoint() = 0;
 
-  virtual void init() = 0;
+  virtual bool init() = 0;
 
   virtual void updatePosition(double dt) = 0;
 

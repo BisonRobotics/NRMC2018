@@ -17,7 +17,7 @@ TEST (safety_vesc_test, init_stops_on_lower_limit_and_sets_estimate)
     NiceMock<MockVescAccess> vesc;
     LinearSafetyController linearSafetyController(linear_joint_params, &vesc,false);
     ON_CALL (vesc, getLimitSwitchState()).WillByDefault(Return(nsVescAccess::limitSwitchState::bottomOfMotion));
-    EXPECT_CALL (vesc, setTorque(_)).Times(2);
+    EXPECT_CALL (vesc, setTorque(_)).Times(1);
     linearSafetyController.init ();
     EXPECT_TRUE (linearSafetyController.isInit());
     EXPECT_NEAR (linearSafetyController.getPosition(), linear_joint_params.lower_limit_position, .001);

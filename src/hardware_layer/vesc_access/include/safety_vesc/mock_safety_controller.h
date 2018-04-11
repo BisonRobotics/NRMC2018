@@ -12,7 +12,7 @@ public:
     MOCK_METHOD0 (updateVelocity, double(void));
     MOCK_METHOD0 (isInit, bool (void));
     MOCK_METHOD0 (isAtSetpoint, bool(void));
-    MOCK_METHOD0 (init, void(void));
+    MOCK_METHOD0 (init, bool(void));
     MOCK_METHOD1 (updatePosition, void(double));
     MOCK_METHOD0 (stop, void(void));
     MOCK_METHOD0 (getSafetyPosition, double (void));

@@ -90,7 +90,9 @@ int main(int argc, char **argv)
 
   LinearSafetyController linearSafety (linear_joint_params, backhoeWristVesc, false);
   linearSafety.init();
+
   BackhoeSafetyController backhoeSafety (central_joint_params, backhoeShoulderVesc, false);
+
   backhoeSafety.init();
   // pass vescs (sim or physical) to controllers
 
