@@ -47,6 +47,7 @@ private:
   sensor_msgs::JointState js_message;
   std_msgs::Float32 f32_message;
   ros::Time last_time;
+  static constexpr double publish_period = .5;
   bool first_time;
   struct ifreq ifr;
   struct sockaddr_can addr;

@@ -162,7 +162,7 @@ void Vesc::processMessages()
   if (first_time){
     last_time = ros::Time::now ();
     first_time = false;
-  } else if ((ros::Time::now() - last_time).toSec() > .5){
+  } else if ((ros::Time::now() - last_time).toSec() > publish_period){
     float32_pub.publish(f32_message);
     js_pub.publish(js_message);
     last_time = ros::Time::now ();

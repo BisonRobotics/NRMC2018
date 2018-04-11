@@ -4,7 +4,8 @@
 #include "sensor_msgs/JointState.h"
 
 void VescAccess::initializeMembers(float transmission_ratio, float output_ratio, float velocity_limit,
-                                   float torque_limit, float torque_constant, unsigned int pole_pairs, bool has_limits)
+                                   float torque_limit, float torque_constant, unsigned int pole_pairs, bool has_limits,
+                                    float max_duty)
 {
   setTransmissionRatio(transmission_ratio);
   setOutputRatio(output_ratio);
@@ -12,12 +13,26 @@ void VescAccess::initializeMembers(float transmission_ratio, float output_ratio,
   setLinearVelocityLimit(velocity_limit);
   setTorqueConstant(torque_constant);
   setPolePairs(pole_pairs);
+  setMaxDuty(max_duty);
   this->minADC = 0;
   this->maxADC = 0x0FFF;  // 12 bit ADC
   this->radians_per_turn = M_PI_2;
   this->rad_per_count = radians_per_turn / (1.0f * (maxADC - minADC));
   this->rad_offset = 0.0;
   this->has_limits = has_limits;
+}
+
+void VescAccess::setMaxDuty (float max_duty)
+{
+  if (max_duty > 1)
+  {
+    max_duty = 1;
+  }
+  else if (max_duty < -1)
+  {
+    max_duty = -1;
+  }
+  this->max_duty = max_duty;
 }
 
 
@@ -70,10 +85,12 @@ VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_r
                     has_limits);
 }
 
+
 VescAccess::VescAccess(nsVescAccess::vesc_param_struct_t param, bool has_limits)
   : VescAccess(param.can_id, param.gear_ratio, param.output_ratio, param.max_velocity, param.max_torque,
-               param.torque_constant, param.can_network, param.pole_pairs, has_limits, param.name)
+               param.torque_constant, param.can_network, param.pole_pairs, has_limits, param.name, param.max_duty)
 {
+
 }
 
 VescAccess::VescAccess(nsVescAccess::vesc_param_struct_t param) : VescAccess(param, false)
@@ -82,11 +99,11 @@ VescAccess::VescAccess(nsVescAccess::vesc_param_struct_t param) : VescAccess(par
 
 void VescAccess::setDuty (float duty)
 {
-  if (duty> 1.0f)
+  if (duty> max_duty)
   {
-    duty = 1.0f;
-  } else if (duty < -1.0f){
-    duty = -1.0f;
+    duty = max_duty;
+  } else if (duty < -max_duty){
+    duty = -max_duty;
   }
 
   this->vesc->setDuty(duty);
@@ -274,3 +291,13 @@ float VescAccess::getPotPosition(void)
 {
   return vesc->getADC() * rad_per_count - rad_offset;
 }
+
+VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_ratio, float velocity_limit,
+                       float torque_limit, float torque_constant, char *can_network, unsigned int pole_pairs,
+                       bool has_limits, std::string name, float max_duty)
+{
+ this->vesc = new Vesc(can_network, VESC_ID, name);
+  initializeMembers(transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_constant, pole_pairs,
+                    has_limits, max_duty);
+}
+

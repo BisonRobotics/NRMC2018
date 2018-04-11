@@ -20,6 +20,7 @@
 
 #define MAX_WHEEL_VELOCITY .5f
 #define MAX_WHEEL_TORQUE 176.0f
+#define MAX_WHEEL_DUTY  .4f
 #define WHEEL_GEAR_RATIO 181.4f
 #define WHEEL_OUTPUT_RATIO .3048f
 #define WHEEL_POLE_PAIRS 1
@@ -27,6 +28,7 @@
 
 #define MAX_CENTRAL_DRIVE_VELOCITY 0.9425f  // in rad/s
 #define MAX_CENTRAL_DRIVE_TORQUE 300.0f     // in Nm -> the real number is 675 but we should never approach that
+#define MAX_CENTRAL_DRIVE_DUTY .4f
 #define CENTRAL_DRIVE_GEAR_RATIO 540.0f
 #define CENTRAL_DRIVE_OUTPUT_RATIO 1.0f  //  purely rotational
 #define CENTRAL_DRIVE_POLE_PAIRS 14
@@ -34,6 +36,7 @@
 
 #define MAX_LINEAR_ACTUATOR_VELOCITY 560.0f  // this should be change
 #define MAX_LINEAR_ACTUATOR_TORQUE 10.0f
+#define MAX_LINEAR_DUTY             .4
 #define LINEAR_ACTUATOR_GEAR_RATIO 15.0f
 #define LINEAR_ACTUATOR_OUTPUT_RATIO 1.0f  // this should be the pitch of the screw
 #define LINEAR_ACTUATOR_POLE_PAIRS 14      // update this
@@ -41,6 +44,7 @@
 
 #define MAX_SMALL_CONVEYOR_VELOCITY 4900.0f
 #define MAX_SMALL_CONVEYOR_TORQUE .24f
+#define MAX_SMALL_CONVEYOR_DUTY .4f
 #define SMALL_CONVEYOR_GEAR_RATIO 1.0f
 #define SMALL_CONVEYOR_OUTPUT_RATIO 1.0f
 #define SMALL_CONVEYOR_POLE_PAIRS 7
@@ -48,6 +52,7 @@
 
 #define MAX_LARGE_CONVEYOR_VELOCITY 230.0f
 #define MAX_LARGE_CONVEYOR_TORQUE 15.0f
+#define MAX_LARGE_CONVEYOR_DUTY .4f
 #define LARGE_CONVEYOR_GEAR_RATIO 21.0f
 #define LARGE_CONVEYOR_OUTPUT_RATIO 1.0f
 #define LARGE_CONVEYOR_POLE_PAIRS 7
@@ -55,6 +60,7 @@
 
 #define MAX_VIBRATOR_VELOCITY 6000.0f
 #define MAX_VIBRATOR_TORQUE .13f
+#define MAX_VIBRATOR_DUTY   .4f
 #define VIBRATOR_GEAR_RATIO 1.0f
 #define VIBRATOR_OUTPUT_RATIO 1.0f
 #define VIBRATOR_POLE_PAIRS 1
@@ -62,6 +68,7 @@
 
 #define MAX_OUTRIGGER_VELOCITY 10.0f
 #define MAX_OUTRIGGER_TORQUE 10.0f
+#define MAX_OUTRIGGER_DUTY  .4f
 #define OUTRIGGER_GEAR_RATIO 1.0f
 #define OUTRIGGER_OUTPUT_RATIO 1.0f
 #define OUTRIGGER_POLE_PAIRS 1
@@ -69,6 +76,7 @@
 
 nsVescAccess::vesc_param_struct_t front_left_param = {.max_velocity = MAX_WHEEL_VELOCITY,
                                                       .max_torque = MAX_WHEEL_TORQUE,
+                                                        .max_duty=MAX_WHEEL_DUTY,
                                                       .gear_ratio = WHEEL_GEAR_RATIO,
                                                       .output_ratio = WHEEL_OUTPUT_RATIO,
                                                       .pole_pairs = WHEEL_POLE_PAIRS,
@@ -79,6 +87,7 @@ nsVescAccess::vesc_param_struct_t front_left_param = {.max_velocity = MAX_WHEEL_
 
 nsVescAccess::vesc_param_struct_t front_right_param = {.max_velocity = MAX_WHEEL_VELOCITY,
                                                        .max_torque = MAX_WHEEL_TORQUE,
+                                                       .max_duty=MAX_WHEEL_DUTY,
                                                        .gear_ratio = WHEEL_GEAR_RATIO,
                                                        .output_ratio = -1.0f * WHEEL_OUTPUT_RATIO,
                                                        .pole_pairs = WHEEL_POLE_PAIRS,
@@ -89,6 +98,7 @@ nsVescAccess::vesc_param_struct_t front_right_param = {.max_velocity = MAX_WHEEL
 
 nsVescAccess::vesc_param_struct_t back_right_param = {.max_velocity = MAX_WHEEL_VELOCITY,
                                                       .max_torque = MAX_WHEEL_TORQUE,
+                                                        .max_duty = MAX_WHEEL_DUTY,
                                                       .gear_ratio = WHEEL_GEAR_RATIO,
                                                       .output_ratio = -1.0f * WHEEL_OUTPUT_RATIO,
                                                       .pole_pairs = WHEEL_POLE_PAIRS,
@@ -99,6 +109,7 @@ nsVescAccess::vesc_param_struct_t back_right_param = {.max_velocity = MAX_WHEEL_
 
 nsVescAccess::vesc_param_struct_t back_left_param = {.max_velocity = MAX_WHEEL_VELOCITY,
                                                      .max_torque = MAX_WHEEL_TORQUE,
+                                                    .max_duty = MAX_WHEEL_DUTY,
                                                      .gear_ratio = WHEEL_GEAR_RATIO,
                                                      .output_ratio = WHEEL_OUTPUT_RATIO,
                                                      .pole_pairs = WHEEL_POLE_PAIRS,
@@ -109,6 +120,7 @@ nsVescAccess::vesc_param_struct_t back_left_param = {.max_velocity = MAX_WHEEL_V
 
 nsVescAccess::vesc_param_struct_t sifter_param = {.max_velocity = MAX_VIBRATOR_VELOCITY,
                                                   .max_torque = MAX_VIBRATOR_TORQUE,
+                                                    .max_duty = MAX_VIBRATOR_DUTY,
                                                   .gear_ratio = VIBRATOR_GEAR_RATIO,
                                                   .output_ratio = VIBRATOR_OUTPUT_RATIO,
                                                   .pole_pairs = VIBRATOR_POLE_PAIRS,
@@ -119,26 +131,27 @@ nsVescAccess::vesc_param_struct_t sifter_param = {.max_velocity = MAX_VIBRATOR_V
 
 nsVescAccess::vesc_param_struct_t small_conveyor_param = {.max_velocity = MAX_SMALL_CONVEYOR_VELOCITY,
                                                           .max_torque = MAX_SMALL_CONVEYOR_TORQUE,
+                                                            .max_duty = MAX_SMALL_CONVEYOR_DUTY,
                                                           .gear_ratio = SMALL_CONVEYOR_GEAR_RATIO,
                                                           .output_ratio = SMALL_CONVEYOR_OUTPUT_RATIO,
                                                           .pole_pairs = SMALL_CONVEYOR_POLE_PAIRS,
                                                           .torque_constant = SMALL_CONVEYOR_TORQUE_CONSTANT,
                                                           WHEEL_CAN_NETWORK,
-                                                          .can_id = SMALL_CONVEYOR_ID,
-.name="small_conveyor"};
+                                                          .can_id = SMALL_CONVEYOR_ID,.name="small_conveyor"};
 
 nsVescAccess::vesc_param_struct_t large_conveyor_param = {.max_velocity = MAX_LARGE_CONVEYOR_VELOCITY,
                                                           .max_torque = MAX_LARGE_CONVEYOR_TORQUE,
+                                                          .max_duty = MAX_LARGE_CONVEYOR_DUTY,
                                                           .gear_ratio = LARGE_CONVEYOR_GEAR_RATIO,
                                                           .output_ratio = LARGE_CONVEYOR_OUTPUT_RATIO,
                                                           .pole_pairs = LARGE_CONVEYOR_POLE_PAIRS,
                                                           .torque_constant = LARGE_CONVEYOR_TORQUE_CONSTANT,
                                                           WHEEL_CAN_NETWORK,
-                                                          .can_id = LARGE_CONVEYOR_ID,
-.name="large_conveyor"};
+                                                          .can_id = LARGE_CONVEYOR_ID,.name="large_conveyor"};
 
 nsVescAccess::vesc_param_struct_t left_outrigger_param = {.max_velocity = MAX_OUTRIGGER_VELOCITY,
                                                           .max_torque = MAX_OUTRIGGER_TORQUE,
+                                                          .max_duty = MAX_OUTRIGGER_DUTY,
                                                           .gear_ratio = OUTRIGGER_GEAR_RATIO,
                                                           .output_ratio = OUTRIGGER_OUTPUT_RATIO,
                                                           .pole_pairs = OUTRIGGER_POLE_PAIRS,
@@ -148,6 +161,7 @@ nsVescAccess::vesc_param_struct_t left_outrigger_param = {.max_velocity = MAX_OU
 
 nsVescAccess::vesc_param_struct_t right_outrigger_param = {.max_velocity = MAX_OUTRIGGER_VELOCITY,
                                                            .max_torque = MAX_OUTRIGGER_TORQUE,
+                                                            .max_duty = MAX_OUTRIGGER_DUTY,
                                                            .gear_ratio = OUTRIGGER_GEAR_RATIO,
                                                            .output_ratio = OUTRIGGER_OUTPUT_RATIO,
                                                            .pole_pairs = OUTRIGGER_POLE_PAIRS,
@@ -157,6 +171,7 @@ nsVescAccess::vesc_param_struct_t right_outrigger_param = {.max_velocity = MAX_O
 
 nsVescAccess::vesc_param_struct_t linear_param = {.max_velocity = MAX_LINEAR_ACTUATOR_VELOCITY,
                                                   .max_torque = MAX_LINEAR_ACTUATOR_TORQUE,
+                                                    .max_duty = MAX_LINEAR_DUTY,
                                                   .gear_ratio = LINEAR_ACTUATOR_GEAR_RATIO,
                                                   .output_ratio = LINEAR_ACTUATOR_OUTPUT_RATIO,
                                                   .pole_pairs = LINEAR_ACTUATOR_POLE_PAIRS,
@@ -166,6 +181,7 @@ nsVescAccess::vesc_param_struct_t linear_param = {.max_velocity = MAX_LINEAR_ACT
 
 nsVescAccess::vesc_param_struct_t shoulder_param = {.max_velocity = MAX_CENTRAL_DRIVE_VELOCITY,
                                                     .max_torque = MAX_CENTRAL_DRIVE_TORQUE,
+                                                    .max_duty = MAX_CENTRAL_DRIVE_DUTY,
                                                     .gear_ratio = CENTRAL_DRIVE_GEAR_RATIO,
                                                     .output_ratio = CENTRAL_DRIVE_OUTPUT_RATIO,
                                                     .pole_pairs = CENTRAL_DRIVE_POLE_PAIRS,

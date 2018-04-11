@@ -15,6 +15,7 @@ typedef struct vesc_param_struct
 {
   float max_velocity;
   float max_torque;
+  float max_duty;
   float gear_ratio;
   float output_ratio;
   unsigned int pole_pairs;
