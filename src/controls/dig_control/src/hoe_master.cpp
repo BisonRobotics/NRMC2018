@@ -137,17 +137,16 @@ int main(int argc, char **argv)
     {
        robotAngles.header.stamp = ros::Time::now();
 
-       double URDFangle = 0;
        robotAngles.name.push_back("central_drive_to_monoboom");
-       URDFangle = (1 -  backhoeSimulation->getShTheta()) * M_PI;
-       robotAngles.position.push_back(URDFangle);
+       
+       robotAngles.position.push_back(backhoeSimulation->getShTheta());
 
        robotAngles.name.push_back("monoboom_to_backhoe_bucket");
-       URDFangle = (1 - backhoeSimulation->getWrTheta()) * M_PI;
-       robotAngles.position.push_back(URDFangle);
+       robotAngles.position.push_back(backhoeSimulation->getWrTheta());
 
        JsPub.publish(robotAngles);
-       ROS_INFO("joint state published with angle %f \n", backhoeSimulation->getShTheta());
+       ROS_INFO("shoulder joint state published with angle %f \n", backhoeSimulation->getShTheta());
+       ROS_INFO("wrist joint state published with angle %f \n", backhoeSimulation->getWrTheta());
     }
     else // display output for physical
     {

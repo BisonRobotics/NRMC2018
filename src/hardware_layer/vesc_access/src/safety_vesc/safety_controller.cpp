@@ -85,7 +85,7 @@ double SafetyController::updateVelocity(void)
 
 bool SafetyController::isAtSetpoint(void)
 {
-    return fabs(position_estimate) < fabs(params.setpoint_tolerance);
+    return fabs(position_estimate - set_position) < fabs(params.setpoint_tolerance);
 }
 
 void SafetyController::updatePosition(double dt)

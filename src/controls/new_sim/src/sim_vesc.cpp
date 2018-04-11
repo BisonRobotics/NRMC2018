@@ -73,8 +73,14 @@ float SimVesc::getLinearVelocity(void)
 
 float SimVesc::getTorque(void)
 {
-  if (vel >0) return 100;
-  else return -100;
+  if (vel >0) 
+  {
+     return 20;
+  }
+  else if (vel < 0)
+  { 
+    return -20;
+  }
 }
 
 void SimVesc::setTorque(float current)
