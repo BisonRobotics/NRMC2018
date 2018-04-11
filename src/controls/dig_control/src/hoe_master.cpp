@@ -68,7 +68,7 @@ int main(int argc, char **argv)
     bucketLittleConveyorVesc = bucketSimulation->getLittleConveyorVesc();
     bucketSifterVesc = bucketSimulation->getSifterVesc();
     // SimBackhoe
-    backhoeSimulation = new SimBackhoe(0, 0);  // shoulder and wrist angle
+    backhoeSimulation = new SimBackhoe(0, 0, -2, 4, -2, 4);  // shoulder and wrist angle
     backhoeShoulderVesc = backhoeSimulation->getShoulderVesc();
     backhoeWristVesc = backhoeSimulation->getWristVesc();
     // populate inital backhoe position
@@ -89,10 +89,12 @@ int main(int argc, char **argv)
  }
 
   LinearSafetyController linearSafety (linear_joint_params, backhoeWristVesc, false);
+  linearSafety.init();
   BackhoeSafetyController backhoeSafety (central_joint_params, backhoeShoulderVesc, false);
+  backhoeSafety.init();
   // pass vescs (sim or physical) to controllers
 
-
+  ROS_INFO("Init'd");
   BucketController bucketC(bucketBigConveyorVesc, bucketLittleConveyorVesc, bucketSifterVesc);
   BackhoeController backhoeC(&backhoeSafety, &linearSafety);
 
@@ -135,6 +137,8 @@ int main(int argc, char **argv)
     {
       
     }
+
+    ROS_INFO("Digdump AS states: %d, %d", ddAct.digging_state, ddAct.dumping_state);
 
     ros::spinOnce();
     rate.sleep();

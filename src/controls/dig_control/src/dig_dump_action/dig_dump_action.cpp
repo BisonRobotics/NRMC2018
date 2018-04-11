@@ -26,14 +26,14 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
   else
   {
     is_digging = true;
+    //digging_state = dig_state_enum::dig_idle;
     while (ros::ok() && is_digging)
     {
       r.sleep();
       switch (digging_state)
       {
         case dig_state_enum::dig_idle: //not digging, should start here
-
-          backhoe->setShoulderSetpoint(1); //where we think the ground is (0 should be all the way back, 1 is all the way forward)
+          //backhoe->setShoulderSetpoint(1); //where we think the ground is (0 should be all the way back, 1 is all the way forward)
           bucket->turnSifterOn();
           bucket->turnLittleConveyorOn();
           backhoe->setShoulderSetpoint(.3);
