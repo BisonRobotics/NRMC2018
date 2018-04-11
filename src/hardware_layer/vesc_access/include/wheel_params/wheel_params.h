@@ -4,10 +4,10 @@
 #include "vesc_access/ivesc_access.h"
 #include "safety_vesc/isafety_controller.h"
 
-#define FRONT_LEFT_WHEEL_ID 4
-#define FRONT_RIGHT_WHEEL_ID 1
-#define BACK_RIGHT_WHEEL_ID 2
-#define BACK_LEFT_WHEEL_ID 3
+#define FRONT_LEFT_WHEEL_ID 1
+#define FRONT_RIGHT_WHEEL_ID 2
+#define BACK_RIGHT_WHEEL_ID 3
+#define BACK_LEFT_WHEEL_ID 4
 #define CENTRAL_DRIVE_ID 5
 #define LINEAR_MOTOR_ID 6
 #define VIBRATOR_MOTOR_ID 7

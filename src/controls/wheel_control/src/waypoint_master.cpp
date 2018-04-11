@@ -188,7 +188,7 @@ int main(int argc, char **argv)
     br = new VescAccess(back_right_param);
     bl = new VescAccess(back_left_param);
     pos = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .07);
-    imu = new LpResearchImu("imu");
+    imu = new LpResearchImu("imu_base_link");
   }
 
   // initialize the localizer here

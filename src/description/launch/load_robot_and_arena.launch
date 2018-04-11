@@ -15,4 +15,10 @@
       <param name="test_urdf" value="$(arg test_urdf)" />
   </node>
   <node name="tag_location_publisher" pkg="description" type="tag_location_publisher" />
+
+  <node name="imu_transformer" pkg="imu_transformer" type="imu_transformer_node">
+    <remap from="imu_in/data" to="imu"/>
+    <remap from="imu_out/data" to="imu_base_link"/>
+  </node>
+
 </launch>

@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 {
   ros::init(argc, argv, "localization_tester");
   AprilTagTrackerInterface *aprilTags = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .07);
-  LpResearchImu *lpResearchImu = new LpResearchImu("imu");
+  LpResearchImu *lpResearchImu = new LpResearchImu("imu_base_link");
   ros::NodeHandle n;
   ros::Rate r(50);
   tf2_ros::TransformBroadcaster br;
