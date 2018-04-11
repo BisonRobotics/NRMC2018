@@ -46,6 +46,8 @@ private:
   ros::Publisher js_pub;
   sensor_msgs::JointState js_message;
   std_msgs::Float32 f32_message;
+  ros::Time last_time;
+  bool first_time;
   struct ifreq ifr;
   struct sockaddr_can addr;
   int s;

@@ -21,9 +21,9 @@
 #define MAX_WHEEL_VELOCITY .5f
 #define MAX_WHEEL_TORQUE 176.0f
 #define WHEEL_GEAR_RATIO 181.4f
-#define WHEEL_OUTPUT_RATIO .03048f
+#define WHEEL_OUTPUT_RATIO .3048f
 #define WHEEL_POLE_PAIRS 1
-#define WHEEL_TORQUE_CONSTANT 4.0f
+#define WHEEL_TORQUE_CONSTANT .02120f
 
 #define MAX_CENTRAL_DRIVE_VELOCITY 0.9425f  // in rad/s
 #define MAX_CENTRAL_DRIVE_TORQUE 300.0f     // in Nm -> the real number is 675 but we should never approach that

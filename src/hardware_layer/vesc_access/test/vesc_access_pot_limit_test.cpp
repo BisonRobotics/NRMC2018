@@ -18,8 +18,8 @@ int main(int argc, char **argv)
                                     (char *)"can0", pole_pairs, true);
 
   std::cout << "starting" << std::endl;
-
-  while (1)
+  ros::Rate rate (10);
+  while (ros::ok())
   {
     try
     {
@@ -43,6 +43,6 @@ int main(int argc, char **argv)
     }
     std::cout << std::endl
               << "Pot position: " << vesc->getPotPosition() << std::endl;
-    sleep(1);
+    rate.sleep();
   }
 }

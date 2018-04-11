@@ -52,7 +52,7 @@ int main (int argc, char **argv)
         {&front_left_wheel, &front_right_wheel, &back_left_wheel, &back_right_wheel,
          &central_drive, &linear, &sifter, &small_conveyor, &large_conveyor, &left_outrigger, &right_outrigger
     };
-    while (1)
+    while (ros::ok())
     {
         bool motor_down = false;
         for (unsigned int ctr = 0; ctr < NUMBER_OF_MOTORS; ctr++)
