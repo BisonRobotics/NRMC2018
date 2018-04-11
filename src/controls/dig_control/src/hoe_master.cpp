@@ -26,6 +26,8 @@ int main(int argc, char **argv)
 
   ros::NodeHandle node("~");
   ros::NodeHandle globalNode;
+  ros::Rate rate(DIGGING_CONTROL_RATE_HZ); //should be 50 Hz
+
   bool simulating;
   if (node.hasParam("simulating_digging"))
   {
@@ -77,8 +79,11 @@ int main(int argc, char **argv)
   }
   else
   {
-    bucketSimulation = NULL;   // This is a physical run.
-    backhoeSimulation = NULL;  // You'll cause exceptions.
+    // Don't use these pointers
+    // This is a physical run.
+    // You'll cause exceptions.
+    bucketSimulation = NULL;   
+    backhoeSimulation = NULL;  
 
     backhoeShoulderVesc = new VescAccess (shoulder_param, true);
     backhoeWristVesc = new VescAccess (linear_param, true);
@@ -89,18 +94,27 @@ int main(int argc, char **argv)
  }
 
   LinearSafetyController linearSafety (linear_joint_params, backhoeWristVesc, false);
-  linearSafety.init();
+  bool isLinearInit = false;
+  while (ros::ok() && !isLinearInit)
+  {
+    if (simulating)
+    {
+      backhoeSimulation->update(1.0 / DIGGING_CONTROL_RATE_HZ);
+      ROS_INFO("Linear at %.4f", backhoeSimulation->getWrTheta());
+      ROS_INFO("Linear from vesc at %.4f", backhoeSimulation->getWristVesc()->getPotPosition());
+    }
+    isLinearInit = linearSafety.init();
+    rate.sleep();
+  }
+
 
   BackhoeSafetyController backhoeSafety (central_joint_params, backhoeShoulderVesc, false);
-
   backhoeSafety.init();
   // pass vescs (sim or physical) to controllers
 
   ROS_INFO("Init'd");
   BucketController bucketC(bucketBigConveyorVesc, bucketLittleConveyorVesc, bucketSifterVesc);
   BackhoeController backhoeC(&backhoeSafety, &linearSafety);
-
-  ros::Rate rate(DIGGING_CONTROL_RATE_HZ); //should be 50 Hz
 
   DigDumpAction ddAct(&backhoeC, &bucketC);
 
