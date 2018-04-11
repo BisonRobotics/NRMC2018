@@ -112,7 +112,11 @@ class ImperioControl(object):
         """
         Digs for Regolith
         """
-        if self.rm.dig_regolith(self.robot):
+        result = self.rm.dig_regolith(self.robot)
+        if result == None:
+            print("Imperio : Error with Dig")
+            self.recover()
+        if result:
             self.robot.next_state()
 
     def deposit(self):

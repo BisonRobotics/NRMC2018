@@ -11,32 +11,47 @@ import rospy
 import roslib
 import actionlib
 
-from dig_control.msg import DigAction, DigActionGoal
+from dig_control.msg import DigAction, DigActionGoal, DigActionResult
 
 class RegolithManipulation(object):
     def __init__(self):
         self.dig_client = actionlib.SimpleActionClient('dig_server', DigAction)
+        self.regolith_in_bucket = 0
+        self.waiting_on_action = False
 
     # Tells the robot to dig the regolith
     # Returns boolean of success
     def dig_regolith(self, robot):
-        print("enter dig regolith")
-        goal = self.dig_goal_message()
-        print("dig message created")
-        self.dig_client.wait_for_server()
-        print("finished waiting for the serer")
-        self.dig_client.send_goal(goal)
-        print("goal sent")
-        #TODO : Check how long we should do this
-        result = self.dig_client.get_goal_status_text()
-        print(result)
-        #TODO : Wait for the result here?
+        if self.waiting_on_action == True:
+            result = self.dig_client.get_result()
+            if result == None:
+                return False
+            else:
+                if result.is_error:
+                    return None
+                self.waiting_on_action = False
+                self.regolith_in_bucket = result.weight_harvested
+                print("Imperio : Harvested {} of regolith".format(self.regolith_in_bucket))
+
+        #TODO : Define the needed threshold with the NDSU team [JIRA NRMC2018-358]
+        threshold = 10
+        if self.regolith_in_bucket < threshold:
+            self.single_dig()
+            self.waiting_on_action = True
+            return False
+
         return True
+
+    def single_dig(self):
+        print("Imperio : Performing a dig")
+        goal = self.dig_goal_message()
+        self.dig_client.wait_for_server()
+        self.dig_client.send_goal(goal)
 
     def dig_goal_message(self):
         goal = DigActionGoal
-        #TODO : fill in the angle
-        goal.angle = 0.0
+        #TODO : fill in the angle [JIRA NRMC2018-358]
+        goal.angle = 10.0
         return goal
 
     # Tells the robot to deposit the regolith
