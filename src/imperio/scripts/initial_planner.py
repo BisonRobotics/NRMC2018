@@ -27,7 +27,7 @@ class InitialPlanner(Planner):
 
         field = 1 if y <= 0 else 2
         position = self.get_starting_position(orientation)
-        region = self.starting_y_region(y)
+        region = self.starting_y_region(goal[1])
         waypoints = hardcoded_paths[region][position]
 
         if field == 2:
@@ -46,7 +46,17 @@ class InitialPlanner(Planner):
     def get_starting_position(self, orientation):
         if orientation == 0:
             return 0
-        return (orientation % math.pi) / (math.pi/8)
+
+        angle = (orientation % math.pi)
+        region_size = (math.pi/8)
+
+        for i in range(1,8):
+            region = region_size * i
+            if angle < region:
+                return i
+
+        #If you have reached here, there was an error. Use position 0 as default
+        return 0
 
     def find_best_starting_goal(self):
         if self.occupancy_grid == None:
@@ -88,12 +98,14 @@ class InitialPlanner(Planner):
         return (score, region)
 
     def region_starting_y(self, region):
-        if region == 1:
+        if region == 0:
             return -self.width_thirds
-        if region == 2:
+        if region == 1:
             return 0
-        if region == 3:
+        if region == 2:
             return self.width_thirds
+        #default region is 1
+        return 1
 
     def starting_y_region(self, starting_y):
         if starting_y == self.region_starting_y(0):
@@ -102,5 +114,8 @@ class InitialPlanner(Planner):
             return 1
         if starting_y == self.region_starting_y(2):
             return 2
+        #default region is 0
+        return 0
+
 
          
