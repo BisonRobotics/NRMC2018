@@ -1,0 +1,9 @@
+<!-- Launch file for testing on the actual robot with visualization. Author : Nicole Maguire -->
+<launch>
+
+<node name="imperio_marker_vis" pkg="imperio" type="path_vis.py"/>
+
+<!-- include file="$(find imperio)/launch/with_time_testing.launch"/-->
+<include file="$(find imperio)/launch/minimal_testing.launch"/>
+
+</launch>

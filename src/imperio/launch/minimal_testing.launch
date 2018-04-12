@@ -1,0 +1,15 @@
+<!-- Launch File for testing on the actual robot. Author : Nicole Maguire -->
+<!-- Does not launch ANY dummy data, simulators, or visualization -->
+<launch>
+
+<include file="$(find mapping)/launch/costmap_2d.launch"/>
+<node name="imperio" pkg="imperio" type="imperio_control.py" output="screen"/>
+
+
+<!-- Change these for different testing setups -->
+<!-- Change this to True if you want Imperio to loop through it's state machine -->
+<param name="loop_imperio" value="False"/>
+
+<!-- Params Imperio Needs to Run -->
+<param name="location_accuracy" value="0.1"/>
+</launch>
