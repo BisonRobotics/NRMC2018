@@ -36,7 +36,7 @@ class robot(object):
         :param node: the ROS node being used
         """
         self.state = None
-        self.change_state(RobotState.INITIAL)
+        self.change_state(RobotState.OUTBOUND)
         self.tf = tf.TransformListener(node)
         self.location = None
         self.pose = None
