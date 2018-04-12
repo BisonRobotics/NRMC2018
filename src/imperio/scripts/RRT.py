@@ -235,6 +235,12 @@ def path_planning(start, goal, map):
 
     goal_x, goal_y = goal
     if goal_x > max_x or goal_x < min_x or goal_y > max_y or goal_y < min_y:
+        print("Imperio : Goal outside of the costmap")
+        return []
+
+    start_x, start_y = start[0], start[1]
+    if start_x > max_x or start_x < min_x or start_y > max_y or goal_y < min_y:
+        print("Imperio : Robot localized to a point not found on costmap")
         return []
 
     rrt = RRT(start, goal, map, [min_x, max_x], [min_y, max_y])

@@ -105,8 +105,7 @@ class robot(object):
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             print("IMPERIO ERROR : Robot is not able to localize")
             # TODO : Add recovery behavior [Jira NRMC2018-329]
-            self.location = (0,0,0)
-            self.pose = (0,0,0,0)
+            return (None, None)
         return (self.location, self.pose)
 
 

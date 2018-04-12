@@ -49,6 +49,7 @@ class Planner(object):
         self.robot = robot
         self.occupancy_grid = None
         self.movement_status = MovementStatus.HAS_REACHED_GOAL
+        self.given_goal = False
 
     def map_callback(self, map_message):
         self.occupancy_grid = map_utils.Map(map_message)
@@ -59,7 +60,9 @@ class Planner(object):
         :param status_message: the message that was published
         """
         if status_message.in_motion.data:
-            self.movement_status = MovementStatus.MOVING
+            #self.movement_status = MovementStatus.MOVING
+            self.has_moved = True
+            print("Imperio : Movement Status MOVING")
         if status_message.has_reached_goal.data:
             self.movement_status = MovementStatus.HAS_REACHED_GOAL
             print("Imperio : Movement Status HAS_REACHED_GOAL")
@@ -78,11 +81,19 @@ class Planner(object):
         """
 
         if self.movement_status == MovementStatus.CANNOT_PLAN_PATH:
+            print("CANNOT PLAN PATH")
             return None
         if self.movement_status == MovementStatus.MOVING:
             return False
-        if self.movement_status == MovementStatus.HAS_REACHED_GOAL and self.robot_within_threshold(goal):
+        if self.movement_status == MovementStatus.HAS_REACHED_GOAL and self.given_goal:
+            if self.robot_within_threshold(goal):
+                # Didn't want to make y'all deal with the threshold right now. Relying on local planner to tell us we got to goal
+                print("Imperio : Local and Global planner agree that we made it to goal")
+            #Just for testing with actual robot
+            self.given_goal = False
             return True
+
+        print("PLANNING A PATH TO GOAL {}".format(goal))
 
         #We can't do anything until we have the occupancy grid
         if self.occupancy_grid == None:
@@ -94,9 +105,11 @@ class Planner(object):
         waypoints = self.find_waypoints(goal)
         oriented_waypoints = self.calculate_orientation(waypoints)
         print("Imperio: Path found : {}".format(oriented_waypoints))
+        if oriented_waypoints == []:
+            return None
 
         #TODO : Add recovery behavior for if this is null [Jira NRMC2018-330]
-
+        self.given_goal = True
         self.publish_waypoints(oriented_waypoints)
         print("Imperio : For Goal {}".format(goal))
         return False
@@ -155,6 +168,8 @@ class Planner(object):
 
         # TODO : Check the orientation of the robot [NRMC2018-332]
         abs_distance = math.sqrt((loc_x - goal_x) ** 2 + (loc_y - goal_y) ** 2)
+        print("Imperio : abs_distance {}".format(abs_distance))
+        print("Imperio : Robot is located at {} but the goal is {}".format(location, goal))
         return  abs_distance < errorThreshold
 
     def halt_movement(self):
