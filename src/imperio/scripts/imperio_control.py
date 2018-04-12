@@ -28,6 +28,14 @@ class ImperioControl(object):
         rospy.Subscriber('/halt_autonomy', Bool, self.haltAutonomyCallback)
         rospy.Subscriber('/times_up', Bool, self.timerCallback)
 
+        self.should_loop = True
+        try:
+            if rospy.get_param('loop_imperio'):
+                self.should_loop = False;
+        except:
+            #this is fine, normal launch files do not have this param
+            pass
+
         self.robot = robot(self.node)
         self.initial_planner = InitialPlanner(self.robot)
         self.planner = GlobalPlanner(self.robot)
@@ -94,7 +102,10 @@ class ImperioControl(object):
         if result == None:
             self.robot.change_state(RobotState.HALT)
         if result:
-            self.robot.next_state()
+            if self.should_loop:
+                self.robot.next_state()
+            else:
+                print("Imperio : Sucessfully reached goal")
 
     def navigateInbound(self):
         """
