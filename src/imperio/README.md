@@ -29,6 +29,18 @@ Imperio is Robotic Autonomy. It is the top level software for controlling the ro
    
    this will launch the imperio node, the imperio visualization tool, and the competition timer.
 
+### How do I test it? ###
+
+* Install the python testing frameworks if you don't already have them
+   >pip install pytest
+   >pip install pytest-cov
+
+* Run the tests (Can be done from any directory containing imperio/scripts)
+   >pytest
+
+* Run the code coverage (Assuming you're at the top of the workspace)
+   >pytest --cov=src/imperio/scripts
+
 ### Contribution guidelines ###
 
  * Just Don't Touch It
