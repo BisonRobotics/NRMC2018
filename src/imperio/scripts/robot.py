@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """ Super class for a robot object and state machine, describes the methods that a Robot should have.
 
-Author: James Madison University
+Author: Nicole Maguire
 Date: 4/12/2018
 Version: 3
 
@@ -33,7 +33,7 @@ class robot(object):
         :param node: the ROS node being used
         """
         self.state = None
-        self.change_state(RobotState.OUTBOUND)
+        self.change_state(RobotState.INITIAL)
         self.tf = tf.TransformListener(node)
         self.location = None
         self.pose = None

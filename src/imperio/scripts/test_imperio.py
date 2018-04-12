@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """ Super class for a robot object and state machine, describes the methods that a Robot should have.
 
-Author: James Madison University
+Author: Nicole Maguire
 Date: 4/12/2018
 Test For Version : 3
 
