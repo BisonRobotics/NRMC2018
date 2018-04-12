@@ -8,15 +8,15 @@
     <l_current_min>-40</l_current_min>
     <l_in_current_max>10</l_in_current_max>
     <l_in_current_min>-10</l_in_current_min>
-    <l_abs_current_max>20</l_abs_current_max>
+    <l_abs_current_max>34</l_abs_current_max>
     <l_min_erpm>-60000</l_min_erpm>
     <l_max_erpm>60000</l_max_erpm>
     <l_max_erpm_fbrake>300</l_max_erpm_fbrake>
     <l_max_erpm_fbrake_cc>1500</l_max_erpm_fbrake_cc>
     <l_min_vin>8</l_min_vin>
     <l_max_vin>57</l_max_vin>
-    <l_battery_cut_start>40</l_battery_cut_start>
-    <l_battery_cut_end>36</l_battery_cut_end>
+    <l_battery_cut_start>10</l_battery_cut_start>
+    <l_battery_cut_end>8</l_battery_cut_end>
     <l_slow_abs_current>1</l_slow_abs_current>
     <l_rpm_lim_neg_torque>0</l_rpm_lim_neg_torque>
     <l_temp_fet_start>80</l_temp_fet_start>
@@ -41,20 +41,20 @@
     <hall_table_6>4</hall_table_6>
     <hall_table_7>-1</hall_table_7>
     <hall_sl_erpm>2000</hall_sl_erpm>
-    <foc_current_kp>0.0078</foc_current_kp>
-    <foc_current_ki>24.32</foc_current_ki>
+    <foc_current_kp>0.0077</foc_current_kp>
+    <foc_current_ki>14.58</foc_current_ki>
     <foc_f_sw>20000</foc_f_sw>
     <foc_dt_us>0.08</foc_dt_us>
-    <foc_encoder_inverted>1</foc_encoder_inverted>
-    <foc_encoder_offset>210.92</foc_encoder_offset>
+    <foc_encoder_inverted>0</foc_encoder_inverted>
+    <foc_encoder_offset>268.83</foc_encoder_offset>
     <foc_encoder_ratio>7</foc_encoder_ratio>
     <foc_sensor_mode>1</foc_sensor_mode>
     <foc_pll_kp>2000</foc_pll_kp>
     <foc_pll_ki>20000</foc_pll_ki>
-    <foc_motor_l>7.81e-06</foc_motor_l>
-    <foc_motor_r>0.02432</foc_motor_r>
-    <foc_motor_flux_linkage>0.001901</foc_motor_flux_linkage>
-    <foc_observer_gain>1.2804e+08</foc_observer_gain>
+    <foc_motor_l>7.7e-06</foc_motor_l>
+    <foc_motor_r>0.01458</foc_motor_r>
+    <foc_motor_flux_linkage>0.00192</foc_motor_flux_linkage>
+    <foc_observer_gain>1.2987e+08</foc_observer_gain>
     <foc_duty_dowmramp_kp>10</foc_duty_dowmramp_kp>
     <foc_duty_dowmramp_ki>200</foc_duty_dowmramp_ki>
     <foc_openloop_rpm>1200</foc_openloop_rpm>

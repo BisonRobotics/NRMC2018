@@ -41,8 +41,8 @@
     <hall_table_6>4</hall_table_6>
     <hall_table_7>-1</hall_table_7>
     <hall_sl_erpm>2000</hall_sl_erpm>
-    <foc_current_kp>0.03</foc_current_kp>
-    <foc_current_ki>50</foc_current_ki>
+    <foc_current_kp>0.0077</foc_current_kp>
+    <foc_current_ki>14.36</foc_current_ki>
     <foc_f_sw>20000</foc_f_sw>
     <foc_dt_us>0.08</foc_dt_us>
     <foc_encoder_inverted>0</foc_encoder_inverted>
@@ -51,10 +51,10 @@
     <foc_sensor_mode>1</foc_sensor_mode>
     <foc_pll_kp>2000</foc_pll_kp>
     <foc_pll_ki>20000</foc_pll_ki>
-    <foc_motor_l>7e-06</foc_motor_l>
-    <foc_motor_r>0.015</foc_motor_r>
-    <foc_motor_flux_linkage>0.00245</foc_motor_flux_linkage>
-    <foc_observer_gain>9e+07</foc_observer_gain>
+    <foc_motor_l>7.73e-06</foc_motor_l>
+    <foc_motor_r>0.01436</foc_motor_r>
+    <foc_motor_flux_linkage>0.001909</foc_motor_flux_linkage>
+    <foc_observer_gain>1.2937e+08</foc_observer_gain>
     <foc_duty_dowmramp_kp>10</foc_duty_dowmramp_kp>
     <foc_duty_dowmramp_ki>200</foc_duty_dowmramp_ki>
     <foc_openloop_rpm>1200</foc_openloop_rpm>
