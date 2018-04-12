@@ -25,6 +25,8 @@ cmake-build-*/
 *.pyc
 tmp/
 *.DS_Store
+.coverage
+.pytest_cache/
 
 *.old
 emptytests
