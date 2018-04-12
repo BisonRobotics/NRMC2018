@@ -7,8 +7,8 @@
 
 
 <!-- Change these for different testing setups -->
-<!-- Change this to True if you want Imperio to loop through it's state machine -->
-<param name="loop_imperio" value="False"/>
+<!-- Change this to False if you just want imperio to attempt one OUTBOUND goal navigation -->
+<param name="loop_imperio" value="True"/>
 
 <!-- Params Imperio Needs to Run -->
 <param name="location_accuracy" value="0.1"/>
