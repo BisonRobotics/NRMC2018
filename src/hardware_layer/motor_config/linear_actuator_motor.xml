@@ -2,13 +2,13 @@
 <MCConfiguration>
     <pwm_mode>1</pwm_mode>
     <comm_mode>0</comm_mode>
-    <motor_type>0</motor_type>
+    <motor_type>2</motor_type>
     <sensor_mode>0</sensor_mode>
-    <l_current_max>60</l_current_max>
-    <l_current_min>-60</l_current_min>
-    <l_in_current_max>20</l_in_current_max>
-    <l_in_current_min>0</l_in_current_min>
-    <l_abs_current_max>27</l_abs_current_max>
+    <l_current_max>25</l_current_max>
+    <l_current_min>-25</l_current_min>
+    <l_in_current_max>19</l_in_current_max>
+    <l_in_current_min>-20</l_in_current_min>
+    <l_abs_current_max>31</l_abs_current_max>
     <l_min_erpm>-100000</l_min_erpm>
     <l_max_erpm>100000</l_max_erpm>
     <l_max_erpm_fbrake>300</l_max_erpm_fbrake>
@@ -45,8 +45,8 @@
     <foc_current_ki>50</foc_current_ki>
     <foc_f_sw>20000</foc_f_sw>
     <foc_dt_us>0.08</foc_dt_us>
-    <foc_encoder_inverted>1</foc_encoder_inverted>
-    <foc_encoder_offset>258.88</foc_encoder_offset>
+    <foc_encoder_inverted>0</foc_encoder_inverted>
+    <foc_encoder_offset>180</foc_encoder_offset>
     <foc_encoder_ratio>7</foc_encoder_ratio>
     <foc_sensor_mode>1</foc_sensor_mode>
     <foc_pll_kp>2000</foc_pll_kp>

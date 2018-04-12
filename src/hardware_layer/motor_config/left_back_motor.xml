@@ -2,13 +2,13 @@
 <MCConfiguration>
     <pwm_mode>1</pwm_mode>
     <comm_mode>0</comm_mode>
-    <motor_type>0</motor_type>
+    <motor_type>2</motor_type>
     <sensor_mode>0</sensor_mode>
-    <l_current_max>60</l_current_max>
-    <l_current_min>-60</l_current_min>
-    <l_in_current_max>16</l_in_current_max>
-    <l_in_current_min>-8</l_in_current_min>
-    <l_abs_current_max>23</l_abs_current_max>
+    <l_current_max>40</l_current_max>
+    <l_current_min>-40</l_current_min>
+    <l_in_current_max>10</l_in_current_max>
+    <l_in_current_min>-10</l_in_current_min>
+    <l_abs_current_max>10</l_abs_current_max>
     <l_min_erpm>-100000</l_min_erpm>
     <l_max_erpm>100000</l_max_erpm>
     <l_max_erpm_fbrake>300</l_max_erpm_fbrake>
