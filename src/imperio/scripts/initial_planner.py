@@ -95,7 +95,6 @@ class InitialPlanner(Planner):
         if region == 3:
             return self.width_thirds
 
-
     def starting_y_region(self, starting_y):
         if starting_y == self.region_starting_y(0):
             return 0
