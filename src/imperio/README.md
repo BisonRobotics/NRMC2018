@@ -40,6 +40,12 @@ Imperio is Robotic Autonomy. It is the top level software for controlling the ro
 
 * Run the code coverage (Assuming you're at the top of the workspace)
    >pytest --cov=src/imperio/scripts
+* More in-depth code coverage information
+   >coverage report -m
+* Extremely in-depth code coverage information (recommended) can use any browser
+   >coverage html
+
+   >firefox htmlcov/index.html
 
 ### Contribution guidelines ###
 

@@ -155,7 +155,8 @@ class TestPlanner(object):
 
         map = planner.map_utils.Map()
         sp.occupancy_grid = map
-        sp.movement_status = planner.MovementStatus.MOVING
+        assert not sp.occupancy_grid == None
+        assert not sp.navigate_to_goal((1,1))
 
     def test_publish_waypoints(self):
         planner.rospy.init_node('Test_Imperio')
@@ -182,13 +183,22 @@ class TestPlanner(object):
 
 
     def test_robot_within_threshold(self):
-        pass
+        sr = SpoofRobot()
+        sp = SpoofPlanner(sr)
+
+        #default/launch distance threshold being .1
+        assert not sp.robot_within_threshold((5,5)) #Distance : 7.071068
+        assert sp.robot_within_threshold((0,0)) #Distance : 0.0
+        assert sp.robot_within_threshold((0.05,0.05)) #Distance : 0.0707107
+        assert not sp.robot_within_threshold((.08,.06)) #Distance : .1
+        assert sp.robot_within_threshold((.08,-.05)) #Distance : .0943398
+
 
     def test_halt_movement(self):
-        pass
+        sp = SpoofPlanner(None)
+        sp.halt_movement()
 
     def test_calculate_orientation(self):
-        #TODO : have someone who knows math review this one
         sp = SpoofPlanner(None)
         assert sp.calculate_orientation([]) == []
         assert sp.calculate_orientation(None) == []
@@ -199,13 +209,15 @@ class TestPlanner(object):
         waypoints = [(-1,0)]
         sp.calculate_orientation(waypoints)
 
-        waypoints = [(4,4),(4,4),(4,4),(5,5,),(-1,-1),(4,2)]
+        waypoints = [(4,4),(4,4),(4,4),(5,5),(-1,-1),(4,2)]
         result = sp.calculate_orientation(waypoints)
-        #TODO : Check what this should return
-        assert  len(result) == len(waypoints)
+        assert len(result) == len(waypoints)
 
-
-
+        waypoints = [(1,-1),(2,-1),(3,0),(2,1)]
+        expected_results = [(1,-1, 0), (2,-1,.785398), (3,0, 2.35619), (2,1,2.35619)]
+        result = sp.calculate_orientation(waypoints)
+        for i in range(0,len(waypoints)):
+            assert abs(expected_results[i][2] - result[i][2]) < 0.001
 
 
     def test_get_robot_location(self):

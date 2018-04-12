@@ -143,7 +143,7 @@ class Planner(object):
         errorThreshold = rospy.get_param('/location_accuracy')
         if errorThreshold == None:
             #TODO : Check with the team for best threshold here [Jira NRMC2018-331]
-            errorThreshold = 1
+            errorThreshold = .1
 
 
         goal_x, goal_y = goal
@@ -159,6 +159,7 @@ class Planner(object):
 
         # TODO : Check the orientation of the robot [NRMC2018-332]
         abs_distance = math.sqrt((loc_x - goal_x) ** 2 + (loc_y - goal_y) ** 2)
+        print(errorThreshold)
         return  abs_distance < errorThreshold
 
     def halt_movement(self):
