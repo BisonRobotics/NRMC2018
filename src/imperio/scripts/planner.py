@@ -60,9 +60,7 @@ class Planner(object):
         :param status_message: the message that was published
         """
         if status_message.in_motion.data:
-            #self.movement_status = MovementStatus.MOVING
-            self.has_moved = True
-            print("Imperio : Movement Status MOVING")
+            self.movement_status = MovementStatus.MOVING
         if status_message.has_reached_goal.data:
             self.movement_status = MovementStatus.HAS_REACHED_GOAL
             print("Imperio : Movement Status HAS_REACHED_GOAL")
@@ -81,7 +79,6 @@ class Planner(object):
         """
 
         if self.movement_status == MovementStatus.CANNOT_PLAN_PATH:
-            print("CANNOT PLAN PATH")
             return None
         if self.movement_status == MovementStatus.MOVING:
             return False
