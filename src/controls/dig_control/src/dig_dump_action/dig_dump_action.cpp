@@ -58,11 +58,12 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
           }
           break;
         case dig_state_enum::finding_ground: //going to find the ground
-          //report and latch weightMetric
-
+          //this method checks the torque reported by the motor
+          //it waits for the I gain on the velocity control to increase the torque above
+          //a threshold
           if (backhoe->hasHitGround())
           {
-              backhoe
+              backhoe->abandonShoulderPositionSetpointAndSetTorqueWithoutStopping(1.0f);
               backhoe->setWristSetpoint(1); //curl it in
               digging_state = curling_backhoe;
           }
@@ -84,7 +85,7 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
         case dig_state_enum::dumping_into_bucket: //uncurling wrist to release dirt into bucket
             if (backhoe->wristAtSetpoint())
             {
-                backhoe->setShoulderSetpoint(.3); //wherever transit should be
+                backhoe->setShoulderSetpoint(.3); //wherever transit/initial should be
                 digging_state = returning_backhoe_to_initial;
             }
           break;

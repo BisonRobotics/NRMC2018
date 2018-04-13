@@ -1,16 +1,15 @@
 #include "safety_vesc/linear_safety_controller.h"
 
 
-LinearSafetyController::LinearSafetyController(safetycontroller::joint_params_t params, iVescAccess *vesc, bool in_velocity)
-: SafetyController::SafetyController(vesc, params, in_velocity)
+LinearSafetyController::LinearSafetyController(safetycontroller::joint_params_t params, iVescAccess *vesc)
+: SafetyController::SafetyController(vesc, params)
 {
     has_set_init_vel = false;
 }
 
-void LinearSafetyController::updatePosition(double dt)
+void LinearSafetyController::updatePositionEstimate(double dt)
 {
     this->position_estimate += vesc->getLinearVelocity()*dt;
-    SafetyController::updatePosition(dt);
 }
 
 bool LinearSafetyController::init()

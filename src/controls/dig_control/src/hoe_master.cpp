@@ -93,7 +93,7 @@ int main(int argc, char **argv)
     // initialize real vescs here
  }
 
-  LinearSafetyController linearSafety (linear_joint_params, backhoeWristVesc, false);
+  LinearSafetyController linearSafety (linear_joint_params, backhoeWristVesc);
   bool isLinearInit = false;
   while (ros::ok() && !isLinearInit)
   {
@@ -108,7 +108,7 @@ int main(int argc, char **argv)
   }
 
 
-  BackhoeSafetyController backhoeSafety (central_joint_params, backhoeShoulderVesc, false);
+  BackhoeSafetyController backhoeSafety (central_joint_params, backhoeShoulderVesc);
   backhoeSafety.init();
   // pass vescs (sim or physical) to controllers
 

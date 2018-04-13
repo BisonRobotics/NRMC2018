@@ -1,8 +1,8 @@
 #include "safety_vesc/backhoe_safety_controller.h"
 
 
-BackhoeSafetyController::BackhoeSafetyController(safetycontroller::joint_params_t params, iVescAccess *vesc, bool in_velocity)
-: SafetyController (vesc, params, in_velocity)
+BackhoeSafetyController::BackhoeSafetyController(safetycontroller::joint_params_t params, iVescAccess *vesc)
+: SafetyController (vesc, params)
 {
 
 }
@@ -15,7 +15,7 @@ bool BackhoeSafetyController::init()
     return true;
 }
 
-void BackhoeSafetyController::updatePosition(double dt)
+void BackhoeSafetyController::updatePositionEstimate(double dt)
 {
     this->position_estimate = this->vesc->getPotPosition();
 }

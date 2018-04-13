@@ -15,10 +15,11 @@ public:
   // TODO, return status on update based on operation (see waypoint controller)
   void setShoulderSetpoint(double angle);     // in rad from horizontal
   void setWristSetpoint(double distance);     // in m
-  void setShoulderTorque(double Torque);  // in n*m
+  void setShoulderTorque(double torque);  // in n*m
   void setWristVelocity(double velocity);     // in m/s
   void init();
   void update(double dt);
+  void abandonShoulderPositionSetpointAndSetTorqueWithoutStopping(double torque);
   bool hasHitGround ();
   bool shoulderAtSetpoint();
   bool wristAtSetpoint();

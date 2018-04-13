@@ -26,45 +26,45 @@ void BackhoeController::setWristSetpoint(double angle)
 void BackhoeController::setShoulderTorque(double torque)
 {
   if (getIsInit()) {
-    backhoe_safety->setTorqueSetpoint(torque);
+    backhoe_safety->setTorque(torque);
+  }
+}
+
+void BackhoeController::abandonShoulderPositionSetpointAndSetTorqueWithoutStopping(double torque)
+{
+  if (getIsInit()) {
+    backhoe_safety->abandonPositionSetpointAndSetTorqueWithoutStopping(torque);
   }
 }
 
 void BackhoeController::setWristVelocity(double velocity)
 {
   if (getIsInit()) {
-    linear_safety->setVelocitySetpoint(velocity);
+    linear_safety->setVelocity(velocity);
   }
 }
 
 void BackhoeController::update(double dt)
 {
   if (getIsInit()) {
-    backhoe_safety->updatePosition(dt);
-    linear_safety->updatePosition(dt);
     safetyCheck();
-    backhoe_safety->updateVelocity();
-    linear_safety->updateVelocity();
+    backhoe_safety->update(dt);
+    linear_safety->update(dt);
   }
 }
 
 void BackhoeController::safetyCheck()
 {
-  if (backhoe_safety->getVelocity() > 0 && backhoe_safety->getPosition() > backhoe_safety->getSafetyPosition() &&
-      linear_safety->getPosition() > linear_safety->getSafetyPosition())
+  if ((backhoe_safety->getLinearVelocity() > 0 || backhoe_safety->getTorque() > 0)
+       && backhoe_safety->getPositionEstimate() > backhoe_safety->getSafetyPosition() 
+       && linear_safety->getPositionEstimate() > linear_safety->getSafetyPosition())
   {
     backhoe_safety->stop();
-    if (linear_safety->getVelocity() > 0)
+    if (linear_safety->getLinearVelocity() > 0 || linear_safety->getTorque() > 0)
     {
       linear_safety->stop();
     }
   }
-}
-
-void BackhoeController::init()
-{
-  linear_safety->init ();
-  backhoe_safety->init ();
 }
 
 bool BackhoeController::shoulderAtSetpoint()
@@ -87,13 +87,13 @@ double BackhoeController::getShoulderVelocity()
   return backhoe_safety->getLinearVelocity();
 }
 
-bool BackhoeController::getIsInit()
-{
- return linear_safety->isInit() && backhoe_safety->isInit();
-}
-
 bool BackhoeController::hasHitGround()
 {
   return fabs(backhoe_safety->getTorque ()) > fabs(this->ground_torque);
+}
+
+bool BackhoeController::getIsInit()
+{
+  return backhoe_safety->getInitStatus() && linear_safety->getInitStatus();
 }
 

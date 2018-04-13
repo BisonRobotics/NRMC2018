@@ -2,15 +2,16 @@
 #include <math.h>
 #include <sstream>
 
-SafetyController::SafetyController(iVescAccess *vesc, safetycontroller::joint_params_t params, bool in_velocity)
+SafetyController::SafetyController(iVescAccess *vesc, safetycontroller::joint_params_t params)
 {
     this->params = params;
     this->vesc = vesc;
-    this->in_velocity = in_velocity;
     this->is_init = false;
-    this->set_position = 0;
+    this->in_position_control = false;
+    this->in_open_loop_velocity_control = false;
+    this->in_open_loop_torque_control = false;
     this->set_velocity = 0;
-    this->position_estimate =0;
+    this->set_torque = 0;
 }
 
 void SafetyController::setPositionSetpoint(double position)
@@ -43,19 +44,16 @@ void SafetyController::setVelocity(double velocity)
     checkIsInit();
     if (!in_position_control)
     {
-      if (set_velocity > fabs(params.max_abs_velocity))
+      if (velocity > fabs(params.max_abs_velocity))
       {
-         vesc->setLinearVelocity(params.max_abs_velocity);
+         set_velocity = params.max_abs_velocity;
       }
-      else if (set_velocity < -fabs(params.max_abs_velocity))
+      else if (velocity < -fabs(params.max_abs_velocity))
       {
-         vesc->setLinearVelocity(-params.max_abs_velocity);
+         set_velocity = -params.max_abs_velocity;
       }
-      else
-      {
-        vesc->setLinearVelocity(velocity);
-      }
-
+      in_open_loop_velocity_control = true;
+      in_open_loop_torque_control = false;
     }
     else
     {
@@ -69,7 +67,9 @@ void SafetyController::setTorque(double torque)
     if (!in_position_control)
     {
         //TODO add min/max check for torque
-        vesc->setTorque(set_velocity);
+        set_torque = torque;
+        in_open_loop_velocity_control = false;
+        in_open_loop_torque_control = true;
     }
     else
     {
@@ -78,15 +78,14 @@ void SafetyController::setTorque(double torque)
 }
 
 
-double SafetyController::update(void)
+void SafetyController::update(double dt)
 {
     checkIsInit();
     if (in_position_control)
     {
       if (isAtSetpoint())
       {
-         in_position_control = false;
-         vesc->setLinearVelocity(0);
+         stop();
       }
       else
       {
@@ -99,31 +98,50 @@ double SafetyController::update(void)
         {
           set_velocity = -params.max_abs_velocity;
         }
-        vesc->setLinearVelocity(set_velocity);
       }
     }
 
+    bool stopped = false;
     //this happens in any mode 
-    if (position_estimate <= (params.minimum_pos + params.limit_switch_safety_margin) && set_velocity < 0)
+    updatePositionEstimate(dt);
+    if (position_estimate <= (params.minimum_pos + params.limit_switch_safety_margin) && 
+        (set_velocity < 0 || set_torque < 0))
     {
-      vesc->setLinearVelocity(0);
+      stop();
+      stopped = true;
     } 
-    else if (position_estimate >= (params.maximum_pos - params.limit_switch_safety_margin) && set_velocity > 0)
+    else if (position_estimate >= (params.maximum_pos - params.limit_switch_safety_margin) && 
+              (set_velocity > 0 || set_torque >0))
     {
-      vesc->setLinearVelocity(0);
+      stop();
+      stopped = true;
     }
     switch (vesc->getLimitSwitchState())
     {
         case nsVescAccess::limitSwitchState::bottomOfMotion:
             this->position_estimate = params.lower_limit_position;
-            vesc->setLinearVelocity(0);
+            stop();
+            stopped = true;
             break;
         case nsVescAccess::limitSwitchState::topOfMotion:
            this->position_estimate = params.upper_limit_position;
-            vesc->setLinearVelocity(0);
+            stop();
+            stopped = true;
            break;
        case nsVescAccess::limitSwitchState::inTransit:
            break;
+    }
+
+    if (!stopped)
+    {
+       if (in_position_control || in_open_loop_velocity_control) 
+       {
+           vesc->setLinearVelocity(set_velocity);
+       }
+       else if (in_open_loop_torque_control)
+       {
+           vesc->setTorque(set_torque);
+       }
     }
 }
 
@@ -140,16 +158,20 @@ double SafetyController::getSafetyPosition()
 void SafetyController::stop()
 {
    this->vesc->setLinearVelocity(0);
+   in_position_control = false;
+   in_open_loop_velocity_control = false;
+   in_open_loop_torque_control = false;
 }
 
-double SafetyController::getPosition()
+void SafetyController::abandonPositionSetpointAndSetTorqueWithoutStopping(double torque)
+{
+   in_position_control = false;
+   setTorque(torque);
+}
+
+double SafetyController::getPositionEstimate()
 {
     return this->position_estimate;
-}
-
-double SafetyController::getVelocity ()
-{
-    return set_velocity;
 }
 
 bool SafetyController::init()
@@ -158,7 +180,22 @@ bool SafetyController::init()
     return is_init;
 }
 
-double SafetyController::getSetPosition()
+bool SafetyController::getInitStatus()
+{
+    return is_init;
+}
+
+double SafetyController::getPositionSetpoint()
 {
     return set_position;
+}
+
+float SafetyController::getLinearVelocity()
+{
+    return vesc->getLinearVelocity();
+}
+
+float SafetyController::getTorque()
+{
+    return vesc->getTorque();
 }
