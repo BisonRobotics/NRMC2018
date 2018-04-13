@@ -33,16 +33,16 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
       switch (digging_state)
       {
         case dig_state_enum::dig_idle: //not digging, should start here
-          //backhoe->setShoulderSetpoint(1); //where we think the ground is (0 should be all the way back, 1 is all the way forward)
           bucket->turnSifterOn();
           bucket->turnLittleConveyorOn();
-          backhoe->setShoulderSetpoint(.3);
+          backhoe->setShoulderSetpoint(.3); //put system in known starting config
+          backhoe->setWristSetpoint(0);
           digging_state = ensure_at_measurement_start;
         break;
         case dig_state_enum::ensure_at_measurement_start: 
           if (backhoe->shoulderAtSetpoint())
           {
-            backhoe->setShoulderSetpoint(.6); //where we think the ground is (0 should be all the way back, 1 is all the way forward)
+            backhoe->setShoulderSetpoint(.01); //take it to close to ground
             digging_state = moving_to_ground;
             weightMetric =0;
           }
@@ -52,7 +52,7 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
           weightMetric += backhoe->getShoulderTorque() * backhoe->getShoulderVelocity() * .02; //.02 is dt
           if (backhoe->shoulderAtSetpoint())
           {
-              backhoe->setShoulderSetpoint(1);
+              backhoe->setShoulderSetpoint(-.2); //send it into the ground
               digging_state = finding_ground;
               dig_result.weight_harvested = weightMetric;
           }
@@ -62,7 +62,7 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
 
           if (backhoe->hasHitGround())
           {
-              backhoe->setShoulderSetpoint(.2);
+              backhoe
               backhoe->setWristSetpoint(1); //curl it in
               digging_state = curling_backhoe;
           }

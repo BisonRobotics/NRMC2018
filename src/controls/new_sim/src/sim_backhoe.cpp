@@ -15,7 +15,7 @@ SimBackhoe::SimBackhoe(double shoulderTheta, double wristTheta, double shoulderB
   shTh = shoulderTheta;
   wrTh = wristTheta;
 
-  sh = new SimVesc(16, 0, 1.0, shoulderTheta, shoulderBottomLimit, shoulderUpperLimit);
+  sh = new SimVesc(16, 0, 1.0, shoulderTheta, shoulderBottomLimit, shoulderUpperLimit, true, 0);
   wr = new SimVesc(16, 0, 1.0, wristTheta, wristBottomLimit, wristUpperLimit);
 }
 

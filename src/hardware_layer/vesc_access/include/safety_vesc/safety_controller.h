@@ -30,7 +30,6 @@ public:
   void stop () override;
   bool init() override;
   virtual double getSetPosition () override;
-  void updatePosition (double dt) override;
   float getLinearVelocity () {return vesc->getLinearVelocity();}
   float getTorque () override {return vesc->getTorque();}
 protected:
@@ -41,7 +40,7 @@ protected:
 private:
   double set_position;
   double set_velocity;
-  bool in_velocity;
+  bool in_position_control;
   void performIsInit();
 };
 

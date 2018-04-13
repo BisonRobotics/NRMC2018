@@ -23,10 +23,10 @@ void BackhoeController::setWristSetpoint(double angle)
   }
 }
 
-void BackhoeController::setShoulderVelocity(double velocity)
+void BackhoeController::setShoulderTorque(double torque)
 {
   if (getIsInit()) {
-    backhoe_safety->setVelocitySetpoint(velocity);
+    backhoe_safety->setTorqueSetpoint(torque);
   }
 }
 

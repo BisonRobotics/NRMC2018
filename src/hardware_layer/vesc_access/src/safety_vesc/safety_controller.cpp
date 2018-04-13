@@ -15,25 +15,21 @@ SafetyController::SafetyController(iVescAccess *vesc, safetycontroller::joint_pa
 
 void SafetyController::setPositionSetpoint(double position)
 {
-    performIsInit();
-    if (!in_velocity)
+    checkIsInit();
+
+    if  (position > params.maximum_pos || position < params.minimum_pos)
     {
-        if  (position > params.maximum_pos || position < params.minimum_pos){
-            std::stringstream ss;
-            ss << "Out of bounds at : " << position;
-            this->set_position = this->position_estimate;
-            this->stop();
-            throw BackhoeException (ss.str ());
-        }
-        this->set_position = position;
+      std::stringstream ss;
+      ss << "Out of bounds at : " << position;
+      this->set_position = this->position_estimate;
+      this->stop();
+      throw BackhoeException (ss.str ());
     }
-    else
-    {
-        throw BackhoeException ("tried to set position in velocity mode");
-    }
+    this->set_position = position;
+    in_position_control;
 }
 
-void SafetyController::performIsInit ()
+void SafetyController::checkIsInit ()
 {
     if (!is_init){
         this->stop();
@@ -42,12 +38,24 @@ void SafetyController::performIsInit ()
 }
 
 
-void SafetyController::setVelocitySetpoint(double velocity)
+void SafetyController::setVelocity(double velocity)
 {
-    performIsInit();
-    if (in_velocity)
+    checkIsInit();
+    if (!in_position_control)
     {
-        this->set_velocity = velocity;
+      if (set_velocity > fabs(params.max_abs_velocity))
+      {
+         vesc->setLinearVelocity(params.max_abs_velocity);
+      }
+      else if (set_velocity < -fabs(params.max_abs_velocity))
+      {
+         vesc->setLinearVelocity(-params.max_abs_velocity);
+      }
+      else
+      {
+        vesc->setLinearVelocity(velocity);
+      }
+
     }
     else
     {
@@ -55,53 +63,73 @@ void SafetyController::setVelocitySetpoint(double velocity)
     }
 }
 
-double SafetyController::updateVelocity(void)
+void SafetyController::setTorque(double torque)
 {
-    performIsInit();
-    if (!in_velocity)
+    checkIsInit();
+    if (!in_position_control)
     {
+        //TODO add min/max check for torque
+        vesc->setTorque(set_velocity);
+    }
+    else
+    {
+        throw BackhoeException ("tried to set torque in position mode");
+    }
+}
+
+
+double SafetyController::update(void)
+{
+    checkIsInit();
+    if (in_position_control)
+    {
+      if (isAtSetpoint())
+      {
+         in_position_control = false;
+         vesc->setLinearVelocity(0);
+      }
+      else
+      {
         set_velocity = params.gain*(set_position - position_estimate);
+        if (set_velocity > fabs(params.max_abs_velocity))
+        {
+          set_velocity = params.max_abs_velocity;
+        }
+        else if (set_velocity < -fabs(params.max_abs_velocity))
+        {
+          set_velocity = -params.max_abs_velocity;
+        }
+        vesc->setLinearVelocity(set_velocity);
+      }
     }
 
+    //this happens in any mode 
     if (position_estimate <= (params.minimum_pos + params.limit_switch_safety_margin) && set_velocity < 0)
     {
-        set_velocity = 0;
-    } else if (position_estimate >= (params.maximum_pos - params.limit_switch_safety_margin) && set_velocity > 0)
+      vesc->setLinearVelocity(0);
+    } 
+    else if (position_estimate >= (params.maximum_pos - params.limit_switch_safety_margin) && set_velocity > 0)
     {
-        set_velocity = 0;
+      vesc->setLinearVelocity(0);
     }
-
-    if (set_velocity > fabs(params.max_abs_velocity))
+    switch (vesc->getLimitSwitchState())
     {
-        set_velocity = params.max_abs_velocity;
+        case nsVescAccess::limitSwitchState::bottomOfMotion:
+            this->position_estimate = params.lower_limit_position;
+            vesc->setLinearVelocity(0);
+            break;
+        case nsVescAccess::limitSwitchState::topOfMotion:
+           this->position_estimate = params.upper_limit_position;
+            vesc->setLinearVelocity(0);
+           break;
+       case nsVescAccess::limitSwitchState::inTransit:
+           break;
     }
-    else if (set_velocity < -fabs(params.max_abs_velocity))
-    {
-        set_velocity = -params.max_abs_velocity;
-    }
-
-    vesc->setLinearVelocity(set_velocity);
 }
 
 bool SafetyController::isAtSetpoint(void)
 {
     return fabs(position_estimate - set_position) < fabs(params.setpoint_tolerance);
-}
-
-void SafetyController::updatePosition(double dt)
-{
-    performIsInit();
-    switch (vesc->getLimitSwitchState())
-    {
-        case nsVescAccess::limitSwitchState::bottomOfMotion:
-            this->position_estimate = params.lower_limit_position;
-            break;
-        case nsVescAccess::limitSwitchState::topOfMotion:
-           this->position_estimate = params.upper_limit_position;
-           break;
-       case nsVescAccess::limitSwitchState::inTransit:
-           break;
-    }
 }
 
 double SafetyController::getSafetyPosition()
