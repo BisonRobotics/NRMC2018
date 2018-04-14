@@ -215,8 +215,8 @@
             <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}" />
         </joint>
     </xacro:macro>
-    <xacro:node side="right" dir="-1" />
-    <xacro:node side="left" dir="1" />
+    <xacro:node side="node0" dir="-1" />
+    <xacro:node side="node1" dir="1" />
 
     <link name="monoboom_actuator_link" />
 
