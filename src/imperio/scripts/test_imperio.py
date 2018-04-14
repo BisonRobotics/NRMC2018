@@ -249,6 +249,51 @@ class TestGlobalPlanner(object):
         goal = (6,0)
         assert not gp.find_waypoints(goal) == None
 
+""" Test for the Imperio Controll class
+Author: Nicole Maguire
+Date: 4/12/2018
+Test For Version : 2
+
+"""
+import imperio_control as imperio
+class TestImperioControl(object):
+    def test_init(self):
+        pass
+
+    def test_halt_callback(self):
+        pass
+
+    def test_timer_callback(self):
+        pass
+
+    def test_run(self):
+        pass
+
+    def test_initital(self):
+        pass
+
+    def test_outbound(self):
+        pass
+
+    def test_inbound(self):
+        pass
+
+    def test_dig(self):
+        pass
+
+    def test_deposit(self):
+        pass
+
+    def test_halt(self):
+        pass
+
+    def test_recover(self):
+        pass
+
+    def test_runnint_out_of_time(self):
+        pass
+
+
 
 
 
