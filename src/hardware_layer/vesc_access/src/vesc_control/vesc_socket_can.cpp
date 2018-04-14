@@ -168,7 +168,7 @@ void Vesc::processMessages()
     last_time = ros::Time::now ();
   }
   struct can_frame msg;
-  while (1)
+  while (ros::ok())
   {
     int a = read(s, &msg, sizeof(msg));
     if (a == -1)
