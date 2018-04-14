@@ -27,6 +27,12 @@
 - pip:
     name: imutils
 
+- pip:
+    name: wheel
+
+- pip:
+    name: multiprocessing
+
 - name: get and unpack imu runtime
   become: no
   unarchive:
