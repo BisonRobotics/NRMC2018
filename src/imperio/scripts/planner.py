@@ -44,8 +44,8 @@ class Planner(object):
         self.waypoints_publisher = rospy.Publisher('/position_controller/global_planner_goal', GlobalWaypoints, queue_size=100, latch=True)
 
         rospy.Subscriber('/position_controller/drive_controller_status', DriveStatus, self.drive_status_callback)
-        #rospy.Subscriber('/costmap_2d_node/costmap/costmap', OccupancyGrid, self.map_callback)
-        rospy.Subscriber('/map', OccupancyGrid, self.map_callback)
+        rospy.Subscriber('/costmap_2d_node/costmap/costmap', OccupancyGrid, self.map_callback)
+        #rospy.Subscriber('/map', OccupancyGrid, self.map_callback)
 
         self.robot = robot
         self.occupancy_grid = None
@@ -64,13 +64,13 @@ class Planner(object):
             self.movement_status = MovementStatus.MOVING
         if status_message.has_reached_goal.data:
             self.movement_status = MovementStatus.HAS_REACHED_GOAL
-            print("Imperio : Movement Status HAS_REACHED_GOAL")
+            rospy.loginfo("[IMPERIO] : Movement Status HAS_REACHED_GOAL")
         if status_message.is_stuck.data:
             self.movement_status = MovementStatus.STUCK
-            print("Imperio : Movement Status STUCK")
+            rospy.logwarn("[IMPERIO] : Movement Status STUCK")
         if status_message.cannot_plan_path.data:
             self.movement_status = MovementStatus.CANNOT_PLAN_PATH
-            print("Imperio : Movement Status CANNOT_PLAN_PATH")
+            rospy.logwarn("[IMPERIO] : Movement Status CANNOT_PLAN_PATH")
 
     def navigate_to_goal(self, goal):
         """
@@ -86,30 +86,30 @@ class Planner(object):
         if self.movement_status == MovementStatus.HAS_REACHED_GOAL and self.given_goal:
             if self.robot_within_threshold(goal):
                 # Didn't want to make y'all deal with the threshold right now. Relying on local planner to tell us we got to goal
-                print("Imperio : Local and Global planner agree that we made it to goal")
+                rospy.loginfo("[IMPERIO] : Local and Global planner agree that we made it to goal")
             #Just for testing with actual robot
             self.given_goal = False
             return True
 
-        print("PLANNING A PATH TO GOAL {}".format(goal))
+        rospy.loginfo("[IMPERIO] : PLANNING A PATH TO GOAL {}".format(goal))
 
         #We can't do anything until we have the occupancy grid
         if self.occupancy_grid == None:
-            print("IMPERIO: Cannot find the occupancy grid")
+            rospy.logwarn("[IMPERIO] : Cannot find the occupancy grid")
             self.movement_status == MovementStatus.WAITING
             return False
-        print("Imperio: Occupancy Grid Exists")
+        rospy.loginfo("[IMPERIO] : Occupancy Grid Exists")
 
         waypoints = self.find_waypoints(goal)
         oriented_waypoints = self.calculate_orientation(waypoints)
-        print("Imperio: Path found : {}".format(oriented_waypoints))
+        rospy.loging("[IMPERIO] : Path found : {}".format(oriented_waypoints))
         if oriented_waypoints == []:
             return None
 
         #TODO : Add recovery behavior for if this is null [Jira NRMC2018-330]
         self.given_goal = True
         self.publish_waypoints(oriented_waypoints)
-        print("Imperio : For Goal {}".format(goal))
+        rospy.loginfo("[IMPERIO] : For Goal {}".format(goal))
         return False
 
     @abstractmethod
@@ -138,7 +138,7 @@ class Planner(object):
         message.pose_array = pose_array
         self.waypoints_publisher.publish(message)
         self.movement_status = MovementStatus.MOVING
-        print("Imperio: Waypoints published to local planner")
+        rospy.loginfo("[IMPERIO] : Waypoints published to local planner")
 
 
     def robot_within_threshold(self, goal):
@@ -157,7 +157,7 @@ class Planner(object):
         (location, pose) = self.robot.localize()
 
         if location == None:
-            print("Imperio: Unable to localize the robot")
+            rospy.logerr("[IMPERIO] : Unable to localize the robot")
             #TODO recovery behavior for localization fail [Jira NRMC2018-329]
             return False
 
@@ -166,9 +166,9 @@ class Planner(object):
 
         # TODO : Check the orientation of the robot [NRMC2018-332]
         abs_distance = math.sqrt((loc_x - goal_x) ** 2 + (loc_y - goal_y) ** 2)
-        print("Imperio : abs_distance {}".format(abs_distance))
-        print("Imperio : Robot is located at {} but the goal is {}".format(location, goal))
-        return  abs_distance < errorThreshold
+        rospy.loginfo("[IMPERIO] : abs_distance {}".format(abs_distance))
+        rospy.loginfo("[IMPERIO] : Robot is located at {} but the goal is {}".format(location, goal))
+        return abs_distance < errorThreshold
 
     def halt_movement(self):
         """
