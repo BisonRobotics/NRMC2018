@@ -130,7 +130,7 @@ void DigDumpAction::dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal)
       switch (dumping_state)
       {
         case dump_state_enum::dump_idle:
-          backhoe->setShoulderSetpoint(0); //move central drive to appropiate spot
+          backhoe->setShoulderSetpoint(1); //move central drive to appropiate spot
           dumping_state = moving_bucket_to_setpoint;
           break;
         case dump_state_enum::moving_bucket_to_setpoint:
