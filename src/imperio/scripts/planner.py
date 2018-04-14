@@ -44,7 +44,8 @@ class Planner(object):
         self.waypoints_publisher = rospy.Publisher('/position_controller/global_planner_goal', GlobalWaypoints, queue_size=100, latch=True)
 
         rospy.Subscriber('/position_controller/drive_controller_status', DriveStatus, self.drive_status_callback)
-        rospy.Subscriber('/costmap_2d_node/costmap/costmap', OccupancyGrid, self.map_callback)
+        #rospy.Subscriber('/costmap_2d_node/costmap/costmap', OccupancyGrid, self.map_callback)
+        rospy.Subscriber('/map', OccupancyGrid, self.map_callback)
 
         self.robot = robot
         self.occupancy_grid = None
