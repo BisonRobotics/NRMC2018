@@ -66,6 +66,7 @@ class ImperioControl(object):
         """
         The operation loop for Imperio
         """
+        rate = rospy.Rate(10)  # Refresh at 10Hz
         while not self.robot.state == RobotState.HALT and not rospy.is_shutdown():
             if self.robot.state == RobotState.INITIAL:
                 self.navigateInitialPosition()
@@ -81,6 +82,7 @@ class ImperioControl(object):
                 self.recover()
             else:
                 self.halt()
+            rate.sleep()
 
     def navigateInitialPosition(self):
         while self.starting_region == None:
