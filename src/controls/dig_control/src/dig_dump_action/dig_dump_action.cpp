@@ -35,12 +35,12 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
         case dig_state_enum::dig_idle: //not digging, should start here
           bucket->turnSifterOn();
           bucket->turnLittleConveyorOn();
-          backhoe->setShoulderSetpoint(.3); //put system in known starting config
-          backhoe->setWristSetpoint(0);
+          backhoe->setShoulderSetpoint(.7); //put system in known starting config
+          backhoe->setWristSetpoint(.13);
           digging_state = ensure_at_measurement_start;
         break;
         case dig_state_enum::ensure_at_measurement_start: 
-          if (backhoe->shoulderAtSetpoint())
+          if (backhoe->shoulderAtSetpoint() && backhoe->wristAtSetpoint())
           {
             backhoe->setShoulderSetpoint(.01); //take it to close to ground
             digging_state = moving_to_ground;
@@ -64,14 +64,14 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
           if (backhoe->hasHitGround())
           {
               backhoe->abandonShoulderPositionSetpointAndSetTorqueWithoutStopping(1.0f);
-              backhoe->setWristSetpoint(1); //curl it in
+              backhoe->setWristSetpoint(0); //curl it in
               digging_state = curling_backhoe;
           }
           break;
         case dig_state_enum::curling_backhoe: //curling wrist into dirt
             if (backhoe->wristAtSetpoint())
             {
-                backhoe->setShoulderSetpoint(.3); //lift to angle appropiate for dropping dirt into bucket
+                backhoe->setShoulderSetpoint(-.7); //lift to angle appropiate for dropping dirt into bucket
                 digging_state = moving_arm_to_initial;
             }
           break;
@@ -85,7 +85,7 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
         case dig_state_enum::dumping_into_bucket: //uncurling wrist to release dirt into bucket
             if (backhoe->wristAtSetpoint())
             {
-                backhoe->setShoulderSetpoint(.3); //wherever transit/initial should be
+                backhoe->setShoulderSetpoint(-1.1); //wherever transit/initial should be
                 digging_state = returning_backhoe_to_initial;
             }
           break;

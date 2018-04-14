@@ -70,7 +70,9 @@ int main(int argc, char **argv)
     bucketLittleConveyorVesc = bucketSimulation->getLittleConveyorVesc();
     bucketSifterVesc = bucketSimulation->getSifterVesc();
     // SimBackhoe
-    backhoeSimulation = new SimBackhoe(0, 0, -2, 4, -2, 4);  // shoulder and wrist angle, limits
+    backhoeSimulation = new SimBackhoe(1.2, .1, 
+                                       central_joint_params.minimum_pos, central_joint_params.maximum_pos,
+                                        linear_joint_params.minimum_pos, linear_joint_params.maximum_pos);  // shoulder and wrist angle, limits
     backhoeShoulderVesc = backhoeSimulation->getShoulderVesc();
     backhoeWristVesc = backhoeSimulation->getWristVesc();
     // populate inital backhoe position
@@ -93,6 +95,9 @@ int main(int argc, char **argv)
     // initialize real vescs here
  }
 
+  BackhoeSafetyController backhoeSafety (central_joint_params, backhoeShoulderVesc);
+  backhoeSafety.init();
+
   LinearSafetyController linearSafety (linear_joint_params, backhoeWristVesc);
   bool isLinearInit = false;
   while (ros::ok() && !isLinearInit)
@@ -102,14 +107,14 @@ int main(int argc, char **argv)
       backhoeSimulation->update(1.0 / DIGGING_CONTROL_RATE_HZ);
       ROS_INFO("Linear at %.4f", backhoeSimulation->getWrTheta());
       ROS_INFO("Linear from vesc at %.4f", backhoeSimulation->getWristVesc()->getPotPosition());
+      ROS_INFO("Linear Limit state %d", backhoeSimulation->getWristVesc()->getLimitSwitchState());
+      ROS_INFO("Linear vel set to  %.4f", backhoeSimulation->getWristVesc()->getLinearVelocity());
+      if (((SimVesc*)backhoeSimulation->getWristVesc())->ableToHitGround()) ROS_INFO("Linear able to hit ground");
     }
     isLinearInit = linearSafety.init();
     rate.sleep();
   }
 
-
-  BackhoeSafetyController backhoeSafety (central_joint_params, backhoeShoulderVesc);
-  backhoeSafety.init();
   // pass vescs (sim or physical) to controllers
 
   ROS_INFO("Init'd");
@@ -147,12 +152,14 @@ int main(int argc, char **argv)
        JsPub.publish(robotAngles);
        ROS_INFO("shoulder joint state published with angle %f \n", backhoeSimulation->getShTheta());
        ROS_INFO("wrist joint state published with angle %f \n", backhoeSimulation->getWrTheta());
+       
     }
     else // display output for physical
     {
-      
+    
     }
-
+    ROS_INFO("backhoe controller says CD at %.4f", backhoeSafety.getPositionEstimate());
+    ROS_INFO("backhoe controller says LA at %.4f", linearSafety.getPositionEstimate());
     ROS_INFO("Digdump AS states: %d, %d", ddAct.digging_state, ddAct.dumping_state);
 
     ros::spinOnce();

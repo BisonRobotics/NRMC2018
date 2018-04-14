@@ -1,5 +1,6 @@
 #include <backhoe_controller/backhoe_controller.h>
 #include <cmath>
+#include <ros/ros.h>
 
 BackhoeController::BackhoeController(iSafetyController *backhoeSafety, iSafetyController *linearSafety)
 
@@ -48,7 +49,9 @@ void BackhoeController::update(double dt)
 {
   if (getIsInit()) {
     safetyCheck();
+    ROS_INFO("central drive update");
     backhoe_safety->update(dt);
+    ROS_INFO("Linear actuator update");
     linear_safety->update(dt);
   }
 }
@@ -59,10 +62,12 @@ void BackhoeController::safetyCheck()
        && backhoe_safety->getPositionEstimate() > backhoe_safety->getSafetyPosition() 
        && linear_safety->getPositionEstimate() > linear_safety->getSafetyPosition())
   {
+    ROS_INFO("BC says safety stop 1");
     backhoe_safety->stop();
     if (linear_safety->getLinearVelocity() > 0 || linear_safety->getTorque() > 0)
     {
       linear_safety->stop();
+      ROS_INFO("BC says safety stop 1");
     }
   }
 }

@@ -1,6 +1,7 @@
 #include "safety_vesc/safety_controller.h"
 #include <math.h>
 #include <sstream>
+#include <ros/ros.h>
 
 SafetyController::SafetyController(iVescAccess *vesc, safetycontroller::joint_params_t params)
 {
@@ -27,7 +28,7 @@ void SafetyController::setPositionSetpoint(double position)
       throw BackhoeException (ss.str ());
     }
     this->set_position = position;
-    in_position_control;
+    in_position_control = true;
 }
 
 void SafetyController::checkIsInit ()
@@ -81,11 +82,16 @@ void SafetyController::setTorque(double torque)
 void SafetyController::update(double dt)
 {
     checkIsInit();
+    ROS_INFO("doing safety controller update");
+    bool stopped = false;
     if (in_position_control)
     {
       if (isAtSetpoint())
       {
+          ROS_INFO("stopped because at setpoint");
          stop();
+         stopped = true;
+        in_position_control = false;
       }
       else
       {
@@ -100,19 +106,19 @@ void SafetyController::update(double dt)
         }
       }
     }
-
-    bool stopped = false;
     //this happens in any mode 
     updatePositionEstimate(dt);
     if (position_estimate <= (params.minimum_pos + params.limit_switch_safety_margin) && 
         (set_velocity < 0 || set_torque < 0))
     {
+      ROS_INFO("stopped because guessing too close to min limit switch");
       stop();
       stopped = true;
     } 
     else if (position_estimate >= (params.maximum_pos - params.limit_switch_safety_margin) && 
               (set_velocity > 0 || set_torque >0))
     {
+      ROS_INFO("stopped because guessing too close to max limit switch");
       stop();
       stopped = true;
     }
@@ -120,11 +126,13 @@ void SafetyController::update(double dt)
     {
         case nsVescAccess::limitSwitchState::bottomOfMotion:
             this->position_estimate = params.lower_limit_position;
+            ROS_INFO("stopped because at lower switch");
             stop();
             stopped = true;
             break;
         case nsVescAccess::limitSwitchState::topOfMotion:
            this->position_estimate = params.upper_limit_position;
+                       ROS_INFO("stopped because at upper switch");
             stop();
             stopped = true;
            break;
@@ -137,6 +145,7 @@ void SafetyController::update(double dt)
        if (in_position_control || in_open_loop_velocity_control) 
        {
            vesc->setLinearVelocity(set_velocity);
+           ROS_INFO("setting vellcity to %.4f", set_velocity);
        }
        else if (in_open_loop_torque_control)
        {

@@ -1,6 +1,7 @@
 #include <vesc_access/ivesc_access.h>
 #include "sim_robot/sim_vesc.h"
 #include "sensor_msgs/JointState.h"
+#include <ros/ros.h>
 
 SimVesc::SimVesc(double Pgain, double Igain, double velo_factor)
 {
@@ -42,12 +43,13 @@ SimVesc::SimVesc(double Pgain, double Igain, double velo_factor,
   }
   else
   {
-    hitsGround = false;
+    this->hitsGround = false;
   }
 }
 
 void SimVesc::update(double dt)
 {
+   ROS_INFO("SIM vesc updated");
   // note I gain not implemented
   double err = vel - setVel;
   vel += (-vesc_Pgain) * err * dt;
@@ -56,6 +58,7 @@ void SimVesc::update(double dt)
     if (pot_pos < groundPos && vel < 0) //ground is towards negative position
     {
       vel = 0;
+      ROS_INFO("Hit ground");
       onGround = true;
     }
     else 
@@ -70,12 +73,16 @@ void SimVesc::update(double dt)
     {
       vel =0;
       setVel =0;
+      pot_pos = endLimit;
       limitSwitch = nsVescAccess::limitSwitchState::topOfMotion;
+      ROS_INFO("At endlimit");
     }
     else if (pot_pos < beginLimit)
     {
       vel =0;
       setVel =0;
+      pot_pos = beginLimit;
+      ROS_INFO("at beginlimit");
       limitSwitch = nsVescAccess::limitSwitchState::bottomOfMotion;
     }
     else
@@ -118,7 +125,8 @@ float SimVesc::getTorque(void)
 
 void SimVesc::setTorque(float current)
 {
-  setLinearVelocity(.3*current);
+  this->setLinearVelocity(.3*current);
+  ROS_INFO("Set Torque to %.4f", current);
 }
 
 void SimVesc::setLimitSwitchState(nsVescAccess::limitSwitchState state)
@@ -139,4 +147,9 @@ float SimVesc::getPotPosition(void)
 void SimVesc::setPotPosition(float pos)
 {
   pot_pos = pos;
+}
+
+bool SimVesc::ableToHitGround()
+{
+    return hitsGround;
 }

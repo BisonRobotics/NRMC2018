@@ -1,4 +1,5 @@
 #include "sim_robot/sim_backhoe.h"
+#include <ros/ros.h>
 
 SimBackhoe::SimBackhoe(double shoulderTheta, double wristTheta)
 {
@@ -16,12 +17,14 @@ SimBackhoe::SimBackhoe(double shoulderTheta, double wristTheta, double shoulderB
   wrTh = wristTheta;
 
   sh = new SimVesc(16, 0, 1.0, shoulderTheta, shoulderBottomLimit, shoulderUpperLimit, true, 0);
-  wr = new SimVesc(16, 0, 1.0, wristTheta, wristBottomLimit, wristUpperLimit);
+  wr = new SimVesc(16, 0, 1.0, wristTheta, wristBottomLimit, wristUpperLimit, false, 0);
 }
 
 void SimBackhoe::update(double dt)
 {
+  ROS_INFO("shoulder sim update");
   sh->update(dt);
+  ROS_INFO("wrist sim update");
   wr->update(dt);
 
   shTh += sh->getLinearVelocity() * dt;
