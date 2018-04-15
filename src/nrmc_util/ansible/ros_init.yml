@@ -1,10 +1,10 @@
 # ROS shared init for NRMC2018
 ---
-- name: Add ROS repository apt-key
+- name: add ROS repository apt-key
   become: yes
   apt_key: keyserver=hkp://ha.pool.sks-keyservers.net:80 id=0xB01FA116
 
-- name: Add ROS repository
+- name: add ROS repository
   become: yes
   apt_repository: repo='deb http://packages.ros.org/ros/ubuntu xenial main' state=present
 
