@@ -8,3 +8,6 @@
 	path = src/hardware_layer/realsense_samples_ros
 	url = git@github.com:BisonRobotics/realsense_samples_ros.git
 
+[submodule "src/navigation/apriltag_tracker"]
+	path = src/navigation/apriltag_tracker
+	url = git@github.com:BisonRobotics/apriltag_tracker.git
