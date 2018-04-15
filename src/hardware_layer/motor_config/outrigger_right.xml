@@ -24,7 +24,7 @@
     <l_temp_motor_start>50</l_temp_motor_start>
     <l_temp_motor_end>60</l_temp_motor_end>
     <l_min_duty>0.005</l_min_duty>
-    <l_max_duty>0.5</l_max_duty>
+    <l_max_duty>0.7</l_max_duty>
     <sl_min_erpm>150</sl_min_erpm>
     <sl_min_erpm_cycle_int_limit>1100</sl_min_erpm_cycle_int_limit>
     <sl_max_fullbreak_current_dir_change>10</sl_max_fullbreak_current_dir_change>
@@ -81,7 +81,7 @@
     <p_pid_ang_div>1</p_pid_ang_div>
     <cc_startup_boost_duty>0.01</cc_startup_boost_duty>
     <cc_min_current>0.05</cc_min_current>
-    <cc_gain>0.0046</cc_gain>
+    <cc_gain>0.15</cc_gain>
     <cc_ramp_step_max>5</cc_ramp_step_max>
     <m_fault_stop_time_ms>3000</m_fault_stop_time_ms>
     <m_duty_ramp_step>0.02</m_duty_ramp_step>
