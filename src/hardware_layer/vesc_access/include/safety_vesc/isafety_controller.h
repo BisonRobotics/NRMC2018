@@ -13,7 +13,8 @@ namespace safetycontroller
     double upper_limit_position;
     double max_abs_velocity;
     double limit_switch_safety_margin;
-  }joint_params_t;
+    double max_abs_torque;
+  } joint_params_t;
 }
 
 
@@ -49,6 +50,8 @@ public:
   virtual float getTorque()= 0;
 
   virtual void abandonPositionSetpointAndSetTorqueWithoutStopping(double torque)=0;
+
+  virtual void updatePositionEstimate (double dt) = 0;
 };
 
 

@@ -101,4 +101,3 @@ bool BackhoeController::getIsInit()
 {
   return backhoe_safety->getInitStatus() && linear_safety->getInitStatus();
 }
-

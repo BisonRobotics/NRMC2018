@@ -13,6 +13,7 @@ SafetyController::SafetyController(iVescAccess *vesc, safetycontroller::joint_pa
     this->in_open_loop_torque_control = false;
     this->set_velocity = 0;
     this->set_torque = 0;
+    this->stopped = true;
 }
 
 void SafetyController::setPositionSetpoint(double position)
@@ -39,20 +40,17 @@ void SafetyController::checkIsInit ()
     }
 }
 
+double SafetyController::symmetricClamp (double number, double bound)
+{
+    return std::max(-bound,std::min(number,bound));
+}
 
 void SafetyController::setVelocity(double velocity)
 {
     checkIsInit();
     if (!in_position_control)
     {
-      if (velocity > fabs(params.max_abs_velocity))
-      {
-         set_velocity = params.max_abs_velocity;
-      }
-      else if (velocity < -fabs(params.max_abs_velocity))
-      {
-         set_velocity = -params.max_abs_velocity;
-      }
+      set_velocity = symmetricClamp(velocity,params.max_abs_velocity);
       in_open_loop_velocity_control = true;
       in_open_loop_torque_control = false;
     }
@@ -67,8 +65,7 @@ void SafetyController::setTorque(double torque)
     checkIsInit();
     if (!in_position_control)
     {
-        //TODO add min/max check for torque
-        set_torque = torque;
+        set_torque = symmetricClamp(torque, params.max_abs_torque);
         in_open_loop_velocity_control = false;
         in_open_loop_torque_control = true;
     }
@@ -81,29 +78,20 @@ void SafetyController::setTorque(double torque)
 
 void SafetyController::update(double dt)
 {
+    stopped = false;
     checkIsInit();
     ROS_INFO("doing safety controller update");
-    bool stopped = false;
     if (in_position_control)
     {
       if (isAtSetpoint())
       {
-          ROS_INFO("stopped because at setpoint");
-         stop();
-         stopped = true;
+        ROS_INFO("stopped because at setpoint");
+        stop();
         in_position_control = false;
       }
       else
       {
-        set_velocity = params.gain*(set_position - position_estimate);
-        if (set_velocity > fabs(params.max_abs_velocity))
-        {
-          set_velocity = params.max_abs_velocity;
-        }
-        else if (set_velocity < -fabs(params.max_abs_velocity))
-        {
-          set_velocity = -params.max_abs_velocity;
-        }
+        set_velocity = symmetricClamp(params.gain*(set_position - position_estimate), params.max_abs_velocity);
       }
     }
     //this happens in any mode 
@@ -113,31 +101,12 @@ void SafetyController::update(double dt)
     {
       ROS_INFO("stopped because guessing too close to min limit switch");
       stop();
-      stopped = true;
     } 
     else if (position_estimate >= (params.maximum_pos - params.limit_switch_safety_margin) && 
               (set_velocity > 0 || set_torque >0))
     {
       ROS_INFO("stopped because guessing too close to max limit switch");
       stop();
-      stopped = true;
-    }
-    switch (vesc->getLimitSwitchState())
-    {
-        case nsVescAccess::limitSwitchState::bottomOfMotion:
-            this->position_estimate = params.lower_limit_position;
-            ROS_INFO("stopped because at lower switch");
-            stop();
-            stopped = true;
-            break;
-        case nsVescAccess::limitSwitchState::topOfMotion:
-           this->position_estimate = params.upper_limit_position;
-                       ROS_INFO("stopped because at upper switch");
-            stop();
-            stopped = true;
-           break;
-       case nsVescAccess::limitSwitchState::inTransit:
-           break;
     }
 
     if (!stopped)
@@ -145,7 +114,7 @@ void SafetyController::update(double dt)
        if (in_position_control || in_open_loop_velocity_control) 
        {
            vesc->setLinearVelocity(set_velocity);
-           ROS_INFO("setting vellcity to %.4f", set_velocity);
+           ROS_INFO("setting velocity to %.4f", set_velocity);
        }
        else if (in_open_loop_torque_control)
        {
@@ -167,6 +136,7 @@ double SafetyController::getSafetyPosition()
 void SafetyController::stop()
 {
    this->vesc->setLinearVelocity(0);
+   stopped=true;
    in_position_control = false;
    in_open_loop_velocity_control = false;
    in_open_loop_torque_control = false;
@@ -207,4 +177,23 @@ float SafetyController::getLinearVelocity()
 float SafetyController::getTorque()
 {
     return vesc->getTorque();
+}
+
+void SafetyController::updatePositionEstimate(double dt)
+{
+    switch (vesc->getLimitSwitchState())
+    {
+        case nsVescAccess::limitSwitchState::bottomOfMotion:
+            this->position_estimate = params.lower_limit_position;
+            ROS_INFO("stopped because at lower switch");
+            stop();
+            break;
+        case nsVescAccess::limitSwitchState::topOfMotion:
+           this->position_estimate = params.upper_limit_position;
+           ROS_INFO("stopped because at upper switch");
+           stop();
+           break;
+       case nsVescAccess::limitSwitchState::inTransit:
+           break;
+    }
 }

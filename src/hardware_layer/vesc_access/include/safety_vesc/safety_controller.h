@@ -31,7 +31,7 @@ public:
   void stop () override;
   bool init() override;
   double getPositionSetpoint () override;
-  virtual void updatePositionEstimate(double dt) =0;
+  void updatePositionEstimate(double dt) override;
   float getLinearVelocity () override;
   float getTorque () override;
   void abandonPositionSetpointAndSetTorqueWithoutStopping(double torque) override;
@@ -40,6 +40,7 @@ protected:
   safetycontroller::joint_params_t params;
   iVescAccess *vesc;
   bool is_init;
+  bool stopped;
   double position_estimate;
 private:
   double set_position;
@@ -48,7 +49,7 @@ private:
   bool in_position_control;
   bool in_open_loop_velocity_control;
   bool in_open_loop_torque_control;
-  void performIsInit();
+  double symmetricClamp (double number, double bound);
 };
 
 #endif //PROJECT_SAFETY_VESC_H
