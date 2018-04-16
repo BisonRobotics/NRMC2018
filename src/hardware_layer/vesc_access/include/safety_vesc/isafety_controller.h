@@ -1,6 +1,8 @@
 #ifndef PROJECT_iSAFETY_VESC_H
 #define PROJECT_iSAFETY_VESC_H
 
+#include <string>
+
 namespace safetycontroller
 {
   typedef struct joint_params {
@@ -14,6 +16,7 @@ namespace safetycontroller
     double max_abs_velocity;
     double limit_switch_safety_margin;
     double max_abs_torque;
+    std::string name;
   } joint_params_t;
 
   enum controlModeState {

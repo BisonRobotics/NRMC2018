@@ -66,17 +66,22 @@ void SimVesc::update(double dt)
   pot_pos += vel;
   if (hasLimits)
   {
-    if (pot_pos > endLimit)
+    if (pot_pos >= endLimit)
     {
-      vel =0;
-      setVel =0;
+      if (setVel > 0) {
+        vel = 0;
+        setVel = 0;
+
+      }
       pot_pos = endLimit;
       limitSwitch = nsVescAccess::limitSwitchState::topOfMotion;
     }
-    else if (pot_pos < beginLimit)
+    else if (pot_pos <= beginLimit)
     {
-      vel =0;
-      setVel =0;
+      if (setVel < 0) {
+        vel = 0;
+        setVel = 0;
+      }
       pot_pos = beginLimit;
       limitSwitch = nsVescAccess::limitSwitchState::bottomOfMotion;
     }
@@ -89,11 +94,11 @@ void SimVesc::update(double dt)
   {
      limitSwitch = nsVescAccess::limitSwitchState::inTransit;
   }
-  if (vel >0) 
+  if (vel >0.001)
   {
      torque = 20;
   }
-  else if (vel < 0)
+  else if (vel < 0.001)
   { 
     torque = -20;
   }

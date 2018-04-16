@@ -209,7 +209,8 @@ safetycontroller::joint_params_t linear_joint_params =
         .upper_limit_position = LINEAR_ACTUATOR_LENGTH,
         .max_abs_velocity =.2,
         .limit_switch_safety_margin = .01,
-        .max_abs_torque = 100
+        .max_abs_torque = 100,
+        .name = "linear"
     };
 
 safetycontroller::joint_params_t central_joint_params =
@@ -223,6 +224,7 @@ safetycontroller::joint_params_t central_joint_params =
         .upper_limit_position = MAXIMUM_CENTRAL_ANGLE,
         .max_abs_velocity = .2,
         .limit_switch_safety_margin = .01,
-        .max_abs_torque = 100
+        .max_abs_torque = 100,
+        .name = "central"
     };
 #endif

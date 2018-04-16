@@ -12,7 +12,7 @@ SafetyController::SafetyController(iVescAccess *vesc, safetycontroller::joint_pa
     this->set_velocity = 0;
     this->set_torque = 0;
     this->stopped = true;
-    this->position_estimate = (params.upper_limit_position + params.lower_limit_position)/2.0;
+    this->position_estimate =0;
 }
 
 void SafetyController::setPositionSetpoint(double position)
@@ -77,12 +77,12 @@ void SafetyController::update(double dt)
 {
     stopped = false;
     checkIsInit();
-    ROS_INFO("doing safety controller update");
+    ROS_INFO("%s doing safety controller update", params.name.c_str());
     if (control_mode == safetycontroller::position_control)
     {
       if (isAtSetpoint())
       {
-        ROS_INFO("stopped because at setpoint");
+        ROS_INFO("%s stopped because at setpoint %4f with posestimate %.4f", params.name.c_str(), set_position, position_estimate);
         stop();
       }
       else
@@ -95,13 +95,13 @@ void SafetyController::update(double dt)
     if (position_estimate <= (params.minimum_pos + params.limit_switch_safety_margin) && 
         (set_velocity < 0 || set_torque < 0))
     {
-      ROS_INFO("stopped because guessing too close to min limit switch");
+      ROS_INFO("%s stopped because guessing too close to min limit switch at %.4f", params.name.c_str(), position_estimate);
       stop();
     } 
     else if (position_estimate >= (params.maximum_pos - params.limit_switch_safety_margin) && 
               (set_velocity > 0 || set_torque >0))
     {
-      ROS_INFO("stopped because guessing too close to max limit switch");
+      ROS_INFO("%s stopped because guessing too close to max limit switch at %.4f", params.name.c_str(), position_estimate);
       stop();
     }
 
@@ -111,9 +111,11 @@ void SafetyController::update(double dt)
             case safetycontroller::position_control:
             case safetycontroller::velocity_control:
                 vesc->setLinearVelocity(set_velocity);
+                ROS_INFO ("%s set velocity: %.4f", params.name.c_str(), set_velocity);
                 break;
             case safetycontroller::torque_control:
                 vesc->setTorque(set_torque);
+                ROS_INFO ("%s set velocity: %.4f", params.name.c_str(), set_velocity);
                 break;
         }
     }
@@ -121,7 +123,7 @@ void SafetyController::update(double dt)
 
 bool SafetyController::isAtSetpoint(void)
 {
-    return fabs(position_estimate - set_position) < fabs(params.setpoint_tolerance);
+    return fabs(position_estimate - set_position) < fabs(params.setpoint_tolerance) || control_mode==safetycontroller::controlModeState::none;
 }
 
 double SafetyController::getSafetyPosition()
@@ -178,10 +180,12 @@ void SafetyController::updatePositionEstimate(double dt)
     switch (vesc->getLimitSwitchState())
     {
         case nsVescAccess::limitSwitchState::bottomOfMotion:
+            ROS_INFO ("%s at lower limit", params.name.c_str());
             this->position_estimate = params.lower_limit_position;
             break;
         case nsVescAccess::limitSwitchState::topOfMotion:
            this->position_estimate = params.upper_limit_position;
+            ROS_INFO ("%s at upper limit", params.name.c_str());
            break;
        case nsVescAccess::limitSwitchState::inTransit:
            break;
