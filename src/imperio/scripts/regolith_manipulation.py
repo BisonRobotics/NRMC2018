@@ -25,7 +25,7 @@ class RegolithManipulation(object):
 
     # Tells the robot to dig the regolith
     # Returns boolean of success
-    def dig_regolith(self, robot):
+    def dig_regolith(self):
         if self.halt:
             return None
 
@@ -61,7 +61,7 @@ class RegolithManipulation(object):
 
     # Tells the robot to deposit the regolith
     # Returns boolean of success
-    def deposit_regolith(self, robot):
+    def deposit_regolith(self):
         if self.halt:
             return None
 
@@ -81,7 +81,9 @@ class RegolithManipulation(object):
         if self.regolith_in_bucket > accepted_empty_threshold:
             self.single_dig()
             self.waiting_on_action = True
-        return False
+            return False
+
+        return True
 
     def single_dump(self):
         print("Imperio : Performing a dump")
@@ -94,5 +96,5 @@ class RegolithManipulation(object):
         return goal
 
     # The commands to tell the robot to stop moving the hoe
-    def halt_regolith_commands(self, robot):
+    def halt_regolith_commands(self):
         self.halt = True
