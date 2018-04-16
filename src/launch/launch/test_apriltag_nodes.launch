@@ -5,15 +5,6 @@
   <machine name="node0"    address="node0"    env-loader="/home/nrmc/NRMC2018-ATT/env.bash" user="nrmc" default="never" />
   <machine name="node1"    address="node1"    env-loader="/home/nrmc/NRMC2018-ATT/env.bash" user="nrmc" default="never" />
 
-  <!-- AprilTags specific stuff -->
-  <node machine="node0" name="node0" pkg="apriltag_tracker" type="apriltag_tracker"/>
-  <node machine="node1" name="node1" pkg="apriltag_tracker" type="apriltag_tracker"/>
-  <node machine="her-name" name="transforms_publisher" pkg="apriltag_tracker" type="transforms_publisher"/>
-  <node machine="her-name" name="pose_estimate_filter" pkg="apriltag_tracker" type="pose_estimate_filter"/>
-  <!--<node machine="her-name" name="node0_image_republisher" pkg="image_transport" type="republish"
-        args="compressed in:=/node0/image theora out:=/her_name/node0_image" />
-  <node machine="her-name" name="node1_image_republisher" pkg="image_transport" type="republish"
-        args="compressed in:=/node1/image theora out:=/her_name/node1_image" />-->
-
+  <include file="$(find launch)/launch/apriltag_nodes.launch" />
   <include file="$(find description)/launch/load_robot_and_arena.launch" />
 </launch>
