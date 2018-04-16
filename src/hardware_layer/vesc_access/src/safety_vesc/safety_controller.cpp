@@ -84,7 +84,6 @@ void SafetyController::update(double dt)
       {
         ROS_INFO("stopped because at setpoint");
         stop();
-        control_mode = safetycontroller::none;
       }
       else
       {
