@@ -2,9 +2,11 @@
 // Created by marcintrosh on 2/24/18.
 //
 #include "vesc_access/vesc_access.h"
+#include "ros/ros.h"
 
 int main(int argc, char **argv)
 {
+  ros::init (argc, argv, "pot_limit_test");
   float transmission_ratio = 1.0f;
   float output_ratio = 1.0f;
   float velocity_limit = 10000.0f;
@@ -16,8 +18,8 @@ int main(int argc, char **argv)
                                     (char *)"can0", pole_pairs, true);
 
   std::cout << "starting" << std::endl;
-
-  while (1)
+  ros::Rate rate (10);
+  while (ros::ok())
   {
     try
     {
@@ -41,6 +43,6 @@ int main(int argc, char **argv)
     }
     std::cout << std::endl
               << "Pot position: " << vesc->getPotPosition() << std::endl;
-    sleep(1);
+    rate.sleep();
   }
 }

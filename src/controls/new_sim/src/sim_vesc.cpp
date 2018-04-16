@@ -147,3 +147,8 @@ bool SimVesc::ableToHitGround()
 {
     return hitsGround;
 }
+
+void SimVesc::setDuty (float d)
+{
+
+}

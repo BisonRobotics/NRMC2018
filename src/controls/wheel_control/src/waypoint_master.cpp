@@ -303,7 +303,7 @@ int main(int argc, char **argv)
     
   ROS_INFO("Theta received, going into initial turn.");
   firstTime = true;
-  while (std::abs(WaypointControllerHelper::anglediff(stateVector.theta, topicTheta)) > topicthetatol)
+  while (ros::ok() && std::abs(WaypointControllerHelper::anglediff(stateVector.theta, topicTheta)) > topicthetatol)
   {
     double speed = zeroPointTurnGain * WaypointControllerHelper::anglediff(stateVector.theta, topicTheta);
 

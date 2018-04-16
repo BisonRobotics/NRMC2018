@@ -16,7 +16,10 @@
 
 #include <sys/time.h>
 #include "vesc_control/ivesc.h"
-
+#include <string>
+#include "sensor_msgs/JointState.h"
+#include "std_msgs/Float32.h"
+#include "ros/ros.h"
 class Vesc : public iVesc
 {
 public:
@@ -39,6 +42,13 @@ public:
   } mc_fault_code;
 
 private:
+  ros::Publisher float32_pub;
+  ros::Publisher js_pub;
+  sensor_msgs::JointState js_message;
+  std_msgs::Float32 f32_message;
+  ros::Time last_time;
+  static constexpr double publish_period = .5;
+  bool first_time;
   struct ifreq ifr;
   struct sockaddr_can addr;
   int s;
@@ -176,21 +186,21 @@ public:
     unsigned control_mode : 4;
   } custom_control;
 
-  Vesc(char *interface, uint8_t controllerID);
-  Vesc(char *interface, uint8_t controllerID, uint32_t quirks);
+  Vesc(char *interface, uint8_t controllerID, std::string name);
+  Vesc(char *interface, uint8_t controllerID, uint32_t quirks, std::string name);
   void setPoint(mc_control_mode mode, float setpoint);
-  void setDuty(float dutyCycle);
-  void setCurrent(float current);
+  void setDuty(float dutyCycle) override;
+  void setCurrent(float current) override;
   void setCurrentBrake(float current);
-  void setRpm(float rpm);
+  void setRpm(float rpm) override;
   void setPos(float pos);
   void setCustom(float setpoint);
 
   void enable();
   void disable();
 
-  int getRpm();
-  float getCurrent();
+  int getRpm() override;
+  float getCurrent() override;
   float getDutyCycle();
   float getPosition();
   int getTachometer();
@@ -202,9 +212,9 @@ public:
   mc_fault_code getFaultCode();
   mc_state getState();
 
-  bool getForLimit();
-  bool getRevLimit();
-  int getADC();
+  bool getForLimit() override;
+  bool getRevLimit() override;
+  int getADC() override;
 
   void resetWattHours();
   bool encoderIndexFound();

@@ -20,7 +20,7 @@ public:
   float getPotPosition(void) override;
   void setPotPosition(float pos);
   bool ableToHitGround();
-
+  void setDuty (float d) override;
 private:
   float vel;
   float torque;

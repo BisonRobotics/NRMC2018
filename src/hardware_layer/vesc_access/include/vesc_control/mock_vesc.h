@@ -15,6 +15,7 @@ public:
   MOCK_METHOD0(getADC, int(void));
   MOCK_METHOD0(getForLimit, bool(void));
   MOCK_METHOD0(getRevLimit, bool(void));
+  MOCK_METHOD1(setDuty, void(float));
 };
 
 #endif
