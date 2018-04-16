@@ -186,10 +186,12 @@
             </visual>
         </link>
 
-        <joint name="${side}_dynamixel_to_camera_mount" type="fixed">
+        <joint name="${side}_dynamixel_to_camera_mount" type="revolute">
             <parent link="${side}_dynamixel"/>
             <child link="${side}_camera_mount"/>
             <origin xyz="0.016256 0.000508 0.0195072" rpy="0 0 0" />
+            <axis xyz="0 0 1" />
+            <limit effort="1000.0" lower="${-pi}" upper="${pi}" velocity="1000.0"/>
         </joint>
 
         <link name="${side}_camera">
