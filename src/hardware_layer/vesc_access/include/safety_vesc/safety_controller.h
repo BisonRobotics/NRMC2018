@@ -35,6 +35,7 @@ public:
   float getLinearVelocity () override;
   float getTorque () override;
   void abandonPositionSetpointAndSetTorqueWithoutStopping(double torque) override;
+  safetycontroller::controlModeState getControlMode ()override;
 protected:
   void checkIsInit () override;
   safetycontroller::joint_params_t params;
@@ -43,12 +44,10 @@ protected:
   bool stopped;
   double position_estimate;
 private:
+  safetycontroller::controlModeState control_mode;
   double set_position;
   double set_torque;
   double set_velocity;
-  bool in_position_control;
-  bool in_open_loop_velocity_control;
-  bool in_open_loop_torque_control;
   double symmetricClamp (double number, double bound);
 };
 

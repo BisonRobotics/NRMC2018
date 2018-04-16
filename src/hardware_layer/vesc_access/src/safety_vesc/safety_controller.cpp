@@ -8,13 +8,11 @@ SafetyController::SafetyController(iVescAccess *vesc, safetycontroller::joint_pa
     this->params = params;
     this->vesc = vesc;
     this->is_init = false;
-    this->in_position_control = false;
-    this->in_open_loop_velocity_control = false;
-    this->in_open_loop_torque_control = false;
+    control_mode = safetycontroller::none;
     this->set_velocity = 0;
     this->set_torque = 0;
     this->stopped = true;
-    this->position_estimate = 0.0;
+    this->position_estimate = (params.upper_limit_position + params.lower_limit_position)/2.0;
 }
 
 void SafetyController::setPositionSetpoint(double position)
@@ -30,7 +28,7 @@ void SafetyController::setPositionSetpoint(double position)
       throw BackhoeException (ss.str ());
     }
     this->set_position = position;
-    in_position_control = true;
+    control_mode = safetycontroller::position_control;
 }
 
 void SafetyController::checkIsInit ()
@@ -49,11 +47,10 @@ double SafetyController::symmetricClamp (double number, double bound)
 void SafetyController::setVelocity(double velocity)
 {
     checkIsInit();
-    if (!in_position_control)
+    if (control_mode != safetycontroller::position_control)
     {
       set_velocity = symmetricClamp(velocity,params.max_abs_velocity);
-      in_open_loop_velocity_control = true;
-      in_open_loop_torque_control = false;
+      control_mode = safetycontroller::velocity_control;
     }
     else
     {
@@ -64,11 +61,10 @@ void SafetyController::setVelocity(double velocity)
 void SafetyController::setTorque(double torque)
 {
     checkIsInit();
-    if (!in_position_control)
+    if (control_mode != safetycontroller::velocity_control)
     {
         set_torque = symmetricClamp(torque, params.max_abs_torque);
-        in_open_loop_velocity_control = false;
-        in_open_loop_torque_control = true;
+        control_mode = safetycontroller::torque_control;
     }
     else
     {
@@ -82,13 +78,13 @@ void SafetyController::update(double dt)
     stopped = false;
     checkIsInit();
     ROS_INFO("doing safety controller update");
-    if (in_position_control)
+    if (control_mode == safetycontroller::position_control)
     {
       if (isAtSetpoint())
       {
         ROS_INFO("stopped because at setpoint");
         stop();
-        in_position_control = false;
+        control_mode = safetycontroller::none;
       }
       else
       {
@@ -112,15 +108,15 @@ void SafetyController::update(double dt)
 
     if (!stopped)
     {
-       if (in_position_control || in_open_loop_velocity_control) 
-       {
-           vesc->setLinearVelocity(set_velocity);
-           ROS_INFO("setting velocity to %.4f", set_velocity);
-       }
-       else if (in_open_loop_torque_control)
-       {
-           vesc->setTorque(set_torque);
-       }
+        switch (control_mode){
+            case safetycontroller::position_control:
+            case safetycontroller::velocity_control:
+                vesc->setLinearVelocity(set_velocity);
+                break;
+            case safetycontroller::torque_control:
+                vesc->setTorque(set_torque);
+                break;
+        }
     }
 }
 
@@ -138,14 +134,12 @@ void SafetyController::stop()
 {
    this->vesc->setLinearVelocity(0);
    stopped=true;
-   in_position_control = false;
-   in_open_loop_velocity_control = false;
-   in_open_loop_torque_control = false;
+   control_mode = safetycontroller::none;
 }
 
 void SafetyController::abandonPositionSetpointAndSetTorqueWithoutStopping(double torque)
 {
-   in_position_control = false;
+   control_mode = safetycontroller::torque_control;
    setTorque(torque);
 }
 
@@ -193,4 +187,9 @@ void SafetyController::updatePositionEstimate(double dt)
        case nsVescAccess::limitSwitchState::inTransit:
            break;
     }
+}
+
+safetycontroller::controlModeState SafetyController::getControlMode()
+{
+    return control_mode;
 }

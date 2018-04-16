@@ -15,6 +15,13 @@ namespace safetycontroller
     double limit_switch_safety_margin;
     double max_abs_torque;
   } joint_params_t;
+
+  enum controlModeState {
+    none,
+    position_control,
+    velocity_control,
+    torque_control
+  };
 }
 
 
@@ -52,6 +59,8 @@ public:
   virtual void abandonPositionSetpointAndSetTorqueWithoutStopping(double torque)=0;
 
   virtual void updatePositionEstimate (double dt) = 0;
+
+  virtual safetycontroller::controlModeState getControlMode() = 0;
 };
 
 

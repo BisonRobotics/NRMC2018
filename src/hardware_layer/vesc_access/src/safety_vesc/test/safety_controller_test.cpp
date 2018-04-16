@@ -25,6 +25,21 @@ TEST (safety_vesc_test, limit_switches_reset_position)
   EXPECT_NEAR (linearSafety.getPositionEstimate(), linear_joint_params.upper_limit_position, .001);
 }
 
+
+TEST (safety_vesc_test, torques_get_capped)
+{
+  NiceMock<MockVescAccess> vesc;
+  SafetyController linearSafety (&vesc, linear_joint_params);
+  linearSafety.init ();
+  ON_CALL(vesc, getLimitSwitchState()).WillByDefault(Return(nsVescAccess::inTransit));
+  EXPECT_CALL (vesc, setTorque(FloatNear(linear_joint_params.max_abs_torque,.001)));
+  linearSafety.setTorque (100);
+  linearSafety.update(.01);
+  EXPECT_CALL (vesc, setTorque(FloatNear(-linear_joint_params.max_abs_torque,.001)));
+  linearSafety.setTorque(-100);
+  linearSafety.update (.01);
+}
+
 TEST (safety_vesc_test, velocities_get_capped_at_safety)
 {
   NiceMock<MockVescAccess> vesc;
@@ -34,6 +49,9 @@ TEST (safety_vesc_test, velocities_get_capped_at_safety)
   EXPECT_CALL (vesc, setLinearVelocity(FloatNear(linear_joint_params.max_abs_velocity,.001)));
   linearSafety.setVelocity(10);
   linearSafety.update(.01);
+  EXPECT_CALL (vesc,setLinearVelocity(FloatNear(-linear_joint_params.max_abs_velocity,.001)));
+  linearSafety.setVelocity(-100);
+  linearSafety.update (.01);
 }
 
 TEST (safety_vesc_test, limit_switches_stop_motion_downward)
@@ -85,7 +103,35 @@ TEST (safety_vesc_test, calls_get_torque)
   safetyController.getTorque();
 }
 
+TEST (safety_vesc_test, throws_exception_on_velocity_setpoint_after_pos)
+{
+  NiceMock<MockVescAccess> vesc;
+  SafetyController safetyController (&vesc, linear_joint_params);
+  safetyController.init ();
+  safetyController.setPositionSetpoint(.01);
+  EXPECT_THROW(safetyController.setVelocity(10), BackhoeException);
+}
 
+TEST (safety_vesc_test, throws_exception_on_torque_setpoint_after_pos)
+{
+    NiceMock<MockVescAccess> vesc;
+    SafetyController safetyController(&vesc, linear_joint_params);
+    safetyController.init ();
+    safetyController.setPositionSetpoint(0);
+    EXPECT_THROW (safetyController.setTorque(10), BackhoeException);
+}
+
+TEST (safety_vesc_test, can_transition_between_position_and_torque)
+{
+  NiceMock<MockVescAccess> vesc;
+  SafetyController safetyController(&vesc, linear_joint_params);
+  safetyController.init  ();
+  safetyController.setPositionSetpoint(0);
+  EXPECT_CALL (vesc, setTorque(_));
+  safetyController.abandonPositionSetpointAndSetTorqueWithoutStopping(0);
+  safetyController.update(.01);
+  EXPECT_EQ (safetyController.getControlMode(), safetycontroller::controlModeState::torque_control);
+}
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {

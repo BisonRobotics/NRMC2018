@@ -24,6 +24,7 @@ public:
     MOCK_METHOD1 (abandonPositionSetpointAndSetTorqueWithoutStopping, void (double));
     MOCK_METHOD1 (update, void(double));
     MOCK_METHOD0 (getPositionEstimate, double(void));
+    MOCK_METHOD0 (getControlMode, safetycontroller::controlModeState(void));
 };
 
 
