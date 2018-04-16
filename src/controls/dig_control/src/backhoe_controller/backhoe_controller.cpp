@@ -31,6 +31,14 @@ void BackhoeController::setShoulderTorque(double torque)
   }
 }
 
+void BackhoeController::setShoulderVelocity (double velocity)
+{
+  if (getIsInit()){
+    backhoe_safety->setVelocity(velocity);
+  }
+}
+
+
 void BackhoeController::abandonShoulderPositionSetpointAndSetTorqueWithoutStopping(double torque)
 {
   if (getIsInit()) {
