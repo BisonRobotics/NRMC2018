@@ -2,14 +2,22 @@
 #include <byteswap.h>
 #include <cmath>
 
-Vesc::Vesc(char *interface, uint8_t controllerID)
+Vesc::Vesc(char *interface, uint8_t controllerID, std::string name) : Vesc(interface, controllerID, 0, name)
 {
-  init_socketCAN(interface);
-  _controllerID = controllerID;
+ // init_socketCAN(interface);
+ // _controllerID = controllerID;
 }
 
-Vesc::Vesc(char *interface, uint8_t controllerID, uint32_t quirks)
+Vesc::Vesc(char *interface, uint8_t controllerID, uint32_t quirks, std::string name)
 {
+  ros::NodeHandle n;
+  this->float32_pub = n.advertise<std_msgs::Float32> (name+"/current",30);
+  this->js_pub = n.advertise<sensor_msgs::JointState> ("/joint_states",20);
+  js_message.name.push_back (name);
+  js_message.position.push_back(0);
+  js_message.velocity.push_back(0);
+  js_message.effort.push_back(0);
+  first_time = true;
   init_socketCAN(interface);
   _controllerID = controllerID;
   _quirks = quirks;
@@ -151,8 +159,16 @@ void Vesc::disable()
 
 void Vesc::processMessages()
 {
+  if (first_time){
+    last_time = ros::Time::now ();
+    first_time = false;
+  } else if ((ros::Time::now() - last_time).toSec() > publish_period){
+    float32_pub.publish(f32_message);
+    js_pub.publish(js_message);
+    last_time = ros::Time::now ();
+  }
   struct can_frame msg;
-  while (1)
+  while (ros::ok())
   {
     int a = read(s, &msg, sizeof(msg));
     if (a == -1)
@@ -176,6 +192,9 @@ void Vesc::processMessages()
           _rpm = (*(VESC_status1 *)msg.data).rpm;
           _current = (*(VESC_status1 *)msg.data).motorCurrent / 10.0;
           _position = (*(VESC_status1 *)msg.data).position / 1000.0;
+          js_message.effort[0] = _current;
+          js_message.velocity[0] = _rpm;
+          f32_message.data = _current;
           gettimeofday(&_prevmsgtime, NULL);
           break;
         case CAN_PACKET_STATUS2:
@@ -184,6 +203,7 @@ void Vesc::processMessages()
           _flimit = (*(VESC_status2 *)msg.data).flimit;
           _rlimit = (*(VESC_status2 *)msg.data).rlimit;
           gettimeofday(&_prevmsgtime, NULL);
+         //js_message.velocity[0] =_tachometer;
           break;
         case CAN_PACKET_STATUS3:
           _wattHours = (*(VESC_status3 *)msg.data).wattHours;
@@ -198,6 +218,7 @@ void Vesc::processMessages()
           _state = (mc_state)(*(VESC_status4 *)msg.data).state;
           _encoderIndex = (*(VESC_status4 *)msg.data).encoderIndex;
           gettimeofday(&_prevmsgtime, NULL);
+          js_message.position[0] = _encoderIndex;
           break;
         default:
           break;

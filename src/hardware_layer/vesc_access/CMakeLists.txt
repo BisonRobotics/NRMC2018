@@ -9,6 +9,8 @@ add_compile_options(-std=c++11)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+        sensor_msgs
+        std_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -65,6 +67,9 @@ target_link_libraries(vesc_access
   ${catkin_LIBRARIES}
   #vesc_lib
 )
+
+target_link_libraries(vesc_lib
+        ${catkin_LIBRARIES})
 add_executable (vesc_access_integration_test
   test/vesc_access_integration_test.cpp
 )

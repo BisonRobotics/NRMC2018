@@ -17,7 +17,7 @@ public:
   void setLimitSwitchState(nsVescAccess::limitSwitchState state);
   float getPotPosition(void) override;
   void setPotPosition(float pos);
-
+  void setDuty (float d) override;
 private:
   float vel;
   float setVel;
