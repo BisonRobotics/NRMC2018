@@ -8,14 +8,12 @@ class MockSafetyController : public iSafetyController{
 public:
     MOCK_METHOD1 (setPositionSetpoint,void(double));
     MOCK_METHOD1 (setVelocity, void(double));
-    MOCK_METHOD0 (getPosition, double (void));
     MOCK_METHOD0 (updateVelocity, double(void));
     MOCK_METHOD0 (isAtSetpoint, bool(void));
     MOCK_METHOD0 (init, bool(void));
     MOCK_METHOD1 (updatePositionEstimate, void(double));
     MOCK_METHOD0 (stop, void(void));
     MOCK_METHOD0 (getSafetyPosition, double (void));
-    MOCK_METHOD0 (getVelocity, double(void));
     MOCK_METHOD0 (getSetPosition, double (void));
     MOCK_METHOD0 (getTorque, float(void));
     MOCK_METHOD0 (getLinearVelocity, float(void));

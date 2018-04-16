@@ -14,6 +14,7 @@ SafetyController::SafetyController(iVescAccess *vesc, safetycontroller::joint_pa
     this->set_velocity = 0;
     this->set_torque = 0;
     this->stopped = true;
+    this->position_estimate = 0.0;
 }
 
 void SafetyController::setPositionSetpoint(double position)
@@ -185,13 +186,9 @@ void SafetyController::updatePositionEstimate(double dt)
     {
         case nsVescAccess::limitSwitchState::bottomOfMotion:
             this->position_estimate = params.lower_limit_position;
-            ROS_INFO("stopped because at lower switch");
-            stop();
             break;
         case nsVescAccess::limitSwitchState::topOfMotion:
            this->position_estimate = params.upper_limit_position;
-           ROS_INFO("stopped because at upper switch");
-           stop();
            break;
        case nsVescAccess::limitSwitchState::inTransit:
            break;

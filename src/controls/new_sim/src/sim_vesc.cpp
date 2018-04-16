@@ -49,7 +49,7 @@ SimVesc::SimVesc(double Pgain, double Igain, double velo_factor,
 
 void SimVesc::update(double dt)
 {
-   ROS_INFO("SIM vesc updated");
+ //  ROS_INFO("SIM vesc updated");
   // note I gain not implemented
   double err = vel - setVel;
   vel += (-vesc_Pgain) * err * dt;

@@ -30,6 +30,7 @@ TEST (safety_vesc_test, velocities_get_capped_at_safety)
   NiceMock<MockVescAccess> vesc;
   SafetyController linearSafety (&vesc, linear_joint_params);
   linearSafety.init ();
+  ON_CALL (vesc, getLimitSwitchState()).WillByDefault(Return(nsVescAccess::inTransit));
   EXPECT_CALL (vesc, setLinearVelocity(FloatNear(linear_joint_params.max_abs_velocity,.001)));
   linearSafety.setVelocity(10);
   linearSafety.update(.01);
@@ -41,7 +42,6 @@ TEST (safety_vesc_test, limit_switches_stop_motion_downward)
   SafetyController linearSafety (&vesc, linear_joint_params);
   linearSafety.init ();
   ON_CALL(vesc, getLimitSwitchState()).WillByDefault(Return(nsVescAccess::limitSwitchState::bottomOfMotion));
-  linearSafety.updatePositionEstimate(.01);
   linearSafety.setVelocity(-1.0);
   EXPECT_CALL (vesc, setLinearVelocity (FloatNear(0,.001)));
   linearSafety.update(.01);
@@ -53,7 +53,6 @@ TEST (safety_vesc_test, limit_switches_stop_motion_upward)
   SafetyController linearSafety (&vesc, linear_joint_params);
   linearSafety.init ();
   ON_CALL(vesc, getLimitSwitchState()).WillByDefault(Return(nsVescAccess::limitSwitchState::topOfMotion));
-  linearSafety.updatePositionEstimate(.01);
   linearSafety.setVelocity(1);
   EXPECT_CALL (vesc, setLinearVelocity (FloatNear(0,.001)));
   linearSafety.update(.01);
