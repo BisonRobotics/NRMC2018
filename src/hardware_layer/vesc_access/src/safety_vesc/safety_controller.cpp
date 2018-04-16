@@ -61,7 +61,7 @@ void SafetyController::setVelocity(double velocity)
 void SafetyController::setTorque(double torque)
 {
     checkIsInit();
-    if (control_mode != safetycontroller::velocity_control)
+    if (control_mode != safetycontroller::position_control)
     {
         set_torque = symmetricClamp(torque, params.max_abs_torque);
         control_mode = safetycontroller::torque_control;
