@@ -90,13 +90,12 @@ class robot(object):
         Localization for the robot
         :return: robot location (x,y) and pose (x,y,theta)
         """
-
-        try:
-            (self.location, self.pose) = self.tf.lookupTransform('/map', '/base_link', rospy.Time(0))
-            print("Imperio : Robot localized to location : {} and pose : {}".format(self.location, self.pose))
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            print("IMPERIO ERROR : Robot is not able to localize")
-            # TODO : Add recovery behavior [Jira NRMC2018-329]
-            self.location = (0,0,0)
-            self.pose = (0,0,0,0)
-        return (self.location, self.pose)
+        while not rospy.is_shutdown():
+            try:
+                (self.location, self.pose) = self.tf.lookupTransform('/map', '/base_link', rospy.Time(0))
+                rospy.loginfo("Imperio : Robot localized to location : {} and pose : {}".format(self.location, self.pose))
+                return self.location, self.pose
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                rospy.logwarn("[IMPERIO] : Robot is not able to localize")
+                # TODO : Add recovery behavior [Jira NRMC2018-329]
+                rospy.sleep(1.0)

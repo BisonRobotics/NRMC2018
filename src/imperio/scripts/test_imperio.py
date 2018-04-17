@@ -61,19 +61,6 @@ class TestRobot(object):
         r.next_state()
         assert r.state == RobotState.HALT
 
-    def test_localize(self):
-        ref_tf = tf.TransformListener()
-        r = robot(None)
-        robot_loc, robot_pose = r.localize()
-        try:
-            ref_loc, ref_pose = ref_tf.lookupTransform('/map', '/base_link', 0)
-            assert robot_loc == ref_loc
-            assert robot_pose == ref_pose
-        except:
-            #TODO : Recovery behavior instead [Jira NRMC2018-329]
-            assert robot_loc == (0,0,0)
-            assert robot_pose == (0,0,0,0)
-
 """ Test for the abstract planner class using a spoof planner class.
 Author: Nicole Maguire
 Date: 4/12/2018
