@@ -7,7 +7,9 @@ class SimVesc : public iVescAccess
 {
 public:
   SimVesc(double Pgain, double Igain, double velo);
-  SimVesc(double Pgain, double Igain, double velo_factor, double initialPos, double beginLimit, double endLimit);
+  SimVesc(double Pgain, double Igain, double velo_factor, 
+          double initialPos, double beginLimit, double endLimit,
+          bool hitsGround = false, double groundPos = 0.0);
   void setLinearVelocity(float meters_per_second) override;
   void setTorque(float current) override;  // note: not really implemented
   float getLinearVelocity(void) override;
@@ -17,9 +19,11 @@ public:
   void setLimitSwitchState(nsVescAccess::limitSwitchState state);
   float getPotPosition(void) override;
   void setPotPosition(float pos);
+  bool ableToHitGround();
   void setDuty (float d) override;
 private:
   float vel;
+  float torque;
   float setVel;
   double errI;
   double vesc_Pgain;
@@ -29,7 +33,10 @@ private:
   double pot_pos;
   double beginLimit;
   double endLimit;
+  double groundPos;
   bool hasLimits;
+  bool hitsGround;
+  bool onGround;
 };
 
 #endif
