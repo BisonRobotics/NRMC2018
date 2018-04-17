@@ -63,7 +63,7 @@ void SimVesc::update(double dt)
       onGround = false;
     }
   }
-  pot_pos += vel;
+  pot_pos += vel *dt;
   if (hasLimits)
   {
     if (pot_pos >= endLimit)

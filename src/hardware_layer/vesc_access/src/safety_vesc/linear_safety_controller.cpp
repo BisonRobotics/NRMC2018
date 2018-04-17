@@ -10,7 +10,6 @@ LinearSafetyController::LinearSafetyController(safetycontroller::joint_params_t 
 
 void LinearSafetyController::updatePositionEstimate(double dt)
 {
-    SafetyController::updatePositionEstimate(dt);
     this->position_estimate += vesc->getLinearVelocity()*dt;
 }
 

@@ -35,14 +35,14 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
         case dig_state_enum::dig_idle: //state 0//not digging, should start here
           bucket->turnSifterOn();
           bucket->turnLittleConveyorOn();
-          backhoe->setShoulderSetpoint(.7); //put system in known starting config
-          backhoe->setWristSetpoint(.02);
+          backhoe->setShoulderSetpoint(2.4); //put system in known starting config
+          backhoe->setWristSetpoint(.07);
           digging_state = ensure_at_measurement_start;
         break;
         case dig_state_enum::ensure_at_measurement_start: //state 1
           if (backhoe->shoulderAtSetpoint() && backhoe->wristAtSetpoint())
           {
-            backhoe->setShoulderSetpoint(.01); //take it to close to ground
+            backhoe->setShoulderSetpoint(1.5); //take it to close to ground
             digging_state = moving_to_ground;
             weightMetric =0;
           }
@@ -52,18 +52,18 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
           weightMetric += backhoe->getShoulderTorque() * backhoe->getShoulderVelocity() * .02; //.02 is dt
           if (backhoe->shoulderAtSetpoint())
           {
-              backhoe->setShoulderSetpoint(-.2); //send it into the ground
+              backhoe->setShoulderSetpoint(0); //send it into the ground
               digging_state = finding_ground;
               dig_result.weight_harvested = weightMetric;
           }
           break;
         case dig_state_enum::finding_ground: //state 3 //going to find the ground
           //this method checks the torque reported by the motor
-          //it waits for the I gain on the velocity control to increase the torque above
-          //a threshold
+          //it waits for the p gain on the velocity control to increase the torque above
+          //a threshold after the RPM drops when the ground is hit
           if (backhoe->hasHitGround())
           {
-              backhoe->abandonShoulderPositionSetpointAndSetTorqueWithoutStopping(1.0f);
+              backhoe->abandonShoulderPositionSetpointAndSetTorqueWithoutStopping(-1.0f);
               backhoe->setWristSetpoint(.13); //curl it in
               digging_state = curling_backhoe;
           }
@@ -71,21 +71,21 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
         case dig_state_enum::curling_backhoe: //state 4 //curling wrist into dirt
             if (backhoe->wristAtSetpoint())
             {
-                backhoe->setShoulderSetpoint(.7); //lift to angle appropiate for dropping dirt into bucket
+                backhoe->setShoulderSetpoint(2.4); //lift to angle appropiate for dropping dirt into bucket
                 digging_state = moving_arm_to_initial;
             }
           break;
         case dig_state_enum::moving_arm_to_initial: //state 5 //lifting dug dirt up
             if (backhoe->shoulderAtSetpoint())
             {
-              backhoe->setWristSetpoint(0); //curl it out
+              backhoe->setWristSetpoint(0.07); //curl it out
               digging_state = dumping_into_bucket;
             }
           break;
         case dig_state_enum::dumping_into_bucket: //state 6 //uncurling wrist to release dirt into bucket
             if (backhoe->wristAtSetpoint())
             {
-                backhoe->setShoulderSetpoint(1.1); //wherever transit/initial should be
+                backhoe->setShoulderSetpoint(2.6); //wherever transit/initial should be
                 digging_state = returning_backhoe_to_initial;
             }
           break;

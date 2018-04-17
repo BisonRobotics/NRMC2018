@@ -92,6 +92,7 @@ void SafetyController::update(double dt)
     }
     //this happens in any mode 
     updatePositionEstimate(dt);
+    checkPositionEstimateAgainstLimitSwitchesAndResetItIfNeeded();
     if (position_estimate <= (params.minimum_pos + params.limit_switch_safety_margin) && 
         (set_velocity < 0 || set_torque < 0))
     {
@@ -175,7 +176,7 @@ float SafetyController::getTorque()
     return vesc->getTorque();
 }
 
-void SafetyController::updatePositionEstimate(double dt)
+void SafetyController::checkPositionEstimateAgainstLimitSwitchesAndResetItIfNeeded()
 {
     switch (vesc->getLimitSwitchState())
     {

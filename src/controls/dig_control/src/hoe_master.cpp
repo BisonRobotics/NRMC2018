@@ -70,7 +70,7 @@ int main(int argc, char **argv)
     bucketLittleConveyorVesc = bucketSimulation->getLittleConveyorVesc();
     bucketSifterVesc = bucketSimulation->getSifterVesc();
     // SimBackhoe
-    backhoeSimulation = new SimBackhoe(1.2, .1, 
+    backhoeSimulation = new SimBackhoe(2.2, .1, 
                                        central_joint_params.minimum_pos, central_joint_params.maximum_pos,
                                         linear_joint_params.minimum_pos, linear_joint_params.maximum_pos);  // shoulder and wrist angle, limits
     backhoeShoulderVesc = backhoeSimulation->getShoulderVesc();

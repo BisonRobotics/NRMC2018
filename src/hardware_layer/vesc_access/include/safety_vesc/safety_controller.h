@@ -31,7 +31,8 @@ public:
   void stop () override;
   bool init() override;
   double getPositionSetpoint () override;
-  void updatePositionEstimate(double dt) override;
+  void checkPositionEstimateAgainstLimitSwitchesAndResetItIfNeeded() override;
+  virtual void updatePositionEstimate(double dt) = 0;
   float getLinearVelocity () override;
   float getTorque () override;
   void abandonPositionSetpointAndSetTorqueWithoutStopping(double torque) override;
