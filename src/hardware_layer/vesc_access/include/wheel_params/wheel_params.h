@@ -22,8 +22,8 @@
 #define MAX_WHEEL_TORQUE                176.0f
 #define MAX_WHEEL_DUTY                  .4f
 #define WHEEL_GEAR_RATIO                256.667f
-#define WHEEL_OUTPUT_RATIO              (.3048f*3.14159)
-#define WHEEL_POLE_PAIRS                5
+#define WHEEL_OUTPUT_RATIO              (.03048f)
+#define WHEEL_POLE_PAIRS                10
 #define WHEEL_TORQUE_CONSTANT           .02120f
 
 #define MAX_CENTRAL_DRIVE_VELOCITY      0.9425f  // in rad/s
@@ -110,7 +110,7 @@ nsVescAccess::vesc_param_struct_t back_right_param = {.max_velocity = MAX_WHEEL_
                                                       .max_torque = MAX_WHEEL_TORQUE,
                                                       .max_duty = MAX_WHEEL_DUTY,
                                                       .gear_ratio = WHEEL_GEAR_RATIO,
-                                                      .output_ratio = -1.0f * WHEEL_OUTPUT_RATIO,
+                                                      .output_ratio = 1.0f * WHEEL_OUTPUT_RATIO,
                                                       .pole_pairs = WHEEL_POLE_PAIRS,
                                                       .torque_constant = WHEEL_TORQUE_CONSTANT,
                                                       WHEEL_CAN_NETWORK,
@@ -120,7 +120,7 @@ nsVescAccess::vesc_param_struct_t back_left_param = {.max_velocity = MAX_WHEEL_V
                                                      .max_torque = MAX_WHEEL_TORQUE,
                                                      .max_duty = MAX_WHEEL_DUTY,
                                                      .gear_ratio = WHEEL_GEAR_RATIO,
-                                                     .output_ratio = WHEEL_OUTPUT_RATIO,
+                                                     .output_ratio = -1.0f*WHEEL_OUTPUT_RATIO,
                                                      .pole_pairs = WHEEL_POLE_PAIRS,
                                                      .torque_constant = WHEEL_TORQUE_CONSTANT,
                                                      WHEEL_CAN_NETWORK,
