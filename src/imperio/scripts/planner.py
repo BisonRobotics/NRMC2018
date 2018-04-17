@@ -45,6 +45,7 @@ class Planner(object):
 
         rospy.Subscriber('/position_controller/drive_controller_status', DriveStatus, self.drive_status_callback)
         rospy.Subscriber('/costmap_2d_node/costmap/costmap', OccupancyGrid, self.map_callback)
+        #rospy.Subscriber('/map', OccupancyGrid, self.map_callback)
 
         self.robot = robot
         self.occupancy_grid = None
@@ -62,13 +63,13 @@ class Planner(object):
             self.movement_status = MovementStatus.MOVING
         if status_message.has_reached_goal.data:
             self.movement_status = MovementStatus.HAS_REACHED_GOAL
-            print("Imperio : Movement Status HAS_REACHED_GOAL")
+            rospy.loginfo("[IMPERIO] : Movement Status HAS_REACHED_GOAL")
         if status_message.is_stuck.data:
             self.movement_status = MovementStatus.STUCK
-            print("Imperio : Movement Status STUCK")
+            rospy.logwarn("[IMPERIO] : Movement Status STUCK")
         if status_message.cannot_plan_path.data:
             self.movement_status = MovementStatus.CANNOT_PLAN_PATH
-            print("Imperio : Movement Status CANNOT_PLAN_PATH")
+            rospy.logwarn("[IMPERIO] : Movement Status CANNOT_PLAN_PATH")
 
     def navigate_to_goal(self, goal):
         """
@@ -84,21 +85,25 @@ class Planner(object):
         if self.movement_status == MovementStatus.HAS_REACHED_GOAL and self.robot_within_threshold(goal):
             return True
 
+        rospy.loginfo("[IMPERIO] : PLANNING A PATH TO GOAL {}".format(goal))
+
         #We can't do anything until we have the occupancy grid
         if self.occupancy_grid == None:
-            print("IMPERIO: Cannot find the occupancy grid")
+            rospy.logwarn("[IMPERIO] : Cannot find the occupancy grid")
             self.movement_status = MovementStatus.WAITING
             return False
-        print("Imperio: Occupancy Grid Exists")
+        rospy.loginfo("[IMPERIO] : Occupancy Grid Exists")
 
         waypoints = self.find_waypoints(goal)
         oriented_waypoints = self.calculate_orientation(waypoints)
-        print("Imperio: Path found : {}".format(oriented_waypoints))
+        rospy.loginfo("[IMPERIO] : Path found : {}".format(oriented_waypoints))
+        if oriented_waypoints == []:
+            return None
 
         #TODO : Add recovery behavior for if this is null [Jira NRMC2018-330]
 
         self.publish_waypoints(oriented_waypoints)
-        print("Imperio : For Goal {}".format(goal))
+        rospy.loginfo("[IMPERIO] : For Goal {}".format(goal))
         return False
 
     @abstractmethod
@@ -131,7 +136,7 @@ class Planner(object):
         message.pose_array = pose_array
         self.waypoints_publisher.publish(message)
         self.movement_status = MovementStatus.MOVING
-        print("Imperio: Waypoints published to local planner")
+        rospy.loginfo("[IMPERIO] : Waypoints published to local planner")
 
 
     def robot_within_threshold(self, goal):
@@ -150,7 +155,7 @@ class Planner(object):
         (location, pose) = self.robot.localize()
 
         if location == None:
-            print("Imperio: Unable to localize the robot")
+            rospy.logerr("[IMPERIO] : Unable to localize the robot")
             #TODO recovery behavior for localization fail [Jira NRMC2018-329]
             return False
 
@@ -159,7 +164,9 @@ class Planner(object):
 
         # TODO : Check the orientation of the robot [NRMC2018-332]
         abs_distance = math.sqrt((loc_x - goal_x) ** 2 + (loc_y - goal_y) ** 2)
-        return  abs_distance < errorThreshold
+        rospy.loginfo("[IMPERIO] : abs_distance from goal {}".format(abs_distance))
+        rospy.loginfo("[IMPERIO] : Robot is located at {} but the goal is {}".format(location, goal))
+        return abs_distance < errorThreshold
 
     def halt_movement(self):
         """
