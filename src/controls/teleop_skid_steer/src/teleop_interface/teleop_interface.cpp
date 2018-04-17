@@ -34,11 +34,7 @@ float TeleopInterface::getVelocity()
 
 void TeleopInterface::setVelocity(float velocity)
 {
-  if (velocity < 0.0f)
-  {
-    velocity = -1.0 * velocity;
-  }
-  this->velocity_scale = velocity;
+  this->velocity_scale = std::abs(velocity);
 }
 
 void TeleopInterface::stopMotors()
@@ -51,23 +47,31 @@ void TeleopInterface::stopMotors()
 
 float TeleopInterface::clamp(float number, float max, float min)
 {
-  if (number < min)
-  {
-    return min;
-  }
-  else if (number > max)
-  {
-    return max;
-  }
-  return number;
+  return std::max(min,std::min(number,max));
 }
 
 void TeleopInterface::update(float left_vel, float right_vel)
 {
-  fl->setLinearVelocity(left_vel * velocity_scale);
-  bl->setLinearVelocity(left_vel * velocity_scale);
-  fr->setLinearVelocity(right_vel * velocity_scale);
-  br->setLinearVelocity(right_vel * velocity_scale);
+  if (fabs(left_vel) > .001) {
+    fl->setLinearVelocity(left_vel * velocity_scale);
+    bl->setLinearVelocity(left_vel * velocity_scale);
+  } else {
+    fl->setTorque (0);
+    bl->setTorque (0);
+  }
+
+  if (fabs(right_vel) > .001){
+    fr->setLinearVelocity(right_vel * velocity_scale);
+    br->setLinearVelocity(right_vel * velocity_scale);
+  } else {
+    fr->setTorque(0);
+    br->setTorque(0);
+  }
+
+  fl->getTorque();
+  bl->getTorque();
+  br->getTorque();
+  fr->getTorque();
 }
 
 TeleopInterface::~TeleopInterface()

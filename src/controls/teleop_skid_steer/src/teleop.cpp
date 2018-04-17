@@ -24,8 +24,8 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "robotteleop");
   ros::NodeHandle n;
   ros::Subscriber joy_sub = n.subscribe("joy", 10, callback);
-  ros::Rate loop_rate(100);
-  TeleopInterface tele(0.8f);
+  ros::Rate loop_rate(10);
+  TeleopInterface tele(0.2f);
 
   while (ros::ok())
   {

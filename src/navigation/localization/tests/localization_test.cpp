@@ -50,7 +50,7 @@ int main(int argc, char **argv)
   ros::NodeHandle n;
   ros::Rate r(50);
   tf2_ros::TransformBroadcaster br;
-  ros::Subscriber sub = n.subscribe("joy", 30, callback);
+  ros::Subscriber sub = n.subscribe("/joy", 30, callback);
   TeleopInterface teleopInterface(.5f);
   SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0.0, 0.0, 0.0, teleopInterface.fl, teleopInterface.fr,
                                 teleopInterface.br, teleopInterface.bl, lpResearchImu, aprilTags,
