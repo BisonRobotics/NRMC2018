@@ -52,9 +52,8 @@ bool newWaypointHere = false;
 pose newWaypoint;
 bool halt = false;
 
-double topicTheta=0;
-bool thetaHere=false;
-
+double topicTheta = 0;
+bool thetaHere = false;
 
 void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 {
@@ -113,17 +112,17 @@ void haltCallback(const std_msgs::Empty::ConstPtr &msg)
 
 void initialThetaCallback(const std_msgs::Float64::ConstPtr &msg)
 {
-    topicTheta = msg->data;
-    thetaHere = true;
+  topicTheta = msg->data;
+  thetaHere = true;
 }
 
-
-bool areTheseEqual (imperio::DriveStatus status1, imperio::DriveStatus status2)
+bool areTheseEqual(imperio::DriveStatus status1, imperio::DriveStatus status2)
 {
-  return (status1.is_stuck.data == status2.is_stuck.data && status1.cannot_plan_path.data == status2.cannot_plan_path.data &&
-          status1.in_motion.data == status2.in_motion.data && status1.has_reached_goal.data == status2.has_reached_goal.data);
+  return (status1.is_stuck.data == status2.is_stuck.data &&
+          status1.cannot_plan_path.data == status2.cannot_plan_path.data &&
+          status1.in_motion.data == status2.in_motion.data &&
+          status1.has_reached_goal.data == status2.has_reached_goal.data);
 }
-
 
 int main(int argc, char **argv)
 {
@@ -151,7 +150,6 @@ int main(int argc, char **argv)
     ROS_ERROR("\n\nsimulating_driving param not defined! aborting.\n\n");
     return -1;
   }
-
 
   ros::Subscriber sub = node.subscribe("additional_waypoint", 100, newGoalCallback);
   ros::Publisher jspub = globalNode.advertise<sensor_msgs::JointState>("joint_states", 500);
@@ -238,7 +236,7 @@ int main(int argc, char **argv)
   line_strip2.color.a = 1;
   line_strip2.header.frame_id = "/map";
 
-  double wheel_positions[4] = {0};
+  double wheel_positions[4] = { 0 };
 
   geometry_msgs::Point vis_point;
   // hang here until someone knows where we are
@@ -276,9 +274,9 @@ int main(int argc, char **argv)
     ros::spinOnce();
     rate.sleep();
   }
-  
-  //zero point turn vescs here before waypoint controller is initialized
-  //get number from topic  
+
+  // zero point turn vescs here before waypoint controller is initialized
+  // get number from topic
   double topicthetatol = .1;
   if (node.hasParam("initial_theta_tolerance"))
   {
@@ -293,7 +291,7 @@ int main(int argc, char **argv)
   double zeroPointTurnGain;
   if (node.hasParam("initial_theta_gain"))
   {
-    node.getParam("initial_theta_gain",zeroPointTurnGain);
+    node.getParam("initial_theta_gain", zeroPointTurnGain);
   }
   else
   {
@@ -314,21 +312,21 @@ int main(int argc, char **argv)
 
     if (firstTime)
     {
-        firstTime = false;
-        currTime = ros::Time::now();
-        lastTime = currTime - idealLoopTime;
-        loopTime = (currTime - lastTime);
+      firstTime = false;
+      currTime = ros::Time::now();
+      lastTime = currTime - idealLoopTime;
+      loopTime = (currTime - lastTime);
     }
     else
     {
-        lastTime = currTime;
-        currTime = ros::Time::now();
-        loopTime = (currTime - lastTime);
+      lastTime = currTime;
+      currTime = ros::Time::now();
+      loopTime = (currTime - lastTime);
     }
     if (simulating)
     {
-        sim->update((loopTime).toSec());
-        tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
+      sim->update((loopTime).toSec());
+      tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
     }
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
@@ -500,7 +498,9 @@ int main(int argc, char **argv)
       {
         mode_pub.publish(status_msg);
       }
-    } else {
+    }
+    else
+    {
       mode_pub.publish(status_msg);
     }
 
@@ -550,7 +550,6 @@ int main(int argc, char **argv)
 
     ROS_INFO("Dist2endOnPath : %.4f", wc.getDist2endOnPath());
     ROS_INFO("Dist2endAbs : %.4f", wc.getDist2endAbs());
-
 
     ROS_INFO("EtpEstimate : %.4f", wc.getETpEstimate());
     ROS_INFO("EppEstimate : %.4f", wc.getEPpEstimate());

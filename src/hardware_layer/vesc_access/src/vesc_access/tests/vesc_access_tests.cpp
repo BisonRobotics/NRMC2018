@@ -36,7 +36,7 @@ TEST(VescAccessTests, canSetTorque)
 
 TEST(VescAccessTests, canSetVelocityLimit)
 {
-      NiceMock<MockVesc> vesc;
+  NiceMock<MockVesc> vesc;
   float output_ratio = 10.0f;
   float transmission_ratio = 10.0f;
   float velocity_limit = 12.0f;

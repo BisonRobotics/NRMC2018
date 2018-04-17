@@ -18,14 +18,13 @@ SimVesc::SimVesc(double Pgain, double Igain, double velo_factor)
   hitsGround = false;
 }
 
-SimVesc::SimVesc(double Pgain, double Igain, double velo_factor, 
-                 double initialPos, double beginLimit, double endLimit, 
+SimVesc::SimVesc(double Pgain, double Igain, double velo_factor, double initialPos, double beginLimit, double endLimit,
                  bool hitsGround, double groundPos)
 {
   vesc_Pgain = Pgain;
   vesc_Igain = Igain;
   vel = 0;
-  torque =0;
+  torque = 0;
   setVel = 0;
   errI = 0;
   velocity_factor = velo_factor;
@@ -48,37 +47,38 @@ SimVesc::SimVesc(double Pgain, double Igain, double velo_factor,
 
 void SimVesc::update(double dt)
 {
- // note I gain not implemented
+  // note I gain not implemented
   double err = vel - setVel;
   vel += (-vesc_Pgain) * err * dt;
   if (hitsGround)
   {
-    if (pot_pos < groundPos && vel < 0) //ground is towards negative position
+    if (pot_pos < groundPos && vel < 0)  // ground is towards negative position
     {
       vel = 0;
       onGround = true;
     }
-    else 
+    else
     {
       onGround = false;
     }
   }
-  pot_pos += vel *dt;
+  pot_pos += vel * dt;
   if (hasLimits)
   {
     if (pot_pos >= endLimit)
     {
-      if (setVel > 0) {
+      if (setVel > 0)
+      {
         vel = 0;
         setVel = 0;
-
       }
       pot_pos = endLimit;
       limitSwitch = nsVescAccess::limitSwitchState::topOfMotion;
     }
     else if (pot_pos <= beginLimit)
     {
-      if (setVel < 0) {
+      if (setVel < 0)
+      {
         vel = 0;
         setVel = 0;
       }
@@ -92,14 +92,14 @@ void SimVesc::update(double dt)
   }
   else
   {
-     limitSwitch = nsVescAccess::limitSwitchState::inTransit;
+    limitSwitch = nsVescAccess::limitSwitchState::inTransit;
   }
-  if (vel >0.001)
+  if (vel > 0.001)
   {
-     torque = 20;
+    torque = 20;
   }
   else if (vel < 0.001)
-  { 
+  {
     torque = -20;
   }
   if (onGround)
@@ -125,7 +125,7 @@ float SimVesc::getTorque(void)
 
 void SimVesc::setTorque(float current)
 {
-  this->setLinearVelocity(.3*current);
+  this->setLinearVelocity(.3 * current);
 }
 
 void SimVesc::setLimitSwitchState(nsVescAccess::limitSwitchState state)
@@ -150,10 +150,9 @@ void SimVesc::setPotPosition(float pos)
 
 bool SimVesc::ableToHitGround()
 {
-    return hitsGround;
+  return hitsGround;
 }
 
-void SimVesc::setDuty (float d)
+void SimVesc::setDuty(float d)
 {
-
 }

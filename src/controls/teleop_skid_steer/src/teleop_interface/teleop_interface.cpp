@@ -47,23 +47,29 @@ void TeleopInterface::stopMotors()
 
 float TeleopInterface::clamp(float number, float max, float min)
 {
-  return std::max(min,std::min(number,max));
+  return std::max(min, std::min(number, max));
 }
 
 void TeleopInterface::update(float left_vel, float right_vel)
 {
-  if (fabs(left_vel) > .001) {
+  if (fabs(left_vel) > .001)
+  {
     fl->setLinearVelocity(left_vel * velocity_scale);
     bl->setLinearVelocity(left_vel * velocity_scale);
-  } else {
-    fl->setTorque (0);
-    bl->setTorque (0);
+  }
+  else
+  {
+    fl->setTorque(0);
+    bl->setTorque(0);
   }
 
-  if (fabs(right_vel) > .001){
+  if (fabs(right_vel) > .001)
+  {
     fr->setLinearVelocity(right_vel * velocity_scale);
     br->setLinearVelocity(right_vel * velocity_scale);
-  } else {
+  }
+  else
+  {
     fr->setTorque(0);
     br->setTorque(0);
   }

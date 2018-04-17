@@ -6,7 +6,7 @@
 
 int main(int argc, char **argv)
 {
-  ros::init (argc, argv, "pot_limit_test");
+  ros::init(argc, argv, "pot_limit_test");
   float transmission_ratio = 1.0f;
   float output_ratio = 1.0f;
   float velocity_limit = 10000.0f;
@@ -18,7 +18,7 @@ int main(int argc, char **argv)
                                     (char *)"can0", pole_pairs, true);
 
   std::cout << "starting" << std::endl;
-  ros::Rate rate (10);
+  ros::Rate rate(10);
   while (ros::ok())
   {
     try

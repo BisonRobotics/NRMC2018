@@ -36,6 +36,7 @@ public:
   DigDumpAction(BackhoeController *backhoe, BucketController *bucket);
   dig_state_enum digging_state;
   dump_state_enum dumping_state;
+
 private:
   ros::NodeHandle nh_;
   actionlib::SimpleActionServer<dig_control::DumpAction> dump_as_;

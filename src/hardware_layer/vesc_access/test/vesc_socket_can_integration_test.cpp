@@ -5,7 +5,7 @@
 
 int main(int argc, char **argv)
 {
-  ros::init (argc, argv, "motor_test");
+  ros::init(argc, argv, "motor_test");
   Vesc *vesc = new Vesc((char *)"can0", 7, "test_motor");
 
   unsigned int number_of_cycles = 4;
