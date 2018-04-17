@@ -12,7 +12,7 @@ SafetyController::SafetyController(iVescAccess *vesc, safetycontroller::joint_pa
     this->set_velocity = 0;
     this->set_torque = 0;
     this->stopped = true;
-    this->position_estimate =0;
+    this->position_estimate = (params.lower_limit_position+params.upper_limit_position)/2.0;
 }
 
 void SafetyController::setPositionSetpoint(double position)
@@ -133,7 +133,7 @@ double SafetyController::getSafetyPosition()
 
 void SafetyController::stop()
 {
-   this->vesc->setTorque(0);
+   this->vesc->setLinearVelocity(0);
    stopped=true;
    control_mode = safetycontroller::none;
 }

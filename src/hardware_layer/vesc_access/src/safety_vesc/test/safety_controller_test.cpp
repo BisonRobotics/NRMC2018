@@ -33,7 +33,7 @@ TEST (safety_vesc_test, torques_get_capped)
   linearSafety.init ();
   ON_CALL(vesc, getLimitSwitchState()).WillByDefault(Return(nsVescAccess::inTransit));
   EXPECT_CALL (vesc, setTorque(FloatNear(linear_joint_params.max_abs_torque,.001)));
-  linearSafety.setTorque (100);
+  linearSafety.setTorque (200);
   linearSafety.update(.01);
   EXPECT_CALL (vesc, setTorque(FloatNear(-linear_joint_params.max_abs_torque,.001)));
   linearSafety.setTorque(-100);
