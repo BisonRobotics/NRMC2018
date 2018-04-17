@@ -50,7 +50,6 @@ class Planner(object):
         self.robot = robot
         self.occupancy_grid = None
         self.movement_status = MovementStatus.HAS_REACHED_GOAL
-        self.given_goal = False
 
     def map_callback(self, map_message):
         self.occupancy_grid = map_utils.Map(map_message)
@@ -83,12 +82,7 @@ class Planner(object):
             return None
         if self.movement_status == MovementStatus.MOVING:
             return False
-        if self.movement_status == MovementStatus.HAS_REACHED_GOAL and self.given_goal:
-            if self.robot_within_threshold(goal):
-                # Didn't want to make y'all deal with the threshold right now. Relying on local planner to tell us we got to goal
-                rospy.loginfo("[IMPERIO] : Local and Global planner agree that we made it to goal")
-            #Just for testing with actual robot
-            self.given_goal = False
+        if self.movement_status == MovementStatus.HAS_REACHED_GOAL and self.robot_within_threshold(goal):
             return True
 
         rospy.loginfo("[IMPERIO] : PLANNING A PATH TO GOAL {}".format(goal))
@@ -107,7 +101,7 @@ class Planner(object):
             return None
 
         #TODO : Add recovery behavior for if this is null [Jira NRMC2018-330]
-        self.given_goal = True
+
         self.publish_waypoints(oriented_waypoints)
         rospy.loginfo("[IMPERIO] : For Goal {}".format(goal))
         return False
@@ -170,7 +164,7 @@ class Planner(object):
 
         # TODO : Check the orientation of the robot [NRMC2018-332]
         abs_distance = math.sqrt((loc_x - goal_x) ** 2 + (loc_y - goal_y) ** 2)
-        rospy.loginfo("[IMPERIO] : abs_distance {}".format(abs_distance))
+        rospy.loginfo("[IMPERIO] : abs_distance from goal {}".format(abs_distance))
         rospy.loginfo("[IMPERIO] : Robot is located at {} but the goal is {}".format(location, goal))
         return abs_distance < errorThreshold
 
