@@ -101,3 +101,8 @@ void SimVesc::setPotPosition(float pos)
 {
   pot_pos = pos;
 }
+
+void SimVesc::setDuty (float d)
+{
+
+}

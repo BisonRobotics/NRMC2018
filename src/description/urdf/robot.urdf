@@ -186,10 +186,12 @@
             </visual>
         </link>
 
-        <joint name="${side}_dynamixel_to_camera_mount" type="fixed">
+        <joint name="${side}_dynamixel_to_camera_mount" type="revolute">
             <parent link="${side}_dynamixel"/>
             <child link="${side}_camera_mount"/>
             <origin xyz="0.016256 0.000508 0.0195072" rpy="0 0 0" />
+            <axis xyz="0 0 1" />
+            <limit effort="1000.0" lower="${-pi}" upper="${pi}" velocity="1000.0"/>
         </joint>
 
         <link name="${side}_camera">
@@ -215,8 +217,8 @@
             <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}" />
         </joint>
     </xacro:macro>
-    <xacro:node side="right" dir="-1" />
-    <xacro:node side="left" dir="1" />
+    <xacro:node side="node0" dir="-1" />
+    <xacro:node side="node1" dir="1" />
 
     <link name="monoboom_actuator_link" />
 
