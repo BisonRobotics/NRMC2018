@@ -23,30 +23,17 @@ int main(int argc, char** argv)
   tf2::Quaternion q;
 
   q.setRPY(M_PI_2, 0.0, M_PI_2);
-  geometry_msgs::TransformStamped map_to_tag04_tf;
-  map_to_tag04_tf.header.seq = 0;
-  map_to_tag04_tf.header.frame_id = "map";
-  map_to_tag04_tf.child_frame_id = "tag4";
-  map_to_tag04_tf.transform.translation.x = 0.0;
-  map_to_tag04_tf.transform.translation.y = 0.0;
-  map_to_tag04_tf.transform.translation.z = 0.25;
-  map_to_tag04_tf.transform.rotation.x = q.getX();
-  map_to_tag04_tf.transform.rotation.y = q.getY();
-  map_to_tag04_tf.transform.rotation.z = q.getZ();
-  map_to_tag04_tf.transform.rotation.w = q.getW();
-
-  q.setRPY(M_PI_2, 0.0, M_PI_2);
-  geometry_msgs::TransformStamped map_to_tag03_tf;
-  map_to_tag03_tf.header.seq = 0;
-  map_to_tag03_tf.header.frame_id = "map";
-  map_to_tag03_tf.child_frame_id = "tag3";
-  map_to_tag03_tf.transform.translation.x = 0.0;
-  map_to_tag03_tf.transform.translation.y = 0.5;
-  map_to_tag03_tf.transform.translation.z = 0.25;
-  map_to_tag03_tf.transform.rotation.x = q.getX();
-  map_to_tag03_tf.transform.rotation.y = q.getY();
-  map_to_tag03_tf.transform.rotation.z = q.getZ();
-  map_to_tag03_tf.transform.rotation.w = q.getW();
+  geometry_msgs::TransformStamped map_to_tag00_tf;
+  map_to_tag00_tf.header.seq = 0;
+  map_to_tag00_tf.header.frame_id = "map";
+  map_to_tag00_tf.child_frame_id = "tag0";
+  map_to_tag00_tf.transform.translation.x = 0.0;
+  map_to_tag00_tf.transform.translation.y = 0.525;
+  map_to_tag00_tf.transform.translation.z = 0.25;
+  map_to_tag00_tf.transform.rotation.x = q.getX();
+  map_to_tag00_tf.transform.rotation.y = q.getY();
+  map_to_tag00_tf.transform.rotation.z = q.getZ();
+  map_to_tag00_tf.transform.rotation.w = q.getW();
 
   q.setRPY(M_PI_2, 0.0, M_PI_2);
   geometry_msgs::TransformStamped map_to_tag01_tf;
@@ -54,7 +41,7 @@ int main(int argc, char** argv)
   map_to_tag01_tf.header.frame_id = "map";
   map_to_tag01_tf.child_frame_id = "tag1";
   map_to_tag01_tf.transform.translation.x = 0.0;
-  map_to_tag01_tf.transform.translation.y = -0.5;
+  map_to_tag01_tf.transform.translation.y = -0.525;
   map_to_tag01_tf.transform.translation.z = 0.25;
   map_to_tag01_tf.transform.rotation.x = q.getX();
   map_to_tag01_tf.transform.rotation.y = q.getY();
@@ -64,16 +51,13 @@ int main(int argc, char** argv)
   ros::Rate rate(2);
   while (ros::ok())
   {
-    map_to_tag04_tf.header.stamp = ros::Time::now();
-    map_to_tag03_tf.header.stamp = ros::Time::now();
+    map_to_tag00_tf.header.stamp = ros::Time::now();
     map_to_tag01_tf.header.stamp = ros::Time::now();
 
-    map_to_tag04_tf.header.seq++;
-    map_to_tag03_tf.header.seq++;
+    map_to_tag00_tf.header.seq++;
     map_to_tag01_tf.header.seq++;
 
-    br->sendTransform(map_to_tag04_tf);
-    br->sendTransform(map_to_tag03_tf);
+    br->sendTransform(map_to_tag00_tf);
     br->sendTransform(map_to_tag01_tf);
 
     ros::spinOnce();
