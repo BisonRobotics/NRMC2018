@@ -13,16 +13,16 @@ void OutriggerController::deploy()
 {
   retracted = false;
   // TODO replace with real values
-  l->setLinearVelocity(.5);
-  r->setLinearVelocity(.5);
+  l->setDuty(.5);
+  r->setDuty(.5);
 }
 
 void OutriggerController::retract()
 {
   deployed = false;
   // TODO replace with real values
-  l->setLinearVelocity(-.5);
-  r->setLinearVelocity(-.5);
+  l->setDuty(-.5);
+  r->setDuty(-.5);
 }
 
 void OutriggerController::update(double dt)
