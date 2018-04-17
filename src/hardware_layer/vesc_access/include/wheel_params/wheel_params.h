@@ -31,7 +31,7 @@
 #define MAX_CENTRAL_DRIVE_DUTY          .4f
 #define CENTRAL_DRIVE_GEAR_RATIO        540.0f
 #define CENTRAL_DRIVE_OUTPUT_RATIO      1.0f  //  purely rotational
-#define CENTRAL_DRIVE_POLE_PAIRS        14
+#define CENTRAL_DRIVE_POLE_PAIRS        5
 #define CENTRAL_DRIVE_TORQUE_CONSTANT   .0641f  // Nm/A
 
 #define MAX_LINEAR_ACTUATOR_VELOCITY    560.0f  // this should be change
@@ -39,7 +39,7 @@
 #define MAX_LINEAR_DUTY                 .4
 #define LINEAR_ACTUATOR_GEAR_RATIO      15.0f
 #define LINEAR_ACTUATOR_OUTPUT_RATIO    1.0f  // this should be the pitch of the screw
-#define LINEAR_ACTUATOR_POLE_PAIRS      14      // update this
+#define LINEAR_ACTUATOR_POLE_PAIRS      5      // update this
 #define LINEAR_ACTUATOR_TORQUE_CONSTANT .0341f
 
 #define MAX_SMALL_CONVEYOR_VELOCITY     4900.0f
@@ -55,7 +55,7 @@
 #define MAX_LARGE_CONVEYOR_DUTY         .4f
 #define LARGE_CONVEYOR_GEAR_RATIO       21.0f
 #define LARGE_CONVEYOR_OUTPUT_RATIO     1.0f
-#define LARGE_CONVEYOR_POLE_PAIRS       7
+#define LARGE_CONVEYOR_POLE_PAIRS       5
 #define LARGE_CONVEYOR_TORQUE_CONSTANT .0341f
 
 #define MAX_VIBRATOR_VELOCITY           6000.0f
