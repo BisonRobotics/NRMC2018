@@ -63,8 +63,8 @@ int main(int argc, char **argv)
   VescAccess small_conveyor_vesc(small_conveyor_param);
   VescAccess large_conveyor_vesc(large_conveyor_param);
 
-  LinearSafetyController linearSafety (linear_joint_params,&linear_vesc);
-  BackhoeSafetyController backhoeSafety (central_joint_params, &shoulder_vesc);
+  LinearSafetyController linearSafety(linear_joint_params, &linear_vesc);
+  BackhoeSafetyController backhoeSafety(central_joint_params, &shoulder_vesc);
   BackhoeController backhoe(&backhoeSafety, &linearSafety);
 
   BucketController bucket(&large_conveyor_vesc, &small_conveyor_vesc, &sifter_vesc);

@@ -9,53 +9,58 @@ BackhoeController::BackhoeController(iSafetyController *backhoeSafety, iSafetyCo
   this->linear_safety = linearSafety;
 }
 
-
 void BackhoeController::setShoulderSetpoint(double angle)
 {
-  if (getIsInit()) {
+  if (getIsInit())
+  {
     backhoe_safety->setPositionSetpoint(angle);
   }
 }
 
 void BackhoeController::setWristSetpoint(double angle)
 {
-  if (getIsInit()) {
+  if (getIsInit())
+  {
     linear_safety->setPositionSetpoint(angle);
   }
 }
 
 void BackhoeController::setShoulderTorque(double torque)
 {
-  if (getIsInit()) {
+  if (getIsInit())
+  {
     backhoe_safety->setTorque(torque);
   }
 }
 
-void BackhoeController::setShoulderVelocity (double velocity)
+void BackhoeController::setShoulderVelocity(double velocity)
 {
-  if (getIsInit()){
+  if (getIsInit())
+  {
     backhoe_safety->setVelocity(velocity);
   }
 }
 
-
 void BackhoeController::abandonShoulderPositionSetpointAndSetTorqueWithoutStopping(double torque)
 {
-  if (getIsInit()) {
+  if (getIsInit())
+  {
     backhoe_safety->abandonPositionSetpointAndSetTorqueWithoutStopping(torque);
   }
 }
 
 void BackhoeController::setWristVelocity(double velocity)
 {
-  if (getIsInit()) {
+  if (getIsInit())
+  {
     linear_safety->setVelocity(velocity);
   }
 }
 
 void BackhoeController::update(double dt)
 {
-  if (getIsInit()) {
+  if (getIsInit())
+  {
     safetyCheck();
     ROS_INFO("central drive update");
     backhoe_safety->update(dt);
@@ -66,9 +71,9 @@ void BackhoeController::update(double dt)
 
 void BackhoeController::safetyCheck()
 {
-  if ((backhoe_safety->getLinearVelocity() > 0)
-       && backhoe_safety->getPositionEstimate() > backhoe_safety->getSafetyPosition() 
-       && linear_safety->getPositionEstimate() > linear_safety->getSafetyPosition())
+  if ((backhoe_safety->getLinearVelocity() > 0) &&
+      backhoe_safety->getPositionEstimate() > backhoe_safety->getSafetyPosition() &&
+      linear_safety->getPositionEstimate() > linear_safety->getSafetyPosition())
   {
     ROS_INFO("BC says safety stop 1");
     backhoe_safety->stop();
@@ -102,7 +107,7 @@ double BackhoeController::getShoulderVelocity()
 
 bool BackhoeController::hasHitGround()
 {
-  return fabs(backhoe_safety->getTorque ()) > fabs(this->ground_torque);
+  return fabs(backhoe_safety->getTorque()) > fabs(this->ground_torque);
 }
 
 bool BackhoeController::getIsInit()

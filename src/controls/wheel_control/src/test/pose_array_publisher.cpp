@@ -28,8 +28,8 @@ int main(int argc, char** argv)
   std::random_device rd;
   std::mt19937 mt(rd());
 
-  //std::uniform_real_distribution<double> dist(-M_PI, M_PI);
-  std::normal_distribution<double> dist{0, .3};
+  // std::uniform_real_distribution<double> dist(-M_PI, M_PI);
+  std::normal_distribution<double> dist{ 0, .3 };
 
   double randomTheta;
   double waypointDist = .5;
@@ -41,11 +41,11 @@ int main(int argc, char** argv)
 
     if (wp1.theta > M_PI)
     {
-        wp1.theta -=2.0 * M_PI;
+      wp1.theta -= 2.0 * M_PI;
     }
     else if (wp1.theta < -M_PI)
     {
-        wp1.theta += 2.0 * M_PI;
+      wp1.theta += 2.0 * M_PI;
     }
 
     wp1.x += waypointDist * cos(wp1.theta);
@@ -54,7 +54,7 @@ int main(int argc, char** argv)
   }
   wpmsg.pose_array = waypoints;
 
-  rate.sleep(); //wait for ros to catch up
+  rate.sleep();  // wait for ros to catch up
   rate.sleep();
   rate.sleep();
   pub.publish(wpmsg);

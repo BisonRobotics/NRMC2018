@@ -5,28 +5,29 @@
 
 namespace safetycontroller
 {
-  typedef struct joint_params {
-    double minimum_pos;
-    double maximum_pos;
-    double safety_check_pos;
-    double gain;
-    double setpoint_tolerance;
-    double lower_limit_position;
-    double upper_limit_position;
-    double max_abs_velocity;
-    double limit_switch_safety_margin;
-    double max_abs_torque;
-    std::string name;
-  } joint_params_t;
+typedef struct joint_params
+{
+  double minimum_pos;
+  double maximum_pos;
+  double safety_check_pos;
+  double gain;
+  double setpoint_tolerance;
+  double lower_limit_position;
+  double upper_limit_position;
+  double max_abs_velocity;
+  double limit_switch_safety_margin;
+  double max_abs_torque;
+  std::string name;
+} joint_params_t;
 
-  enum controlModeState {
-    none,
-    position_control,
-    velocity_control,
-    torque_control
-  };
+enum controlModeState
+{
+  none,
+  position_control,
+  velocity_control,
+  torque_control
+};
 }
-
 
 class iSafetyController
 {
@@ -37,9 +38,9 @@ public:
 
   virtual void setTorque(double torque) = 0;
 
-  virtual bool getInitStatus() = 0; //gets status to see if initialized (without taking action)
+  virtual bool getInitStatus() = 0;  // gets status to see if initialized (without taking action)
 
-  virtual void checkIsInit () = 0; //throws exception if not initialized
+  virtual void checkIsInit() = 0;  // throws exception if not initialized
 
   virtual void update(double dt) = 0;
 
@@ -57,15 +58,13 @@ public:
 
   virtual float getLinearVelocity() = 0;
 
-  virtual float getTorque()= 0;
+  virtual float getTorque() = 0;
 
-  virtual void abandonPositionSetpointAndSetTorqueWithoutStopping(double torque)=0;
-  
+  virtual void abandonPositionSetpointAndSetTorqueWithoutStopping(double torque) = 0;
+
   virtual void updatePositionEstimate(double dt) = 0;
 
   virtual safetycontroller::controlModeState getControlMode() = 0;
 };
 
-
-
-#endif //PROJECT_SAFETY_VESC_H
+#endif  // PROJECT_SAFETY_VESC_H

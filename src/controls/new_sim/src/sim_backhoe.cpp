@@ -10,8 +10,8 @@ SimBackhoe::SimBackhoe(double shoulderTheta, double wristTheta)
   wr = new SimVesc(16, 0, 1.0);
 }
 
-SimBackhoe::SimBackhoe(double shoulderTheta, double wristTheta, double shoulderBottomLimit,
-                       double shoulderUpperLimit, double wristBottomLimit, double wristUpperLimit)
+SimBackhoe::SimBackhoe(double shoulderTheta, double wristTheta, double shoulderBottomLimit, double shoulderUpperLimit,
+                       double wristBottomLimit, double wristUpperLimit)
 {
   shTh = shoulderTheta;
   wrTh = wristTheta;
@@ -27,8 +27,8 @@ void SimBackhoe::update(double dt)
   ROS_INFO("wrist sim update");
   wr->update(dt);
 
-  //shTh += sh->getLinearVelocity() * dt;
-  //wrTh += wr->getLinearVelocity() * dt;
+  // shTh += sh->getLinearVelocity() * dt;
+  // wrTh += wr->getLinearVelocity() * dt;
 }
 
 double SimBackhoe::getShTheta()

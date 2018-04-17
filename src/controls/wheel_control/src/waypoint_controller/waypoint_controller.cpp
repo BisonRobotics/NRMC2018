@@ -243,9 +243,9 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
       dist2endOnPath = WaypointControllerHelper::sign(currMan.distance) * currMan.radius *
                        (WaypointControllerHelper::anglediff(maneuverEnd.theta, theCPP.theta));
       dist2endAbs = dist(robotPose.x, robotPose.y, maneuverEnd.x, maneuverEnd.y);
-      if (currMan.radius > 900) //if straight line path, use abs distance instead
+      if (currMan.radius > 900)  // if straight line path, use abs distance instead
       {
-          dist2endOnPath = dist2endAbs;
+        dist2endOnPath = dist2endAbs;
       }
       dist2Path = dist(robotPose.x, robotPose.y, theCPP.x, theCPP.y);
 
