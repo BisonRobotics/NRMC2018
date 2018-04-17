@@ -206,11 +206,59 @@ class TestPlanner(object):
         for i in range(0,len(waypoints)):
             assert abs(expected_results[i][2] - result[i][2]) < 0.001
 
-
     def test_get_robot_location(self):
         sr = SpoofRobot()
         sp = SpoofPlanner(sr)
         assert sp.get_robot_location() == (0,0,0)
+
+import initial_planner
+class TestInitialPlanner(object):
+    def test_init(self):
+        ip = initial_planner.InitialPlanner()
+        assert not ip.theta_publisher == None
+        assert ip.has_turned == False
+        assert ip.planner_failed == False
+        assert ip.msg_published == False
+
+    def test_zero_pt_turn_callback(self):
+        ip = initial_planner.InitialPlanner()
+        msg = initial_planner.DriveStatus()
+        msg.has_reached_goal.data = True
+        ip.drive_status_callback(msg)
+        assert ip.planner_failed == False
+        assert ip.has_turned
+
+        ip = initial_planner.InitialPlanner()
+        msg = initial_planner.DriveStatus()
+        msg.is_stuck.data = True
+        ip.drive_status_callback(msg)
+        assert ip.planner_failed
+        assert ip.has_turned == False
+
+        ip = initial_planner.InitialPlanner()
+        msg = initial_planner.DriveStatus()
+        msg.cannot_plan_path.data = True
+        ip.drive_status_callback(msg)
+        assert ip.planner_failed
+        assert ip.has_turned == False
+
+    def test_turn_to_start(self):
+        ip = initial_planner.InitialPlanner()
+        assert ip.turn_to_start() == False
+
+        ip = initial_planner.InitialPlanner()
+        ip.planner_failed = True
+        assert ip.turn_to_start() == None
+
+        ip = initial_planner.InitialPlanner()
+        ip.has_turned = True
+        assert ip.turn_to_start() == True
+
+
+    def test_publish_turn_msg(self):
+        ip = initial_planner.InitialPlanner()
+        ip.publish_turn_msg(0)
+        assert ip.msg_published == True
 
 
 

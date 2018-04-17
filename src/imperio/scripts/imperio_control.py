@@ -29,7 +29,7 @@ class ImperioControl(object):
         rospy.Subscriber('/times_up', Bool, self.timerCallback)
 
         self.robot = robot(self.node)
-        self.initial_planner = InitialPlanner(self.robot)
+        self.initial_planner = InitialPlanner()
         self.planner = GlobalPlanner(self.robot)
         self.rm = RegolithManipulation()
         self.starting_region = None
@@ -78,9 +78,7 @@ class ImperioControl(object):
             rate.sleep()
 
     def navigateInitialPosition(self):
-        while self.starting_region == None:
-            self.starting_region = self.initial_planner.find_best_starting_goal()
-        result = self.initial_planner.navigate_to_goal(self.starting_region)
+        result = self.initial_planner.turn_to_start()
         if result == None:
             self.robot.change_state(RobotState.HALT)
         if result:
