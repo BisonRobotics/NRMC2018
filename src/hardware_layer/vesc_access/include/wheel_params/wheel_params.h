@@ -81,7 +81,7 @@
 #define LINEAR_ACTUATOR_LENGTH          .1778
 #define MINIMUM_CENTRAL_ANGLE           0
 #define MAXIMUM_CENTRAL_ANGLE           2.96
-#define SAFE_CENTRAL_ANGLE              -1.22
+#define SAFE_CENTRAL_ANGLE              2.22
 #define SAFE_LINEAR_DISTANCE            .06985
 
 
@@ -201,8 +201,8 @@ safetycontroller::joint_params_t linear_joint_params =
         .minimum_pos = 0,
         .maximum_pos = LINEAR_ACTUATOR_LENGTH,
         .safety_check_pos = SAFE_LINEAR_DISTANCE,
-        .gain = .05,
-        .setpoint_tolerance = .04,
+        .gain = .15,
+        .setpoint_tolerance = .005,
         .lower_limit_position = 0,
         .upper_limit_position = LINEAR_ACTUATOR_LENGTH,
         .max_abs_velocity =.2,
@@ -216,7 +216,7 @@ safetycontroller::joint_params_t central_joint_params =
         .minimum_pos = MINIMUM_CENTRAL_ANGLE,
         .maximum_pos = MAXIMUM_CENTRAL_ANGLE,
         .safety_check_pos = SAFE_CENTRAL_ANGLE,
-        .gain = .05,
+        .gain = .15,
         .setpoint_tolerance = 0.04,
         .lower_limit_position = MINIMUM_CENTRAL_ANGLE,
         .upper_limit_position = MAXIMUM_CENTRAL_ANGLE,

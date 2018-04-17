@@ -66,13 +66,13 @@ void BackhoeController::update(double dt)
 
 void BackhoeController::safetyCheck()
 {
-  if ((backhoe_safety->getLinearVelocity() > 0 || backhoe_safety->getTorque() > 0)
+  if ((backhoe_safety->getLinearVelocity() > 0)
        && backhoe_safety->getPositionEstimate() > backhoe_safety->getSafetyPosition() 
        && linear_safety->getPositionEstimate() > linear_safety->getSafetyPosition())
   {
     ROS_INFO("BC says safety stop 1");
     backhoe_safety->stop();
-    if (linear_safety->getLinearVelocity() > 0 || linear_safety->getTorque() > 0)
+    if (linear_safety->getLinearVelocity() > 0)
     {
       linear_safety->stop();
       ROS_INFO("BC says safety stop 1");

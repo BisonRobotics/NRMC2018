@@ -146,7 +146,7 @@ int main(int argc, char **argv)
        
        robotAngles.position.push_back(backhoeSimulation->getShTheta());
 
-       robotAngles.name.push_back("monoboom_to_backhoe_bucket");
+       robotAngles.name.push_back("monoboom_actuator");
        robotAngles.position.push_back(backhoeSimulation->getWrTheta());
 
        JsPub.publish(robotAngles);
