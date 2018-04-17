@@ -290,7 +290,7 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  double zeroPointTurnGain = .02;
+  double zeroPointTurnGain;
   if (node.hasParam("initial_theta_gain"))
   {
     node.getParam("initial_theta_gain",zeroPointTurnGain);
@@ -300,7 +300,7 @@ int main(int argc, char **argv)
     ROS_ERROR("\n\ninitial_theta_gain param not defined! aborting.\n\n");
     return -1;
   }
-    
+
   ROS_INFO("Theta received, going into initial turn.");
   firstTime = true;
   while (ros::ok() && std::abs(WaypointControllerHelper::anglediff(stateVector.theta, topicTheta)) > topicthetatol)
