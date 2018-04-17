@@ -4,11 +4,11 @@
     <comm_mode>0</comm_mode>
     <motor_type>2</motor_type>
     <sensor_mode>0</sensor_mode>
-    <l_current_max>40</l_current_max>
-    <l_current_min>-40</l_current_min>
+    <l_current_max>20</l_current_max>
+    <l_current_min>-20</l_current_min>
     <l_in_current_max>10</l_in_current_max>
-    <l_in_current_min>-13</l_in_current_min>
-    <l_abs_current_max>22</l_abs_current_max>
+    <l_in_current_min>-10</l_in_current_min>
+    <l_abs_current_max>31</l_abs_current_max>
     <l_min_erpm>-60000</l_min_erpm>
     <l_max_erpm>60000</l_max_erpm>
     <l_max_erpm_fbrake>300</l_max_erpm_fbrake>
@@ -71,9 +71,9 @@
     <foc_hall_table_6>255</foc_hall_table_6>
     <foc_hall_table_7>255</foc_hall_table_7>
     <foc_sl_erpm>2500</foc_sl_erpm>
-    <s_pid_kp>0.0002</s_pid_kp>
-    <s_pid_ki>0.0001</s_pid_ki>
-    <s_pid_kd>0</s_pid_kd>
+    <s_pid_kp>0.035</s_pid_kp>
+    <s_pid_ki>0.0004</s_pid_ki>
+    <s_pid_kd>0.0005</s_pid_kd>
     <s_pid_min_rpm>900</s_pid_min_rpm>
     <p_pid_kp>0.03</p_pid_kp>
     <p_pid_ki>0</p_pid_ki>
