@@ -45,7 +45,7 @@ geometry_msgs::TransformStamped create_tf(double x, double y, double theta)
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "localization_tester");
-  AprilTagTrackerInterface *aprilTags = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .07);
+  AprilTagTrackerInterface *aprilTags = new AprilTagTrackerInterface("/pose_estimate", .1);
   LpResearchImu *lpResearchImu = new LpResearchImu("imu_base_link");
   ros::NodeHandle n;
   ros::Rate r(50);

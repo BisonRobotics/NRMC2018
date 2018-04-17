@@ -1,5 +1,4 @@
 # Common tasks for NRMC2018
----
 - name: add ZR300 key
   become: yes
   apt_key: keyserver=keys.gnupg.net id=0xD6FB2970
