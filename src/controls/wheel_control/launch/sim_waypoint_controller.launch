@@ -2,5 +2,7 @@
   <node name="waypoint_streamer" pkg="wheel_control" type="waypoint_filter" />
   <node name="position_controller" pkg="wheel_control" type="waypoint_master">
     <param name="simulating_driving" type="bool" value="true"/>
+    <param name="initial_theta_tolerance" type="double" value=".2"/>
+    <param name="initial_theta_gain" type="double" value=".04"/>
   </node>
 </launch>

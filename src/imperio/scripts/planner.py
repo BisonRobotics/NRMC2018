@@ -4,8 +4,8 @@ Abstract Planner Class
 LEGACY CODE WARNING : Do not try to instantiate this class, it is an abstract class
 
 Author: Nicole Maguire - James Madison University
-Date: 4/2/2018
-Version: 0
+Date: 4/12/2018
+Version: 1
 """
 
 import math
@@ -96,7 +96,7 @@ class Planner(object):
         #We can't do anything until we have the occupancy grid
         if self.occupancy_grid == None:
             rospy.logwarn("[IMPERIO] : Cannot find the occupancy grid")
-            self.movement_status == MovementStatus.WAITING
+            self.movement_status = MovementStatus.WAITING
             return False
         rospy.loginfo("[IMPERIO] : Occupancy Grid Exists")
 
@@ -126,6 +126,10 @@ class Planner(object):
         Publishes the waypoints to the local planner
         :param waypoints: an array of oriented waypoints
         """
+        if len(waypoints) < 2:
+            #TODO : Handle recovery behavior here. Possible invalid path
+            return
+
         message = GlobalWaypoints()
         pose_array = []
         waypoints.pop(0)
@@ -150,7 +154,7 @@ class Planner(object):
         errorThreshold = rospy.get_param('/location_accuracy')
         if errorThreshold == None:
             #TODO : Check with the team for best threshold here [Jira NRMC2018-331]
-            errorThreshold = 1
+            errorThreshold = .1
 
 
         goal_x, goal_y = goal
@@ -208,11 +212,10 @@ class Planner(object):
             oriented_waypoints.append(single)
 
         # still need to add the last waypoint
-        if len(waypoints) > 1:
-            final_waypoint = waypoints[len(waypoints) - 1]
-            final_orientation = oriented_waypoints[len(oriented_waypoints) - 1][2]
-            single = [final_waypoint[0], final_waypoint[1], final_orientation]
-            oriented_waypoints.append(single)
+        final_waypoint = waypoints[len(waypoints) - 1]
+        final_orientation = oriented_waypoints[len(oriented_waypoints) - 1][2]
+        single = [final_waypoint[0], final_waypoint[1], final_orientation]
+        oriented_waypoints.append(single)
 
         return oriented_waypoints
 

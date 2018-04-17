@@ -1,17 +1,14 @@
 #!/usr/bin/env python
 """ Super class for a robot object and state machine, describes the methods that a Robot should have.
 
-Author: James Madison University
-Date: 11/27/2017
-Version: 2
+Author: Nicole Maguire
+Date: 4/12/2018
+Version: 3
 
 """
 from enum import Enum
-import time
 import tf
 import rospy
-
-from sensor_msgs.msg import LaserScan
 
 class RobotState(Enum):
     """
@@ -40,11 +37,6 @@ class robot(object):
         self.tf = tf.TransformListener(node)
         self.location = None
         self.pose = None
-        self.laser_scan = None
-        self.debug_count = 0
-
-    def laser_scan_callback(self, laser_scan_message):
-        pass
 
     def change_state(self, new_state):
         """
@@ -107,19 +99,3 @@ class robot(object):
                 rospy.logwarn("[IMPERIO] : Robot is not able to localize")
                 # TODO : Add recovery behavior [Jira NRMC2018-329]
                 rospy.sleep(1.0)
-
-
-    def dig(self):
-        """
-        Low Commangs required the robot to dig
-        """
-        # Currently just a dummy method
-        time.sleep(2)
-
-    # Commands required for the robot to deposit the regolith
-    def deposit(self):
-        """
-        Low level commands for making the robot deposit it's bucker
-        """
-        # Currently a dummy method
-        time.sleep(2)
