@@ -39,6 +39,7 @@ class ImperioControl(object):
         self.robot = robot(self.node)
         self.initial_planner = InitialPlanner(self.robot)
         self.planner = GlobalPlanner(self.robot)
+        self.rm = RegolithManipulation()
         self.starting_region = None
         self.run()
 
@@ -122,14 +123,18 @@ class ImperioControl(object):
         """
         Digs for Regolith
         """
-        if dig_regolith(self.robot):
+        result = self.rm.dig_regolith(self.robot)
+        if result == None:
+            print("Imperio : Error with Dig")
+            self.recover()
+        if result:
             self.robot.next_state()
 
     def deposit(self):
         """
         Deposits the regolith
         """
-        if deposit_regolith(self.robot):
+        if self.rm.deposit_regolith(self.robot):
             self.robot.next_state()
 
     def halt(self):

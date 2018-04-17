@@ -5,7 +5,7 @@
 class VescDiagnostic
 {
 public:
-  VescDiagnostic (char *network,  uint8_t can_id, std::string motor_name) : vesc(network, can_id), can_network(network), id (can_id), name (motor_name){}
+  VescDiagnostic (char *network,  uint8_t can_id, std::string motor_name) : vesc(network, can_id, motor_name), can_network(network), id (can_id), name (motor_name){}
   Vesc vesc;
   std::string name;
   uint8_t id;
@@ -26,7 +26,7 @@ public:
 
 int main (int argc, char **argv)
 {
-
+    ros::init (argc, argv, "runtime_check");
         VescDiagnostic front_left_wheel = VescDiagnostic(front_left_param.can_network, front_left_param.can_id,
                                                          std::string("front left wheel"));
         VescDiagnostic front_right_wheel = VescDiagnostic(front_right_param.can_network, front_right_param.can_id,
@@ -52,7 +52,7 @@ int main (int argc, char **argv)
         {&front_left_wheel, &front_right_wheel, &back_left_wheel, &back_right_wheel,
          &central_drive, &linear, &sifter, &small_conveyor, &large_conveyor, &left_outrigger, &right_outrigger
     };
-    while (1)
+    while (ros::ok())
     {
         bool motor_down = false;
         for (unsigned int ctr = 0; ctr < NUMBER_OF_MOTORS; ctr++)
@@ -68,5 +68,6 @@ int main (int argc, char **argv)
             std::cout << "all motors good" << std::endl;
         }
         sleep (1);
+        ros::spinOnce();
     }
 }
