@@ -49,7 +49,7 @@ void retractOutriggers(const dig_control::OutriggerGoalConstPtr &goal,
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "outrigger_action_server");
-  ros::NodeHandle n;
+  ros::NodeHandle n("~");
 
   if (n.hasParam("simulating_digging"))
   {

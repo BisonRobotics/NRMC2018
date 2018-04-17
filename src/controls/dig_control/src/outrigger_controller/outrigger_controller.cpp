@@ -5,13 +5,16 @@ OutriggerController::OutriggerController(iVescAccess *lVesc, iVescAccess *rVesc)
   l = lVesc;
   r = rVesc;
 
-  deployed = false;
-  retracted = true;
+  deploying = false;
+  retracting = false;
+  timeSpent = 0;
 }
 
 void OutriggerController::deploy()
 {
-  retracted = false;
+  deploying = true;
+  retracting = false;
+  timeSpent = 0;
   // TODO replace with real values
   l->setDuty(.5);
   r->setDuty(.5);
@@ -19,7 +22,9 @@ void OutriggerController::deploy()
 
 void OutriggerController::retract()
 {
-  deployed = false;
+  retracting = true;
+  deploying = false;
+  timeSpent = 0;
   // TODO replace with real values
   l->setDuty(-.5);
   r->setDuty(-.5);
@@ -29,16 +34,25 @@ void OutriggerController::update(double dt)
 {
   // TODO poll vescs for limit switch status/feedback here
   // update is deployed/retracted status
-  if (l->getLimitSwitchState() == nsVescAccess::limitSwitchState::bottomOfMotion &&
-      r->getLimitSwitchState() == nsVescAccess::limitSwitchState::bottomOfMotion)
+  if (deploying || retracting)
   {
-    deployed = true;
+    timeSpent += dt;
+    if (timeSpent >= timeToActuate)
+    {
+       if (deploying)
+       {
+         deploying = false;
+         deployed = true;
+       }
+       else if (retracting)
+       {
+         retracting = false;
+         retracted = true;
+       }
+    }
   }
-  else if (l->getLimitSwitchState() == nsVescAccess::limitSwitchState::topOfMotion &&
-           r->getLimitSwitchState() == nsVescAccess::limitSwitchState::topOfMotion)
-  {
-    retracted = true;
-  }
+
+
 }
 
 bool OutriggerController::isDeployed()
