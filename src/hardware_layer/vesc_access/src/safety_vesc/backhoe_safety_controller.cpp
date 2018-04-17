@@ -17,5 +17,6 @@ bool BackhoeSafetyController::init()
 
 void BackhoeSafetyController::updatePositionEstimate(double dt)
 {
-    this->position_estimate = this->vesc->getPotPosition();
+    this->position_estimate = vesc->getPotPosition();
+    SafetyController::updatePositionEstimate(dt);
 }

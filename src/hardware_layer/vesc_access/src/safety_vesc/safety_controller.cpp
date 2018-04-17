@@ -92,7 +92,6 @@ void SafetyController::update(double dt)
     }
     //this happens in any mode 
     updatePositionEstimate(dt);
-    checkPositionEstimateAgainstLimitSwitchesAndResetItIfNeeded();
     if (position_estimate <= (params.minimum_pos + params.limit_switch_safety_margin) && 
         (set_velocity < 0 || set_torque < 0))
     {
@@ -134,7 +133,7 @@ double SafetyController::getSafetyPosition()
 
 void SafetyController::stop()
 {
-   this->vesc->setLinearVelocity(0);
+   this->vesc->setTorque(0);
    stopped=true;
    control_mode = safetycontroller::none;
 }
@@ -196,4 +195,9 @@ void SafetyController::checkPositionEstimateAgainstLimitSwitchesAndResetItIfNeed
 safetycontroller::controlModeState SafetyController::getControlMode()
 {
     return control_mode;
+}
+
+void SafetyController::updatePositionEstimate(double dt) //you must call this method in your implementation which overrrides this one
+{
+    checkPositionEstimateAgainstLimitSwitchesAndResetItIfNeeded();
 }

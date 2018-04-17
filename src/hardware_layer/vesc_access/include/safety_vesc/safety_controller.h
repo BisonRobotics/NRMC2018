@@ -31,12 +31,11 @@ public:
   void stop () override;
   bool init() override;
   double getPositionSetpoint () override;
-  void checkPositionEstimateAgainstLimitSwitchesAndResetItIfNeeded() override;
-  virtual void updatePositionEstimate(double dt) = 0;
   float getLinearVelocity () override;
   float getTorque () override;
   void abandonPositionSetpointAndSetTorqueWithoutStopping(double torque) override;
-  safetycontroller::controlModeState getControlMode ()override;
+  safetycontroller::controlModeState getControlMode () override;
+  void updatePositionEstimate(double dt) override; //you must call this method in your implementation which overrides this one
 protected:
   void checkIsInit () override;
   safetycontroller::joint_params_t params;
@@ -50,6 +49,7 @@ private:
   double set_torque;
   double set_velocity;
   double symmetricClamp (double number, double bound);
+  void checkPositionEstimateAgainstLimitSwitchesAndResetItIfNeeded();
 };
 
 #endif //PROJECT_SAFETY_VESC_H

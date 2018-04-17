@@ -60,8 +60,8 @@ public:
   virtual float getTorque()= 0;
 
   virtual void abandonPositionSetpointAndSetTorqueWithoutStopping(double torque)=0;
-
-  virtual void checkPositionEstimateAgainstLimitSwitchesAndResetItIfNeeded() = 0;
+  
+  virtual void updatePositionEstimate(double dt) = 0;
 
   virtual safetycontroller::controlModeState getControlMode() = 0;
 };
