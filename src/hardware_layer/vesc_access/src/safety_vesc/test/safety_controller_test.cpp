@@ -128,6 +128,7 @@ TEST (safety_vesc_test, can_transition_between_position_and_torque)
   safetyController.init  ();
   safetyController.setPositionSetpoint(0);
   EXPECT_CALL (vesc, setTorque(_));
+  ON_CALL(vesc, getLimitSwitchState()).WillByDefault(Return(nsVescAccess::limitSwitchState::inTransit));
   safetyController.abandonPositionSetpointAndSetTorqueWithoutStopping(0);
   safetyController.update(.01);
   EXPECT_EQ (safetyController.getControlMode(), safetycontroller::controlModeState::torque_control);
