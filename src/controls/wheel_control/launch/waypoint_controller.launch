@@ -4,5 +4,5 @@
     <param name="simulating_driving" type="bool" value="false"/>
   </node>
   <include file="$(find lpms_imu)/launch/imu_node.launch"/>
-
+  <include file="$(find launch)/launch/test_apriltag_nodes.launch"/>
 </launch>
