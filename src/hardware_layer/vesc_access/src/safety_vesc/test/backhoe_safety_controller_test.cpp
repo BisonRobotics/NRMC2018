@@ -26,7 +26,8 @@ TEST (safety_vesc_test, update_position_calls_potentiometer)
     NiceMock<MockVescAccess> vesc;
     BackhoeSafetyController backhoeSafetyController(linear_joint_params, &vesc);
     EXPECT_CALL (vesc, getPotPosition ());
-    backhoeSafetyController.updatePositionEstimate(0);
+    ON_CALL (vesc, getLimitSwitchState()).WillByDefault(Return(nsVescAccess::limitSwitchState::bottomOfMotion));
+    backhoeSafetyController.updatePositionEstimate(0.01);
 }
 
 TEST (safety_vesc_test, get_torque_consults_the_vesc)
