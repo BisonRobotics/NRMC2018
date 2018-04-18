@@ -1,4 +1,5 @@
 #include <outrigger_controller/outrigger_controller.h>
+#define OUTRIGGER_ACTUATION_DUTY .5
 
 OutriggerController::OutriggerController(iVescAccess *lVesc, iVescAccess *rVesc)
 {
@@ -23,9 +24,8 @@ void OutriggerController::deploy()
   retracted = false;
   
   time_spent = 0;
-  // TODO replace with real values
-  l->setDuty(.5);
-  r->setDuty(.5);
+  l->setDuty(OUTRIGGER_ACTUATION_DUTY);
+  r->setDuty(OUTRIGGER_ACTUATION_DUTY);
 }
 
 void OutriggerController::retract()
@@ -37,9 +37,8 @@ void OutriggerController::retract()
   retracted = false;
   
   time_spent = 0;
-  // TODO replace with real values
-  l->setDuty(-.5);
-  r->setDuty(-.5);
+  l->setDuty(-OUTRIGGER_ACTUATION_DUTY);
+  r->setDuty(-OUTRIGGER_ACTUATION_DUTY);
 }
 
 void OutriggerController::update(double dt)
