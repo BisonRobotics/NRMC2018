@@ -87,7 +87,6 @@ private:
   double EPpLowPass, EPpLowPassPrev, ETpLowPass, ETpLowPassPrev, EPpDerivFiltEst, ETpDerivFiltEst;
   double EPpEst, ETpEst;
 
-  // TODO replace gains with a gains struct
   double LvelCmd, RvelCmd;
   double LvelCmdPrev, RvelCmdPrev;
   double WheelAlpha;
