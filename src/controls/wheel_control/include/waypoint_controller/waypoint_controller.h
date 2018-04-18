@@ -12,6 +12,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #define DT_THAT_SHALL_BE_USED .02
+
 namespace WaypointControllerNs
 {
 typedef struct waypointGains_s
