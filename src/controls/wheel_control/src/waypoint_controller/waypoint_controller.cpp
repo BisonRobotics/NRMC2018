@@ -349,8 +349,8 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     {
       if (EPpEst > 0)
       {
-        front_left_wheel->setLinearVelocity(0);
-        back_left_wheel->setLinearVelocity(0);
+        front_left_wheel->setLinearVelocity(0); //TODO experiment with 0 and setting to fraction of LvelCmd
+        back_left_wheel->setLinearVelocity(0); //in the sim it can just spin in circles (maybe the sim is bad?)
       }
       else
       {
