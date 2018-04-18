@@ -12,7 +12,6 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #define DT_THAT_SHALL_BE_USED .02
-
 namespace WaypointControllerNs
 {
 typedef struct waypointGains_s
@@ -87,7 +86,6 @@ private:
   double EPpLowPass, EPpLowPassPrev, ETpLowPass, ETpLowPassPrev, EPpDerivFiltEst, ETpDerivFiltEst;
   double EPpEst, ETpEst;
 
-  // TODO replace gains with a gains struct
   double LvelCmd, RvelCmd;
   double LvelCmdPrev, RvelCmdPrev;
   double WheelAlpha;
