@@ -10,8 +10,6 @@
 #define ANGLETOL .2f
 #define SPEED_CONST .2  // average speed for the wheels in linear m/s
 
-#define OFFPATH_TIMER_VALUE .5 //time to chill out if the path has been shot off of
-
 bool approx(double A, double B, double T)
 {
   return ((A > B - T && A < B + T) ? true : false);
@@ -52,7 +50,7 @@ WaypointController::WaypointController(double axelLength, double maxSafeSpeed, p
   ETpLowPassGain = gains.etplpgain;
   WheelAlpha = gains.wheelalpha;
   WheelErrorGain = gains.wheelerrorgain;
-  
+
   // control states
   clearControlStates();
   navigationQueue.clear();
