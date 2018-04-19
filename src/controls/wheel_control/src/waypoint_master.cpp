@@ -333,7 +333,6 @@ int main(int argc, char **argv)
       tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
     }
 
-
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
@@ -345,8 +344,8 @@ int main(int argc, char **argv)
   status_msg.has_reached_goal.data = 1;
   status_msg.cannot_plan_path.data = 0;
   status_msg.is_stuck.data = 0;
-  mode_pub.publish (status_msg);
-  ros::spinOnce ();
+  mode_pub.publish(status_msg);
+  ros::spinOnce();
   // initialize waypoint controller
   WaypointController wc = WaypointController(ROBOT_AXLE_LENGTH, ROBOT_MAX_SPEED, currPose, fl, fr, br, bl,
                                              1.0 / UPDATE_RATE_HZ, waypoint_default_gains);

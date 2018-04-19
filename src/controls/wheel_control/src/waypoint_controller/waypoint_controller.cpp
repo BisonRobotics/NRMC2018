@@ -126,8 +126,8 @@ void WaypointController::clearControlStates()
   LWheelError = 0;
   RWheelError = 0;
 
-  LvelCmdPrev = LvelCmd; // 0
-  RvelCmdPrev = RvelCmd; // 0
+  LvelCmdPrev = LvelCmd;  // 0
+  RvelCmdPrev = RvelCmd;  // 0
 }
 
 void WaypointController::haltAndAbort()
@@ -177,14 +177,14 @@ std::vector<std::pair<double, double> > WaypointController::addWaypoint(pose way
     newWaypoint.mans = WaypointControllerHelper::waypoint2maneuvers(navigationQueue.back().terminalPose, waypoint);
     // plan from last point to this new one
   }
-  
+
   // Check the path we planned,
   // make sure that it is inbounds.
   // Fix it if its not.
-  
+
   // if (!mansAreInBounds())
   // fixWaypoint(&newWaypoint);
-  
+
   navigationQueue.push_back(newWaypoint);  // append calculated maneuvers to queue
 
   // calculate points that will be covered by the new maneuver
@@ -207,7 +207,7 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
   robotPose.theta = stateVector.theta;
 
   bool aggressiveFix = false;
-  
+
   Status returnStatus = Status::ALLGOOD;
   if (navigationQueue.size() > 0)  // places to go, there are waypoints in the navigationQueue
   {
@@ -270,11 +270,11 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
                                  // if it was the last one
       }
       if (std::abs(dist2Path) > POSITIONTOL)  // fell off of path (to the side most likely)
-      {        
-        //stop wheels on inside side
+      {
+        // stop wheels on inside side
         aggressiveFix = true;
-        //continue execution
-        returnStatus = Status::OFFPATH; 
+        // continue execution
+        returnStatus = Status::OFFPATH;
       }
       if (dist2endOnPath < -GOALREACHEDDIST)  // overshot path and drove past goal (but still might be close to path)
       {
@@ -347,8 +347,8 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     {
       if (EPpEst > 0)
       {
-        front_left_wheel->setLinearVelocity(0); //TODO experiment with 0 and setting to fraction of LvelCmd
-        back_left_wheel->setLinearVelocity(0); //in the sim it can just spin in circles (maybe the sim is bad?)
+        front_left_wheel->setLinearVelocity(0);  // TODO experiment with 0 and setting to fraction of LvelCmd
+        back_left_wheel->setLinearVelocity(0);  // in the sim it can just spin in circles (maybe the sim is bad?)
       }
       else
       {
