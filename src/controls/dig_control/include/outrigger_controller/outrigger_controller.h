@@ -13,7 +13,9 @@ public:
   bool isDeployed();
   bool isRetracted();
 
+  static constexpr double TIME_TO_ACTUATE = 10.0;
 private:
-  bool deployed, retracted;
+  bool deploying, deployed, retracting, retracted;
+  double time_spent;
   iVescAccess *l, *r;
 };
