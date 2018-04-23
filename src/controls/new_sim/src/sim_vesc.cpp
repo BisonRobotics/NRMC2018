@@ -155,4 +155,5 @@ bool SimVesc::ableToHitGround()
 
 void SimVesc::setDuty(float d)
 {
+  this->setLinearVelocity(.5 * d);
 }

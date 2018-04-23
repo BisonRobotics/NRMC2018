@@ -9,6 +9,7 @@
 // this also determines how far you can overshoot a goal
 #define ANGLETOL .2f
 #define SPEED_CONST .2  // average speed for the wheels in linear m/s
+
 bool approx(double A, double B, double T)
 {
   return ((A > B - T && A < B + T) ? true : false);
@@ -125,8 +126,8 @@ void WaypointController::clearControlStates()
   LWheelError = 0;
   RWheelError = 0;
 
-  LvelCmdPrev = LvelCmd;
-  RvelCmdPrev = RvelCmd;
+  LvelCmdPrev = LvelCmd;  // 0
+  RvelCmdPrev = RvelCmd;  // 0
 }
 
 void WaypointController::haltAndAbort()
@@ -176,6 +177,14 @@ std::vector<std::pair<double, double> > WaypointController::addWaypoint(pose way
     newWaypoint.mans = WaypointControllerHelper::waypoint2maneuvers(navigationQueue.back().terminalPose, waypoint);
     // plan from last point to this new one
   }
+
+  // Check the path we planned,
+  // make sure that it is inbounds.
+  // Fix it if its not.
+
+  // if (!mansAreInBounds())
+  // fixWaypoint(&newWaypoint);
+
   navigationQueue.push_back(newWaypoint);  // append calculated maneuvers to queue
 
   // calculate points that will be covered by the new maneuver
@@ -196,6 +205,8 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
   robotPose.x = stateVector.x_pos;
   robotPose.y = stateVector.y_pos;
   robotPose.theta = stateVector.theta;
+
+  bool aggressiveFix = false;
 
   Status returnStatus = Status::ALLGOOD;
   if (navigationQueue.size() > 0)  // places to go, there are waypoints in the navigationQueue
@@ -260,10 +271,10 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
       }
       if (std::abs(dist2Path) > POSITIONTOL)  // fell off of path (to the side most likely)
       {
-        // modifyNavQueue2RecoverFromPathError(robotPose, maneuverEnd);//generate new maneuver and load it into
-        // navigation queue
-        halt();
-        return Status::OFFPATH;  // this also resets the current maneuver
+        // stop wheels on inside side
+        aggressiveFix = true;
+        // continue execution
+        returnStatus = Status::OFFPATH;
       }
       if (dist2endOnPath < -GOALREACHEDDIST)  // overshot path and drove past goal (but still might be close to path)
       {
@@ -325,10 +336,26 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     LvelCmd = WheelAlpha * LvelCmd + (1.0 - WheelAlpha) * LvelCmdPrev;
     RvelCmd = WheelAlpha * RvelCmd + (1.0 - WheelAlpha) * RvelCmdPrev;
 
-    front_left_wheel->setLinearVelocity(LvelCmd);
-    back_left_wheel->setLinearVelocity(LvelCmd);
-    front_right_wheel->setLinearVelocity(RvelCmd);
-    back_right_wheel->setLinearVelocity(RvelCmd);
+    if (!aggressiveFix)
+    {
+      front_left_wheel->setLinearVelocity(LvelCmd);
+      back_left_wheel->setLinearVelocity(LvelCmd);
+      front_right_wheel->setLinearVelocity(RvelCmd);
+      back_right_wheel->setLinearVelocity(RvelCmd);
+    }
+    else
+    {
+      if (EPpEst > 0)
+      {
+        front_left_wheel->setLinearVelocity(0);  // TODO experiment with 0 and setting to fraction of LvelCmd
+        back_left_wheel->setLinearVelocity(0);  // in the sim it can just spin in circles (maybe the sim is bad?)
+      }
+      else
+      {
+        front_right_wheel->setLinearVelocity(0);
+        back_right_wheel->setLinearVelocity(0);
+      }
+    }
     return returnStatus;
   }
   else
