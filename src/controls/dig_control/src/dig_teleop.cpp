@@ -17,7 +17,7 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
   float central = 0.0f;
   bool sifter_toggle = false;
   bool large_conveyor_toggle = false;
-  static constexpr float linear_gain = 1.0f;
+  static constexpr float linear_gain = .1;
   static constexpr float central_gain = 1.0f;
 
   if (joy->buttons[4])  // left bumper is safety
@@ -29,24 +29,32 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
 
     if (joy->buttons[2] && !joy->buttons[3])      /* should we toggle */
     {
-      global_outrigger->deploy();
+//      global_outrigger->deploy();
+      ROS_INFO("DEPLOY");
     }
     else if (joy->buttons[3] && !joy->buttons[2])
     {
-      global_outrigger->retract();
+     // global_outrigger->retract();
+      ROS_INFO("Retract");
     }
   }
 
-  global_backhoe->setShoulderTorque(central_gain * central);
-  global_backhoe->setWristVelocity(linear_gain * linear);
+ // global_backhoe->setShoulderTorque(central_gain * central);
+ // global_backhoe->setWristVelocity(linear_gain * linear);
+
+  ROS_INFO ("Shoulder torque : %f", central_gain*central);
+  ROS_INFO ("Wrist velocity %f", linear_gain*linear);
 
   if (sifter_toggle)
   {
     global_bucket->toggleSifter();
+    global_bucket->toggleLittleConveyor();
+    ROS_INFO("Sifter toggled");
   }
   if (large_conveyor_toggle)
   {
-    global_bucket->toggleBigConveyor();
+    //global_bucket->toggleBigConveyor();
+    ROS_INFO("Bucket toggled");
   }
 }
 
@@ -76,7 +84,7 @@ int main(int argc, char **argv)
   global_bucket = &bucket;
   global_outrigger = &outrigger;
 
-  ros::Subscriber joy_sub = n.subscribe("joy_dig", 10, callback);
+  ros::Subscriber joy_sub = n.subscribe("joy", 10, callback);
   ros::Rate r(10);
   ros::Time initial = ros::Time::now();
 
@@ -87,6 +95,8 @@ int main(int argc, char **argv)
     r.sleep();
   }
 
+  ROS_INFO ("Init!!");
+  float velocity;
   while (ros::ok())
   {
     r.sleep();
@@ -94,5 +104,12 @@ int main(int argc, char **argv)
     backhoe.update((initial - ros::Time::now()).toSec());
     outrigger.update((initial - ros::Time::now()).toSec());
     initial = ros::Time::now();
+    velocity = small_conveyor_vesc.getTorque();
+    velocity = large_conveyor_vesc.getTorque();
+    velocity = sifter_vesc.getTorque ();
+    velocity = right_outrigger_vesc.getTorque();
+    velocity = left_outrigger_vesc.getTorque();
+    velocity = shoulder_vesc.getTorque();
+    velocity = linear_vesc.getTorque ();
   }
 }

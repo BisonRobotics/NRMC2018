@@ -25,7 +25,7 @@ void BucketController::turnBigConveyorOff()
 
 void BucketController::turnLittleConveyorOn()
 {
-  lc->setLinearVelocity(10);
+  lc->setDuty(.9);
   little_conveyor_state = true;
 }
 
@@ -37,7 +37,7 @@ void BucketController::turnLittleConveyorOff()
 
 void BucketController::turnSifterOn()
 {
-  sf->setLinearVelocity(10);
+  sf->setDuty(.75);
   sifter_state = true;
 }
 

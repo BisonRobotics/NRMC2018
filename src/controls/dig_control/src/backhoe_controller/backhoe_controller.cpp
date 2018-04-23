@@ -62,9 +62,9 @@ void BackhoeController::update(double dt)
   if (getIsInit())
   {
     safetyCheck();
-    ROS_INFO("central drive update");
+  //  ROS_INFO("central drive update");
     backhoe_safety->update(dt);
-    ROS_INFO("Linear actuator update");
+    //ROS_INFO("Linear actuator update");
     linear_safety->update(dt);
   }
 }
