@@ -1,6 +1,7 @@
 //
 // Created by marcintrosh on 2/24/18.
 //
+#include <wheel_params/wheel_params.h>
 #include "vesc_access/vesc_access.h"
 #include "ros/ros.h"
 
@@ -14,8 +15,7 @@ int main(int argc, char **argv)
   unsigned int pole_pairs = 14;
   float torque_const = 1.0f;
 
-  VescAccess *vesc = new VescAccess(0, transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_const,
-                                    (char *)"can0", pole_pairs, true);
+  VescAccess *vesc = new VescAccess(shoulder_param, true);
 
   std::cout << "starting" << std::endl;
   ros::Rate rate(10);

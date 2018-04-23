@@ -4,10 +4,11 @@
 #define VESC_ID 0
 #define CAN_INTERFACE "can0"
 #include "ros/ros.h"
+#include "wheel_params/wheel_params.h"
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "pot_test");
-  Vesc motor((char *)"can0", 0, 1, "pot_test");  // TODO: this char* thing is a bit iffy, is this the right way to do it
+  Vesc motor((char *)"can0", shoulder_param.can_id, 1, "pot_test");  // TODO: this char* thing is a bit iffy, is this the right way to do it
   // motor.setCustom(0.1);
   // float current = 0;
   ros::Rate r(20);
