@@ -186,19 +186,6 @@ class TestPlanner(object):
         sp.publish_waypoints(waypoints)
         assert sp.movement_status == planner.MovementStatus.HAS_REACHED_GOAL
 
-
-    def test_robot_within_threshold(self):
-        sr = SpoofRobot()
-        sp = SpoofPlanner(sr)
-
-        #default/launch distance threshold being .1
-        assert not sp.robot_within_threshold((5,5)) #Distance : 7.071068
-        assert sp.robot_within_threshold((0,0)) #Distance : 0.0
-        assert sp.robot_within_threshold((0.05,0.05)) #Distance : 0.0707107
-        assert not sp.robot_within_threshold((.08,.06)) #Distance : .1
-        assert sp.robot_within_threshold((.08,-.05)) #Distance : .0943398
-
-
     def test_halt_movement(self):
         sp = SpoofPlanner(None)
         sp.halt_movement()

@@ -14,6 +14,5 @@
 <param name="time_limit" value="10"/>
 <!-- turn around (in minutes) is how many minutes before the competition ends that the robot should turn around -->
 <param name="turn_around" value="1"/>
-<param name="location_accuracy" value="0.1"/>
 
 </launch>

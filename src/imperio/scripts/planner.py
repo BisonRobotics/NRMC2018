@@ -142,36 +142,6 @@ class Planner(object):
         self.movement_status = MovementStatus.MOVING
         rospy.loginfo("[IMPERIO] : Waypoints published to local planner")
 
-
-    def robot_within_threshold(self, goal):
-        """
-        Determines if the robot is within a threshold specified in the imperio launch file
-        :param goal: the final goal as (x,y)
-        :return: a boolean of if the robot is within the threshold
-        """
-        errorThreshold = rospy.get_param('/location_accuracy')
-        if errorThreshold == None:
-            #TODO : Check with the team for best threshold here [Jira NRMC2018-331]
-            errorThreshold = .1
-
-
-        goal_x, goal_y = goal
-        (location, pose) = self.robot.localize()
-
-        if location == None:
-            rospy.logerr("[IMPERIO] : Unable to localize the robot")
-            #TODO recovery behavior for localization fail [Jira NRMC2018-329]
-            return False
-
-        loc_x = location[0]
-        loc_y = location[1]
-
-        # TODO : Check the orientation of the robot [NRMC2018-332]
-        abs_distance = math.sqrt((loc_x - goal_x) ** 2 + (loc_y - goal_y) ** 2)
-        rospy.loginfo("[IMPERIO] : abs_distance from goal {}".format(abs_distance))
-        rospy.loginfo("[IMPERIO] : Robot is located at {} but the goal is {}".format(location, goal))
-        return abs_distance < errorThreshold
-
     def halt_movement(self):
         """
         Halts the command of the robot
