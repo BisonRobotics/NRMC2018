@@ -17,7 +17,7 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
   float central = 0.0f;
   bool sifter_toggle = false;
   bool large_conveyor_toggle = false;
-  static constexpr float linear_gain = 2.0f;
+  static constexpr float linear_gain = 1.0f;
   static constexpr float central_gain = 1.0f;
 
   if (joy->buttons[4])  // left bumper is safety
@@ -27,7 +27,7 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
     sifter_toggle = joy->buttons[0] != 0;          // A button
     large_conveyor_toggle = joy->buttons[1] != 0;  // B button
 
-    if (joy->buttons[2] && !joy->buttons[3])
+    if (joy->buttons[2] && !joy->buttons[3])      /* should we toggle */
     {
       global_outrigger->deploy();
     }
@@ -63,6 +63,8 @@ int main(int argc, char **argv)
   VescAccess small_conveyor_vesc(small_conveyor_param);
   VescAccess large_conveyor_vesc(large_conveyor_param);
 
+  bool has_been_init = false;
+
   LinearSafetyController linearSafety(linear_joint_params, &linear_vesc);
   BackhoeSafetyController backhoeSafety(central_joint_params, &shoulder_vesc);
   BackhoeController backhoe(&backhoeSafety, &linearSafety);
@@ -75,8 +77,15 @@ int main(int argc, char **argv)
   global_outrigger = &outrigger;
 
   ros::Subscriber joy_sub = n.subscribe("joy_dig", 10, callback);
-  ros::Rate r(50);
+  ros::Rate r(10);
   ros::Time initial = ros::Time::now();
+
+  backhoeSafety.init();
+  while (ros::ok() && !has_been_init)
+  {
+    has_been_init = linearSafety.init ();
+    r.sleep();
+  }
 
   while (ros::ok())
   {

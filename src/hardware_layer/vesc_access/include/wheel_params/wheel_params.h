@@ -38,7 +38,7 @@
 #define MAX_LINEAR_ACTUATOR_TORQUE 10.0f
 #define MAX_LINEAR_DUTY .4
 #define LINEAR_ACTUATOR_GEAR_RATIO 15.0f
-#define LINEAR_ACTUATOR_OUTPUT_RATIO 1.0f  // this should be the pitch of the screw
+#define LINEAR_ACTUATOR_OUTPUT_RATIO .01f  // this should be the pitch of the screw in m/s
 #define LINEAR_ACTUATOR_POLE_PAIRS 5       // update this
 #define LINEAR_ACTUATOR_TORQUE_CONSTANT .0341f
 
