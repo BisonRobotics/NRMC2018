@@ -68,6 +68,7 @@ Test For Version : 1
 
 """
 import planner
+import math
 
 class SpoofPlanner(planner.Planner):
     def __init__(self, robot):
@@ -185,6 +186,15 @@ class TestPlanner(object):
         sp = SpoofPlanner(None)
         sp.halt_movement()
 
+    def test_orient_forward(self):
+        sp = SpoofPlanner(None)
+        assert sp.orient_forwards(0) == 0
+        assert sp.orient_forwards(math.pi) == 0
+        assert sp.orient_forwards(math.pi/2) == math.pi/2
+        assert sp.orient_forwards(-math.pi/2) == -math.pi/2
+        assert sp.orient_forwards(3.0/4.0*math.pi) == -math.pi/4
+        assert sp.orient_forwards(-3.0/4.0*math.pi) == math.pi/4
+
     def test_calculate_orientation(self):
         sp = SpoofPlanner(None)
         assert sp.calculate_orientation([]) == []
@@ -194,17 +204,18 @@ class TestPlanner(object):
         sp.calculate_orientation(waypoints)
 
         waypoints = [(-1,0)]
-        sp.calculate_orientation(waypoints)
+        result = sp.calculate_orientation(waypoints)
+        assert result[0][2] == 0
 
         waypoints = [(4,4),(4,4),(4,4),(5,5),(-1,-1),(4,2)]
         result = sp.calculate_orientation(waypoints)
         assert len(result) == len(waypoints)
 
         waypoints = [(1,-1),(2,-1),(3,0),(2,1)]
-        expected_results = [(1,-1, 0), (2,-1,.785398), (3,0, 2.35619), (2,1,2.35619)]
+        expected_results = [(1,-1, 0), (2,-1,.785398), (3,0, 2.35619), (2,1,0)]
         result = sp.calculate_orientation(waypoints)
         for i in range(0,len(waypoints)):
-            assert abs(expected_results[i][2] - result[i][2]) < 0.001
+            assert abs(sp.orient_forwards(expected_results[i][2]) - result[i][2]) < 0.001
 
     def test_get_robot_location(self):
         sr = SpoofRobot()

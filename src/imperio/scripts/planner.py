@@ -182,13 +182,14 @@ class Planner(object):
         :param waypoints: array of waypoints
         :return: array of waypoints with orientation
         """
+
+        final_orientation = 0
+
         # Check if none or one waypoint
         if (waypoints == None or len(waypoints) == 0):
             return []
 
         if (len(waypoints) == 1):
-            #TODO : final orientation will be passed as param from control (more logistics/strategy/testing needed) [Jira NRMC2018-333]
-            final_orientation = math.degrees(math.atan2(waypoints[0][1], waypoints[0][0]))
             return [[waypoints[0][0], waypoints[0][1], final_orientation]]
 
         # Use atan2 from math to calculate the orientation
@@ -200,14 +201,13 @@ class Planner(object):
             x1, y1 = point1[0], point1[1]
             x2, y2 = point2[0], point2[1]
 
-            orientation = math.atan2((y2 - y1), (x2 - x1))
+            orientation = self.orient_forwards(math.atan2((y2 - y1), (x2 - x1)))
 
             single = [x1, y1, orientation]
             oriented_waypoints.append(single)
 
         # still need to add the last waypoint
         final_waypoint = waypoints[len(waypoints) - 1]
-        final_orientation = oriented_waypoints[len(oriented_waypoints) - 1][2]
         single = [final_waypoint[0], final_waypoint[1], final_orientation]
         oriented_waypoints.append(single)
 
@@ -217,6 +217,12 @@ class Planner(object):
         (location, pose) = self.robot.localize()
         return location
 
+    def orient_forwards(self, orientation):
+        if orientation > math.pi/2:
+            return orientation - math.pi
+        if orientation < -math.pi/2:
+            return orientation + math.pi
+        return orientation
 
 
 
