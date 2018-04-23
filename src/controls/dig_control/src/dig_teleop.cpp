@@ -53,7 +53,7 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
   }
   if (large_conveyor_toggle)
   {
-    //global_bucket->toggleBigConveyor();
+    global_bucket->toggleBigConveyor();
     ROS_INFO("Bucket toggled");
   }
 }
