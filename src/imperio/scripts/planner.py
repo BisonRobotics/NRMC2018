@@ -50,6 +50,7 @@ class Planner(object):
         self.robot = robot
         self.occupancy_grid = None
         self.movement_status = MovementStatus.HAS_REACHED_GOAL
+        self.goal_given = False
 
     def map_callback(self, map_message):
         self.occupancy_grid = map_utils.Map(map_message)
@@ -82,7 +83,8 @@ class Planner(object):
             return None
         if self.movement_status == MovementStatus.MOVING:
             return False
-        if self.movement_status == MovementStatus.HAS_REACHED_GOAL and self.robot_within_threshold(goal):
+        if self.movement_status == MovementStatus.HAS_REACHED_GOAL and self.goal_given:
+            self.goal_given = False
             return True
 
         rospy.loginfo("[IMPERIO] : PLANNING A PATH TO GOAL {}".format(goal))
@@ -98,11 +100,13 @@ class Planner(object):
         oriented_waypoints = self.calculate_orientation(waypoints)
         rospy.loginfo("[IMPERIO] : Path found : {}".format(oriented_waypoints))
         if oriented_waypoints == []:
-            return None
+            rospy.logwarn("[IMPERIO] : No possible path found")
+            return False
 
         #TODO : Add recovery behavior for if this is null [Jira NRMC2018-330]
 
         self.publish_waypoints(oriented_waypoints)
+        self.goal_given = True
         rospy.loginfo("[IMPERIO] : For Goal {}".format(goal))
         return False
 

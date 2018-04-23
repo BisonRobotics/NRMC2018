@@ -76,6 +76,16 @@ class SpoofPlanner(planner.Planner):
     def find_waypoints(self, goal):
         return []
 
+class SpoofPlannerWaypoints(planner.Planner):
+    def __init__(self, robot):
+        super(SpoofPlannerWaypoints, self).__init__(robot)
+
+    def find_waypoints(self, goal):
+        return [(0,0), (1,1), (2,2)]
+
+    def publish_waypoints(self, oriented_waypoints):
+        pass
+
 class SpoofRobot():
     def localize(self):
         location = (0,0,0)
@@ -91,6 +101,7 @@ class TestPlanner(object):
         assert not sp.waypoints_publisher == None
         assert sp.robot == test_robot
         assert not sp.movement_status == None
+        assert sp.goal_given == False
 
     def test_map_callback(self):
         sp = SpoofPlanner(None)
@@ -132,18 +143,25 @@ class TestPlanner(object):
 
         sr = SpoofRobot()
         sp = SpoofPlanner(sr)
-        sp.movement_status = planner.MovementStatus.HAS_REACHED_GOAL
-        assert sp.navigate_to_goal((0,0)) == True
-
-        sp.occupancy_grid = None
-        result = sp.navigate_to_goal((1,1))
+        result = sp.navigate_to_goal((1, 1))
         assert result == False
         assert sp.movement_status == planner.MovementStatus.WAITING
 
         map = planner.map_utils.Map()
         sp.occupancy_grid = map
         assert not sp.occupancy_grid == None
-        assert not sp.navigate_to_goal((1,1))
+        assert not sp.navigate_to_goal((1, 1))
+        assert sp.goal_given == False
+
+        spw = SpoofPlannerWaypoints(None)
+        spw.occupancy_grid = map
+        assert not spw.navigate_to_goal((1,1))
+        assert spw.goal_given == True
+
+        spw.movement_status = planner.MovementStatus.HAS_REACHED_GOAL
+        assert spw.navigate_to_goal((0,0)) == True
+        assert spw.goal_given == False
+
 
     def test_publish_waypoints(self):
         planner.rospy.init_node('Test_Imperio')
