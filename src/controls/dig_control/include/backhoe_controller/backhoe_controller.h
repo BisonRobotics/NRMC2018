@@ -6,25 +6,26 @@
 #include "safety_vesc/backhoe_safety_controller.h"
 #include "safety_vesc/linear_safety_controller.h"
 
-
 class BackhoeController
 {
 public:
-  BackhoeController (iSafetyController *backhoeSafety, iSafetyController *linearSafety);
+  BackhoeController(iSafetyController *backhoeSafety, iSafetyController *linearSafety);
 
   // TODO, return status on update based on operation (see waypoint controller)
-  void setShoulderSetpoint(double angle);     // in rad from horizontal
-  void setWristSetpoint(double distance);     // in m
-  void setShoulderVelocity(double velocity);  // in rad/s
-  void setWristVelocity(double velocity);     // in m/s
-  void init();
+  void setShoulderSetpoint(double angle);  // in rad from horizontal
+  void setWristSetpoint(double distance);  // in m
+  void setShoulderTorque(double torque);   // in n*m
+  void setWristVelocity(double velocity);  // in m/s
   void update(double dt);
-  bool hasHitGround ();
+  void abandonShoulderPositionSetpointAndSetTorqueWithoutStopping(double torque);
+  void setShoulderVelocity(double velocity);
+  bool hasHitGround();
   bool shoulderAtSetpoint();
   bool wristAtSetpoint();
   double getShoulderTorque();
   double getShoulderVelocity();
-  bool getIsInit (void);
+  bool getIsInit(void);
+
 private:
   void safetyCheck();
   iSafetyController *backhoe_safety;

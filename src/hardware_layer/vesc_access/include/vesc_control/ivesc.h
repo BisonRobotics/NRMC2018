@@ -12,7 +12,7 @@ public:
   virtual int getADC(void) = 0;
   virtual bool getForLimit(void) = 0;
   virtual bool getRevLimit(void) = 0;
-  virtual void setDuty (float d) = 0;
+  virtual void setDuty(float d) = 0;
 };
 
 class VescException : public std::runtime_error

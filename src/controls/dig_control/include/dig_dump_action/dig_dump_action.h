@@ -34,6 +34,8 @@ class DigDumpAction
 {
 public:
   DigDumpAction(BackhoeController *backhoe, BucketController *bucket);
+  dig_state_enum digging_state;
+  dump_state_enum dumping_state;
 
 private:
   ros::NodeHandle nh_;
@@ -45,8 +47,6 @@ private:
   dig_control::DumpResult dump_result;
   bool is_digging;
   bool is_dumping;
-  dig_state_enum digging_state;
-  dump_state_enum dumping_state;
   void digExecuteCB(const dig_control::DigGoalConstPtr &goal);
   void dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal);
   BackhoeController *backhoe;

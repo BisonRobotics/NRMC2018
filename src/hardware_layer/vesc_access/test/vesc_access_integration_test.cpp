@@ -4,7 +4,7 @@
 
 int main(int argc, char **argv)
 {
-  ros::init (argc, argv, "integration_test");
+  ros::init(argc, argv, "integration_test");
   float transmission_ratio = 1.0f;
   float output_ratio = 1.0f;
   float velocity_limit = 10000.0f;
@@ -27,6 +27,6 @@ int main(int argc, char **argv)
     sleep(3);
     vesc->setLinearVelocity(-1000.0f);
     sleep(3);
-    ros::spinOnce ();
+    ros::spinOnce();
   }
 }

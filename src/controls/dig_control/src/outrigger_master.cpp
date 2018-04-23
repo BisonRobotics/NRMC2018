@@ -34,7 +34,7 @@ void retractOutriggers(const dig_control::OutriggerGoalConstPtr &goal,
   // deploy outriggers
   ros::Rate r(50);
   outriggerC->retract();
-  while (!outriggerC->isRetracted() && ros::ok()) //is this structure OK? is the ros::ok() check necessary?
+  while (!outriggerC->isRetracted() && ros::ok())  // is this structure OK? is the ros::ok() check necessary?
   {
     r.sleep();
     outriggerC->update(.02);
@@ -49,8 +49,7 @@ void retractOutriggers(const dig_control::OutriggerGoalConstPtr &goal,
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "outrigger_action_server");
-  ros::NodeHandle n;
-
+  ros::NodeHandle n("~");
 
   if (n.hasParam("simulating_digging"))
   {
@@ -85,8 +84,8 @@ int main(int argc, char **argv)
   {
     outriggerSimulation = NULL;
 
-    outriggerRightVesc = new VescAccess (right_outrigger_param);
-    outriggerLeftVesc = new VescAccess (left_outrigger_param);
+    outriggerRightVesc = new VescAccess(right_outrigger_param);
+    outriggerLeftVesc = new VescAccess(left_outrigger_param);
   }
   outriggerC = new OutriggerController(outriggerLeftVesc, outriggerRightVesc);
 

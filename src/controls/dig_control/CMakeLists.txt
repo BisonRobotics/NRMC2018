@@ -66,6 +66,7 @@ add_dependencies(hoe_master
   dig_dump_action_lib
 )
 
+target_link_libraries(backhoe_controller_lib ${catkin_LIBRARIES})
 target_link_libraries(dig_dump_action_lib backhoe_controller_lib bucket_controller_lib ${catkin_LIBRARIES} ${new_sim_LIBRARIES} ${vesc_access_LIBRARIES})
 target_link_libraries(dig_teleop ${vesc_access_LIBRARIES} backhoe_controller_lib bucket_controller_lib ${catkin_LIBRARIES} outrigger_controller_lib ${safety_vesc_LIBRARIES})
 
@@ -99,6 +100,19 @@ if(TARGET test_backhoe_controller)
             gmock_main
             gmock
             ${safety_access_LIBRARIES}
+    )
+    add_dependencies(test_backhoe_controller vesc_access)
+endif()
+
+catkin_add_gtest(test_outrigger_controller src/outrigger_controller/test/outrigger_controller_tests.cpp)
+if(TARGET test_outrigger_controller)
+    target_link_libraries(
+            test_outrigger_controller
+            ${catkin_LIBRARIES}
+            outrigger_controller_lib
+            gmock_main
+            gmock
+            ${vesc_access_LIBRARIES}
     )
     add_dependencies(test_backhoe_controller vesc_access)
 endif()

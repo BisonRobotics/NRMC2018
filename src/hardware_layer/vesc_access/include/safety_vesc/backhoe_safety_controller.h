@@ -6,9 +6,9 @@
 class BackhoeSafetyController : public SafetyController
 {
 public:
-    BackhoeSafetyController (safetycontroller::joint_params_t params, iVescAccess *vesc, bool in_velocity);
-    void init () override;
-    void updatePosition (double dt) override;
+  BackhoeSafetyController(safetycontroller::joint_params_t params, iVescAccess *vesc);
+  bool init() override;
+  void updatePositionEstimate(double dt) override;
 };
 
-#endif //PROJECT_BACKHOE_SAFETY_H
+#endif  // PROJECT_BACKHOE_SAFETY_H

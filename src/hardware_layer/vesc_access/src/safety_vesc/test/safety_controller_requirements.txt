@@ -1,0 +1,14 @@
+The safety controller will reset its estimated position upon reaching a limit switch
+The safety controller will allow position, velocity or torque control modes
+The safety controller will clamp torque and velocity commands to be within a predefined limit
+The safety controller will allow itself to be initialized
+The safety controller will throw an exception if setpoints are set before the controller is initialized
+The safety controller will not send any vesc messages outside of the initialization
+    procedure until the safety controller is initialized
+The safety controller will stop the motor upon reaching a limit switch
+The safety controller will only allow a set velocity command if its not in position mode and will throw
+    an exception if this is not observed
+The safety controller will only allow a set torque command if its not in position mode and will throw
+    an exception if this is not observed
+The safety controller will allow a method to transition between position and torque command
+The safety controller stops the motor when it is within the tolerance to the setpoint

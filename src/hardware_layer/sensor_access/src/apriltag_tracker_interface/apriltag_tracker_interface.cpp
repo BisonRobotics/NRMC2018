@@ -75,9 +75,9 @@ void AprilTagTrackerInterface::callback(const geometry_msgs::PoseStamped::ConstP
     is_floating = false;
     ROS_INFO("received estimate");
   }
-  else 
+  else
   {
-    ROS_ERROR ("nan in position statement ");
+    ROS_ERROR("nan in position statement ");
   }
 }
 

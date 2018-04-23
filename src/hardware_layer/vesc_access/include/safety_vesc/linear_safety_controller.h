@@ -6,10 +6,12 @@
 class LinearSafetyController : public SafetyController
 {
 public:
-  LinearSafetyController (safetycontroller::joint_params_t params, iVescAccess *vesc, bool in_velocity);
-  void init ();
-  void updatePosition (double dt) override;
+  LinearSafetyController(safetycontroller::joint_params_t params, iVescAccess *vesc);
+  bool init() override;
+  void updatePositionEstimate(double dt) override;
+
+private:
+  bool has_set_init_vel;
 };
 
-
-#endif //PROJECT_LINEAR_SAFETY_H
+#endif  // PROJECT_LINEAR_SAFETY_H
