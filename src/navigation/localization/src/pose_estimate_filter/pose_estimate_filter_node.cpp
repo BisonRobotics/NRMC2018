@@ -26,7 +26,10 @@ void callback(const geometry_msgs::PoseStampedConstPtr &pose)
       tf2::Stamped<tf2::Transform> transform;
       tf2::fromMsg(pose, transform);
       transform.stamp_ = ros::Time::now();
-      br->sendTransform(tf2::toMsg(transform));
+      geometry_msgs::TransformStamped message = tf2::toMsg(transform);
+      message.header.frame_id = "map";
+      message.child_frame_id = "base_link";
+      br->sendTransform(message);
     }
   }
   catch (empty_list_error &e)
