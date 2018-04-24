@@ -9,14 +9,12 @@ add_compile_options(-std=c++11)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   depth_image_proc
-  hector_mapping
   nav_msgs
   pointcloud_to_laserscan
   roscpp
   realsense_ros_camera
   tf2
   geometry_msgs
-  gmapping
   costmap_2d
 )
 
