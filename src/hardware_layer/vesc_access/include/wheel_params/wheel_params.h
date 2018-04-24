@@ -27,7 +27,7 @@
 #define WHEEL_TORQUE_CONSTANT .02120f
 
 #define MAX_CENTRAL_DRIVE_VELOCITY 0.9425f  // in rad/s
-#define MAX_CENTRAL_DRIVE_TORQUE 3000.0f     // in Nm -> the real number is 675 but we should never approach that
+#define MAX_CENTRAL_DRIVE_TORQUE 500.0f     // in Nm -> the real number is 675 but we should never approach that
 #define MAX_CENTRAL_DRIVE_DUTY .4f
 #define CENTRAL_DRIVE_GEAR_RATIO -540.0f
 #define CENTRAL_DRIVE_OUTPUT_RATIO 1.0f  //  purely rotational
@@ -226,6 +226,6 @@ safetycontroller::joint_params_t central_joint_params = {.minimum_pos = MINIMUM_
                                                          .upper_limit_position = MAXIMUM_CENTRAL_ANGLE,
                                                          .max_abs_velocity = .2,
                                                          .limit_switch_safety_margin = .01,
-                                                         .max_abs_torque = 1000,
+                                                         .max_abs_torque = 5000,
                                                          .name = "central" };
 #endif

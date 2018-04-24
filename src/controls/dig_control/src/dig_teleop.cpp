@@ -40,7 +40,7 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
   }
 
   global_backhoe->setShoulderTorque(central_gain * central);
- // global_backhoe->setWristTorque(linear_gain * linear);
+  global_backhoe->setWristTorque(linear_gain * linear);
 
   ROS_INFO ("Shoulder torque : %f", central_gain*central);
   ROS_INFO ("Wrist velocity %f", linear_gain*linear);
