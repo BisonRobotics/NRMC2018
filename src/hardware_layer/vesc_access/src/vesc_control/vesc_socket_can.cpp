@@ -103,6 +103,7 @@ void Vesc::setDuty(float dutyCycle)
 }
 void Vesc::setCurrent(float current)
 {
+  ROS_INFO ("CURRENT %f", current);
   setPoint(CONTROL_MODE_CURRENT, current);
 }
 void Vesc::setCurrentBrake(float current)
@@ -111,6 +112,7 @@ void Vesc::setCurrentBrake(float current)
 }
 void Vesc::setRpm(float rpm)
 {
+  ROS_INFO ("RPM %f", rpm);
   setPoint(CONTROL_MODE_SPEED, rpm);
 }
 void Vesc::setPos(float pos)

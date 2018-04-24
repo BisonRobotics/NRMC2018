@@ -19,6 +19,7 @@ public:
   void update(double dt);
   void abandonShoulderPositionSetpointAndSetTorqueWithoutStopping(double torque);
   void setShoulderVelocity(double velocity);
+  void setWristTorque (double torque);
   bool hasHitGround();
   bool shoulderAtSetpoint();
   bool wristAtSetpoint();

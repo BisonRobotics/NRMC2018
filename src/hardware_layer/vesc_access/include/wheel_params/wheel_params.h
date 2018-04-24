@@ -27,12 +27,12 @@
 #define WHEEL_TORQUE_CONSTANT .02120f
 
 #define MAX_CENTRAL_DRIVE_VELOCITY 0.9425f  // in rad/s
-#define MAX_CENTRAL_DRIVE_TORQUE 300.0f     // in Nm -> the real number is 675 but we should never approach that
+#define MAX_CENTRAL_DRIVE_TORQUE 3000.0f     // in Nm -> the real number is 675 but we should never approach that
 #define MAX_CENTRAL_DRIVE_DUTY .4f
-#define CENTRAL_DRIVE_GEAR_RATIO 540.0f
+#define CENTRAL_DRIVE_GEAR_RATIO -540.0f
 #define CENTRAL_DRIVE_OUTPUT_RATIO 1.0f  //  purely rotational
 #define CENTRAL_DRIVE_POLE_PAIRS 5
-#define CENTRAL_DRIVE_TORQUE_CONSTANT .0641f  // Nm/A
+#define CENTRAL_DRIVE_TORQUE_CONSTANT .641f  // Nm/A
 
 #define MAX_LINEAR_ACTUATOR_VELOCITY 560.0f  // this should be change
 #define MAX_LINEAR_ACTUATOR_TORQUE 10.0f
@@ -212,7 +212,7 @@ safetycontroller::joint_params_t linear_joint_params = {.minimum_pos = 0,
                                                         .setpoint_tolerance = .005,
                                                         .lower_limit_position = 0,
                                                         .upper_limit_position = LINEAR_ACTUATOR_LENGTH,
-                                                        .max_abs_velocity = .2,
+                                                        .max_abs_velocity = 1,
                                                         .limit_switch_safety_margin = .01,
                                                         .max_abs_torque = 100,
                                                         .name = "linear" };
@@ -226,6 +226,6 @@ safetycontroller::joint_params_t central_joint_params = {.minimum_pos = MINIMUM_
                                                          .upper_limit_position = MAXIMUM_CENTRAL_ANGLE,
                                                          .max_abs_velocity = .2,
                                                          .limit_switch_safety_margin = .01,
-                                                         .max_abs_torque = 100,
+                                                         .max_abs_torque = 1000,
                                                          .name = "central" };
 #endif
