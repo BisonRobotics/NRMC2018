@@ -18,7 +18,7 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
   bool sifter_toggle = false;
   bool large_conveyor_toggle = false;
   static constexpr float linear_gain = 3;
-  static constexpr float central_gain = 10000.0f;
+  static constexpr float central_gain = 10.0f;
 
   if (joy->buttons[4])  // left bumper is safety
   {
