@@ -5,7 +5,7 @@
 
 using namespace apriltag_tracker;
 
-#define TESTING true
+bool publish_tf;
 
 ros::Publisher *pose_pub;
 PoseEstimateFilter *filter;
@@ -21,7 +21,7 @@ void callback(const geometry_msgs::PoseStampedConstPtr &pose)
     pose_pub->publish(pose);
 
     // Only use for testing
-    if (TESTING)
+    if (publish_tf)
     {
       tf2::Stamped<tf2::Transform> transform;
       tf2::fromMsg(pose, transform);
@@ -41,12 +41,22 @@ void callback(const geometry_msgs::PoseStampedConstPtr &pose)
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "pose_estimate_filter");
-  ros::NodeHandle nh;
+  ros::NodeHandle nh("~");
   pose_pub = new ros::Publisher;
   *pose_pub = nh.advertise<geometry_msgs::PoseStamped>("pose_estimate", 100);
   br = new tf2_ros::TransformBroadcaster();
 
   filter = new PoseEstimateFilter(15, 1.0);
+
+  nh.param<bool>("publish_tf", publish_tf, false);
+  if (publish_tf)
+  {
+    ROS_WARN("Transforms will be published directly to tf from incoming pose estimates");
+  }
+  else
+  {
+    ROS_INFO("Transform publishing disabled");
+  }
 
   ros::Subscriber node0 = nh.subscribe("/node0/pose_estimate", 100, callback);
   ros::Subscriber node1 = nh.subscribe("/node1/pose_estimate", 100, callback);
