@@ -262,23 +262,23 @@
         <origin xyz="0.0450596 0.0436118 0.0316484" rpy="0 0 0" />
     </joint>
 
-    <!--<link name="${side}_camera_mount">
+    <link name="zr300_mount">
         <visual>
             <geometry>
-                <mesh filename="package://description/meshes/camera_mount.stl" />
+                <mesh filename="package://description/meshes/zr300_mount.stl" />
             </geometry>
-            <origin xyz="0 0 0" rpy="0 0 ${-pi/2}" />
+            <origin xyz="-11.494727e-3 -11.494727e-3 -0.0322072" rpy="0 ${-pi/2} ${-pi/4}" />
             <material name="grey" />
         </visual>
     </link>
 
-    <joint name="${side}_dynamixel_to_camera_mount" type="revolute">
-        <parent link="${side}_dynamixel"/>
-        <child link="${side}_camera_mount"/>
-        <origin xyz="0.016256 0.000508 0.0195072" rpy="0 0 0" />
+    <joint name="zr300_dynamixel_to_zr300_mount" type="revolute">
+        <parent link="zr300_dynamixel"/>
+        <child link="zr300_mount"/>
+        <origin xyz="0.016256 0 0.0322072" rpy="0 0 0" />
         <axis xyz="0 0 1" />
         <limit effort="1000.0" lower="${-pi}" upper="${pi}" velocity="1000.0"/>
-    </joint>-->
+    </joint>
 
     <link name="battery_box">
         <visual>
