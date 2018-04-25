@@ -212,8 +212,8 @@ safetycontroller::joint_params_t linear_joint_params = {.minimum_pos = 0,
                                                         .setpoint_tolerance = .005,
                                                         .lower_limit_position = 0,
                                                         .upper_limit_position = LINEAR_ACTUATOR_LENGTH,
-                                                        .max_abs_velocity = 1,
-                                                        .limit_switch_safety_margin = .01,
+                                                        .max_abs_velocity = MAX_LINEAR_ACTUATOR_VELOCITY,
+                                                        .limit_switch_safety_margin = .001,
                                                         .max_abs_torque = 100,
                                                         .name = "linear" };
 
