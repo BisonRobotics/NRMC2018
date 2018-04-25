@@ -226,6 +226,6 @@ safetycontroller::joint_params_t central_joint_params = {.minimum_pos = MINIMUM_
                                                          .upper_limit_position = MAXIMUM_CENTRAL_ANGLE,
                                                          .max_abs_velocity = .2,
                                                          .limit_switch_safety_margin = .01,
-                                                         .max_abs_torque = 5000,
+                                                         .max_abs_torque = 540,
                                                          .name = "central" };
 #endif
