@@ -11,6 +11,8 @@ Vesc::Vesc(char *interface, uint8_t controllerID, std::string name) : Vesc(inter
 Vesc::Vesc(char *interface, uint8_t controllerID, uint32_t quirks, std::string name)
 {
   ros::NodeHandle n;
+  this->name = name;
+  this->js_command_pub = n.advertise<sensor_msgs::JointState>("vesc_command",100);
   this->float32_pub = n.advertise<std_msgs::Float32>(name + "/current", 30);
   this->js_pub = n.advertise<sensor_msgs::JointState>("/joint_states", 20);
   js_message.name.push_back(name);
@@ -103,6 +105,10 @@ void Vesc::setDuty(float dutyCycle)
 }
 void Vesc::setCurrent(float current)
 {
+  sensor_msgs::JointState msg;
+  msg.name.push_back(this->name+"command");
+  msg.effort.push_back(current);
+  js_command_pub.publish (msg);
   setPoint(CONTROL_MODE_CURRENT, current);
 }
 void Vesc::setCurrentBrake(float current)
@@ -111,6 +117,10 @@ void Vesc::setCurrentBrake(float current)
 }
 void Vesc::setRpm(float rpm)
 {
+   sensor_msgs::JointState msg;
+  msg.name.push_back(this->name+"command");
+  msg.velocity.push_back(rpm);
+  js_command_pub.publish (msg);
   setPoint(CONTROL_MODE_SPEED, rpm);
 }
 void Vesc::setPos(float pos)
