@@ -44,6 +44,7 @@ public:
 private:
   ros::Publisher float32_pub;
   ros::Publisher js_pub;
+  ros::Publisher js_command_pub;
   sensor_msgs::JointState js_message;
   std_msgs::Float32 f32_message;
   ros::Time last_time;
@@ -215,7 +216,7 @@ public:
   bool getForLimit() override;
   bool getRevLimit() override;
   int getADC() override;
-
+  std::string name;
   void resetWattHours();
   bool encoderIndexFound();
   bool isAlive();

@@ -13,7 +13,7 @@ BucketController::BucketController(iVescAccess *bigConveyorVesc, iVescAccess *li
 
 void BucketController::turnBigConveyorOn()
 {
-  bc->setDuty(.5);
+  bc->setDuty(.25);
   big_conveyor_state = true;
 }
 

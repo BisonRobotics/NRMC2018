@@ -46,7 +46,7 @@
     <foc_f_sw>20000</foc_f_sw>
     <foc_dt_us>0.08</foc_dt_us>
     <foc_encoder_inverted>1</foc_encoder_inverted>
-    <foc_encoder_offset>66.8</foc_encoder_offset>
+    <foc_encoder_offset>70.79</foc_encoder_offset>
     <foc_encoder_ratio>7</foc_encoder_ratio>
     <foc_sensor_mode>1</foc_sensor_mode>
     <foc_pll_kp>2000</foc_pll_kp>

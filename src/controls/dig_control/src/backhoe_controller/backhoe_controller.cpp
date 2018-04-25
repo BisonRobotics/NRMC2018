@@ -57,6 +57,15 @@ void BackhoeController::setWristVelocity(double velocity)
   }
 }
 
+void BackhoeController::setWristTorque (double torque)
+{
+  if (getIsInit())
+  {
+    linear_safety->setTorque (torque);
+  }
+}
+
+
 void BackhoeController::update(double dt)
 {
   if (getIsInit())
