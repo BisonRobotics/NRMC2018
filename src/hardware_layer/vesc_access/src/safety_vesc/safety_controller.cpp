@@ -187,12 +187,10 @@ void SafetyController::checkPositionEstimateAgainstLimitSwitchesAndResetItIfNeed
   switch (vesc->getLimitSwitchState())
   {
     case nsVescAccess::limitSwitchState::bottomOfMotion:
-  //    ROS_INFO("%s at lower limit", params.name.c_str());
       this->position_estimate = params.lower_limit_position;
       break;
     case nsVescAccess::limitSwitchState::topOfMotion:
       this->position_estimate = params.upper_limit_position;
-  //    ROS_INFO("%s at upper limit", params.name.c_str());
       break;
     case nsVescAccess::limitSwitchState::inTransit:
       break;
