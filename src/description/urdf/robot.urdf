@@ -235,7 +235,7 @@
             <geometry>
                 <mesh filename="package://description/meshes/box.stl" />
             </geometry>
-            <origin xyz="0 0 0" rpy="0 0 0" />
+            <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
             <material name="grey" />
         </visual>
     </link>
@@ -243,15 +243,49 @@
     <joint name="frame_to_computer_box" type="fixed">
         <parent link="frame"/>
         <child link="computer_box"/>
-        <origin xyz="0.858774 -0.093726 0.132461" rpy="${pi/2} 0 0" />
+        <origin xyz="0.858774 -0.093726 0.132461" rpy="0 0 0" />
     </joint>
+
+    <link name="zr300_dynamixel">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/zr300_dynamixel.stl" />
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0 ${-pi/2} ${-pi/2}" />
+            <material name="black" />
+        </visual>
+    </link>
+
+    <joint name="computer_box_to_zr300_dynamixel" type="fixed">
+        <parent link="computer_box"/>
+        <child link="zr300_dynamixel"/>
+        <origin xyz="0.0450596 0.0436118 0.0316484" rpy="0 0 0" />
+    </joint>
+
+    <!--<link name="${side}_camera_mount">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/camera_mount.stl" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 ${-pi/2}" />
+            <material name="grey" />
+        </visual>
+    </link>
+
+    <joint name="${side}_dynamixel_to_camera_mount" type="revolute">
+        <parent link="${side}_dynamixel"/>
+        <child link="${side}_camera_mount"/>
+        <origin xyz="0.016256 0.000508 0.0195072" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+        <limit effort="1000.0" lower="${-pi}" upper="${pi}" velocity="1000.0"/>
+    </joint>-->
 
     <link name="battery_box">
         <visual>
             <geometry>
                 <mesh filename="package://description/meshes/box.stl" />
             </geometry>
-            <origin xyz="0 0 0" rpy="0 0 0" />
+            <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
             <material name="grey" />
         </visual>
     </link>
@@ -259,7 +293,7 @@
     <joint name="frame_to_battery_box" type="fixed">
         <parent link="frame"/>
         <child link="battery_box"/>
-        <origin xyz="0.858774 0.093726 0.132461" rpy="${pi/2} 0 0" />
+        <origin xyz="0.858774 0.093726 0.132461" rpy="0 0 0" />
     </joint>
 
     <!-- Add a few static transforms for testing -->
