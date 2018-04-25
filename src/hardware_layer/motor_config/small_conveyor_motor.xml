@@ -24,7 +24,7 @@
     <l_temp_motor_start>80</l_temp_motor_start>
     <l_temp_motor_end>100</l_temp_motor_end>
     <l_min_duty>0.005</l_min_duty>
-    <l_max_duty>0.35</l_max_duty>
+    <l_max_duty>0.8</l_max_duty>
     <sl_min_erpm>150</sl_min_erpm>
     <sl_min_erpm_cycle_int_limit>1100</sl_min_erpm_cycle_int_limit>
     <sl_max_fullbreak_current_dir_change>10</sl_max_fullbreak_current_dir_change>
@@ -71,8 +71,8 @@
     <foc_hall_table_6>255</foc_hall_table_6>
     <foc_hall_table_7>255</foc_hall_table_7>
     <foc_sl_erpm>2500</foc_sl_erpm>
-    <s_pid_kp>0.0001</s_pid_kp>
-    <s_pid_ki>0.015</s_pid_ki>
+    <s_pid_kp>0.0003</s_pid_kp>
+    <s_pid_ki>0.0004</s_pid_ki>
     <s_pid_kd>0</s_pid_kd>
     <s_pid_min_rpm>900</s_pid_min_rpm>
     <p_pid_kp>0.03</p_pid_kp>
