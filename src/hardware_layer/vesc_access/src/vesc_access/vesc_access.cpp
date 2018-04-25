@@ -283,7 +283,7 @@ nsVescAccess::limitSwitchState VescAccess::getLimitSwitchState(void)
 
 float VescAccess::getPotPosition(void)
 {
-  return vesc->getADC() * rad_per_count - rad_offset;
+  return vesc->getADC() * rad_per_count + rad_offset;
 }
 
 VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_ratio, float velocity_limit,
