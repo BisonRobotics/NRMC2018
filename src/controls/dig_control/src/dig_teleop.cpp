@@ -31,11 +31,11 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
     {
       global_outrigger->deploy();
       ROS_INFO("DEPLOY");
+
     }
     else if (joy->buttons[3] && !joy->buttons[2])
     {
       global_outrigger->retract();
-      ROS_INFO("Retract");
     }
   }
 
@@ -57,19 +57,16 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
     global_backhoe->setWristVelocity(0);
   }
 
-  ROS_INFO ("Shoulder torque : %f", central_gain*central);
-  ROS_INFO ("Wrist velocity %f", linear_gain*linear);
+
 
   if (sifter_toggle)
   {
     global_bucket->toggleSifter();
     global_bucket->toggleLittleConveyor();
-    ROS_INFO("Sifter toggled");
   }
   if (large_conveyor_toggle)
   {
     global_bucket->toggleBigConveyor();
-    ROS_INFO("Bucket toggled");
   }
 }
 
@@ -100,6 +97,7 @@ int main(int argc, char **argv)
   global_outrigger = &outrigger;
 
   ros::Subscriber joy_sub = n.subscribe("dig_joy", 10, callback);
+
   ros::Rate r(10);
   ros::Time initial = ros::Time::now();
 

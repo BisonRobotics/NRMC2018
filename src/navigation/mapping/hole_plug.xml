@@ -1,0 +1,7 @@
+<library path="lib/libhole_layer">
+    <class type="hole_layer::HoleLayer" base_class_type="costmap_2d::Layer">
+        <description>
+            layer that allows holes to be a different cost than obstacles
+        </description>
+    </class>
+</library>

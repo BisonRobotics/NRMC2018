@@ -79,7 +79,6 @@ void SafetyController::update(double dt)
 {
   stopped = false;
   checkIsInit();
- // ROS_INFO("%s doing safety controller update", params.name.c_str());
   if (control_mode == safetycontroller::position_control)
   {
     if (isAtSetpoint())
@@ -182,7 +181,13 @@ float SafetyController::getTorque()
   return vesc->getTorque();
 }
 
-void SafetyController::checkPositionEstimateAgainstLimitSwitchesAndResetItIfNeeded()
+safetycontroller::controlModeState SafetyController::getControlMode()
+{
+  return control_mode;
+}
+
+void SafetyController::updatePositionEstimate(double dt)  // you must call this method in your implementation which
+                                                          // overrides this one
 {
   switch (vesc->getLimitSwitchState())
   {
@@ -195,15 +200,4 @@ void SafetyController::checkPositionEstimateAgainstLimitSwitchesAndResetItIfNeed
     case nsVescAccess::limitSwitchState::inTransit:
       break;
   }
-}
-
-safetycontroller::controlModeState SafetyController::getControlMode()
-{
-  return control_mode;
-}
-
-void SafetyController::updatePositionEstimate(double dt)  // you must call this method in your implementation which
-                                                          // overrrides this one
-{
-  checkPositionEstimateAgainstLimitSwitchesAndResetItIfNeeded();
 }
