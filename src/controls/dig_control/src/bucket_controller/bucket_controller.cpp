@@ -25,7 +25,7 @@ void BucketController::turnBigConveyorOff()
 
 void BucketController::turnLittleConveyorOn()
 {
-  lc->setDuty(.9);
+  lc->setDuty(.7);
   little_conveyor_state = true;
 }
 

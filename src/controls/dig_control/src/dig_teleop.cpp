@@ -40,6 +40,8 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
   global_backhoe->setShoulderTorque(central_gain * central);
   global_backhoe->setWristVelocity(linear_gain * linear);
 
+
+
   if (sifter_toggle)
   {
     global_bucket->toggleSifter();
