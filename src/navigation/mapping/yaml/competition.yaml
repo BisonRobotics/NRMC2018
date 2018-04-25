@@ -2,7 +2,8 @@ plugins:
   - {name: static_map,  type: "costmap_2d::StaticLayer"}
   - {name: inflation, type: "costmap_2d::InflationLayer"}
   - {name: rock_layer, type: "low_pass_namespace::LowPassLayer"}
-  - {name: hole_layer, type: "low_pass_namespace::LowPassLayer"}
+  - {name: hole_layer, type: "hole_layer::HoleLayer"}
+
 publish_frequency: 1.0
 footprint: [[-1.0, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0]]
 
@@ -39,4 +40,3 @@ hole_layer:
     obstacle_range: 5.0
     min_obstacle_height: -.2
     max_obstacle_height: -.05
-
