@@ -147,12 +147,13 @@ void DigDumpAction::dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal)
           if (backhoe->shoulderAtSetpoint())
           {
             bucket->turnBigConveyorOn();
+            initial_time = ros::Time::now();
             dumping_state = actuating_conveyor;
           }
           break;
         case dump_state_enum::actuating_conveyor:
           // keep conveyor actuated for some time? until some current feedback?
-          if (/*dirt_been_dumped*/ true)
+          if((ros::Time::now()-initial_time).toSec() > dump_time)
           {
             bucket->turnBigConveyorOff();
             backhoe->setShoulderSetpoint(CENTRAL_TRANSPORT_ANGLE);
