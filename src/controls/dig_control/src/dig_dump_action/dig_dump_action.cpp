@@ -7,6 +7,7 @@
 #define CENTRAL_MEASUREMENT_STOP_ANGLE 1.5
 #define CENTRAL_HOLD_TORQUE -1
 #define CENTRAL_TRANSPORT_ANGLE 2.4
+#define CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE  2.3
 #define CENTRAL_DUMP_ANGLE 2.0        // must be below safety point, where backhoe dumps into bucket
 #define CENTRAL_DEPOSITION_ANGLE 2.9  // must be below max position
 #define SENDIN_IT_SPEED -1.0          // not yet implemented
@@ -95,8 +96,22 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
         case dig_state_enum::dumping_into_bucket:  // state 6 //uncurling wrist to release dirt into bucket
           if (backhoe->wristAtSetpoint())
           {
-            backhoe->setShoulderSetpoint(CENTRAL_TRANSPORT_ANGLE);  // wherever transit/initial should be
+            backhoe->setShoulderSetpoint(CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE);  // wherever transit/initial should be
+            digging_state = moving_rocks_into_holder;
+          }
+          break;
+        case dig_state_enum::moving_rocks_into_holder:
+          if (backhoe->shoulderAtSetpoint())
+          {
+            initial_dig_time = ros::Time::now();
+            digging_state = waiting_for_rocks;
+          }
+          break;
+        case dig_state_enum::waiting_for_rocks:
+          if ((ros::Time::now()-initial_dig_time).toSec() > time_to_move_rocks_to_holder)
+          {
             digging_state = returning_backhoe_to_initial;
+            backhoe->setShoulderSetpoint(CENTRAL_TRANSPORT_ANGLE);
           }
           break;
         case dig_state_enum::returning_backhoe_to_initial:  // state 7 //moving back to same position as dig idle
