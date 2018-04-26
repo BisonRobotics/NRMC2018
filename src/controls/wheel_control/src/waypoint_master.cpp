@@ -177,6 +177,10 @@ int main(int argc, char **argv)
   ImuSensorInterface *imu;
   PosSensorInterface *pos;
 
+  // initialize the localizer here
+  ros::Time lastTime = ros::Time::now();
+  ros::Time currTime;
+
   if (simulating == true)
   {
     sim = new SimRobot(ROBOT_AXLE_LENGTH, .5, .5, 0);
@@ -191,17 +195,27 @@ int main(int argc, char **argv)
   else
   {
     sim = NULL;  // Make no reference to the sim if not simulating
-    fl = new VescAccess(front_left_param);
-    fr = new VescAccess(front_right_param);
-    br = new VescAccess(back_right_param);
-    bl = new VescAccess(back_left_param);
+    bool no_except = false;
+    while (!no_except) {
+      try {
+        fl = new VescAccess(front_left_param);
+        fr = new VescAccess(front_right_param);
+        br = new VescAccess(back_right_param);
+        bl = new VescAccess(back_left_param);
+        no_except = true;
+      } catch (VescException e) {
+        ROS_WARN(e.what ());
+        no_except = false;
+      }
+      if (no_except && (ros::Time::now() - lastTime).toSec() > 10){
+        ROS_ERROR ("Vesc exception thrown for more than 10 seconds");
+        return -1;
+      }
+    }
     pos = new AprilTagTrackerInterface("/pose_estimate", .1);
     imu = new LpResearchImu("imu_base_link");
   }
 
-  // initialize the localizer here
-  ros::Time lastTime;
-  ros::Time currTime;
   ros::Duration loopTime;
   bool firstTime = true;
   tf2_ros::TransformBroadcaster tfBroad;
