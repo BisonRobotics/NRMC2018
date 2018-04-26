@@ -112,6 +112,8 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
           {
             digging_state = returning_backhoe_to_initial;
             backhoe->setShoulderSetpoint(CENTRAL_TRANSPORT_ANGLE);
+            // central_transport_angle and CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE are so close,
+            // it make sense tto get rid of this but lets see what makes sense
           }
           break;
         case dig_state_enum::returning_backhoe_to_initial:  // state 7 //moving back to same position as dig idle
