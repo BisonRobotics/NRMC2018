@@ -66,10 +66,14 @@ int main(int argc, char** argv)
       
       
       //TODO: interpolate y value at exit of obstacle zone from waypoint in dig zone closest to obstacle zone
-      //      and do something similar for on the way back after a dig to make sure entrance and exit to obstace zone
+      //      and do something similar for on the way back after a dig to make sure entrance and exit to obstacle zone
       //      is done how the RRT thought it should.
     
       goal_markers.points.clear();
+      geometry_msgs::Pose2D entrance_point;
+      geometry_msgs::Pose2D arrival_point;
+      
+      bool grabbing_entrance = false;
 
       for (auto const& wp : waypoints)
       {
@@ -77,7 +81,37 @@ int main(int argc, char** argv)
         vis_point.y = wp.y;
         vis_point.z = .1;
         goal_markers.points.push_back(vis_point);
+        
+        if (direction_metric > 0) // need to grab waypoints on entering and exiting waypoints from obstacle zone.
+        {
+            if (wp.x < 1.5) //this waypoint is in the start zone, as we iterate it will be the closest one to the obstacle zone
+            {
+                //copy waypoint for posting
+                grabbing_entrance = true;
+            }
+            else if (grabbing_entrance && wp.x <4.44) // there is a waypoint in the obstacle field
+            {
+                //post extra 
+            }
+            else if (grabbing_entrance) // there is not a waypoint in the obstacle field
+            {
+                
+            }
+            if (wp.x > 4.44) //need to ignore these and overwrite_dig
+            {
+                
+            }
+        }
+        else if (direction_metric < 0) //need to overwrite dump
+        {
+            
+        }
+        else // just need to forward
+        {
+            
+        }
           
+        /*
         if (wp.x > 4.44 + 1.0) // entering/exiting the dig zone + some buffer
         {
           if (direction_metric > 0) //moving forward to do a dig
@@ -136,7 +170,7 @@ int main(int argc, char** argv)
         ros::spinOnce();
         rate.sleep();
       }
-      
+      */
       if (overwrite_dump)
       {
           wpmsg.x = 1.2;
