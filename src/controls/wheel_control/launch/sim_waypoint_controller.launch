@@ -5,5 +5,5 @@
     <param name="initial_theta_tolerance" type="double" value=".2"/>
     <param name="initial_theta_gain" type="double" value=".04"/>
   </node>
-  <node name="waypoint_spoofer" pkg="wheel_control" type="position_spoofer.py"/>
+  <node name="waypoint_spoofer" pkg="wheel_control" type="goal_translator.py"/>
 </launch>

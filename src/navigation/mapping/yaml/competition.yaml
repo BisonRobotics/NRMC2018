@@ -5,7 +5,7 @@ plugins:
   - {name: hole_layer, type: "hole_layer::HoleLayer"}
 
 publish_frequency: 1.0
-footprint: [[-1.0, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0]]
+footprint: [[-1, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0]]
 
 inflation:
   inflation_radius: .365
