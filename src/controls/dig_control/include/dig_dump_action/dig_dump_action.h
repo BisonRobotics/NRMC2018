@@ -17,6 +17,8 @@ enum dig_state_enum
   curling_backhoe,
   moving_arm_to_initial,
   dumping_into_bucket,
+  moving_rocks_into_holder,
+  waiting_for_rocks,
   returning_backhoe_to_initial,
   dig_error
 };
@@ -45,8 +47,12 @@ private:
   dig_control::DigResult dig_result;
   dig_control::DumpFeedback dump_feedback;
   dig_control::DumpResult dump_result;
+  ros::Time initial_dig_time;
   bool is_digging;
   bool is_dumping;
+  ros::Time initial_time;
+  static constexpr float dump_time = 10;
+  static constexpr float time_to_move_rocks_to_holder=1;
   void digExecuteCB(const dig_control::DigGoalConstPtr &goal);
   void dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal);
   BackhoeController *backhoe;

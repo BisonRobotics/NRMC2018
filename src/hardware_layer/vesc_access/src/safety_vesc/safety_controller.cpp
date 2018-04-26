@@ -89,7 +89,7 @@ void SafetyController::update(double dt)
     }
     else
     {
-      set_velocity = symmetricClamp(params.gain * (set_position - position_estimate), params.max_abs_velocity);
+      set_torque = symmetricClamp(params.gain * (set_position - position_estimate), params.max_abs_torque);
     }
   }
   // this happens in any mode
@@ -113,12 +113,12 @@ void SafetyController::update(double dt)
   {
     switch (control_mode)
     {
-      case safetycontroller::position_control:
       case safetycontroller::velocity_control:
         vesc->setLinearVelocity(set_velocity);
         ROS_INFO("%s set velocity: %.4f", params.name.c_str(), set_velocity);
         break;
       case safetycontroller::torque_control:
+      case safetycontroller::position_control:
         vesc->setTorque(set_torque);
         ROS_INFO("%s set velocity: %.4f", params.name.c_str(), set_velocity);
         break;
