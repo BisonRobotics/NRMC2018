@@ -51,7 +51,17 @@ int main(int argc, char** argv)
       double prev_x;
       bool overwrite_dump = false;
       bool overwrite_dig = false;
+            
+      bool grabbing_entrance = false;
+      bool grabbing_exit = false;
       
+      goal_markers.points.clear();
+      geometry_msgs::Pose2D last_point_in_start_zone;
+      geometry_msgs::Pose2D last_point_in_obstacle_zone;
+      geometry_msgs::Pose2D last_point_in_dig_zone;
+      geometry_msgs::Pose2D obstacle_zone_exit_point;
+      
+      //computer direction metric
       for (int index =0; index < waypoints.size(); index++)
       {
           if (index == 0)
@@ -63,20 +73,6 @@ int main(int argc, char** argv)
               direction_metric += waypoints.at(index).x - prev_x;
           }
       }
-      
-      
-      //TODO: interpolate y value at exit of obstacle zone from waypoint in dig zone closest to obstacle zone
-      //      and do something similar for on the way back after a dig to make sure entrance and exit to obstacle zone
-      //      is done how the RRT thought it should.
-    
-      goal_markers.points.clear();
-      geometry_msgs::Pose2D last_point_in_start_zone;
-      geometry_msgs::Pose2D last_point_in_obstacle_zone;
-      geometry_msgs::Pose2D last_point_in_dig_zone;
-      geometry_msgs::Pose2D obstacle_zone_exit_point;
-      
-      bool grabbing_entrance = false;
-      bool grabbing_exit = false;
 
       for (auto const& wp : waypoints)
       {
@@ -109,7 +105,7 @@ int main(int argc, char** argv)
                 last_point_in_start_zone.theta = wp.theta;
                 grabbing_entrance = true;
             }
-            else if ((grabbing_entrance || grabbing_exit) && wp.x <4.44 ) // there is a waypoint(s) in the obstacle field
+            else if ((grabbing_entrance || grabbing_exit) && wp.x <4.44 ) // there is a(n) waypoint(s) in the obstacle field
             {
                 grabbing_entrance = false;
                 grabbing_exit = true;
@@ -128,8 +124,21 @@ int main(int argc, char** argv)
                 grabbing_entrance = false;
                 //calculate exit from here, now, between last_point_in_start_zone and this first point                
                 //it will be used in overwrite_dig logic
-                //TODO
-                obstacle_zone_exit_point.x = 0;
+                obstacle_zone_exit_point.x = (last_point_in_start_zone.y -4.44)*last_point_in_start_zone.x/(last_point_in_start_zone.y - wp.y) 
+                                           + (wp.y - 4.44)*wp.x/(last_point_in_start_zone.y - wp.y);
+                obstacle_zone_exit_point.y = 4.44;
+                obstacle_zone_exit_point.theta = 0;
+                overwrite_dig = true;
+            }
+            else if (grabbing_exit) // waypoint in dig_zone after waypoints in obstacle zone
+            {
+                grabbing_exit = false;
+                //calculate exit from here, now, between last_point_in_dig_zone and this first point                
+                //it will be used in overwrite_dig logic
+                obstacle_zone_exit_point.x = (last_point_in_dig_zone.y -4.44)*last_point_in_dig_zone.x/(last_point_in_dig_zone.y - wp.y) 
+                                           + (wp.y - 4.44)*wp.x/(last_point_in_dig_zone.y - wp.y) ;
+                obstacle_zone_exit_point.y = 4.44;
+                obstacle_zone_exit_point.theta = 0;
                 overwrite_dig = true;
             }
             // if there is no waypoint beyond 4.44, then the dig will not be overwritten because there is no dig
@@ -165,9 +174,22 @@ int main(int argc, char** argv)
             {
                 grabbing_entrance = false;
                 //calculate exit from here, now, between last_point_in_start_zone and this first point                
-                //it will be used in overwrite_dump logic
-                //TODO
-                obstacle_zone_exit_point.x = 0;
+                //it will be used in overwrite_dig logic
+                obstacle_zone_exit_point.x = (last_point_in_dig_zone.y -1.5)*last_point_in_dig_zone.x/(last_point_in_dig_zone.y - wp.y) 
+                                           + (wp.y - 1.5)*wp.x/(last_point_in_dig_zone.y - wp.y);
+                obstacle_zone_exit_point.y = 1.5;
+                obstacle_zone_exit_point.theta = 0;
+                overwrite_dump = true;
+            }
+            else if (grabbing_exit) // waypoint in dig_zone after waypoints in obstacle zone
+            {
+                grabbing_exit = false;
+                //calculate exit from here, now, between last_point_in_dig_zone and this first point                
+                //it will be used in overwrite_dig logic
+                obstacle_zone_exit_point.x = (last_point_in_dig_zone.y -1.5)*last_point_in_dig_zone.x/(last_point_in_dig_zone.y - wp.y) 
+                                           + (wp.y - 1.5)*wp.x/(last_point_in_dig_zone.y - wp.y) ;
+                obstacle_zone_exit_point.y = 1.5;
+                obstacle_zone_exit_point.theta = 0;
                 overwrite_dump = true;
             }
         }
@@ -185,7 +207,10 @@ int main(int argc, char** argv)
         
       if (overwrite_dump)
       {
-          // TODO use exit point
+          pub.publish(obstacle_zone_exit_point);
+          ros::spinOnce();
+          rate.sleep();
+          
           wpmsg.x = 1.2;
           wpmsg.y = -0.025;
           wpmsg.theta =0;
@@ -203,7 +228,9 @@ int main(int argc, char** argv)
       
       if (overwrite_dig)
       {
-          // TODO use exit point
+          pub.publish(obstacle_zone_exit_point);
+          ros::spinOnce();
+          rate.sleep();
           wpmsg.x = 5.25;
           wpmsg.y = -0.025;
           wpmsg.theta =0;
@@ -224,6 +251,7 @@ int main(int argc, char** argv)
       rate.sleep();
       
       waypoints.clear();
+    }
     }
     else
     {
