@@ -27,19 +27,19 @@
 #define WHEEL_TORQUE_CONSTANT .02120f
 
 #define MAX_CENTRAL_DRIVE_VELOCITY 0.9425f  // in rad/s
-#define MAX_CENTRAL_DRIVE_TORQUE 300.0f     // in Nm -> the real number is 675 but we should never approach that
+#define MAX_CENTRAL_DRIVE_TORQUE 500.0f     // in Nm -> the real number is 675 but we should never approach that
 #define MAX_CENTRAL_DRIVE_DUTY .4f
-#define CENTRAL_DRIVE_GEAR_RATIO 540.0f
+#define CENTRAL_DRIVE_GEAR_RATIO -540.0f
 #define CENTRAL_DRIVE_OUTPUT_RATIO 1.0f  //  purely rotational
 #define CENTRAL_DRIVE_POLE_PAIRS 5
-#define CENTRAL_DRIVE_TORQUE_CONSTANT .0641f  // Nm/A
+#define CENTRAL_DRIVE_TORQUE_CONSTANT .641f  // Nm/A
 
-#define MAX_LINEAR_ACTUATOR_VELOCITY 560.0f  // this should be change
+#define MAX_LINEAR_ACTUATOR_VELOCITY .05f  // this should be change
 #define MAX_LINEAR_ACTUATOR_TORQUE 10.0f
 #define MAX_LINEAR_DUTY .4
-#define LINEAR_ACTUATOR_GEAR_RATIO 15.0f
-#define LINEAR_ACTUATOR_OUTPUT_RATIO .01f  // this should be the pitch of the screw in m/s
-#define LINEAR_ACTUATOR_POLE_PAIRS 5       // update this
+#define LINEAR_ACTUATOR_GEAR_RATIO 5.206E6f
+#define LINEAR_ACTUATOR_OUTPUT_RATIO 1.0f  // this should be the pitch of the screw in m/s
+#define LINEAR_ACTUATOR_POLE_PAIRS 1
 #define LINEAR_ACTUATOR_TORQUE_CONSTANT .0341f
 
 #define MAX_SMALL_CONVEYOR_VELOCITY 4900.0f
@@ -148,7 +148,7 @@ nsVescAccess::vesc_param_struct_t small_conveyor_param = {.max_velocity = MAX_SM
                                                           .torque_constant = SMALL_CONVEYOR_TORQUE_CONSTANT,
                                                           WHEEL_CAN_NETWORK,
                                                           .can_id = SMALL_CONVEYOR_ID,
-                                                          .name = "small_conveyor" };
+                                                          .name = "small_conveyor"};
 
 nsVescAccess::vesc_param_struct_t large_conveyor_param = {.max_velocity = MAX_LARGE_CONVEYOR_VELOCITY,
                                                           .max_torque = MAX_LARGE_CONVEYOR_TORQUE,
@@ -159,7 +159,7 @@ nsVescAccess::vesc_param_struct_t large_conveyor_param = {.max_velocity = MAX_LA
                                                           .torque_constant = LARGE_CONVEYOR_TORQUE_CONSTANT,
                                                           WHEEL_CAN_NETWORK,
                                                           .can_id = LARGE_CONVEYOR_ID,
-                                                          .name = "large_conveyor" };
+                                                          .name = "large_conveyor"};
 
 nsVescAccess::vesc_param_struct_t left_outrigger_param = {.max_velocity = MAX_OUTRIGGER_VELOCITY,
                                                           .max_torque = MAX_OUTRIGGER_TORQUE,
@@ -170,7 +170,7 @@ nsVescAccess::vesc_param_struct_t left_outrigger_param = {.max_velocity = MAX_OU
                                                           .torque_constant = OUTRIGGER_TORQUE_CONSTANT,
                                                           WHEEL_CAN_NETWORK,
                                                           .can_id = LEFT_OUTRIGGER_ID,
-                                                          .name = "left_outrigger" };
+                                                          .name = "left_outrigger"};
 
 nsVescAccess::vesc_param_struct_t right_outrigger_param = {.max_velocity = MAX_OUTRIGGER_VELOCITY,
                                                            .max_torque = MAX_OUTRIGGER_TORQUE,
@@ -181,7 +181,7 @@ nsVescAccess::vesc_param_struct_t right_outrigger_param = {.max_velocity = MAX_O
                                                            .torque_constant = OUTRIGGER_TORQUE_CONSTANT,
                                                            WHEEL_CAN_NETWORK,
                                                            .can_id = RIGHT_OUTRIGGER_ID,
-                                                           .name = "right_outrigger" };
+                                                           .name = "right_outrigger"};
 
 nsVescAccess::vesc_param_struct_t linear_param = {.max_velocity = MAX_LINEAR_ACTUATOR_VELOCITY,
                                                   .max_torque = MAX_LINEAR_ACTUATOR_TORQUE,
@@ -208,13 +208,13 @@ nsVescAccess::vesc_param_struct_t shoulder_param = {.max_velocity = MAX_CENTRAL_
 safetycontroller::joint_params_t linear_joint_params = {.minimum_pos = 0,
                                                         .maximum_pos = LINEAR_ACTUATOR_LENGTH,
                                                         .safety_check_pos = SAFE_LINEAR_DISTANCE,
-                                                        .gain = .15,
+                                                        .gain = .11,
                                                         .setpoint_tolerance = .005,
                                                         .lower_limit_position = 0,
                                                         .upper_limit_position = LINEAR_ACTUATOR_LENGTH,
-                                                        .max_abs_velocity = .2,
-                                                        .limit_switch_safety_margin = .01,
-                                                        .max_abs_torque = 100,
+                                                        .max_abs_velocity = MAX_LINEAR_ACTUATOR_VELOCITY,
+                                                        .limit_switch_safety_margin = .001,
+                                                        .max_abs_torque = MAX_LINEAR_ACTUATOR_TORQUE,
                                                         .name = "linear" };
 
 safetycontroller::joint_params_t central_joint_params = {.minimum_pos = MINIMUM_CENTRAL_ANGLE,
@@ -226,6 +226,6 @@ safetycontroller::joint_params_t central_joint_params = {.minimum_pos = MINIMUM_
                                                          .upper_limit_position = MAXIMUM_CENTRAL_ANGLE,
                                                          .max_abs_velocity = .2,
                                                          .limit_switch_safety_margin = .01,
-                                                         .max_abs_torque = 100,
+                                                         .max_abs_torque = MAX_CENTRAL_DRIVE_TORQUE,
                                                          .name = "central" };
 #endif

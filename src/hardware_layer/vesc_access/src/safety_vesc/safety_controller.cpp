@@ -52,6 +52,7 @@ void SafetyController::setVelocity(double velocity)
   {
     set_velocity = symmetricClamp(velocity, params.max_abs_velocity);
     control_mode = safetycontroller::velocity_control;
+    set_torque = 0;
   }
   else
   {
@@ -65,6 +66,7 @@ void SafetyController::setTorque(double torque)
   if (control_mode != safetycontroller::position_control)
   {
     set_torque = symmetricClamp(torque, params.max_abs_torque);
+    set_velocity = 0;
     control_mode = safetycontroller::torque_control;
   }
   else
@@ -77,7 +79,6 @@ void SafetyController::update(double dt)
 {
   stopped = false;
   checkIsInit();
- // ROS_INFO("%s doing safety controller update", params.name.c_str());
   if (control_mode == safetycontroller::position_control)
   {
     if (isAtSetpoint())
@@ -88,7 +89,7 @@ void SafetyController::update(double dt)
     }
     else
     {
-      set_velocity = symmetricClamp(params.gain * (set_position - position_estimate), params.max_abs_velocity);
+      set_torque = symmetricClamp(params.gain * (set_position - position_estimate), params.max_abs_torque);
     }
   }
   // this happens in any mode
@@ -112,12 +113,12 @@ void SafetyController::update(double dt)
   {
     switch (control_mode)
     {
-      case safetycontroller::position_control:
       case safetycontroller::velocity_control:
         vesc->setLinearVelocity(set_velocity);
         ROS_INFO("%s set velocity: %.4f", params.name.c_str(), set_velocity);
         break;
       case safetycontroller::torque_control:
+      case safetycontroller::position_control:
         vesc->setTorque(set_torque);
         ROS_INFO("%s set velocity: %.4f", params.name.c_str(), set_velocity);
         break;
@@ -180,30 +181,23 @@ float SafetyController::getTorque()
   return vesc->getTorque();
 }
 
-void SafetyController::checkPositionEstimateAgainstLimitSwitchesAndResetItIfNeeded()
-{
-  switch (vesc->getLimitSwitchState())
-  {
-    case nsVescAccess::limitSwitchState::bottomOfMotion:
-  //    ROS_INFO("%s at lower limit", params.name.c_str());
-      this->position_estimate = params.lower_limit_position;
-      break;
-    case nsVescAccess::limitSwitchState::topOfMotion:
-      this->position_estimate = params.upper_limit_position;
-  //    ROS_INFO("%s at upper limit", params.name.c_str());
-      break;
-    case nsVescAccess::limitSwitchState::inTransit:
-      break;
-  }
-}
-
 safetycontroller::controlModeState SafetyController::getControlMode()
 {
   return control_mode;
 }
 
 void SafetyController::updatePositionEstimate(double dt)  // you must call this method in your implementation which
-                                                          // overrrides this one
+                                                          // overrides this one
 {
-  checkPositionEstimateAgainstLimitSwitchesAndResetItIfNeeded();
+  switch (vesc->getLimitSwitchState())
+  {
+    case nsVescAccess::limitSwitchState::bottomOfMotion:
+      this->position_estimate = params.lower_limit_position;
+      break;
+    case nsVescAccess::limitSwitchState::topOfMotion:
+      this->position_estimate = params.upper_limit_position;
+      break;
+    case nsVescAccess::limitSwitchState::inTransit:
+      break;
+  }
 }

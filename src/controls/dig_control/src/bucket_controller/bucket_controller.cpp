@@ -25,6 +25,7 @@ void BucketController::turnBigConveyorOff()
 
 void BucketController::turnLittleConveyorOn()
 {
+
   lc->setTorque(7); // in Amps
   little_conveyor_state = true;
 }
