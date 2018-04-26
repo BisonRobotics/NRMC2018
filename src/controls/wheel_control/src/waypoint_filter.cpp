@@ -70,10 +70,13 @@ int main(int argc, char** argv)
       //      is done how the RRT thought it should.
     
       goal_markers.points.clear();
-      geometry_msgs::Pose2D entrance_point;
-      geometry_msgs::Pose2D arrival_point;
+      geometry_msgs::Pose2D last_point_in_start_zone;
+      geometry_msgs::Pose2D last_point_in_obstacle_zone;
+      geometry_msgs::Pose2D last_point_in_dig_zone;
+      geometry_msgs::Pose2D obstacle_zone_exit_point;
       
       bool grabbing_entrance = false;
+      bool grabbing_exit = false;
 
       for (auto const& wp : waypoints)
       {
@@ -82,97 +85,107 @@ int main(int argc, char** argv)
         vis_point.z = .1;
         goal_markers.points.push_back(vis_point);
         
-        if (direction_metric > 0) // need to grab waypoints on entering and exiting waypoints from obstacle zone.
+        if (direction_metric > 2.5) //make sure there is a waypoint in the start zone (by placing one)
+        {
+            // also make sure there is a waypoint in the dig zone and maybe through an exception if there is not.
+        }
+        
+        if (direction_metric < -2.5) //make sure there is a waypoint in the starting area (which is the dig zone, by placing one)
+        {
+            // also make sure there is a waypoint in the start/dump zone and maybe through an exception if there is not.
+        }
+        
+        if (direction_metric > 2.5) // need to grab waypoints on entering and exiting waypoints from obstacle zone.
         {
             if (wp.x < 1.5) //this waypoint is in the start zone, as we iterate it will be the closest one to the obstacle zone
             {
                 //copy waypoint for posting
+                wpmsg.x = wp.x;
+                wpmsg.y = wp.y;
+                wpmsg.theta = wp.theta;
+                //record last point
+                last_point_in_start_zone.x = wp.x;
+                last_point_in_start_zone.y = wp.y;
+                last_point_in_start_zone.theta = wp.theta;
                 grabbing_entrance = true;
             }
-            else if (grabbing_entrance && wp.x <4.44) // there is a waypoint in the obstacle field
+            else if ((grabbing_entrance || grabbing_exit) && wp.x <4.44 ) // there is a waypoint(s) in the obstacle field
             {
-                //post extra 
+                grabbing_entrance = false;
+                grabbing_exit = true;
+                //record last point in obstacle field
+                last_point_in_obstacle_zone.x = wp.x;
+                last_point_in_obstacle_zone.y = wp.y;
+                last_point_in_obstacle_zone.theta = wp.theta;
+                //keep recording points to remember last one
+                //copy waypoint for posting
+                wpmsg.x = wp.x;
+                wpmsg.y = wp.y;
+                wpmsg.theta = wp.theta;
             }
             else if (grabbing_entrance) // there is not a waypoint in the obstacle field
             {
-                
+                grabbing_entrance = false;
+                //calculate exit from here, now, between last_point_in_start_zone and this first point                
+                //it will be used in overwrite_dig logic
+                //TODO
+                obstacle_zone_exit_point.x = 0;
+                overwrite_dig = true;
             }
-            if (wp.x > 4.44) //need to ignore these and overwrite_dig
-            {
-                
-            }
+            // if there is no waypoint beyond 4.44, then the dig will not be overwritten because there is no dig
         }
-        else if (direction_metric < 0) //need to overwrite dump
+        else if (direction_metric < -2.5) //need to overwrite dump
         {
-            
-        }
-        else // just need to forward
-        {
-            
-        }
-          
-        /*
-        if (wp.x > 4.44 + 1.0) // entering/exiting the dig zone + some buffer
-        {
-          if (direction_metric > 0) //moving forward to do a dig
-          {
-            overwrite_dig = true;
-          }
-          else //moving backward or single waypoint or moving sideways
-          {
-            wpmsg.x = wp.x;
-            wpmsg.y = wp.y;
-            wpmsg.theta = wp.theta;
-          }
-        }
-        else if (wp.x > 4.44) // inside the buffer zone before going to the dig area
-        {
-            wpmsg.x = 4.75;
-            wpmsg.y = wp.y;
-            if (wp.y < -.4)
+            if (wp.x > 4.44) //this waypoint is in the starting zone (the dig zone now), as we iterate it will be the closest one to the obstacle zone
             {
-                wpmsg.theta = .7;
+                //copy waypoint for posting
+                wpmsg.x = wp.x;
+                wpmsg.y = wp.y;
+                wpmsg.theta = wp.theta;
+                //record last point
+                last_point_in_dig_zone.x = wp.x;
+                last_point_in_dig_zone.y = wp.y;
+                last_point_in_dig_zone.theta = wp.theta;
+                grabbing_entrance = true;
             }
-            else if (wp.y > .4)
+            else if ((grabbing_entrance || grabbing_exit) && wp.x >1.5 ) // there is a waypoint in the obstacle field
             {
-                wpmsg.theta = -.7;
+                grabbing_entrance = false;
+                grabbing_exit = true;
+                //record last point in obstacle field
+                last_point_in_obstacle_zone.x = wp.x;
+                last_point_in_obstacle_zone.y = wp.y;
+                last_point_in_obstacle_zone.theta = wp.theta;
+                //copy waypoint for posting
+                wpmsg.x = wp.x;
+                wpmsg.y = wp.y;
+                wpmsg.theta = wp.theta;
             }
-            else 
+            else if (grabbing_entrance) // there is not a waypoint in the obstacle field
             {
-                wpmsg.theta = 0;
+                grabbing_entrance = false;
+                //calculate exit from here, now, between last_point_in_start_zone and this first point                
+                //it will be used in overwrite_dump logic
+                //TODO
+                obstacle_zone_exit_point.x = 0;
+                overwrite_dump = true;
             }
         }
-        else if (wp.x > 1.5) // less than 4.44 and greater than 1.5, obstacle zone
+        else // just need to copy waypoints
         {
           wpmsg.x = wp.x;
           wpmsg.y = wp.y;
           wpmsg.theta = wp.theta;
         }
-        else // entering/exiting start/dumping area
-        {
-            if (direction_metric >= 0) //moving forward, or single waypoint or sideways for some reason
-            {
-               wpmsg.x = wp.x;
-               wpmsg.y = wp.y;
-               wpmsg.theta = wp.theta;
-            }
-            else
-            {
-                overwrite_dump = true;
-            }
-        }
-
-        if (!overwrite_dump && !overwrite_dig)
-        {
-            pub.publish(wpmsg);
-        }
-
-        ros::spinOnce();
-        rate.sleep();
+      
+      if (!overwrite_dump && !overwrite_dig)
+      {
+        pub.publish(wpmsg);
       }
-      */
+        
       if (overwrite_dump)
       {
+          // TODO use exit point
           wpmsg.x = 1.2;
           wpmsg.y = -0.025;
           wpmsg.theta =0;
@@ -190,6 +203,7 @@ int main(int argc, char** argv)
       
       if (overwrite_dig)
       {
+          // TODO use exit point
           wpmsg.x = 5.25;
           wpmsg.y = -0.025;
           wpmsg.theta =0;
@@ -206,6 +220,8 @@ int main(int argc, char** argv)
       }
       
       goals_from_autonomy.publish(goal_markers);
+      ros::spinOnce();
+      rate.sleep();
       
       waypoints.clear();
     }
