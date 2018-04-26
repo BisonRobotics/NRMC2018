@@ -19,7 +19,7 @@ if __name__ == '__main__':
     pose_updated = False
     pose = Pose
 
-    rospy.init_node('position_spoofer')
+    rospy.init_node('goal_translator')
     pub = rospy.Publisher ('/position_controller/additional_waypoints', Pose2D, queue_size=10)
     rospy.Subscriber('move_base_simple/goal', PoseStamped, pose_callback)
     pose_2 = Pose2D()
