@@ -132,6 +132,7 @@ int main(int argc, char **argv)
   ros::NodeHandle node("~");
   ros::NodeHandle globalNode;
   ros::Rate rate(UPDATE_RATE_HZ);
+  ros::Rate vesc_init_rate (10);
   bool simulating;
   if (node.hasParam("simulating_driving"))
   {
@@ -211,7 +212,7 @@ int main(int argc, char **argv)
         ROS_ERROR ("Vesc exception thrown for more than 10 seconds");
         ros::shutdown ();
       }
-        rate.sleep();
+        vesc_init_rate.sleep();
     }
     pos = new AprilTagTrackerInterface("/pose_estimate", .1);
     imu = new LpResearchImu("imu_base_link");
