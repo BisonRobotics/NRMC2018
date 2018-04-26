@@ -32,12 +32,12 @@ void Vesc::init_socketCAN(char *ifname)
   s = socket(PF_CAN, SOCK_RAW | SOCK_NONBLOCK, CAN_RAW);  // create nonblocking raw can socket
   if (s == -1)
   {
-    throw VescException("Unable to create raw CAN socket");
+    throw VescException(this->name + " Unable to create raw CAN socket");
   }
   strcpy(ifr.ifr_name, ifname);
   if (ioctl(s, SIOCGIFINDEX, &ifr))
   {
-    throw VescException("Error creating interface");
+    throw VescException(this->name + " Error creating interface");
   }
   addr.can_family = AF_CAN;
   addr.can_ifindex = ifr.ifr_ifindex;
@@ -45,19 +45,19 @@ void Vesc::init_socketCAN(char *ifname)
   int ret = bind(s, (struct sockaddr *)&addr, sizeof(addr));
   if (ret == -1)
   {
-    throw VescException("Unable to bind raw CAN socket");
+    throw VescException(this->name + " Unable to bind raw CAN socket");
   }
 
   sbcm = socket(PF_CAN, SOCK_DGRAM, CAN_BCM);
   if (sbcm == -1)
   {
-    throw VescException("Unable to create bcm socket");
+    throw VescException(this->name + " Unable to create bcm socket");
   }
   ret = connect(sbcm, (struct sockaddr *)&addr, sizeof(addr));
 
   if (ret == -1)
   {
-    throw VescException("Unable to connect bcm socket");
+    throw VescException(this->name + " Unable to connect bcm socket");
   }
 }
 

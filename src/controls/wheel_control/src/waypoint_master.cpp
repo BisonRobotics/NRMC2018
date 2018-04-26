@@ -131,7 +131,7 @@ int main(int argc, char **argv)
 
   ros::NodeHandle node("~");
   ros::NodeHandle globalNode;
-
+  ros::Rate rate(UPDATE_RATE_HZ);
   bool simulating;
   if (node.hasParam("simulating_driving"))
   {
@@ -196,7 +196,7 @@ int main(int argc, char **argv)
   {
     sim = NULL;  // Make no reference to the sim if not simulating
     bool no_except = false;
-    while (!no_except) {
+    while (!no_except  && ros::ok()) {
       try {
         fl = new VescAccess(front_left_param);
         fr = new VescAccess(front_right_param);
@@ -204,13 +204,14 @@ int main(int argc, char **argv)
         bl = new VescAccess(back_left_param);
         no_except = true;
       } catch (VescException e) {
-        ROS_WARN(e.what ());
+        ROS_WARN("%s",e.what ());
         no_except = false;
       }
-      if (no_except && (ros::Time::now() - lastTime).toSec() > 10){
+      if (!no_except && (ros::Time::now() - lastTime).toSec() > 10){
         ROS_ERROR ("Vesc exception thrown for more than 10 seconds");
-        return -1;
+        ros::shutdown ();
       }
+        rate.sleep();
     }
     pos = new AprilTagTrackerInterface("/pose_estimate", .1);
     imu = new LpResearchImu("imu_base_link");
@@ -256,7 +257,7 @@ int main(int argc, char **argv)
   // hang here until someone knows where we are
   ROS_INFO("Going into wait loop for localizer and initial theta...");
 
-  ros::Rate rate(UPDATE_RATE_HZ);
+
   ros::Duration idealLoopTime(1.0 / UPDATE_RATE_HZ);
 
   ros::Subscriber initialThetaSub = node.subscribe("initialTheta", 100, initialThetaCallback);
