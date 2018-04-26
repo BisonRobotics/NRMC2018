@@ -84,6 +84,7 @@ VescAccess::VescAccess(nsVescAccess::vesc_param_struct_t param, bool has_limits)
   : VescAccess(param.can_id, param.gear_ratio, param.output_ratio, param.max_velocity, param.max_torque,
                param.torque_constant, param.can_network, param.pole_pairs, has_limits, param.name, param.max_duty)
 {
+  this->name = param.name;
 }
 
 VescAccess::VescAccess(nsVescAccess::vesc_param_struct_t param) : VescAccess(param, false)
@@ -275,7 +276,7 @@ nsVescAccess::limitSwitchState VescAccess::getLimitSwitchState(void)
   {
     if (has_limits)
     {
-      throw VescException("Both limit switches are active");
+      throw VescException(this->name + " Both limit switches are active");
     }
   }
   return state;
