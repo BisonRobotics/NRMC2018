@@ -7,7 +7,7 @@
 #define CENTRAL_MEASUREMENT_STOP_ANGLE 1.5
 #define CENTRAL_HOLD_TORQUE -1
 #define CENTRAL_TRANSPORT_ANGLE 2.4
-#define CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE  2.3
+#define CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE  2.4
 #define CENTRAL_DUMP_ANGLE 2.0        // must be below safety point, where backhoe dumps into bucket
 #define CENTRAL_DEPOSITION_ANGLE 2.9  // must be below max position
 #define SENDIN_IT_SPEED -1.0          // not yet implemented
