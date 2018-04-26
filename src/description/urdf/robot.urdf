@@ -43,23 +43,20 @@
         </collision>
     </link>-->
 
-    <xacro:macro name="frame">
-        <link name="frame">
-            <visual>
-                <geometry>
-                    <mesh filename="package://description/meshes/frame.stl" />
-                </geometry>
-                <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
-                <material name="grey" />
-            </visual>
-        </link>
-    </xacro:macro>
-    <xacro:frame/>
+    <link name="frame">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/frame.stl" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+            <material name="grey" />
+        </visual>
+    </link>
 
     <joint name="base_link_to_frame" type="fixed">
         <parent link="base_link"/>
         <child link="frame"/>
-        <origin xyz="0 0 2.0796e-01" rpy="0 0 0" />
+        <origin xyz="-387.35e-3 0 2.0796e-01" rpy="0 0 0" />
     </joint>
 
     <xacro:macro name="wheel" params="x_name y_name rot y_dir xdist color">

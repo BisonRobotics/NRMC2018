@@ -6,6 +6,9 @@ Panels:
       Expanded:
         - /Global Options1
         - /RobotModel1
+        - /TF1
+        - /RobotModel2
+        - /RobotModel2/Links1
       Splitter Ratio: 0.5
     Tree Height: 708
   - Class: rviz/Selection
@@ -82,9 +85,27 @@ Visualization Manager:
           Value: true
         base_link:
           Value: true
+        battery_box:
+          Value: true
         bucket:
           Value: true
+        camera_depth_frame:
+          Value: true
+        camera_depth_optical_frame:
+          Value: true
+        camera_fisheye_frame:
+          Value: true
+        camera_fisheye_optical_frame:
+          Value: true
+        camera_link:
+          Value: true
+        camera_rgb_frame:
+          Value: true
+        camera_rgb_optical_frame:
+          Value: true
         central_drive:
+          Value: true
+        computer_box:
           Value: true
         frame:
           Value: true
@@ -92,13 +113,7 @@ Visualization Manager:
           Value: true
         front_right_wheel:
           Value: true
-        left_camera:
-          Value: true
-        left_camera_mount:
-          Value: true
-        left_camera_optical:
-          Value: true
-        left_dynamixel:
+        imu:
           Value: true
         map:
           Value: true
@@ -106,19 +121,41 @@ Visualization Manager:
           Value: true
         monoboom_actuator_link:
           Value: true
-        right_camera:
+        node0_camera:
           Value: true
-        right_camera_mount:
+        node0_camera_mount:
           Value: true
-        right_camera_optical:
+        node0_camera_optical:
           Value: true
-        right_dynamixel:
+        node0_dynamixel:
+          Value: true
+        node1_camera:
+          Value: true
+        node1_camera_mount:
+          Value: true
+        node1_camera_optical:
+          Value: true
+        node1_dynamixel:
+          Value: true
+        tag0:
+          Value: true
+        tag1:
+          Value: true
+        tag5:
+          Value: true
+        tag6:
+          Value: true
+        zr300_dynamixel:
+          Value: true
+        zr300_mount:
+          Value: true
+        zr300_mount_2:
           Value: true
       Marker Scale: 0.200000003
       Name: TF
       Show Arrows: true
       Show Axes: true
-      Show Names: true
+      Show Names: false
       Tree:
         map:
           base_link:
@@ -126,6 +163,8 @@ Visualization Manager:
               back_left_wheel:
                 {}
               back_right_wheel:
+                {}
+              battery_box:
                 {}
               bucket:
                 {}
@@ -135,20 +174,44 @@ Visualization Manager:
                     {}
                   monoboom_actuator_link:
                     {}
+              computer_box:
+                zr300_dynamixel:
+                  zr300_mount:
+                    zr300_mount_2:
+                      camera_link:
+                        camera_rgb_frame:
+                          camera_depth_frame:
+                            camera_depth_optical_frame:
+                              {}
+                          camera_fisheye_frame:
+                            camera_fisheye_optical_frame:
+                              {}
+                          camera_rgb_optical_frame:
+                            {}
               front_left_wheel:
                 {}
               front_right_wheel:
                 {}
-              left_dynamixel:
-                left_camera_mount:
-                  left_camera:
-                    left_camera_optical:
+              node0_dynamixel:
+                node0_camera_mount:
+                  node0_camera:
+                    node0_camera_optical:
                       {}
-              right_dynamixel:
-                right_camera_mount:
-                  right_camera:
-                    right_camera_optical:
+              node1_dynamixel:
+                node1_camera_mount:
+                  node1_camera:
+                    node1_camera_optical:
                       {}
+            imu:
+              {}
+          tag0:
+            {}
+          tag1:
+            {}
+          tag5:
+            {}
+          tag6:
+            {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -210,12 +273,51 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        battery_box:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         bucket:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
+        camera_depth_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_depth_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_fisheye_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_fisheye_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera_rgb_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_rgb_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         central_drive:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        computer_box:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -235,25 +337,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        left_camera:
+        imu:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
-        left_camera_mount:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        left_camera_optical:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        left_dynamixel:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         map:
           Alpha: 1
           Show Axes: false
@@ -267,21 +354,55 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        right_camera:
+        node0_camera:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        right_camera_mount:
+        node0_camera_mount:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        right_camera_optical:
+        node0_camera_optical:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        right_dynamixel:
+        node0_dynamixel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        node1_camera:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        node1_camera_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        node1_camera_optical:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        node1_dynamixel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        zr300_dynamixel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        zr300_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        zr300_mount_2:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -327,25 +448,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 2.36505818
+      Distance: 0.359546304
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 1.78545356
-        Y: -0.0894037783
-        Z: 0.564859986
+        X: 2.2580297
+        Y: -0.795944631
+        Z: 0.372996569
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.70479697
+      Pitch: 0.384796888
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.671362579
+      Yaw: 5.46454906
     Saved: ~
 Window Geometry:
   Displays:
