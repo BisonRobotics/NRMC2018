@@ -51,6 +51,8 @@ private:
   static constexpr float time_to_move_rocks_to_holder;
   bool is_digging;
   bool is_dumping;
+  ros::Time initial_time;
+  static constexpr float dump_time = 10;
   void digExecuteCB(const dig_control::DigGoalConstPtr &goal);
   void dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal);
   BackhoeController *backhoe;
