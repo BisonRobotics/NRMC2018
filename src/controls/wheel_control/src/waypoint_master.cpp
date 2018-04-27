@@ -214,7 +214,7 @@ int main(int argc, char **argv)
       }
         vesc_init_rate.sleep();
     }
-    pos = new AprilTagTrackerInterface("/pose_estimate", .1);
+    pos = new AprilTagTrackerInterface("/pose_estimate_filter/pose_estimate", .1);
     imu = new LpResearchImu("imu_base_link");
   }
 
@@ -323,7 +323,7 @@ int main(int argc, char **argv)
   firstTime = true;
   while (ros::ok() && std::abs(WaypointControllerHelper::anglediff(stateVector.theta, topicTheta)) > topicthetatol)
   {
-    double speed = zeroPointTurnGain * WaypointControllerHelper::anglediff(stateVector.theta, topicTheta);
+    double speed = .1;//zeroPointTurnGain * WaypointControllerHelper::anglediff(stateVector.theta, topicTheta);
 
     fr->setLinearVelocity(-speed);
     br->setLinearVelocity(-speed);
