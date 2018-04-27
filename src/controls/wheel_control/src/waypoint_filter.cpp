@@ -125,6 +125,19 @@ int main(int argc, char** argv)
             }
             // also make sure there is a waypoint in the start/dump zone and maybe through an exception if there is not.
         }
+        /*
+        if (direction_metric > 2.5 || direction_metric < 2.5)
+        {
+            //make sure the points in the obstacle zone are spaced apart properly
+            for (int index =0; index < waypoints.size(); index++)
+            {
+                if (wp.x > 1.5 && wp.x < 4.4) //waypoint is in obstacle field
+                {
+                    //check its distance from the start and end. check if it is within .8 meters of the closest one
+                }
+            }
+        }
+        */
 
       for (auto const& wp : waypoints)
       {
