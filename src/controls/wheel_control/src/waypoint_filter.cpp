@@ -65,6 +65,8 @@ int main(int argc, char** argv)
       bool waypoint_in_dig_zone = false;
       bool point_inserted = false;
       
+      bool ignore_waypoint = false;
+      
       goal_markers.points.clear();
       geometry_msgs::Pose2D last_point_in_start_zone;
       geometry_msgs::Pose2D last_point_in_obstacle_zone;
@@ -141,12 +143,11 @@ int main(int argc, char** argv)
         
         if (direction_metric > 2.5) // need to grab waypoints on entering and exiting waypoints from obstacle zone.
         {
+            ignore_waypoint = false;
             if (wp.x < 1.5) //this waypoint is in the start zone, as we iterate it will be the closest one to the obstacle zone
             {
                 //copy waypoint for posting
-                wpmsg.x = wp.x;
-                wpmsg.y = wp.y;
-                wpmsg.theta = wp.theta;
+                ignore_waypoint = true;
                 //record last point
                 last_point_in_start_zone.x = wp.x;
                 last_point_in_start_zone.y = wp.y;
@@ -210,12 +211,11 @@ int main(int argc, char** argv)
         }
         else if (direction_metric < -2.5) //need to overwrite dump
         {
+            ignore_waypoint = false;
             if (wp.x > 4.44) //this waypoint is in the starting zone (the dig zone now), as we iterate it will be the closest one to the obstacle zone
             {
                 //copy waypoint for posting
-                wpmsg.x = wp.x;
-                wpmsg.y = wp.y;
-                wpmsg.theta = wp.theta;
+                ignore_waypoint = true;
                 //record last point
                 last_point_in_dig_zone.x = wp.x;
                 last_point_in_dig_zone.y = wp.y;
@@ -282,7 +282,7 @@ int main(int argc, char** argv)
           wpmsg.theta = wp.theta;
         }
       
-      if (!overwrite_dump && !overwrite_dig)
+      if (!overwrite_dump && !overwrite_dig && !ignore_waypoint)
       {
         pub.publish(wpmsg);
       }
