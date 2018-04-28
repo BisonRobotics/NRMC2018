@@ -141,4 +141,35 @@ std::list<geometry_msgs::PoseStamped> PoseEstimateFilter::getPoses()
   return poses;
 }
 
+XYZ PoseEstimateFilter::calculateMean(std::list<geometry_msgs::PoseStamped> &poses)
+{
+  XYZ mean;
+  for (auto it = poses.begin(); it != poses.end(); it++)
+  {
+    mean.x += it->pose.position.x;
+    mean.y += it->pose.position.y;
+    mean.z += it->pose.position.z;
+  }
+  mean.x /= poses.size();
+  mean.y /= poses.size();
+  mean.z /= poses.size();
+  return mean;
+}
+
+XYZ PoseEstimateFilter::calculateVariance(std::list<geometry_msgs::PoseStamped> &poses)
+{
+  XYZ mean = calculateMean(poses);
+  XYZ variance;
+  for (auto it = poses.begin(); it != poses.end(); it++)
+  {
+    variance.x += pow(it->pose.position.x - mean.x, 2);
+    variance.y += pow(it->pose.position.y - mean.y, 2);
+    variance.z += pow(it->pose.position.z - mean.z, 2);
+  }
+  variance.x /= poses.size();
+  variance.y /= poses.size();
+  variance.z /= poses.size();
+  return variance;
+}
+
 

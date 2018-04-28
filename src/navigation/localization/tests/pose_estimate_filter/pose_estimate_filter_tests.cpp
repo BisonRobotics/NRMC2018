@@ -170,6 +170,76 @@ TEST(PoseEstimateFilterTests, addPoseEstimate)
   ASSERT_EQ(2, poses.size());
 }
 
+TEST(PoseEstimateFilterTests, calculateMean)
+{
+  using geometry_msgs::PoseStamped;
+  ros::Time current_time = ros::Time(100);
+  PoseStamped pose;
+  std::list<PoseStamped> poses;
+
+  geometry_msgs::Point position = pose.pose.position;
+  pose.pose.position.x =  1.0; pose.pose.position.y =  1.0; pose.pose.position.z =  1.0; poses.emplace_back(pose);
+  pose.pose.position.x =  3.0; pose.pose.position.y =  3.0; pose.pose.position.z =  3.0; poses.emplace_back(pose);
+  pose.pose.position.x =  0.0; pose.pose.position.y =  0.0; pose.pose.position.z =  0.0; poses.emplace_back(pose);
+  pose.pose.position.x =  4.0; pose.pose.position.y =  4.0; pose.pose.position.z =  4.0; poses.emplace_back(pose);
+  ASSERT_NEAR(2.0, PoseEstimateFilter::calculateMean(poses).x, 1e-10);
+  ASSERT_NEAR(2.0, PoseEstimateFilter::calculateMean(poses).y, 1e-10);
+  ASSERT_NEAR(2.0, PoseEstimateFilter::calculateMean(poses).z, 1e-10);
+
+  poses.clear();
+  pose.pose.position.x =  1.0; pose.pose.position.y =  1.0; pose.pose.position.z =  1.0; poses.emplace_back(pose);
+  pose.pose.position.x =  3.0; pose.pose.position.y =  3.0; pose.pose.position.z =  3.0; poses.emplace_back(pose);
+  pose.pose.position.x = -1.0; pose.pose.position.y = -1.0; pose.pose.position.z = -1.0; poses.emplace_back(pose);
+  pose.pose.position.x = -3.0; pose.pose.position.y = -3.0; pose.pose.position.z = -3.0; poses.emplace_back(pose);
+  ASSERT_NEAR(0.0, PoseEstimateFilter::calculateMean(poses).x, 1e-10);
+  ASSERT_NEAR(0.0, PoseEstimateFilter::calculateMean(poses).y, 1e-10);
+  ASSERT_NEAR(0.0, PoseEstimateFilter::calculateMean(poses).z, 1e-10);
+
+  poses.clear();
+  pose.pose.position.x = -1.0; pose.pose.position.y = -1.0; pose.pose.position.z = -1.0; poses.emplace_back(pose);
+  pose.pose.position.x = -3.0; pose.pose.position.y = -3.0; pose.pose.position.z = -3.0; poses.emplace_back(pose);
+  pose.pose.position.x = -0.0; pose.pose.position.y = -0.0; pose.pose.position.z = -0.0; poses.emplace_back(pose);
+  pose.pose.position.x = -4.0; pose.pose.position.y = -4.0; pose.pose.position.z = -4.0; poses.emplace_back(pose);
+  ASSERT_NEAR(-2.0, PoseEstimateFilter::calculateMean(poses).x, 1e-10);
+  ASSERT_NEAR(-2.0, PoseEstimateFilter::calculateMean(poses).y, 1e-10);
+  ASSERT_NEAR(-2.0, PoseEstimateFilter::calculateMean(poses).z, 1e-10);
+}
+
+TEST(PoseEstimateFilterTests, calculateVariance)
+{
+  using geometry_msgs::PoseStamped;
+  ros::Time current_time = ros::Time(100);
+  PoseStamped pose;
+  std::list<PoseStamped> poses;
+
+  geometry_msgs::Point position = pose.pose.position;
+  pose.pose.position.x =  1.0; pose.pose.position.y =  1.0; pose.pose.position.z =  1.0; poses.emplace_back(pose);
+  pose.pose.position.x =  3.0; pose.pose.position.y =  3.0; pose.pose.position.z =  3.0; poses.emplace_back(pose);
+  pose.pose.position.x =  0.0; pose.pose.position.y =  0.0; pose.pose.position.z =  0.0; poses.emplace_back(pose);
+  pose.pose.position.x =  4.0; pose.pose.position.y =  4.0; pose.pose.position.z =  4.0; poses.emplace_back(pose);
+  ASSERT_NEAR(2.5, PoseEstimateFilter::calculateVariance(poses).x, 1e-10);
+  ASSERT_NEAR(2.5, PoseEstimateFilter::calculateVariance(poses).y, 1e-10);
+  ASSERT_NEAR(2.5, PoseEstimateFilter::calculateVariance(poses).z, 1e-10);
+
+  poses.clear();
+  pose.pose.position.x =  1.0; pose.pose.position.y =  1.0; pose.pose.position.z =  1.0; poses.emplace_back(pose);
+  pose.pose.position.x =  3.0; pose.pose.position.y =  3.0; pose.pose.position.z =  3.0; poses.emplace_back(pose);
+  pose.pose.position.x = -1.0; pose.pose.position.y = -1.0; pose.pose.position.z = -1.0; poses.emplace_back(pose);
+  pose.pose.position.x = -3.0; pose.pose.position.y = -3.0; pose.pose.position.z = -3.0; poses.emplace_back(pose);
+  ASSERT_NEAR(5, PoseEstimateFilter::calculateVariance(poses).x, 1e-10);
+  ASSERT_NEAR(5, PoseEstimateFilter::calculateVariance(poses).y, 1e-10);
+  ASSERT_NEAR(5, PoseEstimateFilter::calculateVariance(poses).z, 1e-10);
+
+  poses.clear();
+  pose.pose.position.x = -1.0; pose.pose.position.y = -1.0; pose.pose.position.z = -1.0; poses.emplace_back(pose);
+  pose.pose.position.x = -3.0; pose.pose.position.y = -3.0; pose.pose.position.z = -3.0; poses.emplace_back(pose);
+  pose.pose.position.x = -0.0; pose.pose.position.y = -0.0; pose.pose.position.z = -0.0; poses.emplace_back(pose);
+  pose.pose.position.x = -4.0; pose.pose.position.y = -4.0; pose.pose.position.z = -4.0; poses.emplace_back(pose);
+  ASSERT_NEAR(2.5, PoseEstimateFilter::calculateVariance(poses).x, 1e-10);
+  ASSERT_NEAR(2.5, PoseEstimateFilter::calculateVariance(poses).y, 1e-10);
+  ASSERT_NEAR(2.5, PoseEstimateFilter::calculateVariance(poses).z, 1e-10);
+}
+
 int main(int argc, char **argv)
 {
   testing::InitGoogleTest(&argc, argv);

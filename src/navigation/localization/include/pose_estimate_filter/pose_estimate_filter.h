@@ -17,7 +17,18 @@ public:
   explicit empty_list_error(std::string error_msg) : std::runtime_error(error_msg) {};
 };
 
-
+struct XYZ
+{
+  XYZ()
+  {
+    x = 0.0;
+    y = 0.0;
+    z = 0.0;
+  }
+  double x;
+  double y;
+  double z;
+};
 
 class PoseEstimateFilter
 {
@@ -37,6 +48,8 @@ public:
   static double getTheta(geometry_msgs::Quaternion orientation);
   static geometry_msgs::Quaternion getAverageOrientation(std::list<geometry_msgs::PoseStamped> &poses);
   static geometry_msgs::Point getAveragePosition(std::list<geometry_msgs::PoseStamped> &poses);
+  static XYZ calculateMean(std::list<geometry_msgs::PoseStamped> &poses);
+  static XYZ calculateVariance(std::list<geometry_msgs::PoseStamped> &poses);
 
   // Not thread-safe
   std::list<geometry_msgs::PoseStamped> getPoses();
