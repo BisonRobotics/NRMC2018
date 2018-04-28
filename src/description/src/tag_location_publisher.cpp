@@ -50,14 +50,17 @@ int main(int argc, char** argv)
   map_to_tag01_tf.transform.rotation.w = q1.getW();
 
   q1.setRPY(M_PI_2, 0.0, M_PI_2);
-  q2.setRPY(0.0, M_PI_4, 0.0);
-  q3 = q1 * q2;
+  //q2.setRPY(0.0, M_PI_4, 0.0);
+  //q3 = q1 * q2;
+  q3 = q1;
   geometry_msgs::TransformStamped map_to_tag02_tf;
   map_to_tag02_tf.header.seq = 0;
   map_to_tag02_tf.header.frame_id = "map";
   map_to_tag02_tf.child_frame_id = "tag5";
-  map_to_tag02_tf.transform.translation.x = 0.053;
-  map_to_tag02_tf.transform.translation.y = -0.7;
+  //map_to_tag02_tf.transform.translation.x = 0.053;
+  map_to_tag02_tf.transform.translation.x = 0.0;
+  //map_to_tag02_tf.transform.translation.y = -0.7;
+  map_to_tag02_tf.transform.translation.y = -0.715;
   map_to_tag02_tf.transform.translation.z = 0.565;
   map_to_tag02_tf.transform.rotation.x = q3.getX();
   map_to_tag02_tf.transform.rotation.y = q3.getY();
@@ -65,14 +68,17 @@ int main(int argc, char** argv)
   map_to_tag02_tf.transform.rotation.w = q3.getW();
 
   q1.setRPY(M_PI_2, 0.0, M_PI_2);
-  q2.setRPY(0.0, -M_PI_4, 0.0);
-  q3 = q1 * q2;
+  //q2.setRPY(0.0, -M_PI_4, 0.0);
+  //q3 = q1 * q2;
+  q3 = q1;
   geometry_msgs::TransformStamped map_to_tag03_tf;
   map_to_tag03_tf.header.seq = 0;
   map_to_tag03_tf.header.frame_id = "map";
   map_to_tag03_tf.child_frame_id = "tag6";
-  map_to_tag03_tf.transform.translation.x = 0.053;
-  map_to_tag03_tf.transform.translation.y = 0.7;
+  //map_to_tag03_tf.transform.translation.x = 0.053;
+  map_to_tag03_tf.transform.translation.x = 0.0;
+  //map_to_tag03_tf.transform.translation.y = 0.7;
+  map_to_tag03_tf.transform.translation.y = 0.715;
   map_to_tag03_tf.transform.translation.z = 0.565;
   map_to_tag03_tf.transform.rotation.x = q3.getX();
   map_to_tag03_tf.transform.rotation.y = q3.getY();
