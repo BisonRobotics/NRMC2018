@@ -14,7 +14,7 @@
     <l_max_erpm_fbrake>300</l_max_erpm_fbrake>
     <l_max_erpm_fbrake_cc>1500</l_max_erpm_fbrake_cc>
     <l_min_vin>8</l_min_vin>
-    <l_max_vin>28</l_max_vin>
+    <l_max_vin>50</l_max_vin>
     <l_battery_cut_start>10</l_battery_cut_start>
     <l_battery_cut_end>8</l_battery_cut_end>
     <l_slow_abs_current>1</l_slow_abs_current>
