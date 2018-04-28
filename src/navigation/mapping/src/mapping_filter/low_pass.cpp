@@ -16,17 +16,25 @@ void LowPassLayer::onInitialize()
 {
   ObstacleLayer::onInitialize();
   ros::NodeHandle nh("~/" + name_);
+  ros::NodeHandle gl_nh;
   current_ = true;
   default_value_ = NO_INFORMATION;  // we can change this later if we want
-  enabled_ = true;
+  enabled_ = false;
+  enable_service = gl_nh.advertiseService ("enable_mapping", &LowPassLayer::updateEnable, this);
+  should_map = false;
+}
+
+
+bool LowPassLayer::updateEnable (std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res){
+  should_map= req.data;
+  return true;
 }
 
 
 void LowPassLayer::updateCosts(costmap_2d::Costmap2D &master_grid, int min_i, int min_j, int max_i, int max_j)
 {
-  if (enabled_)
+  if (enabled_ & should_map)
   {
-
     unsigned char *my_map = master_grid.getCharMap();
     unsigned int size_of_map = master_grid.getSizeInCellsX() * master_grid.getSizeInCellsY();
     cv::Mat input = cv::Mat(master_grid.getSizeInCellsY(), master_grid.getSizeInCellsX(), CV_8U, my_map,
