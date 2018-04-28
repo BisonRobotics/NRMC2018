@@ -160,7 +160,7 @@ int main(int argc, char **argv)
   ros::Publisher baseAnglePub = node.advertise<std_msgs::Float64>("base_angle", 30);
   double settle_time;
   if(!node.getParam("localization_settling_time", settle_time)){
-    settle_time=5;
+    settle_time = 5;
     ROS_INFO_STREAM ("localization settling time " << settle_time);
   }
   std_msgs::Float64 angleErrorMsg;
@@ -216,7 +216,7 @@ int main(int argc, char **argv)
         ROS_ERROR ("Vesc exception thrown for more than 10 seconds");
         ros::shutdown ();
       }
-        vesc_init_rate.sleep();
+      vesc_init_rate.sleep();
     }
     pos = new AprilTagTrackerInterface("/pose_estimate_filter/pose_estimate", .1);
     imu = new LpResearchImu("imu_base_link");
