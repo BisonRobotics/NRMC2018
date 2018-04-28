@@ -56,19 +56,19 @@ class robot(object):
         :param state: the state to be printed
         """
         if state == RobotState.OUTBOUND:
-            print("Imperio : OUTBOUND")
+            rospy.loginfo("[IMPERIO] : OUTBOUND")
         elif state == RobotState.DEPOSIT:
-            print("Imperio : DEPOSIT")
+            rospy.loginfo("[IMPERIO] : DEPOSIT")
         elif state == RobotState.INBOUND:
-            print("Imperio : INBOUND")
+            rospy.loginfo("[IMPERIO] : INBOUND")
         elif state == RobotState.DIG:
-            print("Imperio : DIG")
+            rospy.loginfo("[IMPERIO] : DIG")
         elif state == RobotState.RECOVERY:
-            print("Imperio : RECOVERY BEHAVIOR")
+            rospy.loginfo("[IMPERIO] : RECOVERY BEHAVIOR")
         elif state == RobotState.HALT:
-            print("Imperio : HALT")
+            rospy.loginfo("[IMPERIO] : HALT")
         elif state == RobotState.INITIAL:
-            print("Imperio : Initial Orientation")
+            rospy.loginfo("[IMPERIO] : Initial Orientation")
 
     def next_state(self):
         """
@@ -93,7 +93,7 @@ class robot(object):
         while not rospy.is_shutdown():
             try:
                 (self.location, self.pose) = self.tf.lookupTransform('/map', '/base_link', rospy.Time(0))
-                rospy.loginfo("Imperio : Robot localized to location : {} and pose : {}".format(self.location, self.pose))
+                rospy.loginfo("[IMPERIO] : Robot localized to location : {} and pose : {}".format(self.location, self.pose))
                 return self.location, self.pose
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 rospy.logwarn("[IMPERIO] : Robot is not able to localize")

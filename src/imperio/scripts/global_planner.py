@@ -28,13 +28,13 @@ class GlobalPlanner(Planner):
         """
         location = self.get_robot_location()
 
-        print("Imperio : Starting the path planner")
+        rospy.loginfo("[IMPERIO] : Starting the path planner")
         saved_time = time.time()
         results = RRT.find_best_rrt_path(location, goal, self.occupancy_grid, 20)
-        print("Imperio : Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
+        rospy.loginfo("[IMPERIO] : Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
 
         if len(results) == 0:
             #TODO : Enter recovery behavior [Jira NRMC2018-336]
-            print("IMPERIO : NO POSSIBLE PATH FOUND")
+            rospy.loginfo("IMPERIO : NO POSSIBLE PATH FOUND")
 
         return results
