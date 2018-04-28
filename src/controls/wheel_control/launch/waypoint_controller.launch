@@ -5,6 +5,6 @@
     <param name="initial_theta_tolerance" type="double" value=".1"/>
     <param name="initial_theta_gain" type="double" value=".4"/>
   </node>
-<!--  <include file="$(find lpms_imu)/launch/imu_node.launch"/>
+ <include file="$(find lpms_imu)/launch/imu_node.launch"/>
   <include file="$(find launch)/launch/test_apriltag_nodes.launch"/>
---></launch>
+</launch>

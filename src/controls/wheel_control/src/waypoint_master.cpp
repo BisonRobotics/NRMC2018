@@ -214,7 +214,7 @@ int main(int argc, char **argv)
       }
         vesc_init_rate.sleep();
     }
-    pos = new AprilTagTrackerInterface("/pose_estimate", .1);
+    pos = new AprilTagTrackerInterface("/pose_estimate_filter/pose_estimate", .1);
     imu = new LpResearchImu("imu_base_link");
   }
 
