@@ -23,7 +23,6 @@ public:
 private:
   static constexpr unsigned int size_of_kern = 35;
   ros::ServiceServer enable_service;
-  bool should_map;
 };
 }
 
