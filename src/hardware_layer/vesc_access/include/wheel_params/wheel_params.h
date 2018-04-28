@@ -60,7 +60,7 @@
 
 #define MAX_VIBRATOR_VELOCITY 6000.0f   // in erpm
 #define MAX_VIBRATOR_TORQUE 6.0f    // in Amps
-#define MAX_VIBRATOR_DUTY .87f
+#define MAX_VIBRATOR_DUTY .5f
 #define VIBRATOR_GEAR_RATIO 1.0f
 #define VIBRATOR_OUTPUT_RATIO 1.0f
 #define VIBRATOR_POLE_PAIRS 1
