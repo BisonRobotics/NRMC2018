@@ -8,7 +8,7 @@ Version: 2
 """
 
 import rospy
-from std_msgs.msg import Boolpr
+from std_msgs.msg import Bool
 
 
 class CompetitionTimer(object):

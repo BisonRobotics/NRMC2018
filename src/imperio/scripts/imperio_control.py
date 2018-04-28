@@ -139,7 +139,7 @@ class ImperioControl(object):
         Recovery behavior for the robot
         """
         # Currently just halts the Robot
-        rospy.loginfo("Robot could not be recovered, please regain control.")
+        rospy.loginfo("[IMPERIO] : Robot could not be recovered, please regain control.")
         self.robot.change_state(RobotState.HALT)
 
     def runningOutOfTime(self):
