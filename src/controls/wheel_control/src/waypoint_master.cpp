@@ -158,7 +158,10 @@ int main(int argc, char **argv)
   ros::Publisher angleErrorPub = node.advertise<std_msgs::Float64>("angle_error", 30);
   ros::Publisher simAnglePub = node.advertise<std_msgs::Float64>("sim_angle", 30);
   ros::Publisher baseAnglePub = node.advertise<std_msgs::Float64>("base_angle", 30);
-
+  double settle_time;
+  if(!node.getParam("localization_settling_time", settle_time)){
+    settle_time=5;
+  }
   std_msgs::Float64 angleErrorMsg;
   std_msgs::Float64 simAngleMsg;
   std_msgs::Float64 baseAngleMsg;
@@ -182,7 +185,7 @@ int main(int argc, char **argv)
   ros::Time lastTime = ros::Time::now();
   ros::Time currTime;
 
-  if (simulating == true)
+  if (simulating)
   {
     sim = new SimRobot(ROBOT_AXLE_LENGTH, .5, .5, 0);
     fl = (sim->getFLVesc());
@@ -285,11 +288,21 @@ int main(int argc, char **argv)
       tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
     }
     superLocalizer.updateStateVector(loopTime.toSec());
-    stateVector = superLocalizer.getStateVector();
-    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+
+
     ros::spinOnce();
     rate.sleep();
   }
+
+  lastTime = ros::Time::now ();
+  while ((ros::Time::now()-lastTime).toSec()<settle_time){
+    rate.sleep();
+  }
+
+  stateVector = superLocalizer.getStateVector();
+  tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+  ros::spinOnce ();
+
 
   // zero point turn vescs here before waypoint controller is initialized
   // get number from topic

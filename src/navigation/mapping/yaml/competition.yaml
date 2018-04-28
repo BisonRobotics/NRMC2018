@@ -23,8 +23,8 @@ rock_layer:
     rolling_window: false
     observation_persistence: 0.0
     obstacle_range: 4.0
-    min_obstacle_height: -2.00
-    max_obstacle_height: 6.0
+    min_obstacle_height: -.50
+    max_obstacle_height: .8
 
 hole_layer:
   observation_sources: point_cloud_sensor

@@ -32,6 +32,7 @@ void LowPassLayer::updateCosts(costmap_2d::Costmap2D &master_grid, int min_i, in
     cv::Mat input = cv::Mat(master_grid.getSizeInCellsY(), master_grid.getSizeInCellsX(), CV_8U, my_map,
                             cv::Mat::AUTO_STEP);
     cv::Mat filtered;
+
     cv::medianBlur(input, filtered, size_of_kern);
 
     std::memcpy(my_map, filtered.data, sizeof(unsigned char) * size_of_map);
