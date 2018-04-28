@@ -161,6 +161,7 @@ int main(int argc, char **argv)
   double settle_time;
   if(!node.getParam("localization_settling_time", settle_time)){
     settle_time=5;
+    ROS_INFO_STREAM ("localization settling time " << settle_time);
   }
   std_msgs::Float64 angleErrorMsg;
   std_msgs::Float64 simAngleMsg;
@@ -295,10 +296,10 @@ int main(int argc, char **argv)
   }
 
   lastTime = ros::Time::now ();
-  while ((ros::Time::now()-lastTime).toSec()<settle_time){
+  while ((ros::Time::now()-lastTime).toSec()<settle_time && ros::ok()){
     rate.sleep();
   }
-
+  ROS_INFO ("Localization Settled!");
   stateVector = superLocalizer.getStateVector();
   tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
   ros::spinOnce ();
