@@ -45,13 +45,13 @@ geometry_msgs::TransformStamped create_tf(double x, double y, double theta)
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "localization_tester");
-  AprilTagTrackerInterface *aprilTags = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .07);
+  AprilTagTrackerInterface *aprilTags = new AprilTagTrackerInterface("/pose_estimate_filter/pose_estimate", .1);
   LpResearchImu *lpResearchImu = new LpResearchImu("imu_base_link");
   ros::NodeHandle n;
   ros::Rate r(50);
   tf2_ros::TransformBroadcaster br;
-  ros::Subscriber sub = n.subscribe("joy", 30, callback);
-  TeleopInterface teleopInterface(.5f);
+  ros::Subscriber sub = n.subscribe("/joy", 30, callback);
+  TeleopInterface teleopInterface(.1f);
   SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0.0, 0.0, 0.0, teleopInterface.fl, teleopInterface.fr,
                                 teleopInterface.br, teleopInterface.bl, lpResearchImu, aprilTags,
                                 SuperLocalizer_default_gains);

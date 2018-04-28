@@ -1,0 +1,19 @@
+<!-- Launch file for autonomy. Author : Nicole Maguire -->
+<launch>
+
+<node name="competition_timer" pkg="imperio" type="competition_timer.py"/>
+
+<!-- commented out the dashboard for development, remove for actual launch -->
+<!-- node name="dashboard" pkg="imperio" type="dashboardLaunch.bash"/ -->
+
+<include file="$(find mapping)/launch/costmap_2d.launch"/>
+<node name="imperio_marker_vis" pkg="imperio" type="path_vis.py"/>
+<node name="imperio" pkg="imperio" type="imperio_control.py" output="screen"/>
+<node name="position_spoofer" pkg="imperio" type="position_spoofer.py" output="screen" />
+
+<!-- time limit (in minutes) should be 10, can be changed for testing purposes -->
+<param name="time_limit" value="10"/>
+<!-- turn around (in minutes) is how many minutes before the competition ends that the robot should turn around -->
+<param name="turn_around" value="1"/>
+
+</launch>

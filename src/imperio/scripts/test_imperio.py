@@ -61,19 +61,6 @@ class TestRobot(object):
         r.next_state()
         assert r.state == RobotState.HALT
 
-    def test_localize(self):
-        ref_tf = tf.TransformListener()
-        r = robot(None)
-        robot_loc, robot_pose = r.localize()
-        try:
-            ref_loc, ref_pose = ref_tf.lookupTransform('/map', '/base_link', 0)
-            assert robot_loc == ref_loc
-            assert robot_pose == ref_pose
-        except:
-            #TODO : Recovery behavior instead [Jira NRMC2018-329]
-            assert robot_loc == (0,0,0)
-            assert robot_pose == (0,0,0,0)
-
 """ Test for the abstract planner class using a spoof planner class.
 Author: Nicole Maguire
 Date: 4/12/2018
@@ -81,6 +68,7 @@ Test For Version : 1
 
 """
 import planner
+import math
 
 class SpoofPlanner(planner.Planner):
     def __init__(self, robot):
@@ -88,6 +76,16 @@ class SpoofPlanner(planner.Planner):
 
     def find_waypoints(self, goal):
         return []
+
+class SpoofPlannerWaypoints(planner.Planner):
+    def __init__(self, robot):
+        super(SpoofPlannerWaypoints, self).__init__(robot)
+
+    def find_waypoints(self, goal):
+        return [(0,0), (1,1), (2,2)]
+
+    def publish_waypoints(self, oriented_waypoints):
+        pass
 
 class SpoofRobot():
     def localize(self):
@@ -104,6 +102,7 @@ class TestPlanner(object):
         assert not sp.waypoints_publisher == None
         assert sp.robot == test_robot
         assert not sp.movement_status == None
+        assert sp.goal_given == False
 
     def test_map_callback(self):
         sp = SpoofPlanner(None)
@@ -145,18 +144,25 @@ class TestPlanner(object):
 
         sr = SpoofRobot()
         sp = SpoofPlanner(sr)
-        sp.movement_status = planner.MovementStatus.HAS_REACHED_GOAL
-        assert sp.navigate_to_goal((0,0)) == True
-
-        sp.occupancy_grid = None
-        result = sp.navigate_to_goal((1,1))
+        result = sp.navigate_to_goal((1, 1))
         assert result == False
         assert sp.movement_status == planner.MovementStatus.WAITING
 
         map = planner.map_utils.Map()
         sp.occupancy_grid = map
         assert not sp.occupancy_grid == None
-        assert not sp.navigate_to_goal((1,1))
+        assert not sp.navigate_to_goal((1, 1))
+        assert sp.goal_given == False
+
+        spw = SpoofPlannerWaypoints(None)
+        spw.occupancy_grid = map
+        assert not spw.navigate_to_goal((1,1))
+        assert spw.goal_given == True
+
+        spw.movement_status = planner.MovementStatus.HAS_REACHED_GOAL
+        assert spw.navigate_to_goal((0,0)) == True
+        assert spw.goal_given == False
+
 
     def test_publish_waypoints(self):
         planner.rospy.init_node('Test_Imperio')
@@ -181,22 +187,18 @@ class TestPlanner(object):
         sp.publish_waypoints(waypoints)
         assert sp.movement_status == planner.MovementStatus.HAS_REACHED_GOAL
 
-
-    def test_robot_within_threshold(self):
-        sr = SpoofRobot()
-        sp = SpoofPlanner(sr)
-
-        #default/launch distance threshold being .1
-        assert not sp.robot_within_threshold((5,5)) #Distance : 7.071068
-        assert sp.robot_within_threshold((0,0)) #Distance : 0.0
-        assert sp.robot_within_threshold((0.05,0.05)) #Distance : 0.0707107
-        assert not sp.robot_within_threshold((.08,.06)) #Distance : .1
-        assert sp.robot_within_threshold((.08,-.05)) #Distance : .0943398
-
-
     def test_halt_movement(self):
         sp = SpoofPlanner(None)
         sp.halt_movement()
+
+    def test_orient_forward(self):
+        sp = SpoofPlanner(None)
+        assert sp.orient_forwards(0) == 0
+        assert sp.orient_forwards(math.pi) == 0
+        assert sp.orient_forwards(math.pi/2) == math.pi/2
+        assert sp.orient_forwards(-math.pi/2) == -math.pi/2
+        assert sp.orient_forwards(3.0/4.0*math.pi) == -math.pi/4
+        assert sp.orient_forwards(-3.0/4.0*math.pi) == math.pi/4
 
     def test_calculate_orientation(self):
         sp = SpoofPlanner(None)
@@ -207,18 +209,18 @@ class TestPlanner(object):
         sp.calculate_orientation(waypoints)
 
         waypoints = [(-1,0)]
-        sp.calculate_orientation(waypoints)
+        result = sp.calculate_orientation(waypoints)
+        assert result[0][2] == 0
 
         waypoints = [(4,4),(4,4),(4,4),(5,5),(-1,-1),(4,2)]
         result = sp.calculate_orientation(waypoints)
         assert len(result) == len(waypoints)
 
         waypoints = [(1,-1),(2,-1),(3,0),(2,1)]
-        expected_results = [(1,-1, 0), (2,-1,.785398), (3,0, 2.35619), (2,1,2.35619)]
+        expected_results = [(1,-1, 0), (2,-1,.785398), (3,0, 2.35619), (2,1,0)]
         result = sp.calculate_orientation(waypoints)
         for i in range(0,len(waypoints)):
-            assert abs(expected_results[i][2] - result[i][2]) < 0.001
-
+            assert abs(sp.orient_forwards(expected_results[i][2]) - result[i][2]) < 0.001
 
     def test_get_robot_location(self):
         sr = SpoofRobot()
@@ -293,11 +295,54 @@ class TestImperioControl(object):
     def test_runnint_out_of_time(self):
         pass
 
+import initial_planner
+class TestInitialPlanner(object):
+    def test_init(self):
+        ip = initial_planner.InitialPlanner()
+        assert not ip.theta_publisher == None
+        assert ip.has_turned == False
+        assert ip.planner_failed == False
+        assert ip.msg_published == False
+
+    def test_zero_pt_turn_callback(self):
+        ip = initial_planner.InitialPlanner()
+        msg = initial_planner.DriveStatus()
+        msg.has_reached_goal.data = True
+        ip.drive_status_callback(msg)
+        assert ip.planner_failed == False
+        assert ip.has_turned
+
+        ip = initial_planner.InitialPlanner()
+        msg = initial_planner.DriveStatus()
+        msg.is_stuck.data = True
+        ip.drive_status_callback(msg)
+        assert ip.planner_failed
+        assert ip.has_turned == False
+
+        ip = initial_planner.InitialPlanner()
+        msg = initial_planner.DriveStatus()
+        msg.cannot_plan_path.data = True
+        ip.drive_status_callback(msg)
+        assert ip.planner_failed
+        assert ip.has_turned == False
+
+    def test_turn_to_start(self):
+        ip = initial_planner.InitialPlanner()
+        assert ip.turn_to_start() == False
+
+        ip = initial_planner.InitialPlanner()
+        ip.planner_failed = True
+        assert ip.turn_to_start() == None
+
+        ip = initial_planner.InitialPlanner()
+        ip.has_turned = True
+        assert ip.turn_to_start() == True
 
 
-
-
-
+    def test_publish_turn_msg(self):
+        ip = initial_planner.InitialPlanner()
+        ip.publish_turn_msg(0)
+        assert ip.msg_published == True
 
 
 

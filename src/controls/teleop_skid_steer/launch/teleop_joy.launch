@@ -4,6 +4,13 @@
     <param name="dev" type="string" value="/dev/input/js0" />
     <param name="deadzone" value="0.12" />
   </node>
+  <node respawn="true" pkg="joy"
+        type="joy_node" name="dig_joy" >
+    <param name="dev" type="string" value="/dev/input/js1" />
+    <remap from="joy" to="dig_joy"/>
+    <param name="deadzone" value="0.12" />
+  </node>
+
 
 <!--  <node pkg="teleop_skid_steer" type="teleop_interface_exec" name="teleop"/>
 -->

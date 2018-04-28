@@ -50,34 +50,30 @@
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>depth_image_proc</build_depend>
-  <build_depend>hector_mapping</build_depend>
   <build_depend>nav_msgs</build_depend>
   <build_depend>pointcloud_to_laserscan</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>openni2_launch</build_depend>
-  <build_depend>gmapping</build_depend>
   <build_depend>costmap_2d</build_depend>
   <build_depend>map_server</build_depend>
   <build_export_depend>depth_image_proc</build_export_depend>
-  <build_export_depend>hector_mapping</build_export_depend>
   <build_export_depend>nav_msgs</build_export_depend>
   <build_export_depend>pointcloud_to_laserscan</build_export_depend>
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>openni2_launch</build_export_depend>
   <build_depend>realsense_ros_camera</build_depend>
   <exec_depend>depth_image_proc</exec_depend>
-  <exec_depend>hector_mapping</exec_depend>
   <exec_depend>nav_msgs</exec_depend>
   <exec_depend>pointcloud_to_laserscan</exec_depend>
   <exec_depend>roscpp</exec_depend>
   <exec_depend>realsense_ros_camera</exec_depend>
   <exec_depend>openni2_launch</exec_depend>
-  <exec_depend>gmapping</exec_depend>
   <exec_depend>costmap_2d</exec_depend>
   <exec_depend>map_server</exec_depend>
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->
     <costmap_2d plugin="${prefix}/lowpass_plug.xml"/>
+    <costmap_2d plugin="${prefix}/hole_plug.xml"/>
   </export>
 </package>

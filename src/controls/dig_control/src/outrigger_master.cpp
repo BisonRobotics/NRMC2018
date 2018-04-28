@@ -34,7 +34,7 @@ void retractOutriggers(const dig_control::OutriggerGoalConstPtr &goal,
   // deploy outriggers
   ros::Rate r(50);
   outriggerC->retract();
-  while (!outriggerC->isRetracted() && ros::ok()) //is this structure OK? is the ros::ok() check necessary?
+  while (!outriggerC->isRetracted() && ros::ok())  // is this structure OK? is the ros::ok() check necessary?
   {
     r.sleep();
     outriggerC->update(.02);
@@ -49,9 +49,8 @@ void retractOutriggers(const dig_control::OutriggerGoalConstPtr &goal,
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "outrigger_action_server");
-  ros::NodeHandle n;
-
-
+  ros::NodeHandle n("~");
+  ros::Rate vesc_init_rate (10);
   if (n.hasParam("simulating_digging"))
   {
     n.getParam("simulating_digging", simulating);
@@ -74,7 +73,7 @@ int main(int argc, char **argv)
       n, "deploy_riggers", boost::bind(&deployOutriggers, _1, &deployServer), false);
   actionlib::SimpleActionServer<dig_control::OutriggerAction> retractServer(
       n, "retract_riggers", boost::bind(&retractOutriggers, _1, &retractServer), false);
-
+  ros::Time lastTime = ros::Time::now();
   if (simulating)
   {
     outriggerSimulation = new SimOutriggers(0, 0);
@@ -84,9 +83,23 @@ int main(int argc, char **argv)
   else
   {
     outriggerSimulation = NULL;
+    bool no_except = false;
+    while (!no_except  && ros::ok()) {
+      try {
+        outriggerRightVesc = new VescAccess(right_outrigger_param);
+        outriggerLeftVesc = new VescAccess(left_outrigger_param);
+        no_except = true;
+      } catch (VescException e) {
+        ROS_WARN("%s",e.what ());
+        no_except = false;
+      }
+      if (!no_except && (ros::Time::now() - lastTime).toSec() > 10){
+        ROS_ERROR ("Vesc exception thrown for more than 10 seconds");
+        ros::shutdown ();
+      }
+        vesc_init_rate.sleep();
+    }
 
-    outriggerRightVesc = new VescAccess (right_outrigger_param);
-    outriggerLeftVesc = new VescAccess (left_outrigger_param);
   }
   outriggerC = new OutriggerController(outriggerLeftVesc, outriggerRightVesc);
 

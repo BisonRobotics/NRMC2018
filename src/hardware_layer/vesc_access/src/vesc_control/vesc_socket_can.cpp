@@ -2,14 +2,24 @@
 #include <byteswap.h>
 #include <cmath>
 
-Vesc::Vesc(char *interface, uint8_t controllerID)
+Vesc::Vesc(char *interface, uint8_t controllerID, std::string name) : Vesc(interface, controllerID, 0, name)
 {
-  init_socketCAN(interface);
-  _controllerID = controllerID;
+  // init_socketCAN(interface);
+  // _controllerID = controllerID;
 }
 
-Vesc::Vesc(char *interface, uint8_t controllerID, uint32_t quirks)
+Vesc::Vesc(char *interface, uint8_t controllerID, uint32_t quirks, std::string name)
 {
+  ros::NodeHandle n;
+  this->name = name;
+  this->js_command_pub = n.advertise<sensor_msgs::JointState>("vesc_command",100);
+  this->float32_pub = n.advertise<std_msgs::Float32>(name + "/current", 30);
+  this->js_pub = n.advertise<sensor_msgs::JointState>("/joint_states", 20);
+  js_message.name.push_back(name);
+  js_message.position.push_back(0);
+  js_message.velocity.push_back(0);
+  js_message.effort.push_back(0);
+  first_time = true;
   init_socketCAN(interface);
   _controllerID = controllerID;
   _quirks = quirks;
@@ -22,12 +32,12 @@ void Vesc::init_socketCAN(char *ifname)
   s = socket(PF_CAN, SOCK_RAW | SOCK_NONBLOCK, CAN_RAW);  // create nonblocking raw can socket
   if (s == -1)
   {
-    throw VescException("Unable to create raw CAN socket");
+    throw VescException(this->name + " Unable to create raw CAN socket");
   }
   strcpy(ifr.ifr_name, ifname);
   if (ioctl(s, SIOCGIFINDEX, &ifr))
   {
-    throw VescException("Error creating interface");
+    throw VescException(this->name + " Error creating interface");
   }
   addr.can_family = AF_CAN;
   addr.can_ifindex = ifr.ifr_ifindex;
@@ -35,19 +45,19 @@ void Vesc::init_socketCAN(char *ifname)
   int ret = bind(s, (struct sockaddr *)&addr, sizeof(addr));
   if (ret == -1)
   {
-    throw VescException("Unable to bind raw CAN socket");
+    throw VescException(this->name + " Unable to bind raw CAN socket");
   }
 
   sbcm = socket(PF_CAN, SOCK_DGRAM, CAN_BCM);
   if (sbcm == -1)
   {
-    throw VescException("Unable to create bcm socket");
+    throw VescException(this->name + " Unable to create bcm socket");
   }
   ret = connect(sbcm, (struct sockaddr *)&addr, sizeof(addr));
 
   if (ret == -1)
   {
-    throw VescException("Unable to connect bcm socket");
+    throw VescException(this->name + " Unable to connect bcm socket");
   }
 }
 
@@ -95,6 +105,10 @@ void Vesc::setDuty(float dutyCycle)
 }
 void Vesc::setCurrent(float current)
 {
+  sensor_msgs::JointState msg;
+  msg.name.push_back(this->name+"command");
+  msg.effort.push_back(current);
+  js_command_pub.publish (msg);
   setPoint(CONTROL_MODE_CURRENT, current);
 }
 void Vesc::setCurrentBrake(float current)
@@ -103,6 +117,10 @@ void Vesc::setCurrentBrake(float current)
 }
 void Vesc::setRpm(float rpm)
 {
+   sensor_msgs::JointState msg;
+  msg.name.push_back(this->name+"command");
+  msg.velocity.push_back(rpm);
+  js_command_pub.publish (msg);
   setPoint(CONTROL_MODE_SPEED, rpm);
 }
 void Vesc::setPos(float pos)
@@ -151,8 +169,19 @@ void Vesc::disable()
 
 void Vesc::processMessages()
 {
+  if (first_time)
+  {
+    last_time = ros::Time::now();
+    first_time = false;
+  }
+  else if ((ros::Time::now() - last_time).toSec() > publish_period)
+  {
+    float32_pub.publish(f32_message);
+    js_pub.publish(js_message);
+    last_time = ros::Time::now();
+  }
   struct can_frame msg;
-  while (1)
+  while (ros::ok())
   {
     int a = read(s, &msg, sizeof(msg));
     if (a == -1)
@@ -173,9 +202,19 @@ void Vesc::processMessages()
           gettimeofday(&_prevmsgtime, NULL);
           break;
         case CAN_PACKET_STATUS1:  // custom status message
-          _rpm = (*(VESC_status1 *)msg.data).rpm;
+          if (_encoderIndex)
+          {
+            _rpm = (*(VESC_status1 *)msg.data).rpm;
+          }
+          else
+          {
+            _rpm = 0;
+          }
           _current = (*(VESC_status1 *)msg.data).motorCurrent / 10.0;
           _position = (*(VESC_status1 *)msg.data).position / 1000.0;
+          js_message.effort[0] = _current;
+          js_message.velocity[0] = _rpm;
+          f32_message.data = _current;
           gettimeofday(&_prevmsgtime, NULL);
           break;
         case CAN_PACKET_STATUS2:
@@ -184,6 +223,7 @@ void Vesc::processMessages()
           _flimit = (*(VESC_status2 *)msg.data).flimit;
           _rlimit = (*(VESC_status2 *)msg.data).rlimit;
           gettimeofday(&_prevmsgtime, NULL);
+          // js_message.velocity[0] =_tachometer;
           break;
         case CAN_PACKET_STATUS3:
           _wattHours = (*(VESC_status3 *)msg.data).wattHours;
@@ -198,6 +238,7 @@ void Vesc::processMessages()
           _state = (mc_state)(*(VESC_status4 *)msg.data).state;
           _encoderIndex = (*(VESC_status4 *)msg.data).encoderIndex;
           gettimeofday(&_prevmsgtime, NULL);
+          js_message.position[0] = _encoderIndex;
           break;
         default:
           break;

@@ -17,19 +17,21 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
   float central = 0.0f;
   bool sifter_toggle = false;
   bool large_conveyor_toggle = false;
-  static constexpr float linear_gain = 2.0f;
-  static constexpr float central_gain = 1.0f;
+  static constexpr float linear_gain = 3;
+  static constexpr float central_gain = 10.0f;
 
   if (joy->buttons[4])  // left bumper is safety
   {
     linear = joy->axes[1];                         // left analog up/down
-    central = joy->axes[3];                        // right analog up/down
+    central = joy->axes[4];                        // right analog up/down
     sifter_toggle = joy->buttons[0] != 0;          // A button
     large_conveyor_toggle = joy->buttons[1] != 0;  // B button
 
-    if (joy->buttons[2] && !joy->buttons[3])
+    if (joy->buttons[2] && !joy->buttons[3])      /* should we toggle */
     {
       global_outrigger->deploy();
+      ROS_INFO("DEPLOY");
+
     }
     else if (joy->buttons[3] && !joy->buttons[2])
     {
@@ -37,12 +39,30 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
     }
   }
 
-  global_backhoe->setShoulderVelocity(central_gain * central);
-  global_backhoe->setWristVelocity(linear_gain * linear);
+  if (fabs(central) > .001 )
+  {
+    global_backhoe->setShoulderTorque(central_gain * central);
+  }
+  else
+  {
+    global_backhoe->setShoulderVelocity(0);
+  }
+
+  if (fabs(linear) > .001)
+  {
+    global_backhoe->setWristTorque(linear_gain * linear);
+  }
+  else
+  {
+    global_backhoe->setWristVelocity(0);
+  }
+
+
 
   if (sifter_toggle)
   {
     global_bucket->toggleSifter();
+    global_bucket->toggleLittleConveyor();
   }
   if (large_conveyor_toggle)
   {
@@ -63,8 +83,10 @@ int main(int argc, char **argv)
   VescAccess small_conveyor_vesc(small_conveyor_param);
   VescAccess large_conveyor_vesc(large_conveyor_param);
 
-  LinearSafetyController linearSafety (linear_joint_params,&linear_vesc, true);
-  BackhoeSafetyController backhoeSafety (central_joint_params, &shoulder_vesc, true);
+  bool has_been_init = false;
+
+  LinearSafetyController linearSafety(linear_joint_params, &linear_vesc);
+  BackhoeSafetyController backhoeSafety(central_joint_params, &shoulder_vesc);
   BackhoeController backhoe(&backhoeSafety, &linearSafety);
 
   BucketController bucket(&large_conveyor_vesc, &small_conveyor_vesc, &sifter_vesc);
@@ -74,10 +96,20 @@ int main(int argc, char **argv)
   global_bucket = &bucket;
   global_outrigger = &outrigger;
 
-  ros::Subscriber joy_sub = n.subscribe("joy_dig", 10, callback);
-  ros::Rate r(50);
+  ros::Subscriber joy_sub = n.subscribe("dig_joy", 10, callback);
+
+  ros::Rate r(10);
   ros::Time initial = ros::Time::now();
 
+  backhoeSafety.init();
+  while (ros::ok() && !has_been_init)
+  {
+    has_been_init = linearSafety.init ();
+    r.sleep();
+  }
+
+  ROS_INFO ("Init!!");
+  float velocity;
   while (ros::ok())
   {
     r.sleep();
@@ -85,5 +117,12 @@ int main(int argc, char **argv)
     backhoe.update((initial - ros::Time::now()).toSec());
     outrigger.update((initial - ros::Time::now()).toSec());
     initial = ros::Time::now();
+    velocity = small_conveyor_vesc.getTorque();
+    velocity = large_conveyor_vesc.getTorque();
+    velocity = sifter_vesc.getTorque ();
+    velocity = right_outrigger_vesc.getTorque();
+    velocity = left_outrigger_vesc.getTorque();
+    velocity = shoulder_vesc.getTorque();
+    velocity = linear_vesc.getTorque ();
   }
 }

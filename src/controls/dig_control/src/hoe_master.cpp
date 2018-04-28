@@ -26,6 +26,8 @@ int main(int argc, char **argv)
 
   ros::NodeHandle node("~");
   ros::NodeHandle globalNode;
+  ros::Rate rate(DIGGING_CONTROL_RATE_HZ);  // should be 50 Hz
+
   bool simulating;
   if (node.hasParam("simulating_digging"))
   {
@@ -53,22 +55,23 @@ int main(int argc, char **argv)
   iVescAccess *bucketSifterVesc;
   iVescAccess *backhoeShoulderVesc;
   iVescAccess *backhoeWristVesc;
-
-
+  ros::Time lastTime=ros::Time::now();
+  ros::Rate vesc_init_rate (10);
   // these should not be initialized if we are not simulating
   SimBucket *bucketSimulation;
-
 
   SimBackhoe *backhoeSimulation;
   if (simulating)
   {
-   // SimBucket
+    // SimBucket
     bucketSimulation = new SimBucket();
     bucketBigConveyorVesc = bucketSimulation->getBigConveyorVesc();
     bucketLittleConveyorVesc = bucketSimulation->getLittleConveyorVesc();
     bucketSifterVesc = bucketSimulation->getSifterVesc();
     // SimBackhoe
-    backhoeSimulation = new SimBackhoe(0, 0);  // shoulder and wrist angle
+    backhoeSimulation = new SimBackhoe(2.2, .1, central_joint_params.minimum_pos, central_joint_params.maximum_pos,
+                                       linear_joint_params.minimum_pos,
+                                       linear_joint_params.maximum_pos);  // shoulder and wrist angle, limits
     backhoeShoulderVesc = backhoeSimulation->getShoulderVesc();
     backhoeWristVesc = backhoeSimulation->getWristVesc();
     // populate inital backhoe position
@@ -77,26 +80,60 @@ int main(int argc, char **argv)
   }
   else
   {
-    bucketSimulation = NULL;   // This is a physical run.
-    backhoeSimulation = NULL;  // You'll cause exceptions.
+    // Don't use these pointers
+    // This is a physical run.
+    // You'll cause exceptions.
+    bucketSimulation = NULL;
+    backhoeSimulation = NULL;
+    bool no_except = false;
+    while (!no_except  && ros::ok()) {
+      try {
+        backhoeShoulderVesc = new VescAccess(shoulder_param, true);
+        backhoeWristVesc = new VescAccess(linear_param, true);
+        bucketLittleConveyorVesc = new VescAccess(small_conveyor_param);
+        bucketBigConveyorVesc = new VescAccess(large_conveyor_param);
+        bucketSifterVesc = new VescAccess(sifter_param);
+        no_except = true;
+      } catch (VescException e) {
+        ROS_WARN("%s",e.what ());
+        no_except = false;
+      }
+      if (!no_except && (ros::Time::now() - lastTime).toSec() > 10){
+        ROS_ERROR ("Vesc exception thrown for more than 10 seconds");
+        ros::shutdown ();
+      }
+        vesc_init_rate.sleep();
+    }
 
-    backhoeShoulderVesc = new VescAccess (shoulder_param, true);
-    backhoeWristVesc = new VescAccess (linear_param, true);
-    bucketLittleConveyorVesc = new VescAccess (small_conveyor_param);
-    bucketBigConveyorVesc = new VescAccess (large_conveyor_param);
-    bucketSifterVesc = new VescAccess (sifter_param);
     // initialize real vescs here
- }
+  }
 
-  LinearSafetyController linearSafety (linear_joint_params, backhoeWristVesc, false);
-  BackhoeSafetyController backhoeSafety (central_joint_params, backhoeShoulderVesc, false);
+  BackhoeSafetyController backhoeSafety(central_joint_params, backhoeShoulderVesc);
+  backhoeSafety.init();
+
+  LinearSafetyController linearSafety(linear_joint_params, backhoeWristVesc);
+  bool isLinearInit = false;
+  while (ros::ok() && !isLinearInit)
+  {
+    if (simulating)
+    {
+      backhoeSimulation->update(1.0 / DIGGING_CONTROL_RATE_HZ);
+      ROS_INFO("Linear at %.4f", backhoeSimulation->getWrTheta());
+      ROS_INFO("Linear from vesc at %.4f", backhoeSimulation->getWristVesc()->getPotPosition());
+      ROS_INFO("Linear Limit state %d", backhoeSimulation->getWristVesc()->getLimitSwitchState());
+      ROS_INFO("Linear vel set to  %.4f", backhoeSimulation->getWristVesc()->getLinearVelocity());
+      if (((SimVesc *)backhoeSimulation->getWristVesc())->ableToHitGround())
+        ROS_INFO("Linear able to hit ground");
+    }
+    isLinearInit = linearSafety.init();
+    rate.sleep();
+  }
+
   // pass vescs (sim or physical) to controllers
 
-
+  ROS_INFO("Init'd");
   BucketController bucketC(bucketBigConveyorVesc, bucketLittleConveyorVesc, bucketSifterVesc);
   BackhoeController backhoeC(&backhoeSafety, &linearSafety);
-
-  ros::Rate rate(DIGGING_CONTROL_RATE_HZ); //should be 50 Hz
 
   DigDumpAction ddAct(&backhoeC, &bucketC);
 
@@ -117,24 +154,25 @@ int main(int argc, char **argv)
     sensor_msgs::JointState robotAngles;
     if (simulating)
     {
-       robotAngles.header.stamp = ros::Time::now();
+      robotAngles.header.stamp = ros::Time::now();
 
-       double URDFangle = 0;
-       robotAngles.name.push_back("central_drive_to_monoboom");
-       URDFangle = (1 -  backhoeSimulation->getShTheta()) * M_PI;
-       robotAngles.position.push_back(URDFangle);
+      robotAngles.name.push_back("central_drive_to_monoboom");
 
-       robotAngles.name.push_back("monoboom_to_backhoe_bucket");
-       URDFangle = (1 - backhoeSimulation->getWrTheta()) * M_PI;
-       robotAngles.position.push_back(URDFangle);
+      robotAngles.position.push_back(backhoeSimulation->getShTheta());
 
-       JsPub.publish(robotAngles);
-       ROS_INFO("joint state published with angle %f \n", backhoeSimulation->getShTheta());
+      robotAngles.name.push_back("monoboom_actuator");
+      robotAngles.position.push_back(backhoeSimulation->getWrTheta());
+
+      JsPub.publish(robotAngles);
+      ROS_INFO("shoulder joint state published with angle %f \n", backhoeSimulation->getShTheta());
+      ROS_INFO("wrist joint state published with angle %f \n", backhoeSimulation->getWrTheta());
     }
-    else // display output for physical
+    else  // display output for physical
     {
-      
     }
+    ROS_INFO("backhoe controller says CD at %.4f", backhoeSafety.getPositionEstimate());
+    ROS_INFO("backhoe controller says LA at %.4f", linearSafety.getPositionEstimate());
+    ROS_INFO("Digdump AS states: %d, %d", ddAct.digging_state, ddAct.dumping_state);
 
     ros::spinOnce();
     rate.sleep();

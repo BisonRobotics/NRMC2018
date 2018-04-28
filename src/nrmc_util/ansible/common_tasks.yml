@@ -1,12 +1,24 @@
 # Common tasks for NRMC2018
 ---
-- name: Add ZR300 key
+- name: add ZR300 key
   become: yes
   apt_key: keyserver=keys.gnupg.net id=0xD6FB2970
 
-- name: Add ZR300 repository
+- name: add ZR300 repository
   become: yes
   apt_repository: repo='deb http://realsense-alm-public.s3.amazonaws.com/apt-repo xenial main' state=present
+
+- name: add mraa key
+  become: yes
+  apt_key: keyserver=keyserver.ubuntu.com id=39B88DE4
+
+- name: add mraa repository
+  become: yes
+  apt_repository: repo='deb http://ppa.launchpad.net/mraa/mraa/ubuntu xenial main' state=present
+
+- name: add mraa src repository
+  become: yes
+  apt_repository: repo='deb-src http://ppa.launchpad.net/mraa/mraa/ubuntu xenial main' state=present
 
 - name: install other packages
   become: yes
@@ -23,9 +35,18 @@
     - libbluetooth-dev
     - python-numpy
     - python-pip
+    - libmraa1 
+    - libmraa-dev
+
+- name: add imutils
+  become: yes
+  pip: name=imutils
 
 - pip:
-    name: imutils
+    name: wheel
+
+- pip:
+    name: multiprocessing
 
 - name: get and unpack imu runtime
   become: no

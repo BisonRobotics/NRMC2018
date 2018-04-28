@@ -1,0 +1,8 @@
+<launch>
+  <rosparam file="$(find mapping)/yaml/competition.yaml" command="load" ns="/costmap_2d_node/costmap"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find mapping)/yaml/blank.yaml"/>
+  <node name="costmap_2d_node" pkg="costmap_2d" type="costmap_2d_node"/>
+  <param name="hole_cost" type="int" value="200"/>
+  <include file="$(find localization)/launch/localization_test.launch"/>
+  <include file="$(find realsense_ros_camera)/launch/demo_pointcloud_and_laser.launch"/>
+</launch>

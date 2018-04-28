@@ -52,6 +52,9 @@ bool newWaypointHere = false;
 pose newWaypoint;
 bool halt = false;
 
+double topicTheta = 0;
+bool thetaHere = false;
+
 void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 {
   pose potentialWaypoint;
@@ -107,13 +110,19 @@ void haltCallback(const std_msgs::Empty::ConstPtr &msg)
   halt = true;
 }
 
-
-bool areTheseEqual (imperio::DriveStatus status1, imperio::DriveStatus status2)
+void initialThetaCallback(const std_msgs::Float64::ConstPtr &msg)
 {
-  return (status1.is_stuck.data == status2.is_stuck.data && status1.cannot_plan_path.data == status2.cannot_plan_path.data &&
-          status1.in_motion.data == status2.in_motion.data && status1.has_reached_goal.data == status2.has_reached_goal.data);
+  topicTheta = msg->data;
+  thetaHere = true;
 }
 
+bool areTheseEqual(imperio::DriveStatus status1, imperio::DriveStatus status2)
+{
+  return (status1.is_stuck.data == status2.is_stuck.data &&
+          status1.cannot_plan_path.data == status2.cannot_plan_path.data &&
+          status1.in_motion.data == status2.in_motion.data &&
+          status1.has_reached_goal.data == status2.has_reached_goal.data);
+}
 
 int main(int argc, char **argv)
 {
@@ -122,7 +131,8 @@ int main(int argc, char **argv)
 
   ros::NodeHandle node("~");
   ros::NodeHandle globalNode;
-
+  ros::Rate rate(UPDATE_RATE_HZ);
+  ros::Rate vesc_init_rate (10);
   bool simulating;
   if (node.hasParam("simulating_driving"))
   {
@@ -141,7 +151,6 @@ int main(int argc, char **argv)
     ROS_ERROR("\n\nsimulating_driving param not defined! aborting.\n\n");
     return -1;
   }
-
 
   ros::Subscriber sub = node.subscribe("additional_waypoint", 100, newGoalCallback);
   ros::Publisher jspub = globalNode.advertise<sensor_msgs::JointState>("joint_states", 500);
@@ -169,6 +178,10 @@ int main(int argc, char **argv)
   ImuSensorInterface *imu;
   PosSensorInterface *pos;
 
+  // initialize the localizer here
+  ros::Time lastTime = ros::Time::now();
+  ros::Time currTime;
+
   if (simulating == true)
   {
     sim = new SimRobot(ROBOT_AXLE_LENGTH, .5, .5, 0);
@@ -183,17 +196,28 @@ int main(int argc, char **argv)
   else
   {
     sim = NULL;  // Make no reference to the sim if not simulating
-    fl = new VescAccess(front_left_param);
-    fr = new VescAccess(front_right_param);
-    br = new VescAccess(back_right_param);
-    bl = new VescAccess(back_left_param);
-    pos = new AprilTagTrackerInterface("/position_sensor/pose_estimate", .07);
+    bool no_except = false;
+    while (!no_except  && ros::ok()) {
+      try {
+        fl = new VescAccess(front_left_param);
+        fr = new VescAccess(front_right_param);
+        br = new VescAccess(back_right_param);
+        bl = new VescAccess(back_left_param);
+        no_except = true;
+      } catch (VescException e) {
+        ROS_WARN("%s",e.what ());
+        no_except = false;
+      }
+      if (!no_except && (ros::Time::now() - lastTime).toSec() > 10){
+        ROS_ERROR ("Vesc exception thrown for more than 10 seconds");
+        ros::shutdown ();
+      }
+        vesc_init_rate.sleep();
+    }
+    pos = new AprilTagTrackerInterface("/pose_estimate_filter/pose_estimate", .1);
     imu = new LpResearchImu("imu_base_link");
   }
 
-  // initialize the localizer here
-  ros::Time lastTime;
-  ros::Time currTime;
   ros::Duration loopTime;
   bool firstTime = true;
   tf2_ros::TransformBroadcaster tfBroad;
@@ -228,16 +252,18 @@ int main(int argc, char **argv)
   line_strip2.color.a = 1;
   line_strip2.header.frame_id = "/map";
 
-  double wheel_positions[4] = {0};
+  double wheel_positions[4] = { 0 };
 
   geometry_msgs::Point vis_point;
   // hang here until someone knows where we are
-  ROS_INFO("Going into wait loop for localizer");
+  ROS_INFO("Going into wait loop for localizer and initial theta...");
 
-  ros::Rate rate(UPDATE_RATE_HZ);
+
   ros::Duration idealLoopTime(1.0 / UPDATE_RATE_HZ);
 
-  while (!superLocalizer.getIsDataGood() && ros::ok())
+  ros::Subscriber initialThetaSub = node.subscribe("initialTheta", 100, initialThetaCallback);
+
+  while ((!superLocalizer.getIsDataGood() && ros::ok()) || (ros::ok() && !thetaHere))
   {
     // do initial localization
     if (firstTime)
@@ -256,6 +282,7 @@ int main(int argc, char **argv)
     if (simulating)
     {
       sim->update((loopTime).toSec());
+      tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
     }
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
@@ -264,6 +291,77 @@ int main(int argc, char **argv)
     rate.sleep();
   }
 
+  // zero point turn vescs here before waypoint controller is initialized
+  // get number from topic
+  double topicthetatol = .1;
+  if (node.hasParam("initial_theta_tolerance"))
+  {
+    node.getParam("initial_theta_tolerance", topicthetatol);
+  }
+  else
+  {
+    ROS_ERROR("\n\ninitial_theta_tolerance param not defined! aborting.\n\n");
+    return -1;
+  }
+
+  double zeroPointTurnGain;
+  if (node.hasParam("initial_theta_gain"))
+  {
+    node.getParam("initial_theta_gain", zeroPointTurnGain);
+  }
+  else
+  {
+    ROS_ERROR("\n\ninitial_theta_gain param not defined! aborting.\n\n");
+    return -1;
+  }
+  status_msg.is_stuck.data = 0;
+  status_msg.cannot_plan_path.data = 0;
+  status_msg.in_motion.data = 1;
+  status_msg.has_reached_goal.data = 0;
+  mode_pub.publish(status_msg);
+  ROS_INFO("Theta received, going into initial turn.");
+  firstTime = true;
+  while (ros::ok() && std::abs(WaypointControllerHelper::anglediff(stateVector.theta, topicTheta)) > topicthetatol)
+  {
+    double speed = zeroPointTurnGain * WaypointControllerHelper::anglediff(stateVector.theta, topicTheta);
+
+    fr->setLinearVelocity(-speed);
+    br->setLinearVelocity(-speed);
+    fl->setLinearVelocity(speed);
+    bl->setLinearVelocity(speed);
+
+    if (firstTime)
+    {
+      firstTime = false;
+      currTime = ros::Time::now();
+      lastTime = currTime - idealLoopTime;
+      loopTime = (currTime - lastTime);
+    }
+    else
+    {
+      lastTime = currTime;
+      currTime = ros::Time::now();
+      loopTime = (currTime - lastTime);
+    }
+    if (simulating)
+    {
+      sim->update((loopTime).toSec());
+      tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
+    }
+
+    superLocalizer.updateStateVector(loopTime.toSec());
+    stateVector = superLocalizer.getStateVector();
+    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+    ros::spinOnce();
+    rate.sleep();
+  }
+
+  status_msg.in_motion.data = 0;
+  status_msg.has_reached_goal.data = 1;
+  status_msg.cannot_plan_path.data = 0;
+  status_msg.is_stuck.data = 0;
+  mode_pub.publish(status_msg);
+  ros::spinOnce();
   // initialize waypoint controller
   WaypointController wc = WaypointController(ROBOT_AXLE_LENGTH, ROBOT_MAX_SPEED, currPose, fl, fr, br, bl,
                                              1.0 / UPDATE_RATE_HZ, waypoint_default_gains);
@@ -427,7 +525,9 @@ int main(int argc, char **argv)
       {
         mode_pub.publish(status_msg);
       }
-    } else {
+    }
+    else
+    {
       mode_pub.publish(status_msg);
     }
 
@@ -477,7 +577,6 @@ int main(int argc, char **argv)
 
     ROS_INFO("Dist2endOnPath : %.4f", wc.getDist2endOnPath());
     ROS_INFO("Dist2endAbs : %.4f", wc.getDist2endAbs());
-
 
     ROS_INFO("EtpEstimate : %.4f", wc.getETpEstimate());
     ROS_INFO("EppEstimate : %.4f", wc.getEPpEstimate());

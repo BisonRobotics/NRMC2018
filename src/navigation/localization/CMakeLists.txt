@@ -1,12 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(localization)
 
-## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
 
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   nav_msgs
   roscpp
@@ -15,17 +11,13 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_geometry_msgs
   geometry_msgs
   tf2_ros
-        tf
+  tf
 )
-
 
 find_package (Eigen3 REQUIRED)
 find_package (vesc_access REQUIRED)
 find_package (sensor_access REQUIRED)
 find_package (teleop_skid_steer REQUIRED)
-#find_package (tf2 REQUIRED)
-#find_package (tf2_geometry_msgs REQUIRED)
-#find_package (tf2_ros REQUIRED)
 
 link_directories(/usr/src/gmock/build)
 set(GTEST_LIBRARIES gmock_main)
@@ -50,101 +42,48 @@ catkin_package(
 ## Build ##
 ###########
 
-## Specify additional locations of header files
-## Your package locations should be listed before other locations
 include_directories(
   ${catkin_INCLUDE_DIRS}
   ${vesc_access_INCLUDE_DIRS}
   ${sensor_access_INCLUDE_DIRS}
   include/
   ${teleop_skid_steer_INCLUDE_DIRS}
+  ${GTEST_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIRS}
 )
 
-
-
-include_directories(${GTEST_INCLUDE_DIRS})
-include_directories (${EIGEN3_INCLUDE_DIRS}) #figure that one out
-
-add_library(localizer_lib
-	src/localizer/localizer.cpp
-)
-
-
-add_library(super_localizer_helper_lib
-    src/super_localizer/super_localizer_helper.cpp
-)
-
-add_library(super_localizer_lib
-  src/super_localizer/super_localizer.cpp
-)
+add_library(localizer_lib src/localizer/localizer.cpp)
 add_dependencies(localizer_lib vesc_access lpresearch_imu )
+target_link_libraries(localizer_lib vesc_access lpresearch_imu apriltag_tracker_interface)
 
-target_link_libraries(localizer_lib
-  vesc_access
-  lpresearch_imu
-  apriltag_tracker_interface
-)
-
-
-
-add_dependencies(super_localizer_lib localizer_lib apriltag_tracker_interface)
-
+add_library(super_localizer_helper_lib src/super_localizer/super_localizer_helper.cpp)
+target_link_libraries(super_localizer_helper_lib localizer_lib)
 add_dependencies(super_localizer_helper_lib localizer_lib apriltag_tracker_interface)
 
+add_library(super_localizer_lib src/super_localizer/super_localizer.cpp)
+add_dependencies(super_localizer_lib localizer_lib apriltag_tracker_interface)
+target_link_libraries(super_localizer_lib localizer_lib super_localizer_helper_lib)
 
-target_link_libraries(super_localizer_helper_lib 
-  localizer_lib
-)
+add_library(PoseEstimateFilter src/pose_estimate_filter/pose_estimate_filter.cpp)
+target_link_libraries(PoseEstimateFilter ${Eigen3_LIBS})
+target_link_libraries(PoseEstimateFilter ${catkin_LIBRARIES})
+target_link_libraries(PoseEstimateFilter ${OpenCV_LIBS})
 
-target_link_libraries(super_localizer_lib
-  localizer_lib
-  super_localizer_helper_lib
-)
-
-
+############
+# Programs #
+############
 add_executable(localizer_teleop_test tests/localization_test.cpp)
 add_dependencies(localizer_teleop_test apriltag_tracker_interface)
 #target_link_libraries (apriltag_tracker_interface ${catkin_LIBRARIES})
-target_link_libraries(localizer_teleop_test 
-      ${catkin_LIBRARIES} lpresearch_imu
-      apriltag_tracker_interface 
-      super_localizer_lib 
-      teleop_interface
-      )
-#############
-## Install ##
-#############
+target_link_libraries(localizer_teleop_test ${catkin_LIBRARIES})
+target_link_libraries(localizer_teleop_test lpresearch_imu)
+target_link_libraries(localizer_teleop_test apriltag_tracker_interface)
+target_link_libraries(localizer_teleop_test super_localizer_lib)
+target_link_libraries(localizer_teleop_test teleop_interface)
 
-# all install targets should use catkin DESTINATION variables
-# See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
-
-## Mark executable scripts (Python etc.) for installation
-## in contrast to setup.py, you can choose the destination
-# install(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
-
-## Mark executables and/or libraries for installation
- install(TARGETS localizer_lib
-   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
- )
-
-## Mark cpp header files for installation
- install(DIRECTORY include/
-   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-   FILES_MATCHING PATTERN "*.h"
-   PATTERN ".svn" EXCLUDE
- )
-
-## Mark other files for installation (e.g. launch and bag files, etc.)
-# install(FILES
-#   # myfile1
-#   # myfile2
-#   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-# )
+add_executable(pose_estimate_filter src/pose_estimate_filter/pose_estimate_filter_node.cpp)
+target_link_libraries(pose_estimate_filter ${catkin_LIBRARIES})
+target_link_libraries(pose_estimate_filter PoseEstimateFilter)
 
 #############
 ## Testing ##
@@ -190,5 +129,9 @@ if(TARGET test_super_localization_helper)
   add_dependencies(test_super_localization_helper localizer_lib)
 endif()
 
-## Add folders to be run by python nosetests
-# catkin_add_nosetests(test)
+catkin_add_gtest(pose_estimate_filter_tests ../localization/tests/pose_estimate_filter/pose_estimate_filter_tests.cpp)
+if(TARGET pose_estimate_filter_tests)
+  target_link_libraries(pose_estimate_filter_tests ${catkin_LIBRARIES})
+  target_link_libraries(pose_estimate_filter_tests PoseEstimateFilter)
+endif()
+

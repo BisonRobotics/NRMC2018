@@ -7,4 +7,6 @@
 [submodule "src/realsense_samples_ros"]
 	path = src/hardware_layer/realsense_samples_ros
 	url = git@github.com:BisonRobotics/realsense_samples_ros.git
-
+[submodule "src/hardware_layer/dynamixel"]
+	path = src/hardware_layer/dynamixel
+	url = git@github.com:BisonRobotics/dynamixel.git

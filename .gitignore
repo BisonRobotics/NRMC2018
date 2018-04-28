@@ -261,4 +261,4 @@ TSWLatexianTemp*
 *.l#?
 
 # auto generated bmp files
-*.bmp
+#*.bmp

@@ -1,10 +1,13 @@
 //
 // Created by marcintrosh on 2/24/18.
 //
+#include <wheel_params/wheel_params.h>
 #include "vesc_access/vesc_access.h"
+#include "ros/ros.h"
 
 int main(int argc, char **argv)
 {
+  ros::init(argc, argv, "pot_limit_test");
   float transmission_ratio = 1.0f;
   float output_ratio = 1.0f;
   float velocity_limit = 10000.0f;
@@ -12,12 +15,11 @@ int main(int argc, char **argv)
   unsigned int pole_pairs = 14;
   float torque_const = 1.0f;
 
-  VescAccess *vesc = new VescAccess(0, transmission_ratio, output_ratio, velocity_limit, torque_limit, torque_const,
-                                    (char *)"can0", pole_pairs, true);
+  VescAccess *vesc = new VescAccess(shoulder_param, true);
 
   std::cout << "starting" << std::endl;
-
-  while (1)
+  ros::Rate rate(10);
+  while (ros::ok())
   {
     try
     {
@@ -41,6 +43,6 @@ int main(int argc, char **argv)
     }
     std::cout << std::endl
               << "Pot position: " << vesc->getPotPosition() << std::endl;
-    sleep(1);
+    rate.sleep();
   }
 }

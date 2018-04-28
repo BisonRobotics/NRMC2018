@@ -12,29 +12,30 @@ using ::testing::Gt;
 using ::testing::NiceMock;
 using ::testing::FloatNear;
 
-TEST (safety_vesc_test, init_calls_potentiometer)
+TEST(safety_vesc_test, init_calls_potentiometer)
 {
-    NiceMock<MockVescAccess> vesc;
-    BackhoeSafetyController backhoeSafetyController(linear_joint_params, &vesc,false);
-    EXPECT_CALL (vesc, getPotPosition());
-    backhoeSafetyController.init();
-    EXPECT_TRUE (backhoeSafetyController.isInit());
+  NiceMock<MockVescAccess> vesc;
+  BackhoeSafetyController backhoeSafetyController(linear_joint_params, &vesc);
+  EXPECT_CALL(vesc, getPotPosition());
+  backhoeSafetyController.init();
+  EXPECT_TRUE(backhoeSafetyController.getInitStatus());
 }
 
-TEST (safety_vesc_test, update_position_calls_potentiometer)
+TEST(safety_vesc_test, update_position_calls_potentiometer)
 {
-    NiceMock<MockVescAccess> vesc;
-    BackhoeSafetyController backhoeSafetyController(linear_joint_params, &vesc,false);
-    EXPECT_CALL (vesc, getPotPosition ());
-    backhoeSafetyController.updatePosition(0);
+  NiceMock<MockVescAccess> vesc;
+  BackhoeSafetyController backhoeSafetyController(linear_joint_params, &vesc);
+  EXPECT_CALL(vesc, getPotPosition());
+  ON_CALL(vesc, getLimitSwitchState()).WillByDefault(Return(nsVescAccess::limitSwitchState::bottomOfMotion));
+  backhoeSafetyController.updatePositionEstimate(0.01);
 }
 
-TEST (safety_vesc_test, get_torque_consults_the_vesc)
+TEST(safety_vesc_test, get_torque_consults_the_vesc)
 {
-    NiceMock<MockVescAccess> vesc;
-    BackhoeSafetyController backhoeSafetyController(linear_joint_params, &vesc, false);
-    EXPECT_CALL (vesc, getTorque());
-    backhoeSafetyController.getTorque();
+  NiceMock<MockVescAccess> vesc;
+  BackhoeSafetyController backhoeSafetyController(linear_joint_params, &vesc);
+  EXPECT_CALL(vesc, getTorque());
+  backhoeSafetyController.getTorque();
 }
 
 // Run all the tests that were declared with TEST()

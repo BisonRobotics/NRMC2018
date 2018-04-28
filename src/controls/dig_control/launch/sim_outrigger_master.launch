@@ -1,0 +1,5 @@
+<launch>
+  <node name="outrigger_master" pkg="dig_control" type="outrigger_master" >
+      <param name="simulating_digging" type="bool" value="true"/>
+  </node>
+</launch>
