@@ -20,7 +20,7 @@ public:
   void updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, int min_j, int max_i, int max_j) override;
 
 private:
-  static constexpr unsigned int size_of_kern = 5;
+  static constexpr unsigned int size_of_kern = 15;
 };
 }
 
