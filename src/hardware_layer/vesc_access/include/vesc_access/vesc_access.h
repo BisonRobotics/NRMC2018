@@ -55,11 +55,8 @@ private:
   float velocity_limit;
   float torque_limit;
   unsigned int pole_pairs;
-  unsigned int minADC;
-  unsigned int maxADC;
   float rad_per_count;
   float rad_offset;
-  float radians_per_turn;
   float max_duty;
   iVesc *vesc;
   void setTransmissionRatio(float transmission_ratio);
@@ -71,6 +68,7 @@ private:
   float convertCurrentToTorque(float current);
   float convertErpmToRpm(float erpm);
   bool has_limits;
+  std::string name;
   float convertRpmToErpm(float rpm);
   void initializeMembers(float transmission_ratio, float output_ratio, float velocity_limit, float torque_limit,
                          float torque_constant, unsigned int pole_pairs, bool has_limits, float max_duty = 1.0f);

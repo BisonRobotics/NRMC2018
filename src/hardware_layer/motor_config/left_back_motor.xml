@@ -46,7 +46,7 @@
     <foc_f_sw>20000</foc_f_sw>
     <foc_dt_us>0.08</foc_dt_us>
     <foc_encoder_inverted>1</foc_encoder_inverted>
-    <foc_encoder_offset>66.8</foc_encoder_offset>
+    <foc_encoder_offset>201.04</foc_encoder_offset>
     <foc_encoder_ratio>7</foc_encoder_ratio>
     <foc_sensor_mode>1</foc_sensor_mode>
     <foc_pll_kp>2000</foc_pll_kp>
@@ -92,6 +92,6 @@
     <meta_description>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Configuration loaded from the motor controller.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</meta_description>
 </MCConfiguration>

@@ -55,7 +55,8 @@ int main(int argc, char **argv)
   iVescAccess *bucketSifterVesc;
   iVescAccess *backhoeShoulderVesc;
   iVescAccess *backhoeWristVesc;
-
+  ros::Time lastTime=ros::Time::now();
+  ros::Rate vesc_init_rate (10);
   // these should not be initialized if we are not simulating
   SimBucket *bucketSimulation;
 
@@ -84,12 +85,26 @@ int main(int argc, char **argv)
     // You'll cause exceptions.
     bucketSimulation = NULL;
     backhoeSimulation = NULL;
+    bool no_except = false;
+    while (!no_except  && ros::ok()) {
+      try {
+        backhoeShoulderVesc = new VescAccess(shoulder_param, true);
+        backhoeWristVesc = new VescAccess(linear_param, true);
+        bucketLittleConveyorVesc = new VescAccess(small_conveyor_param);
+        bucketBigConveyorVesc = new VescAccess(large_conveyor_param);
+        bucketSifterVesc = new VescAccess(sifter_param);
+        no_except = true;
+      } catch (VescException e) {
+        ROS_WARN("%s",e.what ());
+        no_except = false;
+      }
+      if (!no_except && (ros::Time::now() - lastTime).toSec() > 10){
+        ROS_ERROR ("Vesc exception thrown for more than 10 seconds");
+        ros::shutdown ();
+      }
+        vesc_init_rate.sleep();
+    }
 
-    backhoeShoulderVesc = new VescAccess(shoulder_param, true);
-    backhoeWristVesc = new VescAccess(linear_param, true);
-    bucketLittleConveyorVesc = new VescAccess(small_conveyor_param);
-    bucketBigConveyorVesc = new VescAccess(large_conveyor_param);
-    bucketSifterVesc = new VescAccess(sifter_param);
     // initialize real vescs here
   }
 

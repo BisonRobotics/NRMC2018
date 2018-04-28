@@ -41,14 +41,12 @@ protected:
   bool is_init;
   bool stopped;
   double position_estimate;
-
 private:
   safetycontroller::controlModeState control_mode;
   double set_position;
   double set_torque;
   double set_velocity;
   double symmetricClamp(double number, double bound);
-  void checkPositionEstimateAgainstLimitSwitchesAndResetItIfNeeded();
 };
 
 #endif  // PROJECT_SAFETY_VESC_H

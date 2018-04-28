@@ -14,11 +14,8 @@ void VescAccess::initializeMembers(float transmission_ratio, float output_ratio,
   setTorqueConstant(torque_constant);
   setPolePairs(pole_pairs);
   setMaxDuty(max_duty);
-  this->minADC = 0;
-  this->maxADC = 0x0FFF;  // 12 bit ADC
-  this->radians_per_turn = 1.0 * M_PI_2;
-  this->rad_per_count = radians_per_turn / (1.0f * (maxADC - minADC));
-  this->rad_offset = 0.0;
+  this->rad_per_count = -9.1473E-4f;
+  this->rad_offset = 3.161;
   this->has_limits = has_limits;
 }
 
@@ -87,6 +84,7 @@ VescAccess::VescAccess(nsVescAccess::vesc_param_struct_t param, bool has_limits)
   : VescAccess(param.can_id, param.gear_ratio, param.output_ratio, param.max_velocity, param.max_torque,
                param.torque_constant, param.can_network, param.pole_pairs, has_limits, param.name, param.max_duty)
 {
+  this->name = param.name;
 }
 
 VescAccess::VescAccess(nsVescAccess::vesc_param_struct_t param) : VescAccess(param, false)
@@ -278,7 +276,7 @@ nsVescAccess::limitSwitchState VescAccess::getLimitSwitchState(void)
   {
     if (has_limits)
     {
-      throw VescException("Both limit switches are active");
+      throw VescException(this->name + " Both limit switches are active");
     }
   }
   return state;
@@ -286,7 +284,7 @@ nsVescAccess::limitSwitchState VescAccess::getLimitSwitchState(void)
 
 float VescAccess::getPotPosition(void)
 {
-  return vesc->getADC() * rad_per_count - rad_offset;
+  return vesc->getADC() * rad_per_count + rad_offset;
 }
 
 VescAccess::VescAccess(uint8_t VESC_ID, float transmission_ratio, float output_ratio, float velocity_limit,

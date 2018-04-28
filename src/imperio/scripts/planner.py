@@ -50,6 +50,7 @@ class Planner(object):
         self.robot = robot
         self.occupancy_grid = None
         self.movement_status = MovementStatus.HAS_REACHED_GOAL
+        self.goal_given = False
 
     def map_callback(self, map_message):
         self.occupancy_grid = map_utils.Map(map_message)
@@ -82,7 +83,8 @@ class Planner(object):
             return None
         if self.movement_status == MovementStatus.MOVING:
             return False
-        if self.movement_status == MovementStatus.HAS_REACHED_GOAL and self.robot_within_threshold(goal):
+        if self.movement_status == MovementStatus.HAS_REACHED_GOAL and self.goal_given:
+            self.goal_given = False
             return True
 
         rospy.loginfo("[IMPERIO] : PLANNING A PATH TO GOAL {}".format(goal))
@@ -98,11 +100,13 @@ class Planner(object):
         oriented_waypoints = self.calculate_orientation(waypoints)
         rospy.loginfo("[IMPERIO] : Path found : {}".format(oriented_waypoints))
         if oriented_waypoints == []:
-            return None
+            rospy.logwarn("[IMPERIO] : No possible path found")
+            return False
 
         #TODO : Add recovery behavior for if this is null [Jira NRMC2018-330]
 
         self.publish_waypoints(oriented_waypoints)
+        self.goal_given = True
         rospy.loginfo("[IMPERIO] : For Goal {}".format(goal))
         return False
 
@@ -138,36 +142,6 @@ class Planner(object):
         self.movement_status = MovementStatus.MOVING
         rospy.loginfo("[IMPERIO] : Waypoints published to local planner")
 
-
-    def robot_within_threshold(self, goal):
-        """
-        Determines if the robot is within a threshold specified in the imperio launch file
-        :param goal: the final goal as (x,y)
-        :return: a boolean of if the robot is within the threshold
-        """
-        errorThreshold = rospy.get_param('/location_accuracy')
-        if errorThreshold == None:
-            #TODO : Check with the team for best threshold here [Jira NRMC2018-331]
-            errorThreshold = .1
-
-
-        goal_x, goal_y = goal
-        (location, pose) = self.robot.localize()
-
-        if location == None:
-            rospy.logerr("[IMPERIO] : Unable to localize the robot")
-            #TODO recovery behavior for localization fail [Jira NRMC2018-329]
-            return False
-
-        loc_x = location[0]
-        loc_y = location[1]
-
-        # TODO : Check the orientation of the robot [NRMC2018-332]
-        abs_distance = math.sqrt((loc_x - goal_x) ** 2 + (loc_y - goal_y) ** 2)
-        rospy.loginfo("[IMPERIO] : abs_distance from goal {}".format(abs_distance))
-        rospy.loginfo("[IMPERIO] : Robot is located at {} but the goal is {}".format(location, goal))
-        return abs_distance < errorThreshold
-
     def halt_movement(self):
         """
         Halts the command of the robot
@@ -182,13 +156,14 @@ class Planner(object):
         :param waypoints: array of waypoints
         :return: array of waypoints with orientation
         """
+
+        final_orientation = 0
+
         # Check if none or one waypoint
         if (waypoints == None or len(waypoints) == 0):
             return []
 
         if (len(waypoints) == 1):
-            #TODO : final orientation will be passed as param from control (more logistics/strategy/testing needed) [Jira NRMC2018-333]
-            final_orientation = math.degrees(math.atan2(waypoints[0][1], waypoints[0][0]))
             return [[waypoints[0][0], waypoints[0][1], final_orientation]]
 
         # Use atan2 from math to calculate the orientation
@@ -200,14 +175,13 @@ class Planner(object):
             x1, y1 = point1[0], point1[1]
             x2, y2 = point2[0], point2[1]
 
-            orientation = math.atan2((y2 - y1), (x2 - x1))
+            orientation = self.orient_forwards(math.atan2((y2 - y1), (x2 - x1)))
 
             single = [x1, y1, orientation]
             oriented_waypoints.append(single)
 
         # still need to add the last waypoint
         final_waypoint = waypoints[len(waypoints) - 1]
-        final_orientation = oriented_waypoints[len(oriented_waypoints) - 1][2]
         single = [final_waypoint[0], final_waypoint[1], final_orientation]
         oriented_waypoints.append(single)
 
@@ -217,6 +191,12 @@ class Planner(object):
         (location, pose) = self.robot.localize()
         return location
 
+    def orient_forwards(self, orientation):
+        if orientation > math.pi/2:
+            return orientation - math.pi
+        if orientation < -math.pi/2:
+            return orientation + math.pi
+        return orientation
 
 
 

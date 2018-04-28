@@ -9,14 +9,12 @@ add_compile_options(-std=c++11)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   depth_image_proc
-  hector_mapping
   nav_msgs
   pointcloud_to_laserscan
   roscpp
   realsense_ros_camera
   tf2
   geometry_msgs
-  gmapping
   costmap_2d
 )
 
@@ -51,11 +49,12 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable (costmap_2d_node src/costmap_2d_node.cpp)
-target_link_libraries(costmap_2d_node ${catkin_LIBRARIES})
 
 add_library (lowpass_filter src/mapping_filter/low_pass.cpp)
 target_link_libraries(lowpass_filter ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
+add_library (hole_layer src/mapping_filter/hole_layer.cpp)
+target_link_libraries(hole_layer ${catkin_LIBRARIES})
 
 #############
 ## Install ##

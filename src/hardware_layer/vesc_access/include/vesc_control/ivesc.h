@@ -18,8 +18,11 @@ public:
 class VescException : public std::runtime_error
 {
 public:
-  VescException(const char* msg) : std::runtime_error(msg)
+  explicit VescException(const char* msg) : std::runtime_error(msg)
   {
+  }
+  explicit VescException(std::string msg) : std::runtime_error(msg){
+
   }
 };
 #endif

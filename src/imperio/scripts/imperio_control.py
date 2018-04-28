@@ -101,7 +101,7 @@ class ImperioControl(object):
         """
         Navigates the robot back to the collection big
         """
-        goal = (.5, .5)
+        goal = (.6, 0)
         result =  self.planner.navigate_to_goal(goal)
         if result == None:
             self.robot.change_state(RobotState.HALT)
