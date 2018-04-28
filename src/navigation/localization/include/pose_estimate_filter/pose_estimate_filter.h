@@ -41,6 +41,8 @@ public:
   geometry_msgs::PoseStamped getMovingAverageTransform();
   geometry_msgs::PoseStamped getMovingAverageTransform(ros::Time current_time);
   void flushOldPoses(std::list<geometry_msgs::PoseStamped> *poses, ros::Time current_time);
+  XYZ calculateMean();
+  XYZ calculateVariance();
 
   static void flushOldPoses(std::list<geometry_msgs::PoseStamped> *poses, ros::Time current_time,
                             ros::Duration max_dt);

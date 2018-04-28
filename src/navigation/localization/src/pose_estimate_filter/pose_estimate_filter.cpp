@@ -172,4 +172,14 @@ XYZ PoseEstimateFilter::calculateVariance(std::list<geometry_msgs::PoseStamped> 
   return variance;
 }
 
+XYZ PoseEstimateFilter::calculateMean()
+{
+  return calculateMean(poses);
+}
+
+XYZ PoseEstimateFilter::calculateVariance()
+{
+  return calculateVariance(poses);
+}
+
 
