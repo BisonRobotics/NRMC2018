@@ -158,10 +158,21 @@ int main(int argc, char **argv)
   ros::Publisher angleErrorPub = node.advertise<std_msgs::Float64>("angle_error", 30);
   ros::Publisher simAnglePub = node.advertise<std_msgs::Float64>("sim_angle", 30);
   ros::Publisher baseAnglePub = node.advertise<std_msgs::Float64>("base_angle", 30);
+  ros::Publisher lWheelVelPub = node.advertise<std_msgs::Float64>("lWheelVelCmd", 30);
+  ros::Publisher rWheelVelPub = node.advertise<std_msgs::Float64>("rWheelVelCmd", 30);
 
+  double settle_time;
+  if(!node.getParam("localization_settling_time", settle_time))
+  {
+    settle_time = 5;
+    ROS_INFO_STREAM ("localization settling time " << settle_time);
+  }
+  
   std_msgs::Float64 angleErrorMsg;
   std_msgs::Float64 simAngleMsg;
   std_msgs::Float64 baseAngleMsg;
+  std_msgs::Float64 lWheelVel;
+  std_msgs::Float64 rWheelVel;
 
   tf2_ros::Buffer tfBuffer;
   // tf2_ros::TransformListener tfListener(tfBuffer);
@@ -182,7 +193,7 @@ int main(int argc, char **argv)
   ros::Time lastTime = ros::Time::now();
   ros::Time currTime;
 
-  if (simulating == true)
+  if (simulating)
   {
     sim = new SimRobot(ROBOT_AXLE_LENGTH, .5, .5, 0);
     fl = (sim->getFLVesc());
@@ -212,7 +223,7 @@ int main(int argc, char **argv)
         ROS_ERROR ("Vesc exception thrown for more than 10 seconds");
         ros::shutdown ();
       }
-        vesc_init_rate.sleep();
+      vesc_init_rate.sleep();
     }
     pos = new AprilTagTrackerInterface("/pose_estimate_filter/pose_estimate", .1);
     imu = new LpResearchImu("imu_base_link");
@@ -285,11 +296,21 @@ int main(int argc, char **argv)
       tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
     }
     superLocalizer.updateStateVector(loopTime.toSec());
-    stateVector = superLocalizer.getStateVector();
-    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+
+
     ros::spinOnce();
     rate.sleep();
   }
+
+  lastTime = ros::Time::now ();
+  while ((ros::Time::now()-lastTime).toSec()<settle_time && ros::ok()){
+    rate.sleep();
+  }
+  ROS_INFO ("Localization Settled!");
+  stateVector = superLocalizer.getStateVector();
+  tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+  ros::spinOnce ();
+
 
   // zero point turn vescs here before waypoint controller is initialized
   // get number from topic
@@ -323,7 +344,7 @@ int main(int argc, char **argv)
   firstTime = true;
   while (ros::ok() && std::abs(WaypointControllerHelper::anglediff(stateVector.theta, topicTheta)) > topicthetatol)
   {
-    double speed = zeroPointTurnGain * WaypointControllerHelper::anglediff(stateVector.theta, topicTheta);
+    double speed = .1;//zeroPointTurnGain * WaypointControllerHelper::anglediff(stateVector.theta, topicTheta);
 
     fr->setLinearVelocity(-speed);
     br->setLinearVelocity(-speed);
@@ -390,8 +411,8 @@ int main(int argc, char **argv)
   firstTime = true;
   while (ros::ok())
   {
-    ROS_INFO("\n");
-    ROS_INFO("Top");
+    ROS_DEBUG("\n");
+    ROS_DEBUG("Top");
     // update localizer here
     if (firstTime)
     {
@@ -406,7 +427,7 @@ int main(int argc, char **argv)
       currTime = ros::Time::now();
       loopTime = currTime - lastTime;
     }
-    ROS_INFO("Looptime : %.5f", loopTime.toSec());
+    ROS_DEBUG("Looptime : %.5f", loopTime.toSec());
     if (simulating)
     {
       sim->update(loopTime.toSec());
@@ -454,11 +475,16 @@ int main(int argc, char **argv)
     jsMessage.velocity.push_back(bl->getLinearVelocity());
 
     jspub.publish(jsMessage);
+    
+    lWheelVel.data = fl->getLinearVelocity();
+    rWheelVel.data = fr->getLinearVelocity();
+    lWheelVelPub.publish(lWheelVel);
+    rWheelVelPub.publish(rWheelVel);
 
-    ROS_INFO("FrontLeftVel : %.4f", jsMessage.velocity[0]);
-    ROS_INFO("FrontRightVel : %.4f", jsMessage.velocity[1]);
-    ROS_INFO("BackRightVel : %.4f", jsMessage.velocity[2]);
-    ROS_INFO("BackLeftVel : %.4f", jsMessage.velocity[3]);
+    ROS_DEBUG("FrontLeftVel : %.4f", jsMessage.velocity[0]);
+    ROS_DEBUG("FrontRightVel : %.4f", jsMessage.velocity[1]);
+    ROS_DEBUG("BackRightVel : %.4f", jsMessage.velocity[2]);
+    ROS_DEBUG("BackLeftVel : %.4f", jsMessage.velocity[3]);
 
     if (newWaypointHere)
     {
@@ -473,11 +499,11 @@ int main(int argc, char **argv)
       }
       path_marker_pub.publish(line_strip);
       newWaypointHere = false;
-      ROS_INFO("NewWaypoint : 1");
+      ROS_DEBUG("NewWaypoint : 1");
     }
     else
     {
-      ROS_INFO("NewWaypoint : 0");
+      ROS_DEBUG("NewWaypoint : 0");
     }
 
     // update controller
@@ -508,13 +534,13 @@ int main(int argc, char **argv)
     }
     else if (wcStat == WaypointController::Status::ALLGOOD)
     {
-      ROS_INFO("Mode : 1");
+      ROS_DEBUG("Mode : 1");
       ss << "Mode: ALLGOOD";
       status_msg.in_motion.data = 1;
     }
     else if (wcStat == WaypointController::Status::GOALREACHED)
     {
-      ROS_INFO("Mode : 2");
+      ROS_DEBUG("Mode : 2");
       wc.haltAndAbort();
       ss << "Mode: GOALRECHED";
       status_msg.has_reached_goal.data = 1;
@@ -567,86 +593,86 @@ int main(int argc, char **argv)
       simAnglePub.publish(simAngleMsg);
     }
 
-    ROS_INFO("CPPx : %.4f", theCPP.x);
-    ROS_INFO("CPPy : %.4f", theCPP.y);
-    ROS_INFO("CPPth : %.4f", theCPP.theta);
+    ROS_DEBUG("CPPx : %.4f", theCPP.x);
+    ROS_DEBUG("CPPy : %.4f", theCPP.y);
+    ROS_DEBUG("CPPth : %.4f", theCPP.theta);
 
-    ROS_INFO("CurPx : %.4f", currPose.x);
-    ROS_INFO("CurPy : %.4f", currPose.y);
-    ROS_INFO("CurPth : %.4f", currPose.theta);
+    ROS_DEBUG("CurPx : %.4f", currPose.x);
+    ROS_DEBUG("CurPy : %.4f", currPose.y);
+    ROS_DEBUG("CurPth : %.4f", currPose.theta);
 
-    ROS_INFO("Dist2endOnPath : %.4f", wc.getDist2endOnPath());
-    ROS_INFO("Dist2endAbs : %.4f", wc.getDist2endAbs());
+    ROS_DEBUG("Dist2endOnPath : %.4f", wc.getDist2endOnPath());
+    ROS_DEBUG("Dist2endAbs : %.4f", wc.getDist2endAbs());
 
-    ROS_INFO("EtpEstimate : %.4f", wc.getETpEstimate());
-    ROS_INFO("EppEstimate : %.4f", wc.getEPpEstimate());
+    ROS_DEBUG("EtpEstimate : %.4f", wc.getETpEstimate());
+    ROS_DEBUG("EppEstimate : %.4f", wc.getEPpEstimate());
 
-    ROS_INFO("SetSpeed1 : %.4f", wc.getSetSpeeds().first);
-    ROS_INFO("SetSpeed2 : %.4f", wc.getSetSpeeds().second);
-    ROS_INFO("CmdSpeed1 : %.4f", wc.getCmdSpeeds().first);
-    ROS_INFO("CmdSpeed2 : %.4f", wc.getCmdSpeeds().second);
+    ROS_DEBUG("SetSpeed1 : %.4f", wc.getSetSpeeds().first);
+    ROS_DEBUG("SetSpeed2 : %.4f", wc.getSetSpeeds().second);
+    ROS_DEBUG("CmdSpeed1 : %.4f", wc.getCmdSpeeds().first);
+    ROS_DEBUG("CmdSpeed2 : %.4f", wc.getCmdSpeeds().second);
 
-    ROS_INFO("currMan Index : %d", wc.getCurrManeuverIndex());
+    ROS_DEBUG("currMan Index : %d", wc.getCurrManeuverIndex());
 
     if (navigationQueue.size() > 0)
     {
-      ROS_INFO("NavManSize : %d", (int)navigationQueue.at(0).mans.size());
+      ROS_DEBUG("NavManSize : %d", (int)navigationQueue.at(0).mans.size());
 
-      ROS_INFO("NavMan0rad : %.4f", navigationQueue.at(0).mans.at(0).radius);
-      ROS_INFO("NavMan0nxc : %.4f", navigationQueue.at(0).mans.at(0).xc);
-      ROS_INFO("NavMan0yc : %.4f", navigationQueue.at(0).mans.at(0).yc);
-      ROS_INFO("NavMan0dist : %.4f", navigationQueue.at(0).mans.at(0).distance);
+      ROS_DEBUG("NavMan0rad : %.4f", navigationQueue.at(0).mans.at(0).radius);
+      ROS_DEBUG("NavMan0nxc : %.4f", navigationQueue.at(0).mans.at(0).xc);
+      ROS_DEBUG("NavMan0yc : %.4f", navigationQueue.at(0).mans.at(0).yc);
+      ROS_DEBUG("NavMan0dist : %.4f", navigationQueue.at(0).mans.at(0).distance);
       if (navigationQueue.at(0).mans.size() >= 2)
       {
-        ROS_INFO("NavMan1rad : %.4f", navigationQueue.at(0).mans.at(1).radius);
-        ROS_INFO("NavMan1nxc : %.4f", navigationQueue.at(0).mans.at(1).xc);
-        ROS_INFO("NavMan1yc : %.4f", navigationQueue.at(0).mans.at(1).yc);
-        ROS_INFO("NavMan1dist : %.4f", navigationQueue.at(0).mans.at(1).distance);
+        ROS_DEBUG("NavMan1rad : %.4f", navigationQueue.at(0).mans.at(1).radius);
+        ROS_DEBUG("NavMan1nxc : %.4f", navigationQueue.at(0).mans.at(1).xc);
+        ROS_DEBUG("NavMan1yc : %.4f", navigationQueue.at(0).mans.at(1).yc);
+        ROS_DEBUG("NavMan1dist : %.4f", navigationQueue.at(0).mans.at(1).distance);
       }
       else
       {
-        ROS_INFO("NavMan1rad : %.4f", 0.0);
-        ROS_INFO("NavMan1nxc : %.4f", 0.0);
-        ROS_INFO("NavMan1yc : %.4f", 0.0);
-        ROS_INFO("NavMan1dist : %.4f", 0.0);
+        ROS_DEBUG("NavMan1rad : %.4f", 0.0);
+        ROS_DEBUG("NavMan1nxc : %.4f", 0.0);
+        ROS_DEBUG("NavMan1yc : %.4f", 0.0);
+        ROS_DEBUG("NavMan1dist : %.4f", 0.0);
       }
       pose manEnd = wc.getManeuverEnd();
-      ROS_INFO("CurrManEndx : %.4f", manEnd.x);
-      ROS_INFO("CurrManEndy : %.4f", manEnd.y);
-      ROS_INFO("CurrManEndTh : %.4f", manEnd.theta);
+      ROS_DEBUG("CurrManEndx : %.4f", manEnd.x);
+      ROS_DEBUG("CurrManEndy : %.4f", manEnd.y);
+      ROS_DEBUG("CurrManEndTh : %.4f", manEnd.theta);
 
-      ROS_INFO("NavInitPosex : %.4f", navigationQueue.at(0).initialPose.x);
-      ROS_INFO("NavInitPosey : %.4f", navigationQueue.at(0).initialPose.y);
-      ROS_INFO("NavInitPoseth : %.4f", navigationQueue.at(0).initialPose.theta);
+      ROS_DEBUG("NavInitPosex : %.4f", navigationQueue.at(0).initialPose.x);
+      ROS_DEBUG("NavInitPosey : %.4f", navigationQueue.at(0).initialPose.y);
+      ROS_DEBUG("NavInitPoseth : %.4f", navigationQueue.at(0).initialPose.theta);
 
-      ROS_INFO("NavTermPosex : %.4f", navigationQueue.at(0).terminalPose.x);
-      ROS_INFO("NavTermPosey : %.4f", navigationQueue.at(0).terminalPose.y);
-      ROS_INFO("NavTermPoseth : %.4f", navigationQueue.at(0).terminalPose.theta);
+      ROS_DEBUG("NavTermPosex : %.4f", navigationQueue.at(0).terminalPose.x);
+      ROS_DEBUG("NavTermPosey : %.4f", navigationQueue.at(0).terminalPose.y);
+      ROS_DEBUG("NavTermPoseth : %.4f", navigationQueue.at(0).terminalPose.theta);
     }
     else
     {
-      ROS_INFO("NavManSize : %d", 0);
+      ROS_DEBUG("NavManSize : %d", 0);
 
-      ROS_INFO("NavMan0rad : %.4f", 0.0);
-      ROS_INFO("NavMan0nxc : %.4f", 0.0);
-      ROS_INFO("NavMan0yc : %.4f", 0.0);
-      ROS_INFO("NavMan0dist : %.4f", 0.0);
-      ROS_INFO("NavMan1rad : %.4f", 0.0);
-      ROS_INFO("NavMan1nxc : %.4f", 0.0);
-      ROS_INFO("NavMan1yc : %.4f", 0.0);
-      ROS_INFO("NavMan1dist : %.4f", 0.0);
+      ROS_DEBUG("NavMan0rad : %.4f", 0.0);
+      ROS_DEBUG("NavMan0nxc : %.4f", 0.0);
+      ROS_DEBUG("NavMan0yc : %.4f", 0.0);
+      ROS_DEBUG("NavMan0dist : %.4f", 0.0);
+      ROS_DEBUG("NavMan1rad : %.4f", 0.0);
+      ROS_DEBUG("NavMan1nxc : %.4f", 0.0);
+      ROS_DEBUG("NavMan1yc : %.4f", 0.0);
+      ROS_DEBUG("NavMan1dist : %.4f", 0.0);
 
-      ROS_INFO("CurrManEndx : %.4f", 0.0);
-      ROS_INFO("CurrManEndy : %.4f", 0.0);
-      ROS_INFO("CurrManEndTh : %.4f", 0.0);
+      ROS_DEBUG("CurrManEndx : %.4f", 0.0);
+      ROS_DEBUG("CurrManEndy : %.4f", 0.0);
+      ROS_DEBUG("CurrManEndTh : %.4f", 0.0);
 
-      ROS_INFO("NavInitPosex : %.4f", 0.0);
-      ROS_INFO("NavInitPosey : %.4f", 0.0);
-      ROS_INFO("NavInitPoseth : %.4f", 0.0);
+      ROS_DEBUG("NavInitPosex : %.4f", 0.0);
+      ROS_DEBUG("NavInitPosey : %.4f", 0.0);
+      ROS_DEBUG("NavInitPoseth : %.4f", 0.0);
 
-      ROS_INFO("NavTermPosex : %.4f", 0.0);
-      ROS_INFO("NavTermPosey : %.4f", 0.0);
-      ROS_INFO("NavTermPoseth : %.4f", 0.0);
+      ROS_DEBUG("NavTermPosex : %.4f", 0.0);
+      ROS_DEBUG("NavTermPosey : %.4f", 0.0);
+      ROS_DEBUG("NavTermPoseth : %.4f", 0.0);
     }
     if (halt)
     {

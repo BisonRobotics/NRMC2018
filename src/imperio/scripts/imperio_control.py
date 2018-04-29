@@ -49,7 +49,7 @@ class ImperioControl(object):
         :param bool_msg: Published message
         """
         if bool_msg.data == True:
-            print("Imperio : Out Of Time")
+            rospy.loginfo("[IMPERIO] : Out Of Time")
             self.robot.change_state(RobotState.HALT)
 
         if bool_msg.data == False:
@@ -114,7 +114,7 @@ class ImperioControl(object):
         """
         result = self.rm.dig_regolith()
         if result == None:
-            print("Imperio : Error with Dig")
+            rospy.logwarn("[IMPERIO] : Error with Dig")
             self.recover()
         if result:
             self.robot.next_state()
@@ -139,14 +139,14 @@ class ImperioControl(object):
         Recovery behavior for the robot
         """
         # Currently just halts the Robot
-        print("Robot could not be recovered, please regain control.")
+        rospy.loginfo("[IMPERIO] : Robot could not be recovered, please regain control.")
         self.robot.change_state(RobotState.HALT)
 
     def runningOutOfTime(self):
         """
         What the robot should do when it's running out of time
         """
-        print("Imperio : Almost out of time, changing to inbound mode")
+        rospy.loginfo("[IMPERIO] : Almost out of time, changing to inbound mode")
         if self.robot.state == RobotState.DIG:
             self.robot.change_state(RobotState.INBOUND)
 

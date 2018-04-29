@@ -39,7 +39,7 @@ class RegolithManipulation(object):
                     return None
                 self.waiting_on_action = False
                 self.regolith_in_bucket = result.weight_harvested
-                print("Imperio : Harvested {} of regolith".format(self.regolith_in_bucket))
+                rospy.loginfo("[IMPERIO] : Harvested {} of regolith".format(self.regolith_in_bucket))
 
         #TODO : Define the needed threshold with the NDSU team [JIRA NRMC2018-358]
         threshold = 10
@@ -51,7 +51,7 @@ class RegolithManipulation(object):
         return True
 
     def single_dig(self):
-        print("Imperio : Performing a dig")
+        rospy.loginfo("[IMPERIO] : Performing a dig")
         goal = self.dig_goal_message()
         self.dig_client.wait_for_server()
         self.dig_client.send_goal(goal)

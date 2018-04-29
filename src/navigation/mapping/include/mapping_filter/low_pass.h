@@ -9,6 +9,7 @@
 #include <dynamic_reconfigure/server.h>
 #include <boost/circular_buffer.hpp>
 #include "opencv2/opencv.hpp"
+#include <std_srvs/SetBool.h>
 
 namespace low_pass_namespace
 {
@@ -18,9 +19,10 @@ public:
   explicit LowPassLayer();
   void onInitialize() override;
   void updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, int min_j, int max_i, int max_j) override;
-
+  bool updateEnable (std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res);
 private:
-  static constexpr unsigned int size_of_kern = 5;
+  static constexpr unsigned int size_of_kern = 35;
+  ros::ServiceServer enable_service;
 };
 }
 
