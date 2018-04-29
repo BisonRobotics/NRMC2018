@@ -5,6 +5,8 @@
 
 
 #define MIN_DISTANCE_FOR_RUN 2.5
+#define OBSTACLE_ZONE_START_X 1.5
+#define OBSTACLE_ZONE_END_X 4.44
 
 #include <waypoint_controller/waypoint_controller_helper.h>
 
@@ -79,11 +81,11 @@ int main(int argc, char** argv)
       //compute direction metric
       for (int index =0; index < waypoints.size(); index++)
       {
-          if (waypoints.at(index).x <1.5)
+          if (waypoints.at(index).x < OBSTACLE_ZONE_START_X)
           {
               waypoint_in_start_zone = true;
           }
-          if (waypoints.at(index).x > 4.44)
+          if (waypoints.at(index).x > OBSTACLE_ZONE_END_X)
           {
               waypoint_in_dig_zone = true;
           }
@@ -95,10 +97,10 @@ int main(int argc, char** argv)
         {
             if (!waypoint_in_start_zone)
             {
-                point_to_insert.x = 1.4;
+                point_to_insert.x = OBSTACLE_ZONE_START_X - .1;
                 point_to_insert.y = interpolateYFromXAndTwoPoints(waypoints.at(0).x, waypoints.at(0).y,
                                                                   waypoints.at(0).x + .5 * cos(waypoints.at(0).theta),
-                                                                  waypoints.at(0).y + .5 * sin(waypoints.at(0).theta), 1.4);
+                                                                  waypoints.at(0).y + .5 * sin(waypoints.at(0).theta), OBSTACLE_ZONE_START_X - .1);
                 point_to_insert.theta = waypoints.at(0).theta;
                 waypoints.insert(waypoints.begin(), point_to_insert);
                 point_inserted = true;
@@ -110,10 +112,10 @@ int main(int argc, char** argv)
         {
             if (!waypoint_in_dig_zone)
             {
-                point_to_insert.x = 4.54;
+                point_to_insert.x = OBSTACLE_ZONE_END_X + .1;
                 point_to_insert.y = interpolateYFromXAndTwoPoints(waypoints.at(0).x, waypoints.at(0).y,
                                                                   waypoints.at(0).x + .5 * cos(waypoints.at(0).theta),
-                                                                  waypoints.at(0).y + .5 * sin(waypoints.at(0).theta), 4.54);
+                                                                  waypoints.at(0).y + .5 * sin(waypoints.at(0).theta), OBSTACLE_ZONE_END_X + .1);
                 point_to_insert.theta = waypoints.at(0).theta;
                 waypoints.insert(waypoints.begin(), point_to_insert);
                 point_inserted = true;
@@ -126,7 +128,7 @@ int main(int argc, char** argv)
         {
             for (int index =0; index < waypoints.size(); index++)
             {
-                if (waypoints.at(index).x > 1.5 && waypoints.at(index).x < 4.4) //waypoint is in obstacle field, and because we placed one in the start, there is one behind it too
+                if (waypoints.at(index).x > OBSTACLE_ZONE_START_X && waypoints.at(index).x < OBSTACLE_ZONE_END_X) //waypoint is in obstacle field, and because we placed one in the start, there is one behind it too
                 {
                     //check its distance from the start and end. check if it is within .8 meters of the closest one
                     //check against border at 1.5
@@ -164,7 +166,7 @@ int main(int argc, char** argv)
         if (direction_metric > MIN_DISTANCE_FOR_RUN) // need to grab waypoints on entering and exiting waypoints from obstacle zone.
         {
             ignore_waypoint = false;
-            if (wp.x < 1.5) //this waypoint is in the start zone, as we iterate it will be the closest one to the obstacle zone
+            if (wp.x < OBSTACLE_ZONE_START_X) //this waypoint is in the start zone, as we iterate it will be the closest one to the obstacle zone
             {
                 //copy waypoint for posting
                 ignore_waypoint = true;
@@ -174,14 +176,14 @@ int main(int argc, char** argv)
                 last_point_in_start_zone.theta = wp.theta;
                 grabbing_entrance = true;
             }
-            else if ((grabbing_entrance || grabbing_exit) && wp.x <4.44 ) // there is a(n) waypoint(s) in the obstacle field
+            else if ((grabbing_entrance || grabbing_exit) && wp.x < OBSTACLE_ZONE_END_X ) // there is a(n) waypoint(s) in the obstacle field
             {
                 grabbing_exit = true;
                 //calculate and insert entrance point
                 if (grabbing_entrance) 
                 {
-                    obstacle_zone_entrance_point.x = 1.5;
-                    obstacle_zone_entrance_point.y = interpolateYFromXAndTwoPoints(last_point_in_start_zone.x, last_point_in_start_zone.y, wp.x, wp.y, 1.5);
+                    obstacle_zone_entrance_point.x = OBSTACLE_ZONE_START_X;
+                    obstacle_zone_entrance_point.y = interpolateYFromXAndTwoPoints(last_point_in_start_zone.x, last_point_in_start_zone.y, wp.x, wp.y, OBSTACLE_ZONE_START_X);
                     obstacle_zone_entrance_point.theta = last_point_in_start_zone.theta;
                     //publish this point
                     pub.publish(obstacle_zone_entrance_point);
@@ -203,8 +205,8 @@ int main(int argc, char** argv)
             {
                 grabbing_entrance = false;
                 //calculate and insert entrance point
-                obstacle_zone_entrance_point.x = 1.5;
-                obstacle_zone_entrance_point.y = interpolateYFromXAndTwoPoints(last_point_in_start_zone.x, last_point_in_start_zone.y, wp.x, wp.y, 1.5);
+                obstacle_zone_entrance_point.x = OBSTACLE_ZONE_START_X;
+                obstacle_zone_entrance_point.y = interpolateYFromXAndTwoPoints(last_point_in_start_zone.x, last_point_in_start_zone.y, wp.x, wp.y, OBSTACLE_ZONE_START_X);
                 obstacle_zone_entrance_point.theta = last_point_in_start_zone.theta;
                 //publish this point
                 pub.publish(obstacle_zone_entrance_point);
@@ -212,8 +214,8 @@ int main(int argc, char** argv)
                 rate.sleep();
                 //calculate exit from here, now, between last_point_in_start_zone and this first point                
                 //it will be used in overwrite_dig logic
-                obstacle_zone_exit_point.y = interpolateYFromXAndTwoPoints(last_point_in_start_zone.x, last_point_in_start_zone.y, wp.x, wp.y, 4.44);
-                obstacle_zone_exit_point.x = 4.44;
+                obstacle_zone_exit_point.y = interpolateYFromXAndTwoPoints(last_point_in_start_zone.x, last_point_in_start_zone.y, wp.x, wp.y, OBSTACLE_ZONE_END_X);
+                obstacle_zone_exit_point.x = OBSTACLE_ZONE_END_X;
                 obstacle_zone_exit_point.theta = last_point_in_start_zone.theta;
                 overwrite_dig = true;
             }
@@ -222,8 +224,8 @@ int main(int argc, char** argv)
                 grabbing_exit = false;
                 //calculate exit from here, now, between last_point_in_dig_zone and this first point                
                 //it will be used in overwrite_dig logic
-                obstacle_zone_exit_point.y = interpolateYFromXAndTwoPoints(last_point_in_obstacle_zone.x, last_point_in_obstacle_zone.y, wp.x, wp.y, 4.44);
-                obstacle_zone_exit_point.x = 4.44;
+                obstacle_zone_exit_point.y = interpolateYFromXAndTwoPoints(last_point_in_obstacle_zone.x, last_point_in_obstacle_zone.y, wp.x, wp.y, OBSTACLE_ZONE_END_X);
+                obstacle_zone_exit_point.x = OBSTACLE_ZONE_END_X;
                 obstacle_zone_exit_point.theta = last_point_in_obstacle_zone.theta;
                 overwrite_dig = true;
             }
@@ -232,7 +234,7 @@ int main(int argc, char** argv)
         else if (direction_metric < -MIN_DISTANCE_FOR_RUN) //need to overwrite dump
         {
             ignore_waypoint = false;
-            if (wp.x > 4.44) //this waypoint is in the starting zone (the dig zone now), as we iterate it will be the closest one to the obstacle zone
+            if (wp.x > OBSTACLE_ZONE_END_X) //this waypoint is in the starting zone (the dig zone now), as we iterate it will be the closest one to the obstacle zone
             {
                 //copy waypoint for posting
                 ignore_waypoint = true;
@@ -242,14 +244,14 @@ int main(int argc, char** argv)
                 last_point_in_dig_zone.theta = wp.theta;
                 grabbing_entrance = true;
             }
-            else if ((grabbing_entrance || grabbing_exit) && wp.x >1.5 ) // there is a waypoint in the obstacle field
+            else if ((grabbing_entrance || grabbing_exit) && wp.x >OBSTACLE_ZONE_START_X ) // there is a waypoint in the obstacle field
             {
                 grabbing_exit = true;
                 //calculate and insert entrance point
                 if (grabbing_entrance) 
                 {
-                    obstacle_zone_entrance_point.x = 4.44;
-                    obstacle_zone_entrance_point.y = interpolateYFromXAndTwoPoints(last_point_in_dig_zone.x, last_point_in_dig_zone.y, wp.x, wp.y, 4.44);
+                    obstacle_zone_entrance_point.x = OBSTACLE_ZONE_END_X;
+                    obstacle_zone_entrance_point.y = interpolateYFromXAndTwoPoints(last_point_in_dig_zone.x, last_point_in_dig_zone.y, wp.x, wp.y, OBSTACLE_ZONE_END_X);
                     obstacle_zone_entrance_point.theta = last_point_in_dig_zone.theta;
                     //publish this point
                     pub.publish(obstacle_zone_entrance_point);
@@ -270,8 +272,8 @@ int main(int argc, char** argv)
             {
                 grabbing_entrance = false;
                 //calculate and insert entrance point
-                obstacle_zone_entrance_point.x = 4.44;
-                obstacle_zone_entrance_point.y = interpolateYFromXAndTwoPoints(last_point_in_dig_zone.x, last_point_in_dig_zone.y, wp.x, wp.y, 4.44);
+                obstacle_zone_entrance_point.x = OBSTACLE_ZONE_END_X;
+                obstacle_zone_entrance_point.y = interpolateYFromXAndTwoPoints(last_point_in_dig_zone.x, last_point_in_dig_zone.y, wp.x, wp.y, OBSTACLE_ZONE_END_X);
                 obstacle_zone_entrance_point.theta = last_point_in_dig_zone.theta;
                 //publish this point
                 pub.publish(obstacle_zone_entrance_point);
@@ -279,8 +281,8 @@ int main(int argc, char** argv)
                 rate.sleep();
                 //calculate exit from here, now, between last_point_in_dig_zone (the starting zone) and this first point                
                 //it will be used in overwrite_dig logic
-                obstacle_zone_exit_point.y = interpolateYFromXAndTwoPoints(last_point_in_dig_zone.x, last_point_in_dig_zone.y, wp.x, wp.y, 1.5);
-                obstacle_zone_exit_point.x = 1.5;
+                obstacle_zone_exit_point.y = interpolateYFromXAndTwoPoints(last_point_in_dig_zone.x, last_point_in_dig_zone.y, wp.x, wp.y, OBSTACLE_ZONE_START_X);
+                obstacle_zone_exit_point.x = OBSTACLE_ZONE_START_X;
                 obstacle_zone_exit_point.theta = last_point_in_dig_zone.theta;
                 overwrite_dump = true;
             }
@@ -289,8 +291,8 @@ int main(int argc, char** argv)
                 grabbing_exit = false;
                 //calculate exit from here, now, between last_point_in_obstacle_zone and this first point                
                 //it will be used in overwrite_dig logic
-                obstacle_zone_exit_point.y = interpolateYFromXAndTwoPoints(last_point_in_obstacle_zone.x, last_point_in_obstacle_zone.y, wp.x, wp.y, 1.5);
-                obstacle_zone_exit_point.x = 1.5;
+                obstacle_zone_exit_point.y = interpolateYFromXAndTwoPoints(last_point_in_obstacle_zone.x, last_point_in_obstacle_zone.y, wp.x, wp.y, OBSTACLE_ZONE_START_X);
+                obstacle_zone_exit_point.x = OBSTACLE_ZONE_START_X;
                 obstacle_zone_exit_point.theta = last_point_in_obstacle_zone.theta;
                 overwrite_dump = true;
             }
