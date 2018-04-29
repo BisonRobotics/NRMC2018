@@ -7,6 +7,7 @@
 #define MIN_DISTANCE_FOR_RUN 2.5
 #define OBSTACLE_ZONE_START_X 1.5
 #define OBSTACLE_ZONE_END_X 4.44
+#define MIN_WAYPOINT_DISTANCE .8
 
 #include <waypoint_controller/waypoint_controller_helper.h>
 
@@ -134,11 +135,11 @@ int main(int argc, char** argv)
                     //check against border at 1.5
                     if ((waypoints.at(index).x - waypoints.at(index-1).x)*(waypoints.at(index).x - waypoints.at(index-1).x)
                         + ((waypoints.at(index).y - waypoints.at(index-1).y))*((waypoints.at(index).y - waypoints.at(index-1).y))
-                         > .8 * .8) //waypoint is too far away from the last one/entrance
+                         > MIN_WAYPOINT_DISTANCE * MIN_WAYPOINT_DISTANCE) //waypoint is too far away from the last one/entrance
                     {
                         //interpolate waypoint here and add it in at index
-                        point_to_insert.x = waypoints.at(index-1).x + (direction_metric > 0 ? .75 : -.75) * cos(waypoints.at(index-1).theta);
-                        point_to_insert.y = waypoints.at(index-1).y + (direction_metric > 0 ? .75 : -.75) * sin(waypoints.at(index-1).theta);
+                        point_to_insert.x = waypoints.at(index-1).x + (direction_metric > 0 ? MIN_WAYPOINT_DISTANCE - .05 : -(MIN_WAYPOINT_DISTANCE - .05)) * cos(waypoints.at(index-1).theta);
+                        point_to_insert.y = waypoints.at(index-1).y + (direction_metric > 0 ? MIN_WAYPOINT_DISTANCE - .05 : -(MIN_WAYPOINT_DISTANCE - .05)) * sin(waypoints.at(index-1).theta);
                         point_to_insert.theta = waypoints.at(index-1).theta;
                         waypoints.insert(waypoints.begin() + index, point_to_insert);
                         //these points can be displayed in the line markers for autonomy because they are just interpolated
