@@ -31,7 +31,8 @@ class RegolithManipulation(object):
 
         if self.waiting_on_action == True:
             result = self.dig_client.get_result()
-            if result == None: #The action is not yet complete
+            if result == None: #The action is not yet
+                #rospy.loginfo("[IMPERIO] : Waiting on the dig server")
                 return False
             else:
                 if result.is_error:
@@ -56,8 +57,8 @@ class RegolithManipulation(object):
         self.dig_client.send_goal(goal)
 
     def dig_goal_message(self):
-        goal = DigActionGoal()
-        goal.goal = 42
+        goal = DigActionGoal
+        goal.angle = 42
         return goal
 
     # Tells the robot to deposit the regolith
@@ -94,6 +95,7 @@ class RegolithManipulation(object):
 
     def dump_goal_message(self):
         goal = DumpActionGoal
+        goal.angle = 42
         return goal
 
     # The commands to tell the robot to stop moving the hoe
