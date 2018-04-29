@@ -20,7 +20,7 @@ if __name__ == '__main__':
     pose = Pose
 
     rospy.init_node('goal_translator')
-    pub = rospy.Publisher ('/position_controller/additional_waypoints', Pose2D, queue_size=10)
+    pub = rospy.Publisher ('/position_controller/additional_waypoint', Pose2D, queue_size=10)
     rospy.Subscriber('move_base_simple/goal', PoseStamped, pose_callback)
     pose_2 = Pose2D()
     rate = rospy.Rate(10)  # Update at 10Hz
