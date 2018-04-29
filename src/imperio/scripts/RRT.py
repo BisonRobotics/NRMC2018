@@ -183,7 +183,6 @@ def line_collision_check(first, second, map):
 
 
 def path_smoothing(path, maxIter, obstacleList):
-    #  print("PathSmoothing")
 
     le = get_path_length(path)
 
@@ -191,11 +190,8 @@ def path_smoothing(path, maxIter, obstacleList):
         # Sample two points
         pickPoints = [random.uniform(0, le), random.uniform(0, le)]
         pickPoints.sort()
-        #  print(pickPoints)
         first = get_target_point(path, pickPoints[0])
-        #  print(first)
         second = get_target_point(path, pickPoints[1])
-        #  print(second)
 
         if first[2] <= 0 or second[2] <= 0:
             continue
@@ -236,12 +232,12 @@ def path_planning(start, goal, map):
 
     goal_x, goal_y = goal
     if goal_x > max_x or goal_x < min_x or goal_y > max_y or goal_y < min_y:
-        rospy.loginfo("Imperio : Goal outside of the costmap determined by occupancyGrid width(x) and height(y)")
+        rospy.loginfo("[IMPERIO] : Goal outside of the costmap determined by occupancyGrid width(x) and height(y)")
         return []
 
     start_x, start_y = start[0], start[1]
     if start_x > max_x or start_x < min_x or start_y > max_y or goal_y < min_y:
-        rospy.loginfo("Imperio : Robot localized to a point not found on costmap determined by occupancyGrid width(x) and height(y)")
+        rospy.loginfo("[IMPERIO] : Robot localized to a point not found on costmap determined by occupancyGrid width(x) and height(y)")
         return []
 
     rrt = RRT(start, goal, map, [min_x, max_x], [min_y, max_y])
@@ -255,7 +251,7 @@ def path_planning(start, goal, map):
     return smooth_path
 
 def find_best_rrt_path(start, goal, map, num_paths):
-    print("Imperio : Finding best RRT path out of %s paths" % num_paths)
+    rospy.loginfo("[IMPERIO] : Finding best RRT path out of %s paths" % num_paths)
 
     if use_threading:
         return parallel_paths(start, goal, map, num_paths)
@@ -373,7 +369,7 @@ def calculate_path_score(path):
            try:
                angle = math.acos((bc_dist**2 - ac_dist**2 + ab_dist**2)/(2*bc_dist*ab_dist))
            except ValueError:
-                print("ab {} bc {} ac {}".format(ab_dist, bc_dist, ac_dist))
+                rospy.loginfo("[IMPERIO] : ab {} bc {} ac {}".format(ab_dist, bc_dist, ac_dist))
         else:
             angle = math.pi
 
