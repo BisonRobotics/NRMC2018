@@ -35,6 +35,9 @@ public:
 
 private:
   bool data_is_good;
+  bool imu_is_good;
+  bool pos_is_good;
+  void setDataIsGood (void);
   Localizer *deadReck;
   ImuSensorInterface *cIMU;
   PosSensorInterface *pSensor;
@@ -46,7 +49,8 @@ private:
   LocalizerInterface::stateVector residual;
   LocalizerInterface::stateVector measured;
   LocalizerInterface::stateVector gainVector;
-
+  static constexpr unsigned int position_sensor_index = 0;
+  static constexpr unsigned int imu_sensor_index =1;
   LocalizerInterface::stateVector state_vector;
 
   LocalizerInterface::stateVector initState(double xi, double yi, double theta);
