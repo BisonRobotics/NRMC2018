@@ -112,7 +112,7 @@ class ImperioControl(object):
         """
         Digs for Regolith
         """
-        result = self.rm.dig_regolith(self.robot)
+        result = self.rm.dig_regolith()
         if result == None:
             rospy.logwarn("[IMPERIO] : Error with Dig")
             self.recover()
@@ -123,7 +123,7 @@ class ImperioControl(object):
         """
         Deposits the regolith
         """
-        if self.rm.deposit_regolith(self.robot):
+        if self.rm.deposit_regolith():
             self.robot.next_state()
 
     def halt(self):
@@ -131,7 +131,7 @@ class ImperioControl(object):
         Halts the robot and Imperio
         """
         #halt_movement(self.robot)
-        #halt_regolithm_commands(self.robot)
+        #halt_regolithm_commands(self)
         pass
 
     def recover(self):
