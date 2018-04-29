@@ -305,6 +305,7 @@ int main(int argc, char **argv)
 
   double init_angle = pos->getTheta();
   double init_y = pos->getTheta();
+
   if(init_y >0){
     init_y = 1;
   }
@@ -312,17 +313,10 @@ int main(int argc, char **argv)
   {
     init_y = -1;
   }
-  bool should_zero_point=false;
-  if (std::abs(WaypointControllerHelper::anglediff(init_angle,M_PI)) < range_of_bad_theta)
-  {
-    // do a clock wise zero point turn
-    should_zero_point=true;
-  }
-  else if (std::abs(WaypointControllerHelper::anglediff(init_angle, -M_PI)) < range_of_bad_theta)
-  {
-    // do a counter clockwise zero point turn
-    should_zero_point=true;
-  }
+
+  bool should_zero_point = (std::abs(WaypointControllerHelper::anglediff(init_angle,M_PI)) < range_of_bad_theta) ||
+      (std::abs(WaypointControllerHelper::anglediff(init_angle, -M_PI)) < range_of_bad_theta);
+
   lastTime = ros::Time::now();
 
 
