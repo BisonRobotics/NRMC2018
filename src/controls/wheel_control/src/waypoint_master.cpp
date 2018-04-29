@@ -306,7 +306,8 @@ int main(int argc, char **argv)
   double init_angle = pos->getTheta();
   double init_y = pos->getTheta();
 
-  if(init_y >0){
+  if(init_y >0)
+  {
     init_y = 1;
   }
   else
