@@ -319,7 +319,7 @@ int main(int argc, char **argv)
   }
 
   double init_angle = pos->getTheta();
-  int init_y = pos->getTheta() > 0 ? 1 : -1;
+  int init_y = (pos->getTheta() > 0) ? 1 : -1;
 
   bool should_zero_point = std::abs(WaypointControllerHelper::anglediff(std::abs(init_angle),M_PI)) < range_of_bad_theta;
 
