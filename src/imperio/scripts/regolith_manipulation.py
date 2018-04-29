@@ -90,8 +90,8 @@ class RegolithManipulation(object):
     def single_dump(self):
         print("Imperio : Performing a dump")
         goal = self.dump_goal_message()
-        self.dig_client.wait_for_server()
-        self.dig_client.send_goal(goal)
+        self.dump_client.wait_for_server()
+        self.dump_client.send_goal(goal)
 
     def dump_goal_message(self):
         goal = DumpActionGoal
