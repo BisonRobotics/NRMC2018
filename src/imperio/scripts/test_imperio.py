@@ -227,6 +227,72 @@ class TestPlanner(object):
         sp = SpoofPlanner(sr)
         assert sp.get_robot_location() == (0,0,0)
 
+import regolith_manipulation as reg_man
+
+class SpoofRegMan(reg_man.RegolithManipulation):
+    def __init__(self):
+        super(SpoofRegMan, self).__init__()
+
+    def single_dig(self):
+        #Removed call to dig client
+        pass
+
+    def single_dump(self):
+        #Removed call to dump client
+        pass
+
+class TestRegolithManipulation(object):
+
+    def test_init(self):
+        rm = reg_man.RegolithManipulation()
+        assert not rm.dig_client == None
+        assert not rm.dump_client == None
+        assert rm.regolith_in_bucket == 0
+        assert rm.waiting_on_action == False
+        assert rm.halt == False
+
+    def test_halt(self):
+        rm = reg_man.RegolithManipulation()
+        rm.halt_regolith_commands()
+
+        assert rm.halt == True
+        assert rm.dig_regolith() == None
+        assert rm.deposit_regolith() == None
+
+    def test_dump_goal_message(self):
+        rm = reg_man.RegolithManipulation()
+        message = rm.dump_goal_message()
+        assert not message == None
+
+    def test_dig_goal_message(self):
+        rm = reg_man.RegolithManipulation()
+        message = rm.dig_goal_message()
+        assert not message == None
+
+    def test_dig_regolith(self):
+        rm = SpoofRegMan()
+        result = rm.dig_regolith()
+        assert result == False
+        assert rm.waiting_on_action == True
+
+        rm = SpoofRegMan()
+        rm.regolith_in_bucket = 10
+        result = rm.dig_regolith()
+        assert result == True
+        assert rm.waiting_on_action == False
+
+    def test_deposit_regolith(self):
+        rm = SpoofRegMan()
+        result = rm.deposit_regolith()
+        assert result == True
+        assert rm.waiting_on_action == False
+
+        rm = SpoofRegMan()
+        rm.regolith_in_bucket = 10
+        result = rm.deposit_regolith()
+        assert result == False
+        assert rm.waiting_on_action == True
+
 import initial_planner
 class TestInitialPlanner(object):
     def test_init(self):

@@ -111,10 +111,9 @@ SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(double dt)
     // revise estimate by subtracting residual from it * some gain
 
     LocalizerInterface::stateVector intermediateStateVector =  // this is current estimate + model data
-        LocalizerInterface::addFromModel(this->state_vector, this->deadReck->getStateVector(), dt, have_imu);
+    LocalizerInterface::addFromModel(this->state_vector, this->deadReck->getStateVector(), dt, have_imu);
     LocalizerInterface::stateVector intermediate = LocalizerInterface::multiply(this->gainVector, this->residual);
     this->state_vector = LocalizerInterface::diff(intermediateStateVector, intermediate);
-
     if (this->state_vector.theta > M_PI)
     {
       this->state_vector.theta -= 2.0 * M_PI;
