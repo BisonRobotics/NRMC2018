@@ -79,9 +79,9 @@ class RegolithManipulation(object):
                 print("Imperio : Bucket now {} full".format(self.regolith_in_bucket))
 
 
-        accepted_empty_threshold = 0 #TODO: Confirm this threshold with them [JIRA NRMC2018-358]
+        accepted_empty_threshold = 3 #TODO: Confirm this threshold with them [JIRA NRMC2018-358]
         if self.regolith_in_bucket > accepted_empty_threshold:
-            self.single_dig()
+            self.single_dump()
             self.waiting_on_action = True
             return False
 
