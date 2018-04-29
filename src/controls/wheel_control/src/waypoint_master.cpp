@@ -158,14 +158,21 @@ int main(int argc, char **argv)
   ros::Publisher angleErrorPub = node.advertise<std_msgs::Float64>("angle_error", 30);
   ros::Publisher simAnglePub = node.advertise<std_msgs::Float64>("sim_angle", 30);
   ros::Publisher baseAnglePub = node.advertise<std_msgs::Float64>("base_angle", 30);
+  ros::Publisher lWheelVelPub = node.advertise<std_msgs::Float64>("lWheelVelCmd", 30);
+  ros::Publisher rWheelVelPub = node.advertise<std_msgs::Float64>("rWheelVelCmd", 30);
+
   double settle_time;
-  if(!node.getParam("localization_settling_time", settle_time)){
+  if(!node.getParam("localization_settling_time", settle_time))
+  {
     settle_time = 5;
     ROS_INFO_STREAM ("localization settling time " << settle_time);
   }
+  
   std_msgs::Float64 angleErrorMsg;
   std_msgs::Float64 simAngleMsg;
   std_msgs::Float64 baseAngleMsg;
+  std_msgs::Float64 lWheelVel;
+  std_msgs::Float64 rWheelVel;
 
   tf2_ros::Buffer tfBuffer;
   // tf2_ros::TransformListener tfListener(tfBuffer);
@@ -337,7 +344,7 @@ int main(int argc, char **argv)
   firstTime = true;
   while (ros::ok() && std::abs(WaypointControllerHelper::anglediff(stateVector.theta, topicTheta)) > topicthetatol)
   {
-    double speed = zeroPointTurnGain * WaypointControllerHelper::anglediff(stateVector.theta, topicTheta);
+    double speed = .1;//zeroPointTurnGain * WaypointControllerHelper::anglediff(stateVector.theta, topicTheta);
 
     fr->setLinearVelocity(-speed);
     br->setLinearVelocity(-speed);
@@ -468,6 +475,11 @@ int main(int argc, char **argv)
     jsMessage.velocity.push_back(bl->getLinearVelocity());
 
     jspub.publish(jsMessage);
+    
+    lWheelVel.data = fl->getLinearVelocity();
+    rWheelVel.data = fr->getLinearVelocity();
+    lWheelVelPub.publish(lWheelVel);
+    rWheelVelPub.publish(rWheelVel);
 
     ROS_DEBUG("FrontLeftVel : %.4f", jsMessage.velocity[0]);
     ROS_DEBUG("FrontRightVel : %.4f", jsMessage.velocity[1]);
