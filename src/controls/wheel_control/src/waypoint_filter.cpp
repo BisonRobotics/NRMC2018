@@ -53,7 +53,6 @@ int main(int argc, char** argv)
     if (waypoints.size() > 0)
     {
       double direction_metric = 0;
-      double prev_x;
       bool overwrite_dump = false;
       bool overwrite_dig = false;
             
@@ -78,14 +77,6 @@ int main(int argc, char** argv)
       //compute direction metric
       for (int index =0; index < waypoints.size(); index++)
       {
-          if (index == 0)
-          {
-              prev_x = waypoints.at(index).x;
-          }
-          else
-          {
-              direction_metric += waypoints.at(index).x - prev_x;
-          }
           if (waypoints.at(index).x <1.5)
           {
               waypoint_in_start_zone = true;
@@ -95,6 +86,8 @@ int main(int argc, char** argv)
               waypoint_in_dig_zone = true;
           }
       }
+      
+      direction_metric = waypoints.at(waypoints.size() - 1).x - waypoints.at(0).x;
       
         if (direction_metric > 2.5) //make sure there is a waypoint in the start zone (by placing one)
         {
@@ -125,19 +118,31 @@ int main(int argc, char** argv)
             }
             // also make sure there is a waypoint in the start/dump zone and maybe through an exception if there is not.
         }
-        /*
+        
+        //make sure the points in the obstacle zone are spaced apart properly
         if (direction_metric > 2.5 || direction_metric < 2.5)
         {
-            //make sure the points in the obstacle zone are spaced apart properly
             for (int index =0; index < waypoints.size(); index++)
             {
-                if (wp.x > 1.5 && wp.x < 4.4) //waypoint is in obstacle field
+                if (waypoints.at(index).x > 1.5 && waypoints.at(index).x < 4.4) //waypoint is in obstacle field, and because we placed one in the start, there is one behind it too
                 {
                     //check its distance from the start and end. check if it is within .8 meters of the closest one
+                    //check against border at 1.5
+                    if ((waypoints.at(index).x - waypoints.at(index-1).x)*(waypoints.at(index).x - waypoints.at(index-1).x)
+                        + ((waypoints.at(index).y - waypoints.at(index-1).y))*((waypoints.at(index).y - waypoints.at(index-1).y))
+                         > .8 * .8) //waypoint is too far away from the last one/entrance
+                    {
+                        //interpolate waypoint here and add it in at index
+                        point_to_insert.x = waypoints.at(index-1).x + (direction_metric > 0 ? .75 : -.75) * cos(waypoints.at(index-1).theta);
+                        point_to_insert.y = waypoints.at(index-1).y + (direction_metric > 0 ? .75 : -.75) * sin(waypoints.at(index-1).theta);
+                        point_to_insert.theta = waypoints.at(index-1).theta;
+                        waypoints.insert(waypoints.begin() + index, point_to_insert);
+                        //these points can be displayed in the line markers for autonomy because they are just interpolated
+                    }
                 }
             }
         }
-        */
+        
 
       for (auto const& wp : waypoints)
       {
