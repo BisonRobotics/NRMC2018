@@ -8,8 +8,8 @@
 #define GOALREACHEDDIST .100f  // should be about the size of the noise floor of localization
 // this also determines how far you can overshoot a goal
 #define ANGLETOL .2f
-#define SPEED_CONST .1  // average speed for the wheels in linear m/s
-#define MAX_ABS_WHEEL_SPEED .2
+#define SPEED_CONST .14  // average speed for the wheels in linear m/s
+#define MAX_ABS_WHEEL_SPEED .22
 
 bool approx(double A, double B, double T)
 {

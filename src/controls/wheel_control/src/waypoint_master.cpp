@@ -315,8 +315,6 @@ int main(int argc, char **argv)
   }
 
   ROS_INFO ("Localization Settled!");
-  stateVector = superLocalizer.getStateVector();
-  tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
   ros::spinOnce ();
 
   double range_of_bad_theta;
@@ -333,7 +331,7 @@ int main(int argc, char **argv)
   }
 
   double init_angle = pos->getTheta();
-  int init_y = (pos->getTheta() > 0) ? 1 : -1;
+  int init_y = (pos->getY() > 0) ? 1 : -1;
 
   bool should_zero_point = std::abs(WaypointControllerHelper::anglediff(std::abs(init_angle),M_PI)) < range_of_bad_theta;
 
@@ -398,12 +396,18 @@ int main(int argc, char **argv)
     }
 
     superLocalizer.updateStateVector(loopTime.toSec());
-    stateVector = superLocalizer.getStateVector();
-    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+
     ros::spinOnce();
     rate.sleep();
   }
 
+  fl->setLinearVelocity(0);
+  fr->setLinearVelocity(0);
+  bl->setLinearVelocity(0);
+  br->setLinearVelocity(0);
+  stateVector = superLocalizer.getStateVector();
+  tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+  ros::spinOnce();
   // zero point turn vescs here before waypoint controller is initialized
   // get number from topic
   double topicthetatol = .1;

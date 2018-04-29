@@ -3,8 +3,8 @@
   <node name="position_controller" pkg="wheel_control" type="waypoint_master">
     <param name="simulating_driving" type="bool" value="false"/>
     <param name="initial_theta_tolerance" type="double" value=".1"/>
-    <param name="initial_theta_gain" type="double" value=".4"/>
-    <param name="time_for_blind_zero" type="double" value="4"/>
+    <param name="initial_theta_gain" type="double" value=".1"/>
+    <param name="time_for_blind_zero" type="double" value="7"/>
     <param name="theta_range" type="double" value=".26"/> <!-- This is 30 degrees/2-->
     <param name="localization_settle_time" type="double" value="5"/>
   </node>
