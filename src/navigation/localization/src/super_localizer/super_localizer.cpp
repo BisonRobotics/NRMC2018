@@ -11,8 +11,8 @@ SuperLocalizer::SuperLocalizer(double axleLen, double xi, double yi, double thi,
 
   this->cIMU = centerIMU;
   this->pSensor = posSensor;
-  this->sensors[1] = centerIMU;
-  this->sensors[0] = posSensor;
+  this->sensors[imu_sensor_index] = centerIMU;
+  this->sensors[position_sensor_index] = posSensor;
   this->num_sensors = 2;
   this->have_pos = true;
   this->have_imu = true;
@@ -37,7 +37,7 @@ SuperLocalizer::SuperLocalizer(double axleLen, double xi, double yi, double thi,
   this->have_pos = true;
   this->have_imu = false;
   this->data_is_good = false;
-  this->sensors[0] = posSensor;
+  this->sensors[position_sensor_index] = posSensor;
   this->imu_is_good = false;
   this->pos_is_good = false;
   this->state_vector = LocalizerInterface::initState(xi, yi, thi);
@@ -69,10 +69,10 @@ SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(double dt)
   {
     if (this->sensors[a]->receiveData() == ReadableSensors::ReadStatus::READ_SUCCESS)
     {
-      if (a==0){
+      if (a==position_sensor_index){
         pos_is_good = true;
       }
-      else if (a==1)
+      else if (a==imu_sensor_index)
       {
         imu_is_good = true;
       }
