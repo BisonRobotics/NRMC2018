@@ -291,6 +291,61 @@ int main(int argc, char **argv)
     rate.sleep();
   }
 
+  double range_of_bad_theta;
+  if (!node.getParam("theta_range",range_of_bad_theta)){
+    ROS_ERROR ("~/theta_range is not defined!! This is an error");
+    ros::shutdown ();
+  }
+  double time_for_zero_point;
+  if (!node.getParam("time_for_blind_zero",time_for_zero_point))
+  {
+    ROS_ERROR ("~/time_for_blind_zero is not defined!! This is an error");
+    ros::shutdown ();
+  }
+
+  double init_angle = pos->getTheta();
+  double init_y = pos->getTheta();
+  if(init_y >0){
+    init_y = 1;
+  }
+  else
+  {
+    init_y = -1;
+  }
+  bool should_zero_point=false;
+  if (std::abs(WaypointControllerHelper::anglediff(init_angle,M_PI)) < range_of_bad_theta)
+  {
+    // do a clock wise zero point turn
+    should_zero_point=true;
+  }
+  else if (std::abs(WaypointControllerHelper::anglediff(init_angle, -M_PI)) < range_of_bad_theta)
+  {
+    // do a counter clockwise zero point turn
+    should_zero_point=true;
+  }
+  lastTime = ros::Time::now();
+
+
+  double zeroPointTurnGain;
+  if (node.hasParam("initial_theta_gain"))
+  {
+    node.getParam("initial_theta_gain", zeroPointTurnGain);
+  }
+  else
+  {
+    ROS_ERROR("\n\ninitial_theta_gain param not defined! aborting.\n\n");
+    return -1;
+  }
+  while (should_zero_point && ros::ok() && (ros::Time::now()-lastTime).toSec() < time_for_zero_point)
+  {
+    double speed = init_y *zeroPointTurnGain;
+    fl->setLinearVelocity(speed);
+    fr->setLinearVelocity(-speed);
+    bl->setLinearVelocity(speed);
+    br->setLinearVelocity(-speed);
+    rate.sleep();
+  }
+
   // zero point turn vescs here before waypoint controller is initialized
   // get number from topic
   double topicthetatol = .1;
@@ -304,16 +359,6 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  double zeroPointTurnGain;
-  if (node.hasParam("initial_theta_gain"))
-  {
-    node.getParam("initial_theta_gain", zeroPointTurnGain);
-  }
-  else
-  {
-    ROS_ERROR("\n\ninitial_theta_gain param not defined! aborting.\n\n");
-    return -1;
-  }
   status_msg.is_stuck.data = 0;
   status_msg.cannot_plan_path.data = 0;
   status_msg.in_motion.data = 1;
