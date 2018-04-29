@@ -355,9 +355,10 @@ int main(int argc, char **argv)
 
   firstTime=true;
   ros::Time initialTime=ros::Time::now();
+  double speed = init_y *zeroPointTurnGain;
+
   while (should_zero_point && ros::ok() && (ros::Time::now()-initialTime).toSec() < time_for_zero_point)
   {
-    double speed = init_y *zeroPointTurnGain;
     fl->setLinearVelocity(-speed);
     fr->setLinearVelocity(speed);
     bl->setLinearVelocity(-speed);
@@ -418,10 +419,10 @@ int main(int argc, char **argv)
   mode_pub.publish(status_msg);
   ROS_INFO("Theta received, going into initial turn.");
   firstTime = true;
+  speed = .1;
+  
   while (ros::ok() && std::abs(WaypointControllerHelper::anglediff(stateVector.theta, topicTheta)) > topicthetatol)
   {
-    double speed = .1;//zeroPointTurnGain * WaypointControllerHelper::anglediff(stateVector.theta, topicTheta);
-
     fr->setLinearVelocity(-speed);
     br->setLinearVelocity(-speed);
     fl->setLinearVelocity(speed);

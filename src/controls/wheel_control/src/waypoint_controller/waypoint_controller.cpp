@@ -8,7 +8,8 @@
 #define GOALREACHEDDIST .100f  // should be about the size of the noise floor of localization
 // this also determines how far you can overshoot a goal
 #define ANGLETOL .2f
-#define SPEED_CONST .2  // average speed for the wheels in linear m/s
+#define SPEED_CONST .1  // average speed for the wheels in linear m/s
+#define MAX_ABS_WHEEL_SPEED .2
 
 bool approx(double A, double B, double T)
 {
@@ -18,6 +19,11 @@ bool approx(double A, double B, double T)
 double dist(double A, double B, double C, double D)
 {
   return sqrt((A - C) * (A - C) + (B - D) * (B - D));
+}
+
+double clamp(double A, double upper, double lower)
+{
+    return ((A > upper) ? upper : ((A < lower) ? lower : A));
 }
 
 WaypointController::WaypointController(double axelLength, double maxSafeSpeed, pose initialPose, iVescAccess *fl,
@@ -335,7 +341,10 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
 
     LvelCmd = WheelAlpha * LvelCmd + (1.0 - WheelAlpha) * LvelCmdPrev;
     RvelCmd = WheelAlpha * RvelCmd + (1.0 - WheelAlpha) * RvelCmdPrev;
-
+    
+    LvelCmd = clamp(LvelCmd, MAX_ABS_WHEEL_SPEED, -MAX_ABS_WHEEL_SPEED);
+    RvelCmd = clamp(RvelCmd, MAX_ABS_WHEEL_SPEED, -MAX_ABS_WHEEL_SPEED);
+    
     if (!aggressiveFix)
     {
       front_left_wheel->setLinearVelocity(LvelCmd);
