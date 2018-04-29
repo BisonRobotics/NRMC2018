@@ -362,7 +362,7 @@ int main(int argc, char **argv)
 
   firstTime=true;
 
-  ROS_INFO ("Waiting for direction to do the south check!");
+  ROS_INFO ("Waiting for the OK to do the south check!");
 
   while(ros::ok() && !do_the_south_check){
     rate.sleep();
