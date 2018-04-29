@@ -31,7 +31,6 @@ SuperLocalizer::SuperLocalizer(double axleLen, double xi, double yi, double thi,
 
 {
   this->deadReck = new Localizer(axleLen, xi, yi, thi, frontLeftVesc, frontRightVesc, backRightVesc, backLeftVesc);
-
   this->pSensor = posSensor;
   this->num_sensors = 1;
   this->have_pos = true;
