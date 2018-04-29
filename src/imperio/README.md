@@ -36,7 +36,9 @@ Imperio is Robotic Autonomy. It is the top level software for controlling the ro
    
    >pip install pytest-cov
 
-* Run the tests (Can be done from any directory containing imperio/scripts)
+* To run the tests (Can be done from any directory containing imperio/scripts)
+   >roslaunch imperio unit_testing.launch
+
    >pytest
 
 * Run the code coverage (Assuming you're at the top of the workspace)
