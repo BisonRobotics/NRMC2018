@@ -284,6 +284,7 @@ class SpoofRegMan(reg_man.RegolithManipulation):
     def __init__(self):
         super(SpoofRegMan, self).__init__()
 
+<<<<<<< Updated upstream
     def single_dig(self):
         #Removed call to dig client
         pass
@@ -343,6 +344,8 @@ class TestRegolithManipulation(object):
         result = rm.deposit_regolith()
         assert result == False
         assert rm.waiting_on_action == True
+=======
+>>>>>>> Stashed changes
 
 import initial_planner
 class TestInitialPlanner(object):
