@@ -61,6 +61,57 @@ class TestRobot(object):
         r.next_state()
         assert r.state == RobotState.HALT
 
+""" Test for the Imperio Controll class
+Author: Nicole Maguire
+Date: 4/12/2018
+Test For Version : 2
+
+"""
+import imperio_control as imperio
+class TestImperioControl(object):
+    def test_init(self):
+
+        rospy.init_node("imperio_test")
+        ic = imperio.ImperioControl()
+        assert not ic.robot == None
+        assert not ic.initial_planner == None
+        assert not ic.planner == None
+        assert not ic.rm == None
+        assert ic.starting_region == None
+
+    def test_halt_callback(self):
+        pass
+
+    def test_timer_callback(self):
+        pass
+
+    def test_run(self):
+        pass
+
+    def test_initital(self):
+        pass
+
+    def test_outbound(self):
+        pass
+
+    def test_inbound(self):
+        pass
+
+    def test_dig(self):
+        pass
+
+    def test_deposit(self):
+        pass
+
+    def test_halt(self):
+        pass
+
+    def test_recover(self):
+        pass
+
+    def test_runnint_out_of_time(self):
+        pass
+
 """ Test for the abstract planner class using a spoof planner class.
 Author: Nicole Maguire
 Date: 4/12/2018
@@ -165,7 +216,7 @@ class TestPlanner(object):
 
 
     def test_publish_waypoints(self):
-        planner.rospy.init_node('Test_Imperio')
+        #planner.rospy.init_node('Test_Imperio')
 
         sp = SpoofPlanner(None)
         waypoints = [(2, 4, 5), (34, 4, 5), (5, 2, 2)]

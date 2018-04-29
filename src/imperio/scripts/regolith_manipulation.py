@@ -56,7 +56,7 @@ class RegolithManipulation(object):
         self.dig_client.send_goal(goal)
 
     def dig_goal_message(self):
-        goal = DigActionGoal()
+        goal = DigActionGoal
         return goal
 
     # Tells the robot to deposit the regolith
@@ -92,7 +92,7 @@ class RegolithManipulation(object):
         self.dig_client.send_goal(goal)
 
     def dump_goal_message(self):
-        goal = DumpActionGoal()
+        goal = DumpActionGoal
         return goal
 
     # The commands to tell the robot to stop moving the hoe
