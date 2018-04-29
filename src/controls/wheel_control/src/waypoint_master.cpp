@@ -51,6 +51,7 @@
 bool newWaypointHere = false;
 pose newWaypoint;
 bool halt = false;
+bool do_the_south_check = false;
 
 double topicTheta = 0;
 bool thetaHere = false;
@@ -110,6 +111,11 @@ void haltCallback(const std_msgs::Empty::ConstPtr &msg)
   halt = true;
 }
 
+void faceSouthCheckCallback (const std_msgs::Empty::ConstPtr &msg)
+{
+  do_the_south_check =true;
+}
+
 void initialThetaCallback(const std_msgs::Float64::ConstPtr &msg)
 {
   topicTheta = msg->data;
@@ -153,6 +159,7 @@ int main(int argc, char **argv)
   }
 
   ros::Subscriber sub = node.subscribe("additional_waypoint", 100, newGoalCallback);
+  ros::Subscriber sub_south = node.subscribe ("south_check", 100, faceSouthCheckCallback);
   ros::Publisher jspub = globalNode.advertise<sensor_msgs::JointState>("joint_states", 500);
 
   ros::Publisher angleErrorPub = node.advertise<std_msgs::Float64>("angle_error", 30);
@@ -354,6 +361,14 @@ int main(int argc, char **argv)
   ROS_INFO ("time for zero point: %f", time_for_zero_point);
 
   firstTime=true;
+
+  ROS_INFO ("Waiting for direction to do the south check!");
+
+  while(ros::ok() && !do_the_south_check){
+    rate.sleep();
+    ros::spinOnce();
+  }
+
   ros::Time initialTime=ros::Time::now();
   while (should_zero_point && ros::ok() && (ros::Time::now()-initialTime).toSec() < time_for_zero_point)
   {
