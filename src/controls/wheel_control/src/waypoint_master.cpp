@@ -195,7 +195,7 @@ int main(int argc, char **argv)
 
   if (simulating)
   {
-    sim = new SimRobot(ROBOT_AXLE_LENGTH, .5, .5, 0);
+    sim = new SimRobot(ROBOT_AXLE_LENGTH, .5, -.5, -M_PI);
     fl = (sim->getFLVesc());
     fr = (sim->getFRVesc());
     br = (sim->getBRVesc());
@@ -274,7 +274,7 @@ int main(int argc, char **argv)
 
   ros::Subscriber initialThetaSub = node.subscribe("initialTheta", 100, initialThetaCallback);
 
-  while ((!superLocalizer.getIsDataGood() && ros::ok()) || (ros::ok() && !thetaHere))
+  while ((!superLocalizer.getIsDataGood() && ros::ok()))
   {
     // do initial localization
     if (firstTime)
@@ -306,11 +306,88 @@ int main(int argc, char **argv)
   while ((ros::Time::now()-lastTime).toSec()<settle_time && ros::ok()){
     rate.sleep();
   }
+
   ROS_INFO ("Localization Settled!");
   stateVector = superLocalizer.getStateVector();
   tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
   ros::spinOnce ();
 
+  double range_of_bad_theta;
+  if (!node.getParam("theta_range",range_of_bad_theta))
+  {
+    ROS_ERROR ("~/theta_range is not defined!! This is an error");
+    ros::shutdown ();
+  }
+  double time_for_zero_point;
+  if (!node.getParam("time_for_blind_zero",time_for_zero_point))
+  {
+    ROS_ERROR ("~/time_for_blind_zero is not defined!! This is an error");
+    ros::shutdown ();
+  }
+
+  double init_angle = pos->getTheta();
+  int init_y = (pos->getTheta() > 0) ? 1 : -1;
+
+  bool should_zero_point = std::abs(WaypointControllerHelper::anglediff(std::abs(init_angle),M_PI)) < range_of_bad_theta;
+
+  if (should_zero_point)
+  {
+    ROS_INFO ("Zero point turning");
+  }
+  else {
+    ROS_INFO ("Not zero point turning %.4f Theta", init_angle);
+  }
+
+
+
+  double zeroPointTurnGain;
+  if (node.hasParam("initial_theta_gain"))
+  {
+    node.getParam("initial_theta_gain", zeroPointTurnGain);
+  }
+  else
+  {
+    ROS_ERROR("\n\ninitial_theta_gain param not defined! aborting.\n\n");
+    return -1;
+  }
+
+  ROS_INFO ("time for zero point: %f", time_for_zero_point);
+
+  firstTime=true;
+  ros::Time initialTime=ros::Time::now();
+  while (should_zero_point && ros::ok() && (ros::Time::now()-initialTime).toSec() < time_for_zero_point)
+  {
+    double speed = init_y *zeroPointTurnGain;
+    fl->setLinearVelocity(-speed);
+    fr->setLinearVelocity(speed);
+    bl->setLinearVelocity(-speed);
+    br->setLinearVelocity(speed);
+
+    if (firstTime)
+    {
+      firstTime = false;
+      currTime = ros::Time::now();
+      lastTime = currTime - idealLoopTime;
+      loopTime = (currTime - lastTime);
+    }
+    else
+    {
+      lastTime = currTime;
+      currTime = ros::Time::now();
+      loopTime = (currTime - lastTime);
+    }
+    if (simulating)
+    {
+      sim->update((loopTime).toSec());
+      tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
+    }
+
+    superLocalizer.updateStateVector(loopTime.toSec());
+    stateVector = superLocalizer.getStateVector();
+    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+    ros::spinOnce();
+    rate.sleep();
+  }
 
   // zero point turn vescs here before waypoint controller is initialized
   // get number from topic
@@ -325,16 +402,15 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  double zeroPointTurnGain;
-  if (node.hasParam("initial_theta_gain"))
+  ROS_INFO ("Waiting for theta");
+
+
+  while (ros::ok() && !thetaHere)
   {
-    node.getParam("initial_theta_gain", zeroPointTurnGain);
+    rate.sleep();
+    ros::spinOnce();
   }
-  else
-  {
-    ROS_ERROR("\n\ninitial_theta_gain param not defined! aborting.\n\n");
-    return -1;
-  }
+
   status_msg.is_stuck.data = 0;
   status_msg.cannot_plan_path.data = 0;
   status_msg.in_motion.data = 1;
@@ -383,6 +459,7 @@ int main(int argc, char **argv)
   status_msg.is_stuck.data = 0;
   mode_pub.publish(status_msg);
   ros::spinOnce();
+
   // initialize waypoint controller
   WaypointController wc = WaypointController(ROBOT_AXLE_LENGTH, ROBOT_MAX_SPEED, currPose, fl, fr, br, bl,
                                              1.0 / UPDATE_RATE_HZ, waypoint_default_gains);
