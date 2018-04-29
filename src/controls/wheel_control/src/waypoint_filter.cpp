@@ -4,6 +4,8 @@
 #include <visualization_msgs/Marker.h>
 
 
+#define MIN_DISTANCE_FOR_RUN 2.5
+
 #include <waypoint_controller/waypoint_controller_helper.h>
 
 std::vector<geometry_msgs::Pose2D> waypoints;
@@ -89,7 +91,7 @@ int main(int argc, char** argv)
       
       direction_metric = waypoints.at(waypoints.size() - 1).x - waypoints.at(0).x;
       
-        if (direction_metric > 2.5) //make sure there is a waypoint in the start zone (by placing one)
+        if (direction_metric > MIN_DISTANCE_FOR_RUN) //make sure there is a waypoint in the start zone (by placing one)
         {
             if (!waypoint_in_start_zone)
             {
@@ -104,7 +106,7 @@ int main(int argc, char** argv)
             // TODO: also make sure there is a waypoint in the dig zone and maybe through an exception if there is not.
         }
         
-        if (direction_metric < -2.5) //make sure there is a waypoint in the starting area (which is the dig zone, by placing one)
+        if (direction_metric < -MIN_DISTANCE_FOR_RUN) //make sure there is a waypoint in the starting area (which is the dig zone, by placing one)
         {
             if (!waypoint_in_dig_zone)
             {
@@ -120,7 +122,7 @@ int main(int argc, char** argv)
         }
         
         //make sure the points in the obstacle zone are spaced apart properly
-        if (direction_metric > 2.5 || direction_metric < 2.5)
+        if (direction_metric > MIN_DISTANCE_FOR_RUN || direction_metric < -MIN_DISTANCE_FOR_RUN)
         {
             for (int index =0; index < waypoints.size(); index++)
             {
@@ -159,7 +161,7 @@ int main(int argc, char** argv)
         }
 
         
-        if (direction_metric > 2.5) // need to grab waypoints on entering and exiting waypoints from obstacle zone.
+        if (direction_metric > MIN_DISTANCE_FOR_RUN) // need to grab waypoints on entering and exiting waypoints from obstacle zone.
         {
             ignore_waypoint = false;
             if (wp.x < 1.5) //this waypoint is in the start zone, as we iterate it will be the closest one to the obstacle zone
@@ -227,7 +229,7 @@ int main(int argc, char** argv)
             }
             // if there is no waypoint beyond 4.44, then the dig will not be overwritten because there is no dig
         }
-        else if (direction_metric < -2.5) //need to overwrite dump
+        else if (direction_metric < -MIN_DISTANCE_FOR_RUN) //need to overwrite dump
         {
             ignore_waypoint = false;
             if (wp.x > 4.44) //this waypoint is in the starting zone (the dig zone now), as we iterate it will be the closest one to the obstacle zone
