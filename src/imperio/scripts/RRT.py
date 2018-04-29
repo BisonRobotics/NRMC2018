@@ -137,7 +137,7 @@ def get_target_point(path, targetL):
     return [x, y, ti]
 
 def collision_check(node, map):
-    threshold = .3
+    threshold = .1
     #convert the node to a space in the cell
     row, col = map.cell_index(node.x, node.y)
 
