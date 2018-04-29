@@ -11,12 +11,13 @@ SuperLocalizer::SuperLocalizer(double axleLen, double xi, double yi, double thi,
 
   this->cIMU = centerIMU;
   this->pSensor = posSensor;
-  this->sensors[0] = centerIMU;
-  this->sensors[1] = posSensor;
+  this->sensors[1] = centerIMU;
+  this->sensors[0] = posSensor;
   this->num_sensors = 2;
   this->have_pos = true;
   this->have_imu = true;
-
+  this->imu_is_good = false;
+  this->pos_is_good = false;
   this->state_vector = LocalizerInterface::initState(xi, yi, thi);
   this->residual = LocalizerInterface::initState(0, 0, 0);
   this->measured = LocalizerInterface::initState(0, 0, 0);
@@ -37,13 +38,26 @@ SuperLocalizer::SuperLocalizer(double axleLen, double xi, double yi, double thi,
   this->have_imu = false;
   this->data_is_good = false;
   this->sensors[0] = posSensor;
-
+  this->imu_is_good = false;
+  this->pos_is_good = false;
   this->state_vector = LocalizerInterface::initState(xi, yi, thi);
   this->residual = LocalizerInterface::initState(0, 0, 0);
   this->measured = LocalizerInterface::initState(0, 0, 0);
-
   this->gainVector = gains;
 }
+
+void SuperLocalizer::setDataIsGood(void)
+{
+    if (have_imu && have_pos)
+    {
+      this->data_is_good = imu_is_good && pos_is_good;
+    }
+    else if (have_pos)
+    {
+      this->data_is_good = pos_is_good;
+    }
+}
+
 
 SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(double dt)
 {
@@ -55,9 +69,17 @@ SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(double dt)
   {
     if (this->sensors[a]->receiveData() == ReadableSensors::ReadStatus::READ_SUCCESS)
     {
-      data_is_good = true;
+      if (a==0){
+        pos_is_good = true;
+      }
+      else if (a==1)
+      {
+        imu_is_good = true;
+      }
     }
   }
+
+  setDataIsGood();
 
   if (data_is_good)
   {

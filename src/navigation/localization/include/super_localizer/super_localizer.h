@@ -35,6 +35,9 @@ public:
 
 private:
   bool data_is_good;
+  bool imu_is_good;
+  bool pos_is_good;
+  void setDataIsGood (void);
   Localizer *deadReck;
   ImuSensorInterface *cIMU;
   PosSensorInterface *pSensor;
