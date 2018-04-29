@@ -53,7 +53,7 @@ class ImperioControl(object):
             self.robot.change_state(RobotState.HALT)
 
         if bool_msg.data == False:
-            self.runningOutOftime()
+            self.runningOutOfTime()
 
     def run(self):
         """
