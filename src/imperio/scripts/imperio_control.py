@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-""" Move the robot to desired location.
+""" Control loop for imperio autonomy
 
 Author: James Madison University
-Date: 11/11/2017
+Date: 4/12/2018
 Version: 2
 
 """

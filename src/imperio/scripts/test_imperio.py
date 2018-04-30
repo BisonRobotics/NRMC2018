@@ -227,6 +227,30 @@ class TestPlanner(object):
         sp = SpoofPlanner(sr)
         assert sp.get_robot_location() == (0,0,0)
 
+""" Test for the global planner implementation of the abstract planner
+Author: Nicole Maguire
+Date: 4/12/2018
+Test For Version : 4
+
+"""
+import global_planner
+class TestGlobalPlanner(object):
+    def test_init(self):
+        gp = global_planner.GlobalPlanner(None)
+        assert not gp.waypoints_publisher == None
+        assert gp.robot == None
+        assert gp.movement_status == planner.MovementStatus.HAS_REACHED_GOAL
+
+        sr = SpoofRobot()
+        gp = global_planner.GlobalPlanner(sr)
+        assert gp.robot == sr
+
+    def test_find_waypoints(self):
+        sr = SpoofRobot()
+        gp = global_planner.GlobalPlanner(sr)
+        goal = (6,0)
+        assert not gp.find_waypoints(goal) == None
+
 import regolith_manipulation as reg_man
 
 class SpoofRegMan(reg_man.RegolithManipulation):
