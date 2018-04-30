@@ -166,6 +166,8 @@ int main(int argc, char **argv)
   ros::Publisher angleDerivErrorPub = node.advertise<std_msgs::Float64>("angle_d_error", 30);
   ros::Publisher pathErrorPub = node.advertise<std_msgs::Float64>("path_error", 30);
   ros::Publisher pathDerivErrorPub = node.advertise<std_msgs::Float64>("path_d_error", 30);
+  ros::Publisher dist2EndAbsPub = node.advertise<std_msgs::Float64>("dist_to_end_abs", 30);
+  ros::Publisher dist2EndPub = node.advertise<std_msgs::Float64>("dist_to_end", 30);
   ros::Publisher simAnglePub = node.advertise<std_msgs::Float64>("sim_angle", 30);
   ros::Publisher baseAnglePub = node.advertise<std_msgs::Float64>("base_angle", 30);
   ros::Publisher lWheelVelPub = node.advertise<std_msgs::Float64>("lWheelVelCmd", 30);
@@ -182,6 +184,8 @@ int main(int argc, char **argv)
   std_msgs::Float64 angleDerivErrorMsg;
   std_msgs::Float64 pathErrorMsg;
   std_msgs::Float64 pathDerivErrorMsg;
+  std_msgs::Float64 dist2EndAbsMsg;
+  std_msgs::Float64 dist2EndMsg;
   std_msgs::Float64 simAngleMsg;
   std_msgs::Float64 baseAngleMsg;
   std_msgs::Float64 lWheelVel;
@@ -689,12 +693,17 @@ int main(int argc, char **argv)
     angleDerivErrorMsg.data = wc.getETdEstimate();
     pathErrorMsg.data = wc.getEPpEstimate();
     pathDerivErrorMsg.data = wc.getEPdEstimate();
+    dist2EndMsg.data = wc.getDist2endOnPath();
+    dist2EndAbsMsg.data = wc.getDist2endAbs();
     baseAngleMsg.data = stateVector.theta;
     
     angleErrorPub.publish(angleErrorMsg);
     angleDerivErrorPub.publish(angleDerivErrorMsg);
     pathErrorPub.publish(pathErrorMsg);
     pathDerivErrorPub.publish(pathDerivErrorMsg);
+    dist2EndAbsPub.publish(dist2EndAbsMsg);
+    dist2EndPub.publish(dist2EndMsg);
+    
     baseAnglePub.publish(baseAngleMsg);
     
     if (simulating)

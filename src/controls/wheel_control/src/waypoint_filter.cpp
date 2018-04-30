@@ -219,8 +219,17 @@ int main(int argc, char** argv)
                 //calculate and insert entrance point
                 obstacle_zone_entrance_point.x = OBSTACLE_ZONE_START_X;
                 obstacle_zone_entrance_point.y = interpolateYFromXAndTwoPoints(last_point_in_start_zone.x, last_point_in_start_zone.y, wp.x, wp.y, OBSTACLE_ZONE_START_X);
-                obstacle_zone_entrance_point.theta = last_point_in_start_zone.theta;
-                //publish this point
+                //obstacle_zone_entrance_point.theta = last_point_in_start_zone.theta;
+                if (std::abs(obstacle_zone_entrance_point.y) > .3)
+                {
+                    obstacle_zone_entrance_point.theta = asin(obstacle_zone_entrance_point.y 
+                                                             / sqrt((OBSTACLE_ZONE_START_X - X_DIST_FOR_BACKUP)*(OBSTACLE_ZONE_START_X - X_DIST_FOR_BACKUP + .1) 
+                                                                     + obstacle_zone_entrance_point.y * obstacle_zone_entrance_point.y));
+                }
+                else
+                {
+                    obstacle_zone_entrance_point.theta = last_point_in_start_zone.theta;
+                }                //publish this point
                 pub.publish(obstacle_zone_entrance_point);
                 ros::spinOnce();
                 rate.sleep();
@@ -295,17 +304,37 @@ int main(int argc, char** argv)
                 //it will be used in overwrite_dig logic
                 obstacle_zone_exit_point.y = interpolateYFromXAndTwoPoints(last_point_in_dig_zone.x, last_point_in_dig_zone.y, wp.x, wp.y, OBSTACLE_ZONE_START_X);
                 obstacle_zone_exit_point.x = OBSTACLE_ZONE_START_X;
-                obstacle_zone_exit_point.theta = last_point_in_dig_zone.theta;
+                //obstacle_zone_exit_point.theta = last_point_in_dig_zone.theta;
+                if (std::abs(obstacle_zone_exit_point.y) > .3)
+                {
+                    obstacle_zone_exit_point.theta = asin(obstacle_zone_exit_point.y 
+                                                             / sqrt((OBSTACLE_ZONE_START_X - X_DIST_FOR_BACKUP)*(OBSTACLE_ZONE_START_X - X_DIST_FOR_BACKUP + .1) 
+                                                                     + obstacle_zone_exit_point.y * obstacle_zone_exit_point.y));
+                }
+                else
+                {
+                    obstacle_zone_exit_point.theta = last_point_in_dig_zone.theta;
+                }
                 overwrite_dump = true;
             }
-            else if (grabbing_exit) // waypoint in dig_zone after waypoints in obstacle zone
+            else if (grabbing_exit) // waypoint in start_zone after waypoints in obstacle zone
             {
                 grabbing_exit = false;
                 //calculate exit from here, now, between last_point_in_obstacle_zone and this first point                
                 //it will be used in overwrite_dig logic
                 obstacle_zone_exit_point.y = interpolateYFromXAndTwoPoints(last_point_in_obstacle_zone.x, last_point_in_obstacle_zone.y, wp.x, wp.y, OBSTACLE_ZONE_START_X);
                 obstacle_zone_exit_point.x = OBSTACLE_ZONE_START_X;
-                obstacle_zone_exit_point.theta = last_point_in_obstacle_zone.theta;
+                //obstacle_zone_exit_point.theta = last_point_in_obstacle_zone.theta;
+                if (std::abs(obstacle_zone_exit_point.y) > .3)
+                {
+                    obstacle_zone_exit_point.theta = asin(obstacle_zone_exit_point.y 
+                                                             / sqrt((OBSTACLE_ZONE_START_X - X_DIST_FOR_BACKUP)*(OBSTACLE_ZONE_START_X - X_DIST_FOR_BACKUP + .1) 
+                                                                     + obstacle_zone_exit_point.y * obstacle_zone_exit_point.y));
+                }
+                else
+                {
+                    obstacle_zone_exit_point.theta = last_point_in_dig_zone.theta;
+                }
                 overwrite_dump = true;
             }
         }
