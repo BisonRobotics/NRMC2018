@@ -294,7 +294,7 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
         // continue execution
         returnStatus = Status::OFFPATH;
       }
-      if (dist2endOnPath < -.5 *GOALREACHEDDIST)  // overshot path and drove past goal (but still might be close to path)
+      if (dist2endOnPath < 0)  // overshot path and drove past goal (but still might be close to path)
       {
         modifyNavQueue2RecoverFromGoalOvershoot();  // mark maneuver as complete
         return Status::OVERSHOT;  // next time function is called, maneuver will update and either start next maneuver
