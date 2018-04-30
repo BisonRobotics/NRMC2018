@@ -53,8 +53,8 @@ include_directories(
 add_library (lowpass_filter src/mapping_filter/low_pass.cpp)
 target_link_libraries(lowpass_filter ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
-add_library (hole_layer src/mapping_filter/hole_layer.cpp)
-target_link_libraries(hole_layer ${catkin_LIBRARIES})
+#add_library (hole_layer src/mapping_filter/hole_layer.cpp)
+#target_link_libraries(hole_layer ${catkin_LIBRARIES})
 
 #############
 ## Install ##

@@ -20,8 +20,9 @@ public:
   void onInitialize() override;
   void updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, int min_j, int max_i, int max_j) override;
   bool updateEnable (std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res);
+  void updateBounds (double robot_x, double robot_y, double robot_yaw, double *min_x, double *min_y, double *max_x, double *max_y);
 private:
-  static constexpr unsigned int size_of_kern = 71;
+  static constexpr unsigned int size_of_kern = 25;
   ros::ServiceServer enable_service;
 };
 }

@@ -74,6 +74,7 @@
   <export>
     <!-- Other tools can request additional information be placed here -->
     <costmap_2d plugin="${prefix}/lowpass_plug.xml"/>
-    <costmap_2d plugin="${prefix}/hole_plug.xml"/>
+
+ <!--   <costmap_2d plugin="${prefix}/hole_plug.xml"/>-->
   </export>
 </package>

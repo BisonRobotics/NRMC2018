@@ -1,18 +1,15 @@
 plugins:
   - {name: static_map,  type: "costmap_2d::StaticLayer"}
-  - {name: inflation, type: "costmap_2d::InflationLayer"}
 #  - {name: rock_layer, type: "low_pass_namespace::LowPassLayer"}
   - {name: rock_layer, type: "costmap_2d::ObstacleLayer"}
-
-publish_frequency: 1.0
+  - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
+publish_frequency: 1
 footprint: [[-1, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0]]
 
-inflation:
-  inflation_radius: .365
-  cost_scaling_factor: 1.5
+inflation_layer: {circumscribed_radius: 0.264, cost_scaling_factor: 3.0, enabled: true,
+    inflation_radius: 0.1, inscribed_radius: 0.2}
 
 rock_layer:
-  observation_sources: point_cloud_sensor
   point_cloud_sensor:
     data_type: PointCloud2
     sensor_frame: /camera_depth_optical_frame
@@ -23,8 +20,9 @@ rock_layer:
     rolling_window: false
     observation_persistence: 0.0
     obstacle_range: 5.0
-    min_obstacle_height: 0.08
-    max_obstacle_height: 0.4
+    min_obstacle_height: 0.01
+    max_obstacle_height: 0.3
+  observation_sources: point_cloud_sensor
 
 hole_layer:
   observation_sources: point_cloud_sensor
