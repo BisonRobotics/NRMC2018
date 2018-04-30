@@ -316,15 +316,15 @@ int main(int argc, char** argv)
           pub.publish(obstacle_zone_exit_point);
           ros::spinOnce();
           rate.sleep();
-          
+          /*
           wpmsg.x = 1.0;
           wpmsg.y = -0.015;
           wpmsg.theta =0;
           pub.publish(wpmsg);
           ros::spinOnce();
           rate.sleep();
-          
-          wpmsg.x = .9;
+          */
+          wpmsg.x = .63;
           wpmsg.y = 0.015;
           wpmsg.theta =0;
           pub.publish(wpmsg);
