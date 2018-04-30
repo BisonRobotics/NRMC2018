@@ -143,18 +143,11 @@ void WaypointController::clearControlStates()
   LWheelError = 0;
   RWheelError = 0;
 
-  LvelCmdPrev = LvelCmd;  // 0
-  RvelCmdPrev = RvelCmd;  // 0
 }
 
 void WaypointController::haltAndAbort()
 {
-  front_left_wheel->setLinearVelocity(0);
-  back_left_wheel->setLinearVelocity(0);
-  front_right_wheel->setLinearVelocity(0);
-  back_right_wheel->setLinearVelocity(0);
-
-  clearControlStates();
+  halt();
 
   currManeuverIndex = 0;
   doingManeuver = false;
@@ -168,13 +161,11 @@ void WaypointController::halt()
   back_left_wheel->setLinearVelocity(0);
   front_right_wheel->setLinearVelocity(0);
   back_right_wheel->setLinearVelocity(0);
+  LvelCmdPrev = 0;  // 0
+  RvelCmdPrev = 0;  // 0
 
   clearControlStates();
 }
-
-// TODO
-// get planned goodness method
-// X distance travelled / distance taken for all future maneuvers
 
 std::vector<std::pair<double, double> > WaypointController::addWaypoint(pose waypoint, pose currRobotPose)
 {
@@ -323,9 +314,6 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     EPpDerivFiltEst = (EPpLowPass - EPpLowPassPrev) / dt;
     ETpDerivFiltEst = WaypointControllerHelper::anglediff(ETpLowPass, ETpLowPassPrev) / dt;  // order?
 
-    LvelCmdPrev = LvelCmd;
-    RvelCmdPrev = RvelCmd;
-
     double speedEst = sqrt(stateVector.x_vel * stateVector.x_vel + stateVector.y_vel * stateVector.y_vel);
     double radiusEst = (stateVector.omega != 0) ? speedEst / stateVector.omega : 1000;
 
@@ -352,6 +340,8 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
 
     LvelCmd = WheelAlpha * LvelCmd + (1.0 - WheelAlpha) * LvelCmdPrev;
     RvelCmd = WheelAlpha * RvelCmd + (1.0 - WheelAlpha) * RvelCmdPrev;
+    LvelCmdPrev = LvelCmd;
+    RvelCmdPrev = RvelCmd;
     
     //to clamp transparently or to not clamp transparently
     double LvelCmdClamped = clamp(LvelCmd, MAX_ABS_WHEEL_SPEED, -MAX_ABS_WHEEL_SPEED);
