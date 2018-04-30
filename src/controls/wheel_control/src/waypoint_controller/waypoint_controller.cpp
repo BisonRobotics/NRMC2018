@@ -8,7 +8,7 @@
 #define GOALREACHEDDIST .100f  // should be about the size of the noise floor of localization
 // this also determines how far you can overshoot a goal
 #define ANGLETOL .2f
-#define SPEED_CONST .2  // average speed for the wheels in linear m/s
+#define SPEED_CONST .4  // average speed for the wheels in linear m/s
 #define MAX_ABS_WHEEL_SPEED .28
 
 bool approx(double A, double B, double T)
@@ -24,6 +24,11 @@ double dist(double A, double B, double C, double D)
 double clamp(double A, double upper, double lower)
 {
     return ((A > upper) ? upper : ((A < lower) ? lower : A));
+}
+
+double interpolateYFromXAndTwoPoints(double x0, double y0, double x1, double y1, double x)
+{
+    return ((y1 - y0)/(x1 - x0)) * (x - x0) + y0;
 }
 
 WaypointController::WaypointController(double axelLength, double maxSafeSpeed, pose initialPose, iVescAccess *fl,
@@ -143,18 +148,11 @@ void WaypointController::clearControlStates()
   LWheelError = 0;
   RWheelError = 0;
 
-  LvelCmdPrev = LvelCmd;  // 0
-  RvelCmdPrev = RvelCmd;  // 0
 }
 
 void WaypointController::haltAndAbort()
 {
-  front_left_wheel->setLinearVelocity(0);
-  back_left_wheel->setLinearVelocity(0);
-  front_right_wheel->setLinearVelocity(0);
-  back_right_wheel->setLinearVelocity(0);
-
-  clearControlStates();
+  halt();
 
   currManeuverIndex = 0;
   doingManeuver = false;
@@ -168,13 +166,11 @@ void WaypointController::halt()
   back_left_wheel->setLinearVelocity(0);
   front_right_wheel->setLinearVelocity(0);
   back_right_wheel->setLinearVelocity(0);
+  LvelCmdPrev = 0;  // 0
+  RvelCmdPrev = 0;  // 0
 
   clearControlStates();
 }
-
-// TODO
-// get planned goodness method
-// X distance travelled / distance taken for all future maneuvers
 
 std::vector<std::pair<double, double> > WaypointController::addWaypoint(pose waypoint, pose currRobotPose)
 {
@@ -267,14 +263,19 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     else  // doing a maneuver, need to see if robot has completed it
     {
       theCPP = WaypointControllerHelper::findCPP(robotPose, currMan);  // closest pose on path
-
-      dist2endOnPath = WaypointControllerHelper::sign(currMan.distance) * currMan.radius *
-                       (WaypointControllerHelper::anglediff(maneuverEnd.theta, theCPP.theta));
       dist2endAbs = dist(robotPose.x, robotPose.y, maneuverEnd.x, maneuverEnd.y);
-      if (std::abs(currMan.radius) > 900)  // if straight line path, use abs distance instead
+      if (std::abs(currMan.radius) > 900)  // if straight line path, use linear projection
       {
-        dist2endOnPath = dist2endAbs;
+        //project robot onto path        
+        double projectedY = interpolateYFromXAndTwoPoints(maneuverEnd.x, maneuverEnd.y, maneuverEnd.x + cos(maneuverEnd.theta), maneuverEnd.y + sin(maneuverEnd.theta), robotPose.x);
+        dist2endOnPath = WaypointControllerHelper::sign(currMan.distance)  * (maneuverEnd.y - projectedY);
       }
+      else
+      {
+          dist2endOnPath = WaypointControllerHelper::sign(currMan.distance) * currMan.radius *
+                       (WaypointControllerHelper::anglediff(maneuverEnd.theta, theCPP.theta));
+      }
+      
       dist2Path = dist(robotPose.x, robotPose.y, theCPP.x, theCPP.y);
 
       if (approx(dist2endOnPath, 0, GOALREACHEDDIST) &&
@@ -293,7 +294,7 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
         // continue execution
         returnStatus = Status::OFFPATH;
       }
-      if (dist2endOnPath < -.5 *GOALREACHEDDIST)  // overshot path and drove past goal (but still might be close to path)
+      if (dist2endOnPath < 0)  // overshot path and drove past goal (but still might be close to path)
       {
         modifyNavQueue2RecoverFromGoalOvershoot();  // mark maneuver as complete
         return Status::OVERSHOT;  // next time function is called, maneuver will update and either start next maneuver
@@ -323,9 +324,6 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     EPpDerivFiltEst = (EPpLowPass - EPpLowPassPrev) / dt;
     ETpDerivFiltEst = WaypointControllerHelper::anglediff(ETpLowPass, ETpLowPassPrev) / dt;  // order?
 
-    LvelCmdPrev = LvelCmd;
-    RvelCmdPrev = RvelCmd;
-
     double speedEst = sqrt(stateVector.x_vel * stateVector.x_vel + stateVector.y_vel * stateVector.y_vel);
     double radiusEst = (stateVector.omega != 0) ? speedEst / stateVector.omega : 1000;
 
@@ -352,28 +350,32 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
 
     LvelCmd = WheelAlpha * LvelCmd + (1.0 - WheelAlpha) * LvelCmdPrev;
     RvelCmd = WheelAlpha * RvelCmd + (1.0 - WheelAlpha) * RvelCmdPrev;
+    LvelCmdPrev = LvelCmd;
+    RvelCmdPrev = RvelCmd;
     
-    LvelCmd = clamp(LvelCmd, MAX_ABS_WHEEL_SPEED, -MAX_ABS_WHEEL_SPEED);
-    RvelCmd = clamp(RvelCmd, MAX_ABS_WHEEL_SPEED, -MAX_ABS_WHEEL_SPEED);
+    //to clamp transparently or to not clamp transparently
+    double LvelCmdClamped = clamp(LvelCmd, MAX_ABS_WHEEL_SPEED, -MAX_ABS_WHEEL_SPEED);
+    double RvelCmdClamped = clamp(RvelCmd, MAX_ABS_WHEEL_SPEED, -MAX_ABS_WHEEL_SPEED);
+    
     
     if (!aggressiveFix)
     {
-      front_left_wheel->setLinearVelocity(LvelCmd);
-      back_left_wheel->setLinearVelocity(LvelCmd);
-      front_right_wheel->setLinearVelocity(RvelCmd);
-      back_right_wheel->setLinearVelocity(RvelCmd);
+      front_left_wheel->setLinearVelocity(LvelCmdClamped);
+      back_left_wheel->setLinearVelocity(LvelCmdClamped);
+      front_right_wheel->setLinearVelocity(RvelCmdClamped);
+      back_right_wheel->setLinearVelocity(RvelCmdClamped);
     }
     else
     {
       if (EPpEst > 0)
       {
-        front_left_wheel->setLinearVelocity(0);  // TODO experiment with 0 and setting to fraction of LvelCmd
-        back_left_wheel->setLinearVelocity(0);  // in the sim it can just spin in circles (maybe the sim is bad?)
+        front_left_wheel->setLinearVelocity(-.1);  // TODO experiment with 0 and setting to fraction of LvelCmd
+        back_left_wheel->setLinearVelocity(-.1);  // in the sim it can just spin in circles (maybe the sim is bad?)
       }
       else
       {
-        front_right_wheel->setLinearVelocity(0);
-        back_right_wheel->setLinearVelocity(0);
+        front_right_wheel->setLinearVelocity(-.1);
+        back_right_wheel->setLinearVelocity(-.1);
       }
     }
     return returnStatus;

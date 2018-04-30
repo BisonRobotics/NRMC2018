@@ -32,8 +32,8 @@ static constexpr WaypointControllerNs::waypointControllerGains waypoint_default_
   /*DNFW*/
   .eppgain = 30,
   .epdgain = -10,  //.55,
-  .etpgain = 60,
-  .etdgain = -25,  //.8,
+  .etpgain = 20,
+  .etdgain = -10,  //.8,
   .epplpgain = 2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 / (2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 + 1),
   .etplpgain = 2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 / (2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 + 1),
   .wheelalpha = .1,
