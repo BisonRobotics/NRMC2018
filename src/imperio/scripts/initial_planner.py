@@ -11,11 +11,12 @@ Version: 1
 import rospy
 from imperio.msg import DriveStatus
 
-from std_msgs.msg import Float64
+from std_msgs.msg import Float64, Empty
 
 
 class InitialPlanner(object):
     def __init__(self):
+        self.south_check_publisher = rospy.Publisher('/position_controller/south_check', Empty, queue_size=1, latch=True)
         self.theta_publisher = rospy.Publisher('/position_controller/initialTheta', Float64, queue_size=1, latch=True)
         rospy.Subscriber('/position_controller/drive_controller_status', DriveStatus, self.drive_status_callback)
         self.has_turned = False
@@ -38,6 +39,7 @@ class InitialPlanner(object):
         if self.msg_published:
             return False
 
+        self.publish_south_check()
         self.publish_turn_msg(0)
         return False
 
@@ -46,6 +48,10 @@ class InitialPlanner(object):
         msg.data = theta
         self.msg_published = True
         self.theta_publisher.publish(msg)
+
+    def publish_south_check(self):
+        msg = Empty()
+        self.south_check_publisher.publish(msg)
 
 
 

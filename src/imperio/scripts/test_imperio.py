@@ -351,6 +351,7 @@ class TestInitialPlanner(object):
     def test_turn_to_start(self):
         ip = initial_planner.InitialPlanner()
         assert ip.turn_to_start() == False
+        assert ip.turn_to_start() == False
 
         ip = initial_planner.InitialPlanner()
         ip.planner_failed = True
@@ -365,6 +366,10 @@ class TestInitialPlanner(object):
         ip = initial_planner.InitialPlanner()
         ip.publish_turn_msg(0)
         assert ip.msg_published == True
+
+    def test_publish_south_check(self):
+        ip = initial_planner.InitialPlanner()
+        ip.publish_south_check()
 
 
 
