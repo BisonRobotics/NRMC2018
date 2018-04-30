@@ -126,7 +126,7 @@ class Planner(object):
     def publish_waypoints(self, waypoints):
         """
         Publishes the waypoints to the local planner
-        :param waypoints: an array of oriented waypoints
+        :param waypoints: an array of oriented waypoint
         """
 
         message = GlobalWaypoints()
@@ -145,6 +145,7 @@ class Planner(object):
         """
         Halts the command of the robot
         """
+        rospy.loginfo("[IMPERIO] : Halting Navigation")
         self.halt_publisher.publish(Empty())
         self.halt = True
 

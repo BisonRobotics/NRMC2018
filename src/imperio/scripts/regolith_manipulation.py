@@ -100,4 +100,6 @@ class RegolithManipulation(object):
 
     # The commands to tell the robot to stop moving the hoe
     def halt_regolith_commands(self):
+        rospy.loginfo("[IMPERIO] : Halting Regolith Movement")
+
         self.halt = True
