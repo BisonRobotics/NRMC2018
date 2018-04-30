@@ -18,6 +18,7 @@ from imperio.msg import GlobalWaypoints
 from imperio.msg import DriveStatus
 from nav_msgs.msg import OccupancyGrid
 from geometry_msgs.msg import Pose2D
+from std_msgs.msg import Empty
 
 class MovementStatus(Enum):
     """
@@ -42,6 +43,7 @@ class Planner(object):
         :param robot: the robot object the planner will be moving
         """
         self.waypoints_publisher = rospy.Publisher('/position_controller/global_planner_goal', GlobalWaypoints, queue_size=100, latch=True)
+        self.halt_publisher = rospy.Publisher('/position_controller/halt', Empty, queue_size=1, latch=True)
 
         rospy.Subscriber('/position_controller/drive_controller_status', DriveStatus, self.drive_status_callback)
         rospy.Subscriber('/costmap_2d_node/costmap/costmap', OccupancyGrid, self.map_callback)
@@ -51,6 +53,7 @@ class Planner(object):
         self.occupancy_grid = None
         self.movement_status = MovementStatus.HAS_REACHED_GOAL
         self.goal_given = False
+        self.halt = False
 
     def map_callback(self, map_message):
         self.occupancy_grid = map_utils.Map(map_message)
@@ -78,7 +81,8 @@ class Planner(object):
         :param goal: the global goal (based on the overall map) as (x,y)
         :return: a boolean of it the robot has reached the goal, None for a fatal error
         """
-
+        if self.halt:
+            return None
         if self.movement_status == MovementStatus.CANNOT_PLAN_PATH:
             return None
         if self.movement_status == MovementStatus.MOVING:
@@ -99,13 +103,13 @@ class Planner(object):
         waypoints = self.find_waypoints(goal)
         oriented_waypoints = self.calculate_orientation(waypoints)
         rospy.loginfo("[IMPERIO] : Path found : {}".format(oriented_waypoints))
-        if oriented_waypoints == []:
+        if oriented_waypoints == [] or len(oriented_waypoints) < 2:
             rospy.logwarn("[IMPERIO] : No possible path found")
-            return False
+            return None
 
-        #TODO : Add recovery behavior for if this is null [Jira NRMC2018-330]
-
+        oriented_waypoints.pop(0)
         self.publish_waypoints(oriented_waypoints)
+        self.movement_status = MovementStatus.MOVING
         self.goal_given = True
         rospy.loginfo("[IMPERIO] : For Goal {}".format(goal))
         return False
@@ -122,15 +126,11 @@ class Planner(object):
     def publish_waypoints(self, waypoints):
         """
         Publishes the waypoints to the local planner
-        :param waypoints: an array of oriented waypoints
+        :param waypoints: an array of oriented waypoint
         """
-        if len(waypoints) < 2:
-            #TODO : Handle recovery behavior here. Possible invalid path
-            return
 
         message = GlobalWaypoints()
         pose_array = []
-        waypoints.pop(0)
 
         for point in waypoints:
             msg = Pose2D()
@@ -139,16 +139,15 @@ class Planner(object):
 
         message.pose_array = pose_array
         self.waypoints_publisher.publish(message)
-        self.movement_status = MovementStatus.MOVING
         rospy.loginfo("[IMPERIO] : Waypoints published to local planner")
 
     def halt_movement(self):
         """
         Halts the command of the robot
         """
-        #will need to empty the list of poses/goals to the local planner
-        #will need to tell the planner to stop moving
-        pass
+        rospy.loginfo("[IMPERIO] : Halting Navigation")
+        self.halt_publisher.publish(Empty())
+        self.halt = True
 
     def calculate_orientation(self, waypoints):
         """

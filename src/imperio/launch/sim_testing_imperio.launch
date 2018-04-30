@@ -6,7 +6,7 @@
 
 <include file="$(find description)/launch/display_and_load.launch"/>
 <include file="$(find wheel_control)/launch/sim_waypoint_controller.launch"/>
-<include file="$(find dig_control)/launch/dig_master.launch"/>
+<include file="$(find dig_control)/launch/sim_dig_master.launch"/>
 <include file="$(find dig_control)/launch/sim_outrigger_master.launch"/>
 <include file="$(find imperio)/launch/imperio.launch"/>
 

@@ -33,6 +33,7 @@ class ImperioControl(object):
         self.planner = GlobalPlanner(self.robot)
         self.rm = RegolithManipulation()
         self.starting_region = None
+        self.halt_complete = False
         self.run()
 
     def haltAutonomyCallback(self, bool_msg):
@@ -60,7 +61,7 @@ class ImperioControl(object):
         The operation loop for Imperio
         """
         rate = rospy.Rate(10)  # Refresh at 10Hz
-        while not self.robot.state == RobotState.HALT and not rospy.is_shutdown():
+        while not self.halt_complete and not rospy.is_shutdown():
             if self.robot.state == RobotState.INITIAL:
                 self.navigateInitialPosition()
             elif self.robot.state == RobotState.OUTBOUND:
@@ -130,9 +131,10 @@ class ImperioControl(object):
         """
         Halts the robot and Imperio
         """
-        #halt_movement(self.robot)
-        #halt_regolithm_commands(self)
-        pass
+        rospy.loginfo("[IMPERIO]: Halting all movement")
+        self.planner.halt_movement()
+        self.rm.halt_regolith_commands()
+        self.halt_complete = True
 
     def recover(self):
         """
