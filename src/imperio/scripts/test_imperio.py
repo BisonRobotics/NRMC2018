@@ -10,8 +10,8 @@ Test For Version : 3
 from robot import *
 class TestRobot(object):
 
-
     def test_init(self):
+        rospy.init_node("Testing_Imperio")
         r = robot(None)
         assert r.state == RobotState.INITIAL
         assert not r.tf == None
@@ -93,6 +93,14 @@ class SpoofRobot():
         pose = (0,0,0,0)
         return (location, pose)
 
+class SpoofPublisher():
+    def __init__(self):
+        self.message_recieved = False
+        self.message = None
+
+    def publish(self, message):
+        self.message = message
+        self.message_recieved = True
 
 class TestPlanner(object):
 
@@ -103,6 +111,7 @@ class TestPlanner(object):
         assert sp.robot == test_robot
         assert not sp.movement_status == None
         assert sp.goal_given == False
+        assert sp.halt == False
 
     def test_map_callback(self):
         sp = SpoofPlanner(None)
@@ -165,31 +174,32 @@ class TestPlanner(object):
 
 
     def test_publish_waypoints(self):
-        planner.rospy.init_node('Test_Imperio')
-
         sp = SpoofPlanner(None)
+        publisher = SpoofPublisher()
+        sp.waypoints_publisher = publisher
         waypoints = [(2, 4, 5), (34, 4, 5), (5, 2, 2)]
         sp.publish_waypoints(waypoints)
-        assert sp.movement_status == planner.MovementStatus.MOVING
+        assert publisher.message_recieved == True
+        assert not publisher.message == None
+
 
         sp = SpoofPlanner(None)
-        waypoints = [(1,1,1),(2,4,5)]
-        sp.publish_waypoints(waypoints)
-        assert sp.movement_status == planner.MovementStatus.MOVING
-
-        sp = SpoofPlanner(None)
-        waypoints = [(1, 1, 1)]
-        sp.publish_waypoints(waypoints)
-        assert sp.movement_status == planner.MovementStatus.HAS_REACHED_GOAL
-
-        sp = SpoofPlanner(None)
+        publisher = SpoofPublisher()
+        sp.waypoints_publisher = publisher
         waypoints = []
         sp.publish_waypoints(waypoints)
-        assert sp.movement_status == planner.MovementStatus.HAS_REACHED_GOAL
+        assert publisher.message_recieved == True
+        assert not publisher.message == None
 
     def test_halt_movement(self):
         sp = SpoofPlanner(None)
+        publisher = SpoofPublisher()
+        sp.halt_publisher = publisher
         sp.halt_movement()
+
+        assert publisher.message_recieved == True
+        assert sp.halt == True
+        assert sp.navigate_to_goal((0,0)) == None
 
     def test_orient_forward(self):
         sp = SpoofPlanner(None)
