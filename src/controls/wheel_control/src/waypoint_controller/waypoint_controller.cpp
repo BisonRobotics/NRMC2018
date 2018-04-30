@@ -8,7 +8,7 @@
 #define GOALREACHEDDIST .100f  // should be about the size of the noise floor of localization
 // this also determines how far you can overshoot a goal
 #define ANGLETOL .2f
-#define SPEED_CONST .2  // average speed for the wheels in linear m/s
+#define SPEED_CONST .4  // average speed for the wheels in linear m/s
 #define MAX_ABS_WHEEL_SPEED .28
 
 bool approx(double A, double B, double T)
@@ -353,27 +353,29 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     LvelCmd = WheelAlpha * LvelCmd + (1.0 - WheelAlpha) * LvelCmdPrev;
     RvelCmd = WheelAlpha * RvelCmd + (1.0 - WheelAlpha) * RvelCmdPrev;
     
-    LvelCmd = clamp(LvelCmd, MAX_ABS_WHEEL_SPEED, -MAX_ABS_WHEEL_SPEED);
-    RvelCmd = clamp(RvelCmd, MAX_ABS_WHEEL_SPEED, -MAX_ABS_WHEEL_SPEED);
+    //to clamp transparently or to not clamp transparently
+    double LvelCmdClamped = clamp(LvelCmd, MAX_ABS_WHEEL_SPEED, -MAX_ABS_WHEEL_SPEED);
+    double RvelCmdClamped = clamp(RvelCmd, MAX_ABS_WHEEL_SPEED, -MAX_ABS_WHEEL_SPEED);
+    
     
     if (!aggressiveFix)
     {
-      front_left_wheel->setLinearVelocity(LvelCmd);
-      back_left_wheel->setLinearVelocity(LvelCmd);
-      front_right_wheel->setLinearVelocity(RvelCmd);
-      back_right_wheel->setLinearVelocity(RvelCmd);
+      front_left_wheel->setLinearVelocity(LvelCmdClamped);
+      back_left_wheel->setLinearVelocity(LvelCmdClamped);
+      front_right_wheel->setLinearVelocity(RvelCmdClamped);
+      back_right_wheel->setLinearVelocity(RvelCmdClamped);
     }
     else
     {
       if (EPpEst > 0)
       {
-        front_left_wheel->setLinearVelocity(0);  // TODO experiment with 0 and setting to fraction of LvelCmd
-        back_left_wheel->setLinearVelocity(0);  // in the sim it can just spin in circles (maybe the sim is bad?)
+        front_left_wheel->setLinearVelocity(-.1);  // TODO experiment with 0 and setting to fraction of LvelCmd
+        back_left_wheel->setLinearVelocity(-.1);  // in the sim it can just spin in circles (maybe the sim is bad?)
       }
       else
       {
-        front_right_wheel->setLinearVelocity(0);
-        back_right_wheel->setLinearVelocity(0);
+        front_right_wheel->setLinearVelocity(-.1);
+        back_right_wheel->setLinearVelocity(-.1);
       }
     }
     return returnStatus;
