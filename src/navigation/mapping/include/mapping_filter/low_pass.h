@@ -21,7 +21,7 @@ public:
   void updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, int min_j, int max_i, int max_j) override;
   bool updateEnable (std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res);
 private:
-  static constexpr unsigned int size_of_kern = 35;
+  static constexpr unsigned int size_of_kern = 71;
   ros::ServiceServer enable_service;
 };
 }

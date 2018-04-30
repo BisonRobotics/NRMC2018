@@ -36,7 +36,7 @@ void LowPassLayer::updateCosts(costmap_2d::Costmap2D &master_grid, int min_i, in
   {
     unsigned char *my_map = master_grid.getCharMap();
     unsigned int size_of_map = master_grid.getSizeInCellsX() * master_grid.getSizeInCellsY();
-    cv::Mat input = cv::Mat(master_grid.getSizeInCellsY(), master_grid.getSizeInCellsX(), CV_8U, my_map,
+    cv::Mat input = cv::Mat(master_grid.getSizeInCellsX(), master_grid.getSizeInCellsY(), CV_8U, my_map,
                             cv::Mat::AUTO_STEP);
     cv::Mat filtered;
 

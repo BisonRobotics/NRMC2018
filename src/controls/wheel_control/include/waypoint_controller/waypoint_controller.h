@@ -36,7 +36,7 @@ static constexpr WaypointControllerNs::waypointControllerGains waypoint_default_
   .etdgain = -25,  //.8,
   .epplpgain = 2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 / (2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 + 1),
   .etplpgain = 2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 / (2 * M_PI * DT_THAT_SHALL_BE_USED * .1608 + 1),
-  .wheelalpha = .05,
+  .wheelalpha = .1,
   .wheelerrorgain = 10
   /*DNFW*/
 };
@@ -67,7 +67,9 @@ public:
   unsigned int getCurrManeuverIndex();                      // DEBUG
   pose getManeuverEnd();                                    // DEBUG
   double getETpEstimate();                                  // DEBUG
+  double getETdEstimate();                                  // DEBUG
   double getEPpEstimate();                                  // DEBUG
+  double getEPdEstimate();                                  // DEBUG
   double getDist2endOnPath();                               // DEBUG
   double getDist2endAbs();                                  // DEBUG
   std::pair<double, double> getSetSpeeds();                 // DEBUG

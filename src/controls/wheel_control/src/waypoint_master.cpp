@@ -163,6 +163,11 @@ int main(int argc, char **argv)
   ros::Publisher jspub = globalNode.advertise<sensor_msgs::JointState>("joint_states", 500);
 
   ros::Publisher angleErrorPub = node.advertise<std_msgs::Float64>("angle_error", 30);
+  ros::Publisher angleDerivErrorPub = node.advertise<std_msgs::Float64>("angle_d_error", 30);
+  ros::Publisher pathErrorPub = node.advertise<std_msgs::Float64>("path_error", 30);
+  ros::Publisher pathDerivErrorPub = node.advertise<std_msgs::Float64>("path_d_error", 30);
+  ros::Publisher dist2EndAbsPub = node.advertise<std_msgs::Float64>("dist_to_end_abs", 30);
+  ros::Publisher dist2EndPub = node.advertise<std_msgs::Float64>("dist_to_end", 30);
   ros::Publisher simAnglePub = node.advertise<std_msgs::Float64>("sim_angle", 30);
   ros::Publisher baseAnglePub = node.advertise<std_msgs::Float64>("base_angle", 30);
   ros::Publisher lWheelVelPub = node.advertise<std_msgs::Float64>("lWheelVelCmd", 30);
@@ -176,6 +181,11 @@ int main(int argc, char **argv)
   }
   
   std_msgs::Float64 angleErrorMsg;
+  std_msgs::Float64 angleDerivErrorMsg;
+  std_msgs::Float64 pathErrorMsg;
+  std_msgs::Float64 pathDerivErrorMsg;
+  std_msgs::Float64 dist2EndAbsMsg;
+  std_msgs::Float64 dist2EndMsg;
   std_msgs::Float64 simAngleMsg;
   std_msgs::Float64 baseAngleMsg;
   std_msgs::Float64 lWheelVel;
@@ -315,8 +325,6 @@ int main(int argc, char **argv)
   }
 
   ROS_INFO ("Localization Settled!");
-  stateVector = superLocalizer.getStateVector();
-  tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
   ros::spinOnce ();
 
   double range_of_bad_theta;
@@ -333,7 +341,7 @@ int main(int argc, char **argv)
   }
 
   double init_angle = pos->getTheta();
-  int init_y = (pos->getTheta() > 0) ? 1 : -1;
+  int init_y = (pos->getY() > 0) ? 1 : -1;
 
   bool should_zero_point = std::abs(WaypointControllerHelper::anglediff(std::abs(init_angle),M_PI)) < range_of_bad_theta;
 
@@ -398,12 +406,18 @@ int main(int argc, char **argv)
     }
 
     superLocalizer.updateStateVector(loopTime.toSec());
-    stateVector = superLocalizer.getStateVector();
-    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+
     ros::spinOnce();
     rate.sleep();
   }
 
+  fl->setLinearVelocity(0);
+  fr->setLinearVelocity(0);
+  bl->setLinearVelocity(0);
+  br->setLinearVelocity(0);
+  stateVector = superLocalizer.getStateVector();
+  tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+  ros::spinOnce();
   // zero point turn vescs here before waypoint controller is initialized
   // get number from topic
   double topicthetatol = .1;
@@ -675,10 +689,23 @@ int main(int argc, char **argv)
     // publish wc.getEPpEstimate() as topic
     // publish sim theta sim->getTheta()
     // publish base link theta stateVector.theta
-    angleErrorMsg.data = wc.getEPpEstimate();
+    angleErrorMsg.data = wc.getETpEstimate();
+    angleDerivErrorMsg.data = wc.getETdEstimate();
+    pathErrorMsg.data = wc.getEPpEstimate();
+    pathDerivErrorMsg.data = wc.getEPdEstimate();
+    dist2EndMsg.data = wc.getDist2endOnPath();
+    dist2EndAbsMsg.data = wc.getDist2endAbs();
     baseAngleMsg.data = stateVector.theta;
+    
     angleErrorPub.publish(angleErrorMsg);
+    angleDerivErrorPub.publish(angleDerivErrorMsg);
+    pathErrorPub.publish(pathErrorMsg);
+    pathDerivErrorPub.publish(pathDerivErrorMsg);
+    dist2EndAbsPub.publish(dist2EndAbsMsg);
+    dist2EndPub.publish(dist2EndMsg);
+    
     baseAnglePub.publish(baseAngleMsg);
+    
     if (simulating)
     {
       simAngleMsg.data = sim->getTheta();

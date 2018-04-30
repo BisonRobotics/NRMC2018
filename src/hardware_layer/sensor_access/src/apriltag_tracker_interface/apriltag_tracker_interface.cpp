@@ -50,12 +50,12 @@ ReadableSensors::ReadStatus AprilTagTrackerInterface::receiveData()
   if (is_floating)
   {
     retval = ReadableSensors::ReadStatus::READ_FAILED;
-    ROS_INFO("Floating sensor");
+    ROS_DEBUG("Floating sensor");
   }
   else
   {
     retval = ReadableSensors::ReadStatus::READ_SUCCESS;
-    ROS_INFO("Not floating");
+    ROS_DEBUG("Not floating");
   }
   // is_floating = true;
   return retval;
@@ -73,7 +73,7 @@ void AprilTagTrackerInterface::callback(const geometry_msgs::PoseStamped::ConstP
     this->theta = qtToTheta(msg->pose.orientation);
     last_time = ros::Time::now();
     is_floating = false;
-    ROS_INFO("received estimate");
+    ROS_DEBUG("received estimate");
   }
   else
   {

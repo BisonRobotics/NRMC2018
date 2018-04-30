@@ -8,8 +8,8 @@
 #define GOALREACHEDDIST .100f  // should be about the size of the noise floor of localization
 // this also determines how far you can overshoot a goal
 #define ANGLETOL .2f
-#define SPEED_CONST .1  // average speed for the wheels in linear m/s
-#define MAX_ABS_WHEEL_SPEED .2
+#define SPEED_CONST .2  // average speed for the wheels in linear m/s
+#define MAX_ABS_WHEEL_SPEED .28
 
 bool approx(double A, double B, double T)
 {
@@ -93,6 +93,17 @@ double WaypointController::getEPpEstimate()  // DEBUG
 {
   return EPpEst;
 }
+
+double WaypointController::getETdEstimate()  // DEBUG
+{
+  return ETpDerivFiltEst;
+}
+
+double WaypointController::getEPdEstimate()  // DEBUG
+{
+  return EPpDerivFiltEst;
+}
+
 
 double WaypointController::getDist2endOnPath()
 {
@@ -282,7 +293,7 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
         // continue execution
         returnStatus = Status::OFFPATH;
       }
-      if (dist2endOnPath < -GOALREACHEDDIST)  // overshot path and drove past goal (but still might be close to path)
+      if (dist2endOnPath < -.5 *GOALREACHEDDIST)  // overshot path and drove past goal (but still might be close to path)
       {
         modifyNavQueue2RecoverFromGoalOvershoot();  // mark maneuver as complete
         return Status::OVERSHOT;  // next time function is called, maneuver will update and either start next maneuver
