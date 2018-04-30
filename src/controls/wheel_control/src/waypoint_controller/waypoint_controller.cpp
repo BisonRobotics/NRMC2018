@@ -26,6 +26,11 @@ double clamp(double A, double upper, double lower)
     return ((A > upper) ? upper : ((A < lower) ? lower : A));
 }
 
+double interpolateYFromXAndTwoPoints(double x0, double y0, double x1, double y1, double x)
+{
+    return ((y1 - y0)/(x1 - x0)) * (x - x0) + y0;
+}
+
 WaypointController::WaypointController(double axelLength, double maxSafeSpeed, pose initialPose, iVescAccess *fl,
                                        iVescAccess *fr, iVescAccess *br, iVescAccess *bl, double gaurenteedDt,
                                        WaypointControllerNs::waypointControllerGains gains)
@@ -258,14 +263,19 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     else  // doing a maneuver, need to see if robot has completed it
     {
       theCPP = WaypointControllerHelper::findCPP(robotPose, currMan);  // closest pose on path
-
-      dist2endOnPath = WaypointControllerHelper::sign(currMan.distance) * currMan.radius *
-                       (WaypointControllerHelper::anglediff(maneuverEnd.theta, theCPP.theta));
       dist2endAbs = dist(robotPose.x, robotPose.y, maneuverEnd.x, maneuverEnd.y);
-      if (std::abs(currMan.radius) > 900)  // if straight line path, use abs distance instead
+      if (std::abs(currMan.radius) > 900)  // if straight line path, use linear projection
       {
-        dist2endOnPath = dist2endAbs;
+        //project robot onto path        
+        double projectedY = interpolateYFromXAndTwoPoints(maneuverEnd.x, maneuverEnd.y, maneuverEnd.x + cos(maneuverEnd.theta), maneuverEnd.y + sin(maneuverEnd.theta), robotPose.x);
+        dist2endOnPath = WaypointControllerHelper::sign(currMan.distance)  * (maneuverEnd.y - projectedY);
       }
+      else
+      {
+          dist2endOnPath = WaypointControllerHelper::sign(currMan.distance) * currMan.radius *
+                       (WaypointControllerHelper::anglediff(maneuverEnd.theta, theCPP.theta));
+      }
+      
       dist2Path = dist(robotPose.x, robotPose.y, theCPP.x, theCPP.y);
 
       if (approx(dist2endOnPath, 0, GOALREACHEDDIST) &&
