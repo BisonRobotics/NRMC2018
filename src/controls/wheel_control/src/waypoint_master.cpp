@@ -163,6 +163,9 @@ int main(int argc, char **argv)
   ros::Publisher jspub = globalNode.advertise<sensor_msgs::JointState>("joint_states", 500);
 
   ros::Publisher angleErrorPub = node.advertise<std_msgs::Float64>("angle_error", 30);
+  ros::Publisher angleDerivErrorPub = node.advertise<std_msgs::Float64>("angle_d_error", 30);
+  ros::Publisher pathErrorPub = node.advertise<std_msgs::Float64>("path_error", 30);
+  ros::Publisher pathDerivErrorPub = node.advertise<std_msgs::Float64>("path_d_error", 30);
   ros::Publisher simAnglePub = node.advertise<std_msgs::Float64>("sim_angle", 30);
   ros::Publisher baseAnglePub = node.advertise<std_msgs::Float64>("base_angle", 30);
   ros::Publisher lWheelVelPub = node.advertise<std_msgs::Float64>("lWheelVelCmd", 30);
@@ -176,6 +179,9 @@ int main(int argc, char **argv)
   }
   
   std_msgs::Float64 angleErrorMsg;
+  std_msgs::Float64 angleDerivErrorMsg;
+  std_msgs::Float64 pathErrorMsg;
+  std_msgs::Float64 pathDerivErrorMsg;
   std_msgs::Float64 simAngleMsg;
   std_msgs::Float64 baseAngleMsg;
   std_msgs::Float64 lWheelVel;
@@ -679,10 +685,18 @@ int main(int argc, char **argv)
     // publish wc.getEPpEstimate() as topic
     // publish sim theta sim->getTheta()
     // publish base link theta stateVector.theta
-    angleErrorMsg.data = wc.getEPpEstimate();
+    angleErrorMsg.data = wc.getETpEstimate();
+    angleDerivErrorMsg.data = wc.getETdEstimate();
+    pathErrorMsg.data = wc.getEPpEstimate();
+    pathDerivErrorMsg.data = wc.getEPdEstimate();
     baseAngleMsg.data = stateVector.theta;
+    
     angleErrorPub.publish(angleErrorMsg);
+    angleDerivErrorPub.publish(angleDerivErrorMsg);
+    pathErrorPub.publish(pathErrorMsg);
+    pathDerivErrorPub.publish(pathDerivErrorMsg);
     baseAnglePub.publish(baseAngleMsg);
+    
     if (simulating)
     {
       simAngleMsg.data = sim->getTheta();

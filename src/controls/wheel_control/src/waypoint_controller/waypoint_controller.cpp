@@ -94,6 +94,17 @@ double WaypointController::getEPpEstimate()  // DEBUG
   return EPpEst;
 }
 
+double WaypointController::getETdEstimate()  // DEBUG
+{
+  return ETpDerivFiltEst;
+}
+
+double WaypointController::getEPdEstimate()  // DEBUG
+{
+  return EPpDerivFiltEst;
+}
+
+
 double WaypointController::getDist2endOnPath()
 {
   return dist2endOnPath;

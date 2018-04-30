@@ -67,7 +67,9 @@ public:
   unsigned int getCurrManeuverIndex();                      // DEBUG
   pose getManeuverEnd();                                    // DEBUG
   double getETpEstimate();                                  // DEBUG
+  double getETdEstimate();                                  // DEBUG
   double getEPpEstimate();                                  // DEBUG
+  double getEPdEstimate();                                  // DEBUG
   double getDist2endOnPath();                               // DEBUG
   double getDist2endAbs();                                  // DEBUG
   std::pair<double, double> getSetSpeeds();                 // DEBUG

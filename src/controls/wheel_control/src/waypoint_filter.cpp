@@ -8,6 +8,7 @@
 #define OBSTACLE_ZONE_START_X 1.5
 #define OBSTACLE_ZONE_END_X 4.44
 #define MIN_WAYPOINT_DISTANCE .8
+#define X_DIST_FOR_BACKUP .63
 
 #include <waypoint_controller/waypoint_controller_helper.h>
 
@@ -185,7 +186,17 @@ int main(int argc, char** argv)
                 {
                     obstacle_zone_entrance_point.x = OBSTACLE_ZONE_START_X;
                     obstacle_zone_entrance_point.y = interpolateYFromXAndTwoPoints(last_point_in_start_zone.x, last_point_in_start_zone.y, wp.x, wp.y, OBSTACLE_ZONE_START_X);
-                    obstacle_zone_entrance_point.theta = last_point_in_start_zone.theta;
+                    //obstacle_zone_entrance_point.theta = last_point_in_start_zone.theta;
+                    if (std::abs(obstacle_zone_entrance_point.y) > .3)
+                    {
+                        obstacle_zone_entrance_point.theta = asin(obstacle_zone_entrance_point.y 
+                                                                 / sqrt((OBSTACLE_ZONE_START_X - X_DIST_FOR_BACKUP)*(OBSTACLE_ZONE_START_X - X_DIST_FOR_BACKUP + .1) 
+                                                                         + obstacle_zone_entrance_point.y * obstacle_zone_entrance_point.y));
+                    }
+                    else
+                    {
+                        obstacle_zone_entrance_point.theta = last_point_in_start_zone.theta;
+                    }
                     //publish this point
                     pub.publish(obstacle_zone_entrance_point);
                     ros::spinOnce();
