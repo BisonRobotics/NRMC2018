@@ -321,6 +321,12 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     {
       EPpEst = currMan.radius + dist(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
     }
+    if (std::abs(currMan.radius) > 900)
+    {
+        EPpEst = WaypointControllerHelper::sign(std::atan2(robotPose.y - (theCPP.y - WaypointControllerHelper::sign(currMan.distance) * .5*sin(theCPP.theta)),
+                                                           robotPose.x - (theCPP.x - WaypointControllerHelper::sign(currMan.distance) * .5*cos(theCPP.theta))))
+                 * dist(robotPose.x, robotPose.y, theCPP.x, theCPP.y);
+    }
     ETpEst = WaypointControllerHelper::anglediff(robotPose.theta, theCPP.theta);
     // positive error means turn left
 
@@ -367,8 +373,6 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     
     LvelCmdClamped = bump(LvelCmdClamped, MIN_WHEEL_SPEED, ZERO_TOLERANCE_POLICY);
     RvelCmdClamped = bump(RvelCmdClamped, MIN_WHEEL_SPEED, ZERO_TOLERANCE_POLICY);
-
-
     
     if (true || !aggressiveFix)
     {
