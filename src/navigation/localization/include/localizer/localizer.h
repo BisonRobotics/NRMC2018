@@ -12,6 +12,7 @@ class Localizer : public LocalizerInterface::LocalizerInterface_c
 public:
   LocalizerInterface::stateVector getStateVector();
   UpdateStatus updateStateVector(double dt);
+  UpdateStatus updateStateVector(double dt, double theta_est);
 
   Localizer(double axelLen, double xi, double yi, double thi, iVescAccess *frontLeftVesc, iVescAccess *frontRightVesc,
             iVescAccess *backRightVesc,

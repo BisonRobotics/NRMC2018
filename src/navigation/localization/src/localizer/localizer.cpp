@@ -30,6 +30,12 @@ Localizer::Localizer(double axleLen, double xi, double yi, double thi, iVescAcce
   axle_len = axleLen;
 }
 
+Localizer::UpdateStatus Localizer::updateStateVector(double dt, double theta_est)
+{
+    state_vector.theta = theta_est;
+    updateStateVector(dt);
+}
+
 Localizer::UpdateStatus Localizer::updateStateVector(double dt)
 {
   // get linear velocities of wheels
