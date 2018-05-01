@@ -370,7 +370,7 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
 
 
     
-    if (!aggressiveFix)
+    if (true || !aggressiveFix)
     {
       front_left_wheel->setLinearVelocity(LvelCmdClamped);
       back_left_wheel->setLinearVelocity(LvelCmdClamped);
@@ -379,15 +379,15 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     }
     else
     {
-      if (EPpEst > 0)
+      if (EPpEst < 0)
       {
-        front_left_wheel->setLinearVelocity(-.1);  // TODO experiment with 0 and setting to fraction of LvelCmd
-        back_left_wheel->setLinearVelocity(-.1);  // in the sim it can just spin in circles (maybe the sim is bad?)
+        front_left_wheel->setLinearVelocity(-.1*WaypointControllerHelper::sign(currMan.distance));  // TODO experiment with 0 and setting to fraction of LvelCmd
+        back_left_wheel->setLinearVelocity(-.1*WaypointControllerHelper::sign(currMan.distance));  // in the sim it can just spin in circles (maybe the sim is bad?)
       }
       else
       {
-        front_right_wheel->setLinearVelocity(-.1);
-        back_right_wheel->setLinearVelocity(-.1);
+        front_right_wheel->setLinearVelocity(-.1*WaypointControllerHelper::sign(currMan.distance));
+        back_right_wheel->setLinearVelocity(-.1*WaypointControllerHelper::sign(currMan.distance));
       }
     }
     return returnStatus;
