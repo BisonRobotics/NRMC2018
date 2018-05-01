@@ -10,6 +10,8 @@
 #define ANGLETOL .2f
 #define SPEED_CONST .4  // average speed for the wheels in linear m/s
 #define MAX_ABS_WHEEL_SPEED .28
+#define MIN_WHEEL_SPEED .1
+#define ZERO_TOLERANCE_POLICY .001
 
 bool approx(double A, double B, double T)
 {
@@ -24,6 +26,12 @@ double dist(double A, double B, double C, double D)
 double clamp(double A, double upper, double lower)
 {
     return ((A > upper) ? upper : ((A < lower) ? lower : A));
+}
+
+double bump(double A, double minimum, double zero_tol)
+{
+    return (std::abs(A) < minimum && std::abs(A) > zero_tol) ? WaypointControllerHelper::sign(A) * std::abs(minimum) : 
+           ((std::abs(A) > minimum) ? A : 0);
 }
 
 double interpolateYFromXAndTwoPoints(double x0, double y0, double x1, double y1, double x)
@@ -357,6 +365,10 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     double LvelCmdClamped = clamp(LvelCmd, MAX_ABS_WHEEL_SPEED, -MAX_ABS_WHEEL_SPEED);
     double RvelCmdClamped = clamp(RvelCmd, MAX_ABS_WHEEL_SPEED, -MAX_ABS_WHEEL_SPEED);
     
+    LvelCmdClamped = bump(LvelCmdClamped, MIN_WHEEL_SPEED, ZERO_TOLERANCE_POLICY);
+    RvelCmdClamped = bump(RvelCmdClamped, MIN_WHEEL_SPEED, ZERO_TOLERANCE_POLICY);
+
+
     
     if (!aggressiveFix)
     {
