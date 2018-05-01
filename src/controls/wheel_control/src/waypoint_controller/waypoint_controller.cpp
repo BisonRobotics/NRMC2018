@@ -286,7 +286,7 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
       
       dist2Path = dist(robotPose.x, robotPose.y, theCPP.x, theCPP.y);
 
-      if (approx(dist2endOnPath, 0, GOALREACHEDDIST) &&
+      if (/*approx(dist2endOnPath, 0, GOALREACHEDDIST) &&*/
           approx(dist2endAbs, 0, GOALREACHEDDIST))  // reached waypoint in a good way (on the end point)
       {
         doingManeuver = false;
