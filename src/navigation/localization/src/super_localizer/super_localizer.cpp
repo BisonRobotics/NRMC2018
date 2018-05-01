@@ -62,7 +62,7 @@ SuperLocalizer::UpdateStatus SuperLocalizer::updateStateVector(double dt)
 {
   bool floating = false;
   // do dead reckoning calculation, this uses information from the vescs
-  this->deadReck->updateStateVector(dt);
+  this->deadReck->updateStateVector(dt, state_vector.theta);
   // read sensor_
   for (int a = 0; a < num_sensors; a++)
   {

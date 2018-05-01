@@ -10,6 +10,8 @@
 #define ANGLETOL .2f
 #define SPEED_CONST .4  // average speed for the wheels in linear m/s
 #define MAX_ABS_WHEEL_SPEED .28
+#define MIN_WHEEL_SPEED .1
+#define ZERO_TOLERANCE_POLICY .001
 
 bool approx(double A, double B, double T)
 {
@@ -24,6 +26,12 @@ double dist(double A, double B, double C, double D)
 double clamp(double A, double upper, double lower)
 {
     return ((A > upper) ? upper : ((A < lower) ? lower : A));
+}
+
+double bump(double A, double minimum, double zero_tol)
+{
+    return (std::abs(A) < minimum && std::abs(A) > zero_tol) ? WaypointControllerHelper::sign(A) * std::abs(minimum) : 
+           ((std::abs(A) > minimum) ? A : 0);
 }
 
 double interpolateYFromXAndTwoPoints(double x0, double y0, double x1, double y1, double x)
@@ -278,7 +286,7 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
       
       dist2Path = dist(robotPose.x, robotPose.y, theCPP.x, theCPP.y);
 
-      if (approx(dist2endOnPath, 0, GOALREACHEDDIST) &&
+      if (/*approx(dist2endOnPath, 0, GOALREACHEDDIST) &&*/
           approx(dist2endAbs, 0, GOALREACHEDDIST))  // reached waypoint in a good way (on the end point)
       {
         doingManeuver = false;
@@ -312,6 +320,12 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     else
     {
       EPpEst = currMan.radius + dist(currMan.xc, currMan.yc, robotPose.x, robotPose.y);
+    }
+    if (std::abs(currMan.radius) > 900)
+    {
+        EPpEst = WaypointControllerHelper::sign(std::atan2(robotPose.y - (theCPP.y - WaypointControllerHelper::sign(currMan.distance) * .5*sin(theCPP.theta)),
+                                                           robotPose.x - (theCPP.x - WaypointControllerHelper::sign(currMan.distance) * .5*cos(theCPP.theta))))
+                 * dist(robotPose.x, robotPose.y, theCPP.x, theCPP.y);
     }
     ETpEst = WaypointControllerHelper::anglediff(robotPose.theta, theCPP.theta);
     // positive error means turn left
@@ -357,8 +371,10 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     double LvelCmdClamped = clamp(LvelCmd, MAX_ABS_WHEEL_SPEED, -MAX_ABS_WHEEL_SPEED);
     double RvelCmdClamped = clamp(RvelCmd, MAX_ABS_WHEEL_SPEED, -MAX_ABS_WHEEL_SPEED);
     
+    LvelCmdClamped = bump(LvelCmdClamped, MIN_WHEEL_SPEED, ZERO_TOLERANCE_POLICY);
+    RvelCmdClamped = bump(RvelCmdClamped, MIN_WHEEL_SPEED, ZERO_TOLERANCE_POLICY);
     
-    if (!aggressiveFix)
+    if (true || !aggressiveFix)
     {
       front_left_wheel->setLinearVelocity(LvelCmdClamped);
       back_left_wheel->setLinearVelocity(LvelCmdClamped);
@@ -367,15 +383,15 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     }
     else
     {
-      if (EPpEst > 0)
+      if (EPpEst < 0)
       {
-        front_left_wheel->setLinearVelocity(-.1);  // TODO experiment with 0 and setting to fraction of LvelCmd
-        back_left_wheel->setLinearVelocity(-.1);  // in the sim it can just spin in circles (maybe the sim is bad?)
+        front_left_wheel->setLinearVelocity(-.1*WaypointControllerHelper::sign(currMan.distance));  // TODO experiment with 0 and setting to fraction of LvelCmd
+        back_left_wheel->setLinearVelocity(-.1*WaypointControllerHelper::sign(currMan.distance));  // in the sim it can just spin in circles (maybe the sim is bad?)
       }
       else
       {
-        front_right_wheel->setLinearVelocity(-.1);
-        back_right_wheel->setLinearVelocity(-.1);
+        front_right_wheel->setLinearVelocity(-.1*WaypointControllerHelper::sign(currMan.distance));
+        back_right_wheel->setLinearVelocity(-.1*WaypointControllerHelper::sign(currMan.distance));
       }
     }
     return returnStatus;
