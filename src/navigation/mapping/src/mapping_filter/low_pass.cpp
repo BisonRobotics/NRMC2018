@@ -33,6 +33,13 @@ bool LowPassLayer::updateEnable (std_srvs::SetBool::Request &req, std_srvs::SetB
 void LowPassLayer::updateBounds (double robot_x, double robot_y, double robot_yaw, double *min_x, double *min_y, double *max_x, double *max_y)
 {
   ObstacleLayer::updateBounds (robot_x, robot_y, robot_yaw, min_x, min_y, max_x, max_y);
+  unsigned int number_of_cols_map = this->getSizeInCellsY();
+  unsigned int number_of_rows_map = this->getSizeInCellsX();
+
+  cv::Mat input (number_of_cols_map, number_of_rows_map, CV_8U, costmap_);
+  cv::Mat filtered;
+  cv::medianBlur (input, filtered, 51);
+  std::memcpy (costmap_, filtered.data, sizeof(uint8_t)*number_of_cols_map*number_of_rows_map);
 }
 
 
@@ -40,7 +47,7 @@ void LowPassLayer::updateCosts(costmap_2d::Costmap2D &master_grid, int min_i, in
 {
   if (enabled_)
   {
-    unsigned char *my_map = master_grid.getCharMap();
+/*    unsigned char *my_map = master_grid.getCharMap();
     unsigned int size_of_map = master_grid.getSizeInCellsX() * master_grid.getSizeInCellsY();
     cv::Mat input = cv::Mat(master_grid.getSizeInCellsX(), master_grid.getSizeInCellsY(), CV_8U);
     cv::Mat filtered;
@@ -48,7 +55,7 @@ void LowPassLayer::updateCosts(costmap_2d::Costmap2D &master_grid, int min_i, in
     //std::memset (my_map, LETHAL_OBSTACLE, sizeof(unsigned char) * size_of_map);
     cv::medianBlur(input, filtered, 129);
     std::memcpy(my_map, filtered.data, sizeof(unsigned char) * size_of_map);
-    ObstacleLayer::updateCosts(master_grid, min_i, min_j, max_i, max_j);
+  */  ObstacleLayer::updateCosts(master_grid, min_i, min_j, max_i, max_j);
   }
 }
 }
