@@ -21,6 +21,13 @@ void LowPassLayer::onInitialize()
   default_value_ = NO_INFORMATION;  // we can change this later if we want
   enabled_ = true;
   enable_service = gl_nh.advertiseService ("enable_mapping", &LowPassLayer::updateEnable, this);
+  save_service = gl_nh.advertiseService("save_map", &LowPassLayer::saveService, this);
+}
+
+bool LowPassLayer::saveService (std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res)
+{
+  res.success=saveMap(std::string("/home/nrmc/My_good_map.pgm"));
+  return true;
 }
 
 bool LowPassLayer::updateEnable (std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res){
@@ -37,16 +44,16 @@ void LowPassLayer::updateBounds (double robot_x, double robot_y, double robot_ya
   unsigned int number_of_rows_map = this->getSizeInCellsX();
 
   cv::Mat input (number_of_cols_map, number_of_rows_map, CV_8U, costmap_);
-  cv::Mat filtered;
-  cv::medianBlur (input, filtered, 51);
+  cv::Mat filtered (number_of_cols_map, number_of_rows_map, CV_8U);
+  cv::medianBlur (input, filtered, size_of_kern);
   std::memcpy (costmap_, filtered.data, sizeof(uint8_t)*number_of_cols_map*number_of_rows_map);
 }
 
 
 void LowPassLayer::updateCosts(costmap_2d::Costmap2D &master_grid, int min_i, int min_j, int max_i, int max_j)
 {
-  if (enabled_)
-  {
+//  if (enabled_)
+//  {
 /*    unsigned char *my_map = master_grid.getCharMap();
     unsigned int size_of_map = master_grid.getSizeInCellsX() * master_grid.getSizeInCellsY();
     cv::Mat input = cv::Mat(master_grid.getSizeInCellsX(), master_grid.getSizeInCellsY(), CV_8U);
@@ -56,6 +63,6 @@ void LowPassLayer::updateCosts(costmap_2d::Costmap2D &master_grid, int min_i, in
     cv::medianBlur(input, filtered, 129);
     std::memcpy(my_map, filtered.data, sizeof(unsigned char) * size_of_map);
   */  ObstacleLayer::updateCosts(master_grid, min_i, min_j, max_i, max_j);
-  }
+//  }
 }
 }
