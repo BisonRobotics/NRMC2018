@@ -23,6 +23,7 @@ void LowPassLayer::onInitialize()
   enable_service = gl_nh.advertiseService ("enable_mapping", &LowPassLayer::updateEnable, this);
 }
 
+
 bool LowPassLayer::updateEnable (std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res){
   enabled_ = req.data;
   ROS_INFO_STREAM ("Enabled: " << enabled_);
@@ -33,22 +34,12 @@ bool LowPassLayer::updateEnable (std_srvs::SetBool::Request &req, std_srvs::SetB
 void LowPassLayer::updateBounds (double robot_x, double robot_y, double robot_yaw, double *min_x, double *min_y, double *max_x, double *max_y)
 {
   ObstacleLayer::updateBounds (robot_x, robot_y, robot_yaw, min_x, min_y, max_x, max_y);
-}
+  unsigned int number_of_cols_map = this->getSizeInCellsY();
+  unsigned int number_of_rows_map = this->getSizeInCellsX();
 
-
-void LowPassLayer::updateCosts(costmap_2d::Costmap2D &master_grid, int min_i, int min_j, int max_i, int max_j)
-{
-  if (enabled_)
-  {
-    unsigned char *my_map = master_grid.getCharMap();
-    unsigned int size_of_map = master_grid.getSizeInCellsX() * master_grid.getSizeInCellsY();
-    cv::Mat input = cv::Mat(master_grid.getSizeInCellsX(), master_grid.getSizeInCellsY(), CV_8U);
-    cv::Mat filtered;
-    std::memcpy (input.data, my_map,sizeof(unsigned char) * size_of_map);
-    //std::memset (my_map, LETHAL_OBSTACLE, sizeof(unsigned char) * size_of_map);
-    cv::medianBlur(input, filtered, 129);
-    std::memcpy(my_map, filtered.data, sizeof(unsigned char) * size_of_map);
-    ObstacleLayer::updateCosts(master_grid, min_i, min_j, max_i, max_j);
-  }
+  cv::Mat input (number_of_cols_map, number_of_rows_map, CV_8U, costmap_);
+  cv::Mat filtered (number_of_cols_map, number_of_rows_map, CV_8U);
+  cv::medianBlur (input, filtered, size_of_kern);
+  std::memcpy (costmap_, filtered.data, sizeof(uint8_t)*number_of_cols_map*number_of_rows_map);
 }
 }
