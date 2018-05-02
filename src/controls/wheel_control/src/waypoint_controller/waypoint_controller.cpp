@@ -12,9 +12,12 @@
 #define MAX_ABS_WHEEL_SPEED .28
 #define MIN_WHEEL_SPEED .1
 #define ZERO_TOLERANCE_POLICY .001
-#define STUCK_METRIC_ALPHA .6
-#define STUCK_METRIC_THRESHOLD .03
-#define STUCK_METRIC_RELEASE .1
+
+#define STUCK_METRIC_ALPHA .7
+#define STUCK_METRIC_THRESHOLD .1
+#define STUCK_METRIC_RELEASE .12
+#define STUCK_TIMEOUT 2.0
+#define STUCK_COOLDOWN 2.0
 
 bool approx(double A, double B, double T)
 {
@@ -77,6 +80,9 @@ WaypointController::WaypointController(double axelLength, double maxSafeSpeed, p
   prevDistToEndAbs =0;
   stuckMetric = 0;
   unstucking = false;
+  unstucking_cooldown = false;
+  time_unstucking =0;
+  time_unstucking_cooldown =0;
 
   // control states
   clearControlStates();
@@ -389,20 +395,28 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     LvelCmdClamped = bump(LvelCmdClamped, MIN_WHEEL_SPEED, ZERO_TOLERANCE_POLICY);
     RvelCmdClamped = bump(RvelCmdClamped, MIN_WHEEL_SPEED, ZERO_TOLERANCE_POLICY);
     
-    if (stuckMetric < STUCK_METRIC_THRESHOLD)
+    if (stuckMetric < STUCK_METRIC_THRESHOLD && !unstucking && !unstucking_cooldown)
     {
         unstucking = true;
     }
     
-    if ((true || !aggressiveFix) && !unstucking) //stuckMetric is ~velocity
+    if ((true || !aggressiveFix) && !unstucking && !unstucking_cooldown) //stuckMetric is ~velocity
     {
       front_left_wheel->setLinearVelocity(LvelCmdClamped);
       back_left_wheel->setLinearVelocity(LvelCmdClamped);
       front_right_wheel->setLinearVelocity(RvelCmdClamped);
       back_right_wheel->setLinearVelocity(RvelCmdClamped);
     }
-    else if (unstucking)
+    else if (unstucking && !unstucking_cooldown)
     {
+        time_unstucking += dt;
+        if (time_unstucking > STUCK_TIMEOUT)
+        {
+            unstucking = false;
+            time_unstucking = 0.0;
+            unstucking_cooldown = true;
+        }
+        
         if (stuckMetric < STUCK_METRIC_RELEASE)
         {
            front_left_wheel->setLinearVelocity(.15*WaypointControllerHelper::sign(currMan.distance));
@@ -413,6 +427,26 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
         else
         {
             unstucking = false;
+        }
+    }
+    else if (unstucking_cooldown)
+    {
+        time_unstucking_cooldown += dt;
+        /*
+        front_left_wheel->setLinearVelocity(0);
+        back_left_wheel->setLinearVelocity(0);
+        front_right_wheel->setLinearVelocity(0);
+        back_right_wheel->setLinearVelocity(0); 
+        */
+        front_left_wheel->setLinearVelocity(LvelCmdClamped);
+        back_left_wheel->setLinearVelocity(LvelCmdClamped);
+        front_right_wheel->setLinearVelocity(RvelCmdClamped);
+        back_right_wheel->setLinearVelocity(RvelCmdClamped);
+        
+        if (time_unstucking_cooldown > STUCK_COOLDOWN)
+        {
+            unstucking_cooldown = false;
+            time_unstucking_cooldown =0;
         }
     }
     else if (aggressiveFix)

@@ -105,6 +105,9 @@ private:
   double stuckMetric;
   double prevDistToEndAbs;
   bool unstucking;
+  bool unstucking_cooldown;
+  double time_unstucking;
+  double time_unstucking_cooldown;
   
   pose maneuverEnd;
   maneuver currMan;
