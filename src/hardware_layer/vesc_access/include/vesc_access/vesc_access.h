@@ -42,7 +42,6 @@ public:
   nsVescAccess::limitSwitchState getLimitSwitchState(void) override;
   float getPotPosition(void) override;
   void setDuty(float duty) override;
-
 private:
   void setTorqueLimit(float newtown_meters);
   void setLinearVelocityLimit(float meters_per_second);
