@@ -72,6 +72,7 @@ public:
   double getEPdEstimate();                                  // DEBUG
   double getDist2endOnPath();                               // DEBUG
   double getDist2endAbs();                                  // DEBUG
+  double getStuckMetric();                                  // DEBUG
   std::pair<double, double> getSetSpeeds();                 // DEBUG
   std::pair<double, double> getCmdSpeeds();                 // DEBUG
 
@@ -100,7 +101,11 @@ private:
   bool doingManeuver;
 
   double dist2endOnPath, dist2endAbs, dist2Path;
-
+  
+  double stuckMetric;
+  double prevDistToEndAbs;
+  bool unstucking;
+  
   pose maneuverEnd;
   maneuver currMan;
   pose theCPP;
