@@ -7,7 +7,7 @@
     <l_current_max>60</l_current_max>
     <l_current_min>-60</l_current_min>
     <l_in_current_max>8</l_in_current_max>
-    <l_in_current_min>-10</l_in_current_min>
+    <l_in_current_min>-15</l_in_current_min>
     <l_abs_current_max>35</l_abs_current_max>
     <l_min_erpm>-100000</l_min_erpm>
     <l_max_erpm>100000</l_max_erpm>
@@ -24,7 +24,7 @@
     <l_temp_motor_start>80</l_temp_motor_start>
     <l_temp_motor_end>100</l_temp_motor_end>
     <l_min_duty>0.005</l_min_duty>
-    <l_max_duty>0.5</l_max_duty>
+    <l_max_duty>0.65</l_max_duty>
     <sl_min_erpm>150</sl_min_erpm>
     <sl_min_erpm_cycle_int_limit>1100</sl_min_erpm_cycle_int_limit>
     <sl_max_fullbreak_current_dir_change>10</sl_max_fullbreak_current_dir_change>
