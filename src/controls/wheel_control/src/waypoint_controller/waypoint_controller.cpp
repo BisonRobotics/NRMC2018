@@ -294,11 +294,20 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
       
       stuckMetric = STUCK_METRIC_ALPHA * ((prevDistToEndAbs > dist2endAbs) ? (prevDistToEndAbs - dist2endAbs)/dt : stuckMetric) + (1 - STUCK_METRIC_ALPHA) * stuckMetric;
       
-      if (std::abs(currMan.radius) > 900)  // if straight line path, use linear projection
+      if (true || std::abs(currMan.radius) > 900)  // if straight line path, use linear projection
       {
-        //project robot onto path        
-        double projectedY = interpolateYFromXAndTwoPoints(maneuverEnd.x, maneuverEnd.y, maneuverEnd.x + cos(maneuverEnd.theta), maneuverEnd.y + sin(maneuverEnd.theta), robotPose.x);
-        dist2endOnPath = WaypointControllerHelper::sign(currMan.distance)  * (maneuverEnd.y - projectedY);
+        //project robot onto path  
+        /*     
+        double projectedX = interpolateYFromXAndTwoPoints(maneuverEnd.y,maneuverEnd.x, 
+                                                          maneuverEnd.y + sin(maneuverEnd.theta), 
+                                                          maneuverEnd.x + cos(maneuverEnd.theta), robotPose.y);
+        dist2endOnPath = WaypointControllerHelper::sign(currMan.distance)  * (maneuverEnd.x - projectedX);
+        */
+        
+        dist2endOnPath = -WaypointControllerHelper::sign(currMan.distance) 
+                         * WaypointControllerHelper::sign((robotPose.x - maneuverEnd.x)*(maneuverEnd.y + sin(maneuverEnd.theta + M_PI_2) - maneuverEnd.y)
+                                                         - (robotPose.y - maneuverEnd.y)*(maneuverEnd.x + cos(maneuverEnd.theta + M_PI_2) - maneuverEnd.x))
+                         * dist(robotPose.x, robotPose.y, maneuverEnd.x, maneuverEnd.y);
       }
       else
       {
