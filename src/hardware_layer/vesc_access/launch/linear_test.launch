@@ -1,0 +1,5 @@
+<launch>
+    <node name="linear_test" pkg="vesc_access" type="linear_test" output="screen">
+        <param name="linear_scale_factor" type="double" value="1"/>
+    </node>
+</launch>

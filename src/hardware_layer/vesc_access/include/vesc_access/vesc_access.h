@@ -42,7 +42,8 @@ public:
   nsVescAccess::limitSwitchState getLimitSwitchState(void) override;
   float getPotPosition(void) override;
   void setDuty(float duty) override;
-
+  float convertTorqueToCurrent(float torque);
+  iVesc *vesc;
 private:
   void setTorqueLimit(float newtown_meters);
   void setLinearVelocityLimit(float meters_per_second);
@@ -58,10 +59,10 @@ private:
   float rad_per_count;
   float rad_offset;
   float max_duty;
-  iVesc *vesc;
+
   void setTransmissionRatio(float transmission_ratio);
   void setOutputRatio(float output_ratio);
-  float convertTorqueToCurrent(float torque);
+
   float convertLinearVelocityToRpm(float velocity);
   float convertRpmToLinearVelocity(float rpm);
   float convertRpmToLinearVelocity(int rpm);

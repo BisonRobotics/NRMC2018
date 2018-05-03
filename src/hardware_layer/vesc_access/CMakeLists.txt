@@ -101,6 +101,10 @@ target_link_libraries(vesc_socket_pot_test vesc_lib ${catkin_LIBRARIES})
 
 add_executable(runtime_check test/vesc_runtime_check.cpp)
 target_link_libraries(runtime_check vesc_lib)
+
+
+add_executable(linear_test test/linear_integration_test.cpp )
+target_link_libraries(linear_test ${catkin_LIBRARIES} safety_vesc vesc_access)
 # Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/vesc_access.cpp
