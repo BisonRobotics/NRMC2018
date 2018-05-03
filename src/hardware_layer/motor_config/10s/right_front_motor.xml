@@ -8,7 +8,7 @@
     <l_current_min>-20</l_current_min>
     <l_in_current_max>10</l_in_current_max>
     <l_in_current_min>-10</l_in_current_min>
-    <l_abs_current_max>35</l_abs_current_max>
+    <l_abs_current_max>40</l_abs_current_max>
     <l_min_erpm>-60000</l_min_erpm>
     <l_max_erpm>60000</l_max_erpm>
     <l_max_erpm_fbrake>300</l_max_erpm_fbrake>
@@ -71,7 +71,7 @@
     <foc_hall_table_6>255</foc_hall_table_6>
     <foc_hall_table_7>255</foc_hall_table_7>
     <foc_sl_erpm>2500</foc_sl_erpm>
-    <s_pid_kp>0.01</s_pid_kp>
+    <s_pid_kp>0.08</s_pid_kp>
     <s_pid_ki>0.0004</s_pid_ki>
     <s_pid_kd>0.0006</s_pid_kd>
     <s_pid_min_rpm>900</s_pid_min_rpm>

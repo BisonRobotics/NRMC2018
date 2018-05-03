@@ -15,6 +15,11 @@ SafetyController::SafetyController(iVescAccess *vesc, safetycontroller::joint_pa
   this->position_estimate = (params.lower_limit_position + params.upper_limit_position) / 2.0;
 }
 
+
+int sign (double a){
+  return a>0?1:-1;
+}
+
 void SafetyController::setPositionSetpoint(double position)
 {
   checkIsInit();
@@ -28,6 +33,7 @@ void SafetyController::setPositionSetpoint(double position)
     throw BackhoeException(ss.str());
   }
   this->set_position = position;
+  this->set_torque = 7*sign(position-position_estimate);
   control_mode = safetycontroller::position_control;
 }
 
@@ -88,10 +94,6 @@ void SafetyController::update(double dt)
                position_estimate);
       stop();
     }
-    else
-    {
-      set_torque = symmetricClamp(params.gain * (set_position - position_estimate), params.max_abs_torque);
-    }
   }
   // this happens in any mode
   updatePositionEstimate(dt);
@@ -132,8 +134,18 @@ void SafetyController::update(double dt)
 
 bool SafetyController::isAtSetpoint(void)
 {
-  return fabs(position_estimate - set_position) < fabs(params.setpoint_tolerance) ||
-         control_mode == safetycontroller::controlModeState::none;
+  bool ret_val;
+  if (set_torque >0)
+  {
+    ret_val = position_estimate > set_position - params.setpoint_tolerance;
+  } else
+  {
+    ret_val = position_estimate < set_position + params.setpoint_tolerance;
+  }
+
+     return ret_val || control_mode == safetycontroller::controlModeState::none;
+  // if we are going up, we want to only check the lower tolerance
+  // if we are going down we want to only check the upper toleranve
 }
 
 double SafetyController::getSafetyPosition()
