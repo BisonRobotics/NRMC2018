@@ -120,12 +120,12 @@ float SimVesc::getLinearVelocity(void)
 
 float SimVesc::getTorque(void)
 {
-  return torque;
+  return 10*torque;
 }
 
 void SimVesc::setTorque(float current)
 {
-  this->setLinearVelocity(.3 * current);
+  this->setLinearVelocity(.003 * current);
 }
 
 void SimVesc::setLimitSwitchState(nsVescAccess::limitSwitchState state)

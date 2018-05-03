@@ -3,7 +3,7 @@
 
 #define LINEAR_RETRACTED_POINT .05
 #define LINEAR_EXTENDED_POINT .17
-#define CENTRAL_MEASUREMENT_START_ANGLE 2.4
+#define CENTRAL_MEASUREMENT_START_ANGLE 2.0
 #define CENTRAL_MEASUREMENT_STOP_ANGLE 1.5
 #define CENTRAL_HOLD_TORQUE -1
 #define CENTRAL_TRANSPORT_ANGLE 2.4
@@ -127,11 +127,9 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
           }
           break;
         case dig_state_enum::dig_error:
-          bucket->turnSifterOff();
-          bucket->turnLittleConveyorOff();
-          break;
         default:
           bucket->turnSifterOff();
+
           bucket->turnLittleConveyorOff();
           dig_as_.setAborted();
           is_digging = false;

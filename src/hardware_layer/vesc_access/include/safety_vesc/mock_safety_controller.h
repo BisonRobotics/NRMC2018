@@ -26,6 +26,8 @@ public:
   MOCK_METHOD1(update, void(double));
   MOCK_METHOD0(getPositionEstimate, double(void));
   MOCK_METHOD0(getControlMode, safetycontroller::controlModeState(void));
+  MOCK_METHOD0(getCommandedTorque,float(void));
+  MOCK_METHOD0(getCommandedVelocity, float (void));
 };
 
 #endif  // PROJECT_MOCK_SAFETY_VESC_H

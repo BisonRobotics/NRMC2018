@@ -11,7 +11,6 @@ SafetyController::SafetyController(iVescAccess *vesc, safetycontroller::joint_pa
   control_mode = safetycontroller::none;
   this->set_velocity = 0;
   this->set_torque = 0;
-  this->stopped = true;
   this->position_estimate = (params.lower_limit_position + params.upper_limit_position) / 2.0;
 }
 
@@ -59,7 +58,6 @@ void SafetyController::setVelocity(double velocity)
     set_velocity = symmetricClamp(velocity, params.max_abs_velocity);
     control_mode = safetycontroller::velocity_control;
     set_torque = 0;
-    stopped=false;
   }
   else
   {
@@ -75,7 +73,6 @@ void SafetyController::setTorque(double torque)
     set_torque = symmetricClamp(torque, params.max_abs_torque);
     set_velocity = 0;
     control_mode = safetycontroller::torque_control;
-    stopped=false;
   }
   else
   {
@@ -112,30 +109,27 @@ void SafetyController::update(double dt)
     stop();
   }
 
-  if (!stopped)
+
+  switch (control_mode)
   {
-    switch (control_mode)
-    {
-      case safetycontroller::velocity_control:
-        vesc->setLinearVelocity(set_velocity);
-        ROS_INFO("%s set velocity: %.4f", params.name.c_str(), set_velocity);
-        break;
-      case safetycontroller::torque_control:
-      case safetycontroller::position_control:
-        vesc->setTorque(set_torque);
-        ROS_INFO("%s set torque: %.4f", params.name.c_str(), set_torque);
-        break;
-      case safetycontroller::none:
-        vesc->setLinearVelocity(0);
-        break;
-    }
+  case safetycontroller::velocity_control:
+     ROS_INFO("%s set velocity: %.4f", params.name.c_str(), set_velocity);
+     break;
+  case safetycontroller::torque_control:
+  case safetycontroller::position_control:
+    vesc->setTorque(set_torque);
+    ROS_INFO("%s set torque: %.4f", params.name.c_str(), set_torque);
+    break;
+  case safetycontroller::none:
+    vesc->setLinearVelocity(0);
+    break;
   }
 }
 
 bool SafetyController::isAtSetpoint(void)
 {
   bool ret_val;
-  if (set_torque >0)
+  if (set_torque > 0)
   {
     ret_val = position_estimate > set_position - params.setpoint_tolerance;
   } else
@@ -157,7 +151,6 @@ void SafetyController::stop()
 {
   ROS_INFO ("Stop called on %s", this->params.name.c_str());
   this->vesc->setLinearVelocity(0);
-  stopped = true;
   control_mode = safetycontroller::none;
 }
 
