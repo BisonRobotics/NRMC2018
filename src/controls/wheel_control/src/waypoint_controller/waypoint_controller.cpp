@@ -19,6 +19,8 @@
 #define STUCK_TIMEOUT 2.0
 #define STUCK_COOLDOWN 2.0
 
+#define BACKUP_TIME 3.0
+
 bool approx(double A, double B, double T)
 {
   return ((A > B - T && A < B + T) ? true : false);
@@ -84,6 +86,9 @@ WaypointController::WaypointController(double axelLength, double maxSafeSpeed, p
   time_unstucking =0;
   time_unstucking_cooldown =0;
 
+  backing_it_in = false;
+  time_backing = 0;
+  
   // control states
   clearControlStates();
   navigationQueue.clear();
@@ -274,20 +279,53 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
         maneuverEnd = WaypointControllerHelper::endOfManeuver(maneuverEnd, currMan);
         // else the end pose is from the last maneuverEnd through the current maneuver
       }
-      std::pair<double, double> myPair = WaypointControllerHelper::speedAndRadius2WheelVels(
-          SPEED_CONST * maxSpeed * WaypointControllerHelper::sign(currMan.distance), currMan.radius, axelLen, maxSpeed);
-      LeftWheelSetSpeed = myPair.first;
-      RightWheelSetSpeed = myPair.second;
-      // reset control states
-      clearControlStates();
-      // input/seed new calculated wheel velocities
-      LvelCmd = myPair.first;
-      RvelCmd = myPair.second;
+      
+      //if maneuver end is negative x, maneuver means send it for a few seconds backwards
+      //after reaching previous waypoint
+      if (navigationQueue.at(0).terminalPose.x < 0)
+      {
+        backing_it_in = true;
+        doingManeuver = true;
+        clearControlStates();
+      }
+      else
+      {
+        std::pair<double, double> myPair = WaypointControllerHelper::speedAndRadius2WheelVels(
+            SPEED_CONST * maxSpeed * WaypointControllerHelper::sign(currMan.distance), currMan.radius, axelLen, maxSpeed);
+        LeftWheelSetSpeed = myPair.first;
+        RightWheelSetSpeed = myPair.second;
+        // reset control states
+        clearControlStates();
+        // input/seed new calculated wheel velocities
+        LvelCmd = myPair.first;
+        RvelCmd = myPair.second;
 
-      doingManeuver = true;
+        doingManeuver = true;
+      }
+
     }
-    else  // doing a maneuver, need to see if robot has completed it
+    else // doing a maneuver, need to see if robot has completed it
     {
+        
+        if (backing_it_in)
+        {
+            time_backing += dt;
+            if (time_backing > BACKUP_TIME)
+            {
+                backing_it_in = false;
+                time_backing = 0;
+                prevDistToEndAbs =0;
+                dist2endAbs =0;
+                //doingManeuver = false;
+                //currManeuverIndex++;
+                //return Status::ALLGOOD;
+                this->haltAndAbort();
+                return Status::GOALREACHED;
+            }
+        }
+        else
+        {
+            
       theCPP = WaypointControllerHelper::findCPP(robotPose, currMan);  // closest pose on path
       prevDistToEndAbs = dist2endAbs; 
       dist2endAbs = dist(robotPose.x, robotPose.y, maneuverEnd.x, maneuverEnd.y);
@@ -333,6 +371,7 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
         // if it was the last one.
       }
       // todo: implement cantplan
+     }
     }
 
     // do control system calculations
@@ -402,12 +441,19 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
         unstucking = true;
     }
     
-    if ((true || !aggressiveFix) && !unstucking && !unstucking_cooldown) //stuckMetric is ~velocity
+    if ((true || !aggressiveFix) && !unstucking && !unstucking_cooldown && !backing_it_in) //stuckMetric is ~velocity
     {
       front_left_wheel->setLinearVelocity(LvelCmdClamped);
       back_left_wheel->setLinearVelocity(LvelCmdClamped);
       front_right_wheel->setLinearVelocity(RvelCmdClamped);
       back_right_wheel->setLinearVelocity(RvelCmdClamped);
+    }
+    else if (backing_it_in)
+    {
+      front_left_wheel->setLinearVelocity(-.12);
+      back_left_wheel->setLinearVelocity(-.12);
+      front_right_wheel->setLinearVelocity(-.12);
+      back_right_wheel->setLinearVelocity(-.12);
     }
     else if (unstucking && !unstucking_cooldown)
     {

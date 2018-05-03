@@ -109,6 +109,9 @@ private:
   double time_unstucking;
   double time_unstucking_cooldown;
   
+  bool backing_it_in;
+  double time_backing;
+  
   pose maneuverEnd;
   maneuver currMan;
   pose theCPP;
