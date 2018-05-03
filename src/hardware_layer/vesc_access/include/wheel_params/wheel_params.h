@@ -27,7 +27,7 @@
 #define WHEEL_TORQUE_CONSTANT .02120f
 
 #define MAX_CENTRAL_DRIVE_VELOCITY 0.9425f  // in rad/s
-#define MAX_CENTRAL_DRIVE_TORQUE 500.0f     // in Nm -> the real number is 675 but we should never approach that
+#define MAX_CENTRAL_DRIVE_TORQUE 1732.0f     // in Nm -> the real number is 675 but we should never approach that
 #define MAX_CENTRAL_DRIVE_DUTY .4f
 #define CENTRAL_DRIVE_GEAR_RATIO -540.0f
 #define CENTRAL_DRIVE_OUTPUT_RATIO 1.0f  //  purely rotational
@@ -82,7 +82,7 @@
 #define MINIMUM_CENTRAL_ANGLE 0
 #define MAXIMUM_CENTRAL_ANGLE 2.96
 #define SAFE_CENTRAL_ANGLE 2.22
-#define SAFE_LINEAR_DISTANCE .06985
+#define SAFE_LINEAR_DISTANCE .04985
 
 nsVescAccess::vesc_param_struct_t front_left_param = {.max_velocity = MAX_WHEEL_VELOCITY,
                                                       .max_torque = MAX_WHEEL_TORQUE,

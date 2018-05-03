@@ -33,7 +33,8 @@ public:
   void abandonPositionSetpointAndSetTorqueWithoutStopping(double torque) override;
   safetycontroller::controlModeState getControlMode() override;
   void updatePositionEstimate(double dt) override;  // you must call this method in your implementation which overrides
-                                                    // this one
+  float getCommandedTorque () {return set_torque;};
+  float getCommandedVelocity() {return set_velocity;};
 protected:
   void checkIsInit() override;
   safetycontroller::joint_params_t params;

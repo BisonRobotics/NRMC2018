@@ -38,6 +38,7 @@ void BackhoeController::setShoulderVelocity(double velocity)
   if (getIsInit())
   {
     backhoe_safety->setVelocity(velocity);
+    ROS_INFO ("Back hoe set velocity through API %.4f", velocity);
   }
 }
 
@@ -54,6 +55,7 @@ void BackhoeController::setWristVelocity(double velocity)
   if (getIsInit())
   {
     linear_safety->setVelocity(velocity);
+    ROS_INFO ("Wrist Set velocity through API %.4f", velocity);
   }
 }
 
@@ -78,7 +80,11 @@ void BackhoeController::update(double dt)
 
 void BackhoeController::safetyCheck()
 {
-  if ((backhoe_safety->getLinearVelocity() > 0) &&
+
+  // if were are greater than the safety distance and we want to move up on the central, stop it.
+  // if we are greater than the safety distance on the linear and the central is above its safety distance, stop the linear
+
+/*  if ((backhoe_safety->getLinearVelocity() > 0) &&
       backhoe_safety->getPositionEstimate() > backhoe_safety->getSafetyPosition() &&
       linear_safety->getPositionEstimate() > linear_safety->getSafetyPosition())
   {
@@ -87,9 +93,23 @@ void BackhoeController::safetyCheck()
     if (linear_safety->getLinearVelocity() > 0)
     {
       linear_safety->stop();
-      ROS_INFO("BC says safety stop 1");
+      ROS_INFO("BC says safety stop 2");
     }
   }
+  */
+
+  if (backhoe_safety->getPositionEstimate() > backhoe_safety->getSafetyPosition () &&
+      (backhoe_safety->getCommandedTorque() > .001 || backhoe_safety->getCommandedVelocity() > .001)
+      && linear_safety->getPositionEstimate() > linear_safety->getSafetyPosition())
+  {
+    backhoe_safety->stop();
+  }
+
+  if (backhoe_safety->getPositionEstimate() > backhoe_safety->getSafetyPosition() && (linear_safety->getCommandedTorque() > .001 || linear_safety->getCommandedVelocity ()> .001 ))
+  {
+    linear_safety->stop();
+  }
+
 }
 
 bool BackhoeController::shoulderAtSetpoint()

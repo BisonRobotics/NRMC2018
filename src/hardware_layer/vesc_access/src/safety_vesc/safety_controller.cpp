@@ -120,7 +120,7 @@ void SafetyController::update(double dt)
       case safetycontroller::torque_control:
       case safetycontroller::position_control:
         vesc->setTorque(set_torque);
-        ROS_INFO("%s set velocity: %.4f", params.name.c_str(), set_velocity);
+        ROS_INFO("%s set torque: %.4f", params.name.c_str(), set_torque);
         break;
     }
   }
@@ -139,6 +139,7 @@ double SafetyController::getSafetyPosition()
 
 void SafetyController::stop()
 {
+  ROS_INFO ("Stop called on %s", this->params.name.c_str());
   this->vesc->setLinearVelocity(0);
   stopped = true;
   control_mode = safetycontroller::none;
