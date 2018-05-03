@@ -38,7 +38,7 @@
 #define MAX_LINEAR_ACTUATOR_TORQUE 10.0f
 #define MAX_LINEAR_DUTY .4
 #define LINEAR_ACTUATOR_GEAR_RATIO 1
-#define LINEAR_ACTUATOR_OUTPUT_RATIO 1.0/(.44*5.206E6)  // this should be the pitch of the screw in m/s
+#define LINEAR_ACTUATOR_OUTPUT_RATIO 1.0/(5.206E6)  // this should be the pitch of the screw in m/s
 #define LINEAR_ACTUATOR_POLE_PAIRS 1
 #define LINEAR_ACTUATOR_TORQUE_CONSTANT 1.0f
 
@@ -210,8 +210,8 @@ safetycontroller::joint_params_t linear_joint_params = {.minimum_pos = 0,
                                                         .safety_check_pos = SAFE_LINEAR_DISTANCE,
                                                         .gain = .11,
                                                         .setpoint_tolerance = .005,
-                                                        .lower_limit_position = .0433,
-                                                        .upper_limit_position = SAFE_LINEAR_DISTANCE,
+                                                        .lower_limit_position = .0445,
+                                                        .upper_limit_position = .15875,
                                                         .max_abs_velocity = MAX_LINEAR_ACTUATOR_VELOCITY,
                                                         .limit_switch_safety_margin = .001,
                                                         .max_abs_torque = MAX_LINEAR_ACTUATOR_TORQUE,

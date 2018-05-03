@@ -41,7 +41,7 @@ int main (int argc, char**argv)
     }
     VescAccess *linear_vesc = new VescAccess (linear_param,true);
     LinearSafetyController linearSafetyController(linear_joint_params,linear_vesc);
-    ros::Rate r(10);
+    ros::Rate r(50);
     bool init_yet=false;
 
     ROS_INFO ("Going to init!");
