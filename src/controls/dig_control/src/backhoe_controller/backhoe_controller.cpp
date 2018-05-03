@@ -108,8 +108,7 @@ void BackhoeController::safetyCheck()
   }
 
   if (backhoe_safety->getPositionEstimate() > backhoe_safety->getSafetyPosition() &&
-      ((linear_safety->getCommandedTorque() > .001 && backhoe_safety->getControlMode()==safetycontroller::controlModeState::torque_control)
-       || (linear_safety->getCommandedVelocity ()> .001 && linear_safety->getControlMode()==safetycontroller::controlModeState::velocity_control)))
+      (linear_safety->getCommandedTorque() > .001 || linear_safety->getCommandedVelocity ()> .001))
   {
     linear_safety->stop();
     ROS_WARN ("Linear stopped!");

@@ -53,6 +53,7 @@ void SafetyController::setVelocity(double velocity)
     set_velocity = symmetricClamp(velocity, params.max_abs_velocity);
     control_mode = safetycontroller::velocity_control;
     set_torque = 0;
+    stopped=false;
   }
   else
   {
@@ -68,6 +69,7 @@ void SafetyController::setTorque(double torque)
     set_torque = symmetricClamp(torque, params.max_abs_torque);
     set_velocity = 0;
     control_mode = safetycontroller::torque_control;
+    stopped=false;
   }
   else
   {
@@ -77,7 +79,6 @@ void SafetyController::setTorque(double torque)
 
 void SafetyController::update(double dt)
 {
-  stopped = false;
   checkIsInit();
   if (control_mode == safetycontroller::position_control)
   {
@@ -121,6 +122,9 @@ void SafetyController::update(double dt)
       case safetycontroller::position_control:
         vesc->setTorque(set_torque);
         ROS_INFO("%s set torque: %.4f", params.name.c_str(), set_torque);
+        break;
+      case safetycontroller::none:
+        vesc->setLinearVelocity(0);
         break;
     }
   }

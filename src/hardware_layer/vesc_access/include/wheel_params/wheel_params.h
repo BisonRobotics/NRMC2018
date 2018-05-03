@@ -27,15 +27,15 @@
 #define WHEEL_TORQUE_CONSTANT .02120f
 
 #define MAX_CENTRAL_DRIVE_VELOCITY 0.9425f  // in rad/s
-#define MAX_CENTRAL_DRIVE_TORQUE 1732.0f     // in Nm -> the real number is 675 but we should never approach that
+#define MAX_CENTRAL_DRIVE_TORQUE 10.0f     // in Nm -> the real number is 675 but we should never approach that
 #define MAX_CENTRAL_DRIVE_DUTY .4f
-#define CENTRAL_DRIVE_GEAR_RATIO -540.0f
+#define CENTRAL_DRIVE_GEAR_RATIO -1.0f
 #define CENTRAL_DRIVE_OUTPUT_RATIO 1.0f  //  purely rotational
 #define CENTRAL_DRIVE_POLE_PAIRS 5
-#define CENTRAL_DRIVE_TORQUE_CONSTANT .641f  // Nm/A
+#define CENTRAL_DRIVE_TORQUE_CONSTANT 1.0f  // Nm/A
 
 #define MAX_LINEAR_ACTUATOR_VELOCITY .05f  // this should be change
-#define MAX_LINEAR_ACTUATOR_TORQUE 10.0f
+#define MAX_LINEAR_ACTUATOR_TORQUE 4.0f
 #define MAX_LINEAR_DUTY .4
 #define LINEAR_ACTUATOR_GEAR_RATIO 1
 #define LINEAR_ACTUATOR_OUTPUT_RATIO 1.0/(5.206E6)  // this should be the pitch of the screw in m/s
@@ -81,7 +81,7 @@
 #define LINEAR_ACTUATOR_LENGTH .1778
 #define MINIMUM_CENTRAL_ANGLE 0
 #define MAXIMUM_CENTRAL_ANGLE 2.96
-#define SAFE_CENTRAL_ANGLE 2.4
+#define SAFE_CENTRAL_ANGLE 2.2
 #define SAFE_LINEAR_DISTANCE .04985
 
 nsVescAccess::vesc_param_struct_t front_left_param = {.max_velocity = MAX_WHEEL_VELOCITY,
