@@ -46,7 +46,7 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
   else
   {
     ROS_INFO ("shoulder set in callback");
-    global_backhoe->setShoulderVelocity(0);
+    global_backhoe->stopShoulder();
   }
 
   if (fabs(linear) > .001)
@@ -56,7 +56,7 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
   else
   {
     ROS_INFO ("wrist Set in callback");
-    global_backhoe->setWristVelocity(0);
+    global_backhoe->stopWrist();
   }
 
 

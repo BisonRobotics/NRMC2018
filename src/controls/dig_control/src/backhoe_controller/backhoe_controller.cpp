@@ -99,15 +99,20 @@ void BackhoeController::safetyCheck()
   */
 
   if (backhoe_safety->getPositionEstimate() > backhoe_safety->getSafetyPosition () &&
-      (backhoe_safety->getCommandedTorque() > .001 || backhoe_safety->getCommandedVelocity() > .001)
+      ((backhoe_safety->getCommandedTorque() > .001 && (backhoe_safety->getControlMode()==safetycontroller::controlModeState::torque_control))
+        || (backhoe_safety->getCommandedVelocity() > .001 && (backhoe_safety->getControlMode()==safetycontroller::controlModeState::velocity_control)))
       && linear_safety->getPositionEstimate() > linear_safety->getSafetyPosition())
   {
     backhoe_safety->stop();
+    ROS_WARN ("Backhoe stopped");
   }
 
-  if (backhoe_safety->getPositionEstimate() > backhoe_safety->getSafetyPosition() && (linear_safety->getCommandedTorque() > .001 || linear_safety->getCommandedVelocity ()> .001 ))
+  if (backhoe_safety->getPositionEstimate() > backhoe_safety->getSafetyPosition() &&
+      ((linear_safety->getCommandedTorque() > .001 && backhoe_safety->getControlMode()==safetycontroller::controlModeState::torque_control)
+       || (linear_safety->getCommandedVelocity ()> .001 && linear_safety->getControlMode()==safetycontroller::controlModeState::velocity_control)))
   {
     linear_safety->stop();
+    ROS_WARN ("Linear stopped!");
   }
 
 }
@@ -140,4 +145,14 @@ bool BackhoeController::hasHitGround()
 bool BackhoeController::getIsInit()
 {
   return backhoe_safety->getInitStatus() && linear_safety->getInitStatus();
+}
+
+void BackhoeController::stopWrist ()
+{
+  linear_safety->stop();
+}
+
+void BackhoeController::stopShoulder()
+{
+  backhoe_safety->stop();
 }
