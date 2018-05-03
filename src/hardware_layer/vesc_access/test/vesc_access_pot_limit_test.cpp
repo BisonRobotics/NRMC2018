@@ -15,7 +15,7 @@ int main(int argc, char **argv)
   unsigned int pole_pairs = 14;
   float torque_const = 1.0f;
 
-  VescAccess *vesc = new VescAccess(shoulder_param, true);
+  VescAccess *vesc = new VescAccess(linear_param, true);
 
   std::cout << "starting" << std::endl;
   ros::Rate rate(10);

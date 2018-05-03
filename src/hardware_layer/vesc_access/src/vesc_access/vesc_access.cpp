@@ -232,7 +232,13 @@ float VescAccess::getTorque(void)
 
 float VescAccess::getLinearVelocity(void)
 {
-  return (convertRpmToLinearVelocity(convertErpmToRpm(vesc->getRpm())));
+  static constexpr float min_man = .0001;
+  float linear_ret = convertRpmToLinearVelocity(convertErpmToRpm(vesc->getRpm()));
+  if (std::fabs(linear_ret) < min_man)
+  {
+    linear_ret = 0;
+  }
+  return (linear_ret);
 }
 
 float VescAccess::convertErpmToRpm(float erpm)
