@@ -19,7 +19,7 @@
 #define STUCK_TIMEOUT 2.0
 #define STUCK_COOLDOWN 2.0
 
-#define BACKUP_TIME 1.5
+#define BACKUP_TIME 3.0
 
 bool approx(double A, double B, double T)
 {
@@ -323,6 +323,9 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
                 return Status::GOALREACHED;
             }
         }
+        else
+        {
+            
       theCPP = WaypointControllerHelper::findCPP(robotPose, currMan);  // closest pose on path
       prevDistToEndAbs = dist2endAbs; 
       dist2endAbs = dist(robotPose.x, robotPose.y, maneuverEnd.x, maneuverEnd.y);
@@ -368,6 +371,7 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
         // if it was the last one.
       }
       // todo: implement cantplan
+     }
     }
 
     // do control system calculations
