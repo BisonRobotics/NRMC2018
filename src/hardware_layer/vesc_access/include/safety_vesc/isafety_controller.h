@@ -65,6 +65,8 @@ public:
   virtual void updatePositionEstimate(double dt) = 0;
 
   virtual safetycontroller::controlModeState getControlMode() = 0;
+  virtual float getCommandedTorque () =0;
+  virtual float getCommandedVelocity() =0;
 };
 
 #endif  // PROJECT_SAFETY_VESC_H

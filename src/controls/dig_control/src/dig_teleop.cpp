@@ -17,7 +17,7 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
   float central = 0.0f;
   bool sifter_toggle = false;
   bool large_conveyor_toggle = false;
-  static constexpr float linear_gain = 3.0;
+  static constexpr float linear_gain = 2.0;
   static constexpr float central_gain = 5.0f;
 
   if (joy->buttons[4])  // left bumper is safety
@@ -45,7 +45,8 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
   }
   else
   {
-    global_backhoe->setShoulderVelocity(0);
+    ROS_INFO ("shoulder set in callback");
+    global_backhoe->stopShoulder();
   }
 
   if (fabs(linear) > .001)
@@ -54,7 +55,8 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
   }
   else
   {
-    global_backhoe->setWristVelocity(0);
+    ROS_INFO ("wrist Set in callback");
+    global_backhoe->stopWrist();
   }
 
 
@@ -101,6 +103,7 @@ int main(int argc, char **argv)
   ros::Rate r(40);
   ros::Time initial = ros::Time::now();
 
+  ROS_INFO ("Initializing");
   backhoeSafety.init();
   while (ros::ok() && !has_been_init)
   {
@@ -117,7 +120,7 @@ int main(int argc, char **argv)
     ros::spinOnce();
     backhoe.update((initial - ros::Time::now()).toSec());
     outrigger.update((initial - ros::Time::now()).toSec());
-    ROS_INFO ("linear position: %.4f central position: $.4f ",linearSafety.getPositionEstimate(),backhoeSafety.getPositionEstimate() );
+    ROS_INFO ("linear position: %.4f central position: %.4f ",linearSafety.getPositionEstimate(),backhoeSafety.getPositionEstimate() );
     initial = ros::Time::now();
     velocity = small_conveyor_vesc.getTorque();
     velocity = large_conveyor_vesc.getTorque();

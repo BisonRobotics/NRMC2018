@@ -28,7 +28,7 @@ int main (int argc, char**argv)
     ros::init (argc, argv, "linear_test");
     ros::NodeHandle gl_n;
     ros::NodeHandle nh ("~");
-    ros::Subscriber my_sub = gl_n.subscribe("joy",100, callback);
+    ros::Subscriber my_sub = gl_n.subscribe("dig_joy",100, callback);
 
     if (!gl_n.getParam("linear_scale_factor", linear_scalar))
     {

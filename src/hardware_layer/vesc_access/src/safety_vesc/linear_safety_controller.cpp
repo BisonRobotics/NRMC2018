@@ -15,11 +15,11 @@ void LinearSafetyController::updatePositionEstimate(double dt)
 
 bool LinearSafetyController::init()
 {
-  static constexpr float start_torque = -2.0f;
+  static constexpr float start_torque = -3.0f;
 
   if (this->vesc->getLimitSwitchState() == nsVescAccess::limitSwitchState::bottomOfMotion)
   {
-    this->vesc->setTorque(0.0);
+    this->vesc->setLinearVelocity(0);
     this->position_estimate = params.lower_limit_position;
     this->is_init = true;
   }

@@ -11,8 +11,12 @@ SafetyController::SafetyController(iVescAccess *vesc, safetycontroller::joint_pa
   control_mode = safetycontroller::none;
   this->set_velocity = 0;
   this->set_torque = 0;
-  this->stopped = true;
   this->position_estimate = (params.lower_limit_position + params.upper_limit_position) / 2.0;
+}
+
+
+int sign (double a){
+  return a>0?1:-1;
 }
 
 void SafetyController::setPositionSetpoint(double position)
@@ -28,6 +32,7 @@ void SafetyController::setPositionSetpoint(double position)
     throw BackhoeException(ss.str());
   }
   this->set_position = position;
+  this->set_torque = 7*sign(position-position_estimate);
   control_mode = safetycontroller::position_control;
 }
 
@@ -77,7 +82,6 @@ void SafetyController::setTorque(double torque)
 
 void SafetyController::update(double dt)
 {
-  stopped = false;
   checkIsInit();
   if (control_mode == safetycontroller::position_control)
   {
@@ -86,10 +90,6 @@ void SafetyController::update(double dt)
       ROS_INFO("%s stopped because at setpoint %4f with posestimate %.4f", params.name.c_str(), set_position,
                position_estimate);
       stop();
-    }
-    else
-    {
-      set_torque = symmetricClamp(params.gain * (set_position - position_estimate), params.max_abs_torque);
     }
   }
   // this happens in any mode
@@ -109,27 +109,37 @@ void SafetyController::update(double dt)
     stop();
   }
 
-  if (!stopped)
+
+  switch (control_mode)
   {
-    switch (control_mode)
-    {
-      case safetycontroller::velocity_control:
-        vesc->setLinearVelocity(set_velocity);
-        ROS_INFO("%s set velocity: %.4f", params.name.c_str(), set_velocity);
-        break;
-      case safetycontroller::torque_control:
-      case safetycontroller::position_control:
-        vesc->setTorque(set_torque);
-        ROS_INFO("%s set velocity: %.4f", params.name.c_str(), set_velocity);
-        break;
-    }
+  case safetycontroller::velocity_control:
+     ROS_INFO("%s set velocity: %.4f", params.name.c_str(), set_velocity);
+     break;
+  case safetycontroller::torque_control:
+  case safetycontroller::position_control:
+    vesc->setTorque(set_torque);
+    ROS_INFO("%s set torque: %.4f", params.name.c_str(), set_torque);
+    break;
+  case safetycontroller::none:
+    vesc->setLinearVelocity(0);
+    break;
   }
 }
 
 bool SafetyController::isAtSetpoint(void)
 {
-  return fabs(position_estimate - set_position) < fabs(params.setpoint_tolerance) ||
-         control_mode == safetycontroller::controlModeState::none;
+  bool ret_val;
+  if (set_torque > 0)
+  {
+    ret_val = position_estimate > set_position - params.setpoint_tolerance;
+  } else
+  {
+    ret_val = position_estimate < set_position + params.setpoint_tolerance;
+  }
+
+     return ret_val || control_mode == safetycontroller::controlModeState::none;
+  // if we are going up, we want to only check the lower tolerance
+  // if we are going down we want to only check the upper toleranve
 }
 
 double SafetyController::getSafetyPosition()
@@ -139,8 +149,8 @@ double SafetyController::getSafetyPosition()
 
 void SafetyController::stop()
 {
+  ROS_INFO ("Stop called on %s", this->params.name.c_str());
   this->vesc->setLinearVelocity(0);
-  stopped = true;
   control_mode = safetycontroller::none;
 }
 

@@ -26,7 +26,8 @@ public:
   double getShoulderTorque();
   double getShoulderVelocity();
   bool getIsInit(void);
-
+  void stopWrist (void);
+  void stopShoulder (void);
 private:
   void safetyCheck();
   iSafetyController *backhoe_safety;
