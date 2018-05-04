@@ -81,7 +81,7 @@
 #define LINEAR_ACTUATOR_LENGTH .1778
 #define MINIMUM_CENTRAL_ANGLE 0
 #define MAXIMUM_CENTRAL_ANGLE 2.96
-#define SAFE_CENTRAL_ANGLE 2.2
+#define SAFE_CENTRAL_ANGLE 2.3
 #define SAFE_LINEAR_DISTANCE .04985
 
 nsVescAccess::vesc_param_struct_t front_left_param = {.max_velocity = MAX_WHEEL_VELOCITY,
