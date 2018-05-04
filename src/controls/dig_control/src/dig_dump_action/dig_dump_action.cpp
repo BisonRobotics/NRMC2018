@@ -116,7 +116,7 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
             // it make sense tto get rid of this but lets see what makes sense
           }
           break;
-        case dig_state_enum::returning_backhoe_to_initial:  // state 8 //moving back to same position as dig idle
+        case dig_state_enum::returning_backhoe_to_initial:  // state 9 //moving back to same position as dig idle
           if (backhoe->shoulderAtSetpoint())
           {
             bucket->turnLittleConveyorOff();
