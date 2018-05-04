@@ -57,6 +57,7 @@ add_library(dig_dump_action_lib src/dig_dump_action/dig_dump_action.cpp)
 
 add_executable(hoe_master src/hoe_master.cpp)
 add_executable (dig_teleop src/dig_teleop.cpp)
+add_executable (setpoint_test src/test/safety_position_setpoint_test.cpp)
 
 add_dependencies(hoe_master
   backhoe_controller_lib
@@ -81,6 +82,12 @@ target_link_libraries(hoe_master
   ${vesc_access_LIBRARIES}
   ${safety_vesc_LIBRARIES}
 )
+
+add_dependencies(setpoint_test
+  backhoe_controller_lib
+)
+target_link_libraries(setpoint_test ${vesc_access_LIBRARIES} backhoe_controller_lib ${safety_vesc_LIBRARIES} ${catkin_LIBRARIES})
+
 
 add_executable(outrigger_master src/outrigger_master.cpp)
 target_link_libraries(outrigger_master ${catkin_LIBRARIES} outrigger_controller_lib sim_robot)

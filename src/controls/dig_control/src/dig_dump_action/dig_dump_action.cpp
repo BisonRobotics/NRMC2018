@@ -2,15 +2,16 @@
 #include "dig_dump_action/dig_dump_action.h"
 
 #define LINEAR_RETRACTED_POINT .06
-#define LINEAR_EXTENDED_POINT .15
+#define LINEAR_EXTENDED_POINT .14
 #define CENTRAL_MEASUREMENT_START_ANGLE 2.0
 #define CENTRAL_MEASUREMENT_STOP_ANGLE 1.5
-#define CENTRAL_HOLD_TORQUE -1
-#define CENTRAL_TRANSPORT_ANGLE 2.1
-#define CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE  2.4
+#define CENTRAL_HOLD_TORQUE -1          //increase the magintude
+#define CENTRAL_TRANSPORT_ANGLE 2.1                 // move this up
+#define CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE  2.6 // move this up
 #define CENTRAL_DUMP_ANGLE 2.0        // must be below safety point, where backhoe dumps into bucket
 #define CENTRAL_DEPOSITION_ANGLE 2.9  // must be below max position
-#define SENDIN_IT_SPEED -1.0          // not yet implemented
+
+#define GROUND_ALPHA .2
 
 DigDumpAction::DigDumpAction(BackhoeController *backhoe, BucketController *bucket)
   : dig_as_(nh_, "dig_server", boost::bind(&DigDumpAction::digExecuteCB, this, _1), false)
@@ -25,6 +26,7 @@ DigDumpAction::DigDumpAction(BackhoeController *backhoe, BucketController *bucke
   this->bucket = bucket;
   this->backhoe = backhoe;
   weightMetric = 0;
+  this->ground_metric = 10;
 }
 
 void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
@@ -61,18 +63,23 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
         case dig_state_enum::moving_to_ground:  // state 2
           // integrate work moving from measurement start to where we think the ground is
           weightMetric += backhoe->getShoulderTorque() * backhoe->getShoulderVelocity() * .02;  //.02 is dt
+          ground_metric = 10;
           if (backhoe->shoulderAtSetpoint())
           {
             backhoe->setShoulderSetpoint(0);  // send it into the ground
             digging_state = finding_ground;
             dig_result.weight_harvested = weightMetric;
+            prev_backhoe_position = 3*CENTRAL_MEASUREMENT_STOP_ANGLE;
           }
           break;
         case dig_state_enum::finding_ground:  // state 3 //going to find the ground
           // this method checks the torque reported by the motor
           // it waits for the p gain on the velocity control to increase the torque above
           // a threshold after the RPM drops when the ground is hit
-          if (backhoe->hasHitGround())
+          ground_metric = GROUND_ALPHA * (prev_backhoe_position - backhoe->getPositionEstimate())/.02 
+                    + (1 - GROUND_ALPHA) * ground_metric;
+          prev_backhoe_position = backhoe->getPositionEstimate();
+          if (ground_metric < .05 /*backhoe->hasHitGround()*/)
           {
             backhoe->abandonShoulderPositionSetpointAndSetTorqueWithoutStopping(CENTRAL_HOLD_TORQUE);
             backhoe->setWristSetpoint(LINEAR_EXTENDED_POINT);  // curl it in
@@ -129,7 +136,6 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
         case dig_state_enum::dig_error:
         default:
           bucket->turnSifterOff();
-
           bucket->turnLittleConveyorOff();
           dig_as_.setAborted();
           is_digging = false;

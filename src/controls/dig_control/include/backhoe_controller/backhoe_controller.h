@@ -25,6 +25,7 @@ public:
   bool wristAtSetpoint();
   double getShoulderTorque();
   double getShoulderVelocity();
+  double getPositionEstimate();
   bool getIsInit(void);
   void stopWrist (void);
   void stopShoulder (void);

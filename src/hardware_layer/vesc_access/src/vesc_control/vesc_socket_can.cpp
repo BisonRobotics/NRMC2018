@@ -15,6 +15,8 @@ Vesc::Vesc(char *interface, uint8_t controllerID, uint32_t quirks, std::string n
   this->js_command_pub = n.advertise<sensor_msgs::JointState>("vesc_command",100);
   this->float32_pub = n.advertise<std_msgs::Float32>(name + "/current", 30);
   this->js_pub = n.advertise<sensor_msgs::JointState>("/joint_states", 20);
+  this->_flimit=false;
+  this->_rlimit=false;
   js_message.name.push_back(name);
   js_message.position.push_back(0);
   js_message.velocity.push_back(0);

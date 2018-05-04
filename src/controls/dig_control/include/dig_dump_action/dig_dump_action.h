@@ -58,6 +58,8 @@ private:
   BackhoeController *backhoe;
   BucketController *bucket;
   double weightMetric;
+  double ground_metric;
+  double prev_backhoe_position;
 };
 
 #endif  // PROJECT_DIG_DUMP_ACTION_H
