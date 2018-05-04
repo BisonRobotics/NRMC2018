@@ -8,7 +8,7 @@
 #define CENTRAL_HOLD_TORQUE -1          //increase the magintude
 #define CENTRAL_TRANSPORT_ANGLE 2.1                 // move this up
 #define CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE  2.65 // move this up
-#define CENTRAL_DUMP_ANGLE 2.3        // must be below safety point, where backhoe dumps into bucket
+#define CENTRAL_DUMP_ANGLE 2.4        // must be below safety point, where backhoe dumps into bucket
 #define CENTRAL_DEPOSITION_ANGLE 2.9  // must be below max position
 
 #define GROUND_ALPHA .2
@@ -110,12 +110,13 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
         case dig_state_enum::moving_rocks_into_holder:  // state 7
           if (backhoe->shoulderAtSetpoint())
           {
-            initial_dig_time = ros::Time::now();
+            initial_dig_time = 0;//ros::Time::now();
             digging_state = waiting_for_rocks;
           }
           break;
         case dig_state_enum::waiting_for_rocks:  //state 8
-          if ((ros::Time::now()-initial_dig_time).toSec() > time_to_move_rocks_to_holder)
+          initial_dig_time+= .02;
+          if (initial_dig_time /*(ros::Time::now()-initial_dig_time).toSec()*/ > time_to_move_rocks_to_holder)
           {
             digging_state = returning_backhoe_to_initial;
             backhoe->setShoulderSetpoint(CENTRAL_TRANSPORT_ANGLE);
@@ -168,13 +169,14 @@ void DigDumpAction::dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal)
           if (backhoe->shoulderAtSetpoint())
           {
             bucket->turnBigConveyorOn();
-            initial_time = ros::Time::now();
+            initial_time = 0;//ros::Time::now();
             dumping_state = actuating_conveyor;
           }
           break;
         case dump_state_enum::actuating_conveyor:
           // keep conveyor actuated for some time? until some current feedback?
-          if((ros::Time::now()-initial_time).toSec() > dump_time)
+          initial_time += .02;
+          if(/*ros::Time::now()-initial_time).toSec()*/ initial_time > dump_time)
           {
             bucket->turnBigConveyorOff();
             backhoe->setShoulderSetpoint(CENTRAL_TRANSPORT_ANGLE);

@@ -47,11 +47,11 @@ private:
   dig_control::DigResult dig_result;
   dig_control::DumpFeedback dump_feedback;
   dig_control::DumpResult dump_result;
-  ros::Time initial_dig_time;
+  /*ros::Time*/double initial_dig_time;
   bool is_digging;
   bool is_dumping;
-  ros::Time initial_time;
-  static constexpr float dump_time = 20;
+  /*ros::Time*/double initial_time;
+  static constexpr float dump_time = 5;
   static constexpr float time_to_move_rocks_to_holder=1;
   void digExecuteCB(const dig_control::DigGoalConstPtr &goal);
   void dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal);
