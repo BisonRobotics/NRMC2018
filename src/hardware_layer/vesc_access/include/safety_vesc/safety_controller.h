@@ -40,7 +40,6 @@ protected:
   safetycontroller::joint_params_t params;
   iVescAccess *vesc;
   bool is_init;
-  bool stopped;
   double position_estimate;
 private:
   safetycontroller::controlModeState control_mode;
