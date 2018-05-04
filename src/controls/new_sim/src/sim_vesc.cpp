@@ -19,7 +19,7 @@ SimVesc::SimVesc(double Pgain, double Igain, double velo_factor)
 }
 
 SimVesc::SimVesc(double Pgain, double Igain, double velo_factor, double initialPos, double beginLimit, double endLimit,
-                 bool hitsGround, double groundPos)
+                 bool hitsGround, double groundPos, double lff)
 {
   vesc_Pgain = Pgain;
   vesc_Igain = Igain;
@@ -33,6 +33,8 @@ SimVesc::SimVesc(double Pgain, double Igain, double velo_factor, double initialP
   hasLimits = true;
   this->beginLimit = beginLimit;
   this->endLimit = endLimit;
+  
+  this->linearFudgeFuckter = lff;
 
   if (hitsGround)
   {
@@ -62,7 +64,7 @@ void SimVesc::update(double dt)
       onGround = false;
     }
   }
-  pot_pos += vel * dt;
+  pot_pos += linearFudgeFuckter * vel * dt;
   if (hasLimits)
   {
     if (pot_pos >= endLimit)
@@ -120,12 +122,12 @@ float SimVesc::getLinearVelocity(void)
 
 float SimVesc::getTorque(void)
 {
-  return torque;
+  return 2*torque;
 }
 
 void SimVesc::setTorque(float current)
 {
-  this->setLinearVelocity(.3 * current);
+  this->setLinearVelocity(.0005 * current);
 }
 
 void SimVesc::setLimitSwitchState(nsVescAccess::limitSwitchState state)

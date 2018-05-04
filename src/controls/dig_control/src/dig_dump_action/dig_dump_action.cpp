@@ -1,12 +1,12 @@
 
 #include "dig_dump_action/dig_dump_action.h"
 
-#define LINEAR_RETRACTED_POINT .05
-#define LINEAR_EXTENDED_POINT .17
-#define CENTRAL_MEASUREMENT_START_ANGLE 2.4
+#define LINEAR_RETRACTED_POINT .06
+#define LINEAR_EXTENDED_POINT .15
+#define CENTRAL_MEASUREMENT_START_ANGLE 2.0
 #define CENTRAL_MEASUREMENT_STOP_ANGLE 1.5
 #define CENTRAL_HOLD_TORQUE -1
-#define CENTRAL_TRANSPORT_ANGLE 2.4
+#define CENTRAL_TRANSPORT_ANGLE 2.1
 #define CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE  2.4
 #define CENTRAL_DUMP_ANGLE 2.0        // must be below safety point, where backhoe dumps into bucket
 #define CENTRAL_DEPOSITION_ANGLE 2.9  // must be below max position
@@ -100,14 +100,14 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
             digging_state = moving_rocks_into_holder;
           }
           break;
-        case dig_state_enum::moving_rocks_into_holder:
+        case dig_state_enum::moving_rocks_into_holder:  // state 7
           if (backhoe->shoulderAtSetpoint())
           {
             initial_dig_time = ros::Time::now();
             digging_state = waiting_for_rocks;
           }
           break;
-        case dig_state_enum::waiting_for_rocks:
+        case dig_state_enum::waiting_for_rocks:  //state 8
           if ((ros::Time::now()-initial_dig_time).toSec() > time_to_move_rocks_to_holder)
           {
             digging_state = returning_backhoe_to_initial;
@@ -116,7 +116,7 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
             // it make sense tto get rid of this but lets see what makes sense
           }
           break;
-        case dig_state_enum::returning_backhoe_to_initial:  // state 7 //moving back to same position as dig idle
+        case dig_state_enum::returning_backhoe_to_initial:  // state 8 //moving back to same position as dig idle
           if (backhoe->shoulderAtSetpoint())
           {
             bucket->turnLittleConveyorOff();
@@ -125,10 +125,6 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
             digging_state = dig_idle;
             dig_as_.setSucceeded(dig_result);
           }
-          break;
-        case dig_state_enum::dig_error:
-          bucket->turnSifterOff();
-          bucket->turnLittleConveyorOff();
           break;
         default:
           bucket->turnSifterOff();

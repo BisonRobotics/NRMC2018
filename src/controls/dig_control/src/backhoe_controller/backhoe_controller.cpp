@@ -76,6 +76,10 @@ void BackhoeController::update(double dt)
     backhoe_safety->update(dt);
     linear_safety->update(dt);
   }
+  else
+  {
+      ROS_ERROR("UPDATE CALLED WITHOUT INIT");
+  }
 }
 
 void BackhoeController::safetyCheck()
