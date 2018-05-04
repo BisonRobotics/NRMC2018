@@ -8,7 +8,7 @@
 #define CENTRAL_HOLD_TORQUE -1          //increase the magintude
 #define CENTRAL_TRANSPORT_ANGLE 2.1                 // move this up
 #define CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE  2.65 // move this up
-#define CENTRAL_DUMP_ANGLE 2.4        // must be below safety point, where backhoe dumps into bucket
+#define CENTRAL_DUMP_ANGLE 2.30        // must be below safety point, where backhoe dumps into bucket
 #define CENTRAL_DEPOSITION_ANGLE 2.9  // must be below max position
 
 #define GROUND_ALPHA .2

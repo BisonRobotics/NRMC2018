@@ -52,7 +52,7 @@ private:
   bool is_dumping;
   /*ros::Time*/double initial_time;
   static constexpr float dump_time = 5;
-  static constexpr float time_to_move_rocks_to_holder=1;
+  static constexpr float time_to_move_rocks_to_holder=10;
   void digExecuteCB(const dig_control::DigGoalConstPtr &goal);
   void dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal);
   BackhoeController *backhoe;
