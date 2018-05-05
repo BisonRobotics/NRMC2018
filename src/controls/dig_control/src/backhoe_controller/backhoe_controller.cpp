@@ -125,6 +125,11 @@ double BackhoeController::getShoulderVelocity()
   return backhoe_safety->getLinearVelocity();
 }
 
+double BackhoeController::getPositionEstimate()
+{
+    return backhoe_safety->getPositionEstimate();
+}
+
 bool BackhoeController::hasHitGround()
 {
   return fabs(backhoe_safety->getTorque()) > fabs(this->ground_torque);
