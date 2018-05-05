@@ -3,7 +3,7 @@ plugins:
   - {name: rock_layer, type: "low_pass_namespace::LowPassLayer"}
 #  - {name: rock_layer, type: "costmap_2d::ObstacleLayer"}
   - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
-publish_frequency: .5
+publish_frequency: .1
 footprint: [[-1, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0]]
 
 inflation_layer: {circumscribed_radius: 0.264, cost_scaling_factor: 3.0, enabled: true,
