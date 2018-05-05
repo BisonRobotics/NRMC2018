@@ -56,11 +56,15 @@ void OutriggerController::update(double dt)
       {
         deploying = false;
         deployed = true;
+        l->setDuty(0);
+        r->setDuty(0);
       }
       else if (retracting)
       {
         retracting = false;
         retracted = true;
+        l->setDuty(0);
+        r->setDuty(0);
       }
     }
   }
