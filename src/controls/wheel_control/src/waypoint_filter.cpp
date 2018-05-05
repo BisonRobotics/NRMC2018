@@ -324,6 +324,20 @@ int main(int argc, char** argv)
           ros::spinOnce();
           rate.sleep();
           
+          wpmsg.x = 1.4;
+          wpmsg.y = 0.015;
+          wpmsg.theta =0;
+          pub.publish(wpmsg);
+          ros::spinOnce();
+          rate.sleep();
+          
+          wpmsg.x = .8;
+          wpmsg.y = 0.000;
+          wpmsg.theta =0;
+          pub.publish(wpmsg);
+          ros::spinOnce();
+          rate.sleep();
+          
           wpmsg.x = -1.0;
           wpmsg.y = -0.015;
           wpmsg.theta =0;
