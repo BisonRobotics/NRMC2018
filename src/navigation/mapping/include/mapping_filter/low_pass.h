@@ -21,7 +21,7 @@ public:
   bool updateEnable (std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res);
   void updateBounds (double robot_x, double robot_y, double robot_yaw, double *min_x, double *min_y, double *max_x, double *max_y);
 private:
-  static constexpr unsigned int size_of_kern = 13;
+  static constexpr unsigned int size_of_kern = 7;
   ros::ServiceServer enable_service;
 };
 }
