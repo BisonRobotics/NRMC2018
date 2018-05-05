@@ -2,7 +2,7 @@
 <MCConfiguration>
     <pwm_mode>1</pwm_mode>
     <comm_mode>0</comm_mode>
-    <motor_type>2</motor_type>
+    <motor_type>0</motor_type>
     <sensor_mode>0</sensor_mode>
     <l_current_max>20</l_current_max>
     <l_current_min>-20</l_current_min>
@@ -92,6 +92,6 @@
     <meta_description>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Configuration loaded from the motor controller.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</meta_description>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Sans Serif';&quot;&gt;Configuration loaded from the motor controller.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</meta_description>
 </MCConfiguration>
