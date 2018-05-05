@@ -285,6 +285,7 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
       if (navigationQueue.at(0).terminalPose.x < 0)
       {
         backing_it_in = true;
+        squaring_it_up = true;
         doingManeuver = true;
         clearControlStates();
       }
@@ -450,10 +451,29 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     }
     else if (backing_it_in)
     {
-      front_left_wheel->setLinearVelocity(-.12);
-      back_left_wheel->setLinearVelocity(-.12);
-      front_right_wheel->setLinearVelocity(-.12);
-      back_right_wheel->setLinearVelocity(-.12);
+      if (squaring_it_up)
+      {
+          double angle_measurement = WaypointControllerHelper::anglediff(robotPose.theta, 0);
+          if (std::abs(angle_measurement) > .1)
+          {
+            front_left_wheel->setLinearVelocity(.12 * WaypointControllerHelper::sign(angle_measurement));
+            back_left_wheel->setLinearVelocity(.12 * WaypointControllerHelper::sign(angle_measurement));
+            front_right_wheel->setLinearVelocity(-.12 * WaypointControllerHelper::sign(angle_measurement));
+            back_right_wheel->setLinearVelocity(-.12 * WaypointControllerHelper::sign(angle_measurement));
+
+          }
+          else 
+          {
+              squaring_it_up = false;
+          }
+      }
+      else
+      {
+        front_left_wheel->setLinearVelocity(-.12);
+        back_left_wheel->setLinearVelocity(-.12);
+        front_right_wheel->setLinearVelocity(-.12);
+        back_right_wheel->setLinearVelocity(-.12); 
+      }
     }
     else if (unstucking && !unstucking_cooldown)
     {

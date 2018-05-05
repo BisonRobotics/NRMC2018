@@ -110,6 +110,7 @@ private:
   double time_unstucking_cooldown;
   
   bool backing_it_in;
+  bool squaring_it_up;
   double time_backing;
   
   pose maneuverEnd;
