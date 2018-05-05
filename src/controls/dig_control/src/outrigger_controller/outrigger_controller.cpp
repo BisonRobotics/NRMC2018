@@ -26,6 +26,7 @@ void OutriggerController::deploy()
   time_spent = 0;
   l->setDuty(OUTRIGGER_ACTUATION_DUTY);
   r->setDuty(OUTRIGGER_ACTUATION_DUTY);
+  ROS_INFO("DEPLOYING");
 }
 
 void OutriggerController::retract()
@@ -46,6 +47,8 @@ void OutriggerController::update(double dt)
   // update is deployed/retracted status
   if (deploying || retracting)
   {
+    l->getTorque();
+    r->getTorque();
     time_spent += dt;
     if (time_spent >= TIME_TO_ACTUATE)
     {

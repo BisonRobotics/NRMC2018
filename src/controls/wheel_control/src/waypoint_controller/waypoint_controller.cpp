@@ -14,9 +14,9 @@
 #define ZERO_TOLERANCE_POLICY .001
 
 #define STUCK_METRIC_ALPHA .7
-#define STUCK_METRIC_THRESHOLD .1
-#define STUCK_METRIC_RELEASE .12
-#define STUCK_TIMEOUT 2.0
+#define STUCK_METRIC_THRESHOLD .03
+#define STUCK_METRIC_RELEASE .07
+#define STUCK_TIMEOUT .8
 #define STUCK_COOLDOWN 2.0
 
 #define BACKUP_TIME 3.0
@@ -285,6 +285,7 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
       if (navigationQueue.at(0).terminalPose.x < 0)
       {
         backing_it_in = true;
+        squaring_it_up = true;
         doingManeuver = true;
         clearControlStates();
       }
@@ -309,18 +310,21 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
         
         if (backing_it_in)
         {
-            time_backing += dt;
-            if (time_backing > BACKUP_TIME)
+            if (!squaring_it_up)
             {
-                backing_it_in = false;
-                time_backing = 0;
-                prevDistToEndAbs =0;
-                dist2endAbs =0;
-                //doingManeuver = false;
-                //currManeuverIndex++;
-                //return Status::ALLGOOD;
-                this->haltAndAbort();
-                return Status::GOALREACHED;
+                time_backing += dt;
+                if (time_backing > BACKUP_TIME)
+                {
+                    backing_it_in = false;
+                    time_backing = 0;
+                    prevDistToEndAbs =0;
+                    dist2endAbs =0;
+                    //doingManeuver = false;
+                    //currManeuverIndex++;
+                    //return Status::ALLGOOD;
+                    this->haltAndAbort();
+                    return Status::GOALREACHED;
+                }
             }
         }
         else
@@ -450,10 +454,29 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     }
     else if (backing_it_in)
     {
-      front_left_wheel->setLinearVelocity(-.12);
-      back_left_wheel->setLinearVelocity(-.12);
-      front_right_wheel->setLinearVelocity(-.12);
-      back_right_wheel->setLinearVelocity(-.12);
+      if (squaring_it_up)
+      {
+          double angle_measurement = WaypointControllerHelper::anglediff(robotPose.theta, 0);
+          if (std::abs(angle_measurement) > .05)
+          {
+            front_left_wheel->setLinearVelocity(.12 * WaypointControllerHelper::sign(angle_measurement));
+            back_left_wheel->setLinearVelocity(.12 * WaypointControllerHelper::sign(angle_measurement));
+            front_right_wheel->setLinearVelocity(-.12 * WaypointControllerHelper::sign(angle_measurement));
+            back_right_wheel->setLinearVelocity(-.12 * WaypointControllerHelper::sign(angle_measurement));
+
+          }
+          else 
+          {
+              squaring_it_up = false;
+          }
+      }
+      else
+      {
+        front_left_wheel->setLinearVelocity(-.12);
+        back_left_wheel->setLinearVelocity(-.12);
+        front_right_wheel->setLinearVelocity(-.12);
+        back_right_wheel->setLinearVelocity(-.12); 
+      }
     }
     else if (unstucking && !unstucking_cooldown)
     {
