@@ -310,18 +310,21 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
         
         if (backing_it_in)
         {
-            time_backing += dt;
-            if (time_backing > BACKUP_TIME)
+            if (!squaring_it_up)
             {
-                backing_it_in = false;
-                time_backing = 0;
-                prevDistToEndAbs =0;
-                dist2endAbs =0;
-                //doingManeuver = false;
-                //currManeuverIndex++;
-                //return Status::ALLGOOD;
-                this->haltAndAbort();
-                return Status::GOALREACHED;
+                time_backing += dt;
+                if (time_backing > BACKUP_TIME)
+                {
+                    backing_it_in = false;
+                    time_backing = 0;
+                    prevDistToEndAbs =0;
+                    dist2endAbs =0;
+                    //doingManeuver = false;
+                    //currManeuverIndex++;
+                    //return Status::ALLGOOD;
+                    this->haltAndAbort();
+                    return Status::GOALREACHED;
+                }
             }
         }
         else
@@ -454,7 +457,7 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
       if (squaring_it_up)
       {
           double angle_measurement = WaypointControllerHelper::anglediff(robotPose.theta, 0);
-          if (std::abs(angle_measurement) > .1)
+          if (std::abs(angle_measurement) > .05)
           {
             front_left_wheel->setLinearVelocity(.12 * WaypointControllerHelper::sign(angle_measurement));
             back_left_wheel->setLinearVelocity(.12 * WaypointControllerHelper::sign(angle_measurement));
