@@ -6,9 +6,9 @@
 #define CENTRAL_MEASUREMENT_START_ANGLE 2.0
 #define CENTRAL_MEASUREMENT_STOP_ANGLE 1.5
 #define CENTRAL_HOLD_TORQUE -1          //increase the magintude
-#define CENTRAL_TRANSPORT_ANGLE 2.1                 // move this up
-#define CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE  2.65 // move this up
-#define CENTRAL_DUMP_ANGLE 2.30        // must be below safety point, where backhoe dumps into bucket
+#define CENTRAL_TRANSPORT_ANGLE 2.4                 // move this up
+#define CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE  2.85 // move this up
+#define CENTRAL_DUMP_ANGLE 2.58        // must be below safety point, where backhoe dumps into bucket
 #define CENTRAL_DEPOSITION_ANGLE 2.9  // must be below max position
 
 #define GROUND_ALPHA .2
@@ -47,7 +47,6 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
       {
         case dig_state_enum::dig_idle:  // state 0//not digging, should start here
           bucket->turnSifterOn();
-          bucket->turnLittleConveyorOn();
           backhoe->setShoulderSetpoint(CENTRAL_MEASUREMENT_START_ANGLE);  // put system in known starting config
           backhoe->setWristSetpoint(LINEAR_RETRACTED_POINT);
           digging_state = ensure_at_measurement_start;
@@ -68,7 +67,7 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
           {
             backhoe->setShoulderSetpoint(0);  // send it into the ground
             digging_state = finding_ground;
-            dig_result.weight_harvested = weightMetric;
+            dig_result.weight_harvested = weightMetric/100;
             prev_backhoe_position = 3*CENTRAL_MEASUREMENT_STOP_ANGLE;
           }
           break;
@@ -98,6 +97,7 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
           {
             backhoe->setWristSetpoint(LINEAR_RETRACTED_POINT);  // curl it out
             digging_state = dumping_into_bucket;
+            bucket->turnLittleConveyorOn();
           }
           break;
         case dig_state_enum::dumping_into_bucket:  // state 6 //uncurling wrist to release dirt into bucket
