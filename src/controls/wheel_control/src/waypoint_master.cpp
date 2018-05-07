@@ -552,6 +552,7 @@ int main(int argc, char **argv)
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
 
+    tfBroad.sendTransform(create_tf(.6, 0, 0)); //have autonomy plan from here always
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
     // also publish marker
 
