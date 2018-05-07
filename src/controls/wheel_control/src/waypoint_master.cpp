@@ -589,10 +589,10 @@ int main(int argc, char **argv)
     jsMessage.name.push_back("frame_to_back_left_wheel");
 
     jsMessage.header.stamp = ros::Time::now();
-    wheel_positions[0] += fl->getLinearVelocity() / UPDATE_RATE_HZ;
-    wheel_positions[1] += fr->getLinearVelocity() / UPDATE_RATE_HZ;
-    wheel_positions[2] += br->getLinearVelocity() / UPDATE_RATE_HZ;
-    wheel_positions[3] += bl->getLinearVelocity() / UPDATE_RATE_HZ;
+    wheel_positions[0] += 10*fl->getLinearVelocity() / UPDATE_RATE_HZ;
+    wheel_positions[1] += 10*fr->getLinearVelocity() / UPDATE_RATE_HZ;
+    wheel_positions[2] += 10*br->getLinearVelocity() / UPDATE_RATE_HZ;
+    wheel_positions[3] += 10*bl->getLinearVelocity() / UPDATE_RATE_HZ;
     jsMessage.position.push_back(wheel_positions[0]);
     jsMessage.position.push_back(wheel_positions[1]);
     jsMessage.position.push_back(wheel_positions[2]);

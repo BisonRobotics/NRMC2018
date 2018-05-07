@@ -12,11 +12,27 @@
 #include <waypoint_controller/waypoint_controller_helper.h>
 
 std::vector<geometry_msgs::Pose2D> waypoints;
+std::vector<geometry_msgs::Pose2D> one_true_path;
+
+bool one_true_path_recieved = false;
+bool direction = true;
+
 
 void newGoalArrayCallback(const imperio::GlobalWaypoints::ConstPtr& msg)
 {
   // msg->pose_array is a vector
-  waypoints = msg->pose_array;
+  if (!one_true_path_recieved)
+  {
+    waypoints = msg->pose_array;
+    one_true_path = msg->pose_array;
+    one_true_path_recieved = true;
+  }
+  else
+  {
+      direction = !direction;
+      waypoints = one_true_path;
+  }
+
 }
 
 double interpolateYFromXAndTwoPoints(double x0, double y0, double x1, double y1, double x)
@@ -57,6 +73,10 @@ int main(int argc, char** argv)
   {
     if (waypoints.size() > 0)
     {
+      if (!direction)
+      {
+          std::reverse(waypoints.begin(), waypoints.end());
+      }
       double direction_metric = 0;
       bool overwrite_dump = false;
       bool overwrite_dig = false;
