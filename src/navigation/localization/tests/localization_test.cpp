@@ -84,6 +84,8 @@ int main(int argc, char **argv)
              teleopInterface.br->getLinearVelocity());
     ROS_INFO("x: %f y %f theta %f", aprilTags->getX(), aprilTags->getY(), aprilTags->getTheta());
     br.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, lpResearchImu->getOrientation()));
+
+
     r.sleep();
     ros::spinOnce();
   }
