@@ -322,7 +322,9 @@ int main(int argc, char **argv)
   }
 
   lastTime = ros::Time::now ();
-  while ((ros::Time::now()-lastTime).toSec()<settle_time && ros::ok()){
+  while (((ros::Time::now()-lastTime).toSec()<settle_time) && (ros::ok()))
+  {
+    superLocalizer.updateStateVector(.02);
     rate.sleep();
   }
 
@@ -449,9 +451,12 @@ int main(int argc, char **argv)
   mode_pub.publish(status_msg);
   ROS_INFO("Theta received, going into initial turn.");
   firstTime = true;
+  ROS_INFO("statevector theta before turn: %.4f", stateVector.theta);
+  int direction = WaypointControllerHelper::sign(stateVector.theta);
   while (ros::ok() && std::abs(WaypointControllerHelper::anglediff(stateVector.theta, topicTheta)) > topicthetatol)
   {
-    double speed = .1;//zeroPointTurnGain * WaypointControllerHelper::anglediff(stateVector.theta, topicTheta);
+    ROS_INFO("going for %.4f within %.4f, currently at %.4f\n", topicTheta, topicthetatol, stateVector.theta);
+    double speed = direction * .1;//zeroPointTurnGain * WaypointControllerHelper::anglediff(stateVector.theta, topicTheta);
 
     fr->setLinearVelocity(-speed);
     br->setLinearVelocity(-speed);

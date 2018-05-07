@@ -13,7 +13,7 @@ BucketController::BucketController(iVescAccess *bigConveyorVesc, iVescAccess *li
 
 void BucketController::turnBigConveyorOn()
 {
-  bc->setLinearVelocity(7000); // in erpm
+  bc->setLinearVelocity(35000); // in erpm
   big_conveyor_state = true;
 }
 
@@ -26,7 +26,7 @@ void BucketController::turnBigConveyorOff()
 void BucketController::turnLittleConveyorOn()
 {
 
-  lc->setTorque(7); // in Amps
+  lc->setDuty(.4); // in Amps
   little_conveyor_state = true;
 }
 
@@ -38,7 +38,7 @@ void BucketController::turnLittleConveyorOff()
 
 void BucketController::turnSifterOn()
 {
-  sf->setTorque(8);
+  sf->setTorque(4);
   sifter_state = true;
 }
 
