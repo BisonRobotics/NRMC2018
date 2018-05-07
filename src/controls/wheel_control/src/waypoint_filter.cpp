@@ -24,7 +24,7 @@ void newGoalArrayCallback(const imperio::GlobalWaypoints::ConstPtr& msg)
   if (!one_true_path_recieved)
   {
     waypoints = msg->pose_array;
-    one_true_path = msg->pose_array;
+    one_true_path = waypoints;//msg->pose_array;
     one_true_path_recieved = true;
   }
   else
@@ -73,9 +73,22 @@ int main(int argc, char** argv)
   {
     if (waypoints.size() > 0)
     {
+      ROS_INFO("LOOP FROM FILTER");
       if (!direction)
       {
-          std::reverse(waypoints.begin(), waypoints.end());
+          ROS_INFO("GOING TO REVERSE WAYPOINTS");
+          //std::reverse(waypoints.begin(), waypoints.end());
+          std::vector<geometry_msgs::Pose2D> waypoints_backwards;
+          geometry_msgs::Pose2D temp_pose;
+          for(int index = 0; index < waypoints.size(); index++)
+          {
+              //temp_pose = waypoints.at(0);
+              waypoints_backwards.push_back(waypoints.at(waypoints.size() - index - 1));
+              //waypoints.at(waypoints.size() - index - 1) = temp_pose;
+              ROS_INFO("WAYPOINT %d REVERSED OF %d", index, waypoints.size());
+          }
+          waypoints = waypoints_backwards;
+          ROS_INFO("REVERSED WAYPOINTS ASSIGNED");
       }
       double direction_metric = 0;
       bool overwrite_dump = false;
@@ -100,6 +113,7 @@ int main(int argc, char** argv)
       geometry_msgs::Pose2D point_to_insert;
       
       //compute direction metric
+      ROS_INFO("DIRECTION METRIC, %d", waypoints.size());
       for (int index =0; index < waypoints.size(); index++)
       {
           if (waypoints.at(index).x < OBSTACLE_ZONE_START_X)
@@ -143,11 +157,12 @@ int main(int argc, char** argv)
             }
             // also make sure there is a waypoint in the start/dump zone and maybe through an exception if there is not.
         }
-        
+        ROS_INFO("POINTS INSERTED IF NEEDED, %d", waypoints.size());
         //make sure the points in the obstacle zone are spaced apart properly
+        /*
         if (direction_metric > MIN_DISTANCE_FOR_RUN || direction_metric < -MIN_DISTANCE_FOR_RUN)
         {
-            for (int index =0; index < waypoints.size(); index++)
+            for (int index =1; index < waypoints.size(); index++)
             {
                 if (waypoints.at(index).x > OBSTACLE_ZONE_START_X && waypoints.at(index).x < OBSTACLE_ZONE_END_X) //waypoint is in obstacle field, and because we placed one in the start, there is one behind it too
                 {
@@ -167,8 +182,9 @@ int main(int argc, char** argv)
                 }
             }
         }
+        */
         
-
+      ROS_INFO("VISUALIZZTION");
       for (auto const& wp : waypoints)
       {
         if (!point_inserted)
@@ -393,6 +409,7 @@ int main(int argc, char** argv)
       rate.sleep();
       
       waypoints.clear();
+      ROS_INFO("WAYPOINTS CLEARD");
     }
     }
     else

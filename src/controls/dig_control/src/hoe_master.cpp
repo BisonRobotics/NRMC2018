@@ -118,10 +118,10 @@ int main(int argc, char **argv)
     if (simulating)
     {
       backhoeSimulation->update(1.0 / DIGGING_CONTROL_RATE_HZ);
-      ROS_INFO("Linear at %.4f", backhoeSimulation->getWrTheta());
-      ROS_INFO("Linear from vesc at %.4f", backhoeSimulation->getWristVesc()->getPotPosition());
-      ROS_INFO("Linear Limit state %d", backhoeSimulation->getWristVesc()->getLimitSwitchState());
-      ROS_INFO("Linear vel set to  %.4f", backhoeSimulation->getWristVesc()->getLinearVelocity());
+      ROS_DEBUG("Linear at %.4f", backhoeSimulation->getWrTheta());
+      ROS_DEBUG("Linear from vesc at %.4f", backhoeSimulation->getWristVesc()->getPotPosition());
+      ROS_DEBUG("Linear Limit state %d", backhoeSimulation->getWristVesc()->getLimitSwitchState());
+      ROS_DEBUG("Linear vel set to  %.4f", backhoeSimulation->getWristVesc()->getLinearVelocity());
       if (((SimVesc *)backhoeSimulation->getWristVesc())->ableToHitGround())
         ROS_INFO("Linear able to hit ground");
     }
@@ -164,15 +164,15 @@ int main(int argc, char **argv)
       robotAngles.position.push_back(backhoeSimulation->getWrTheta());
 
       JsPub.publish(robotAngles);
-      ROS_INFO("shoulder joint state published with angle %f \n", backhoeSimulation->getShTheta());
-      ROS_INFO("wrist joint state published with angle %f \n", backhoeSimulation->getWrTheta());
+      ROS_DEBUG("shoulder joint state published with angle %f \n", backhoeSimulation->getShTheta());
+      ROS_DEBUG("wrist joint state published with angle %f \n", backhoeSimulation->getWrTheta());
     }
     else  // display output for physical
     {
     }
-    ROS_INFO("backhoe controller says CD at %.4f", backhoeSafety.getPositionEstimate());
-    ROS_INFO("backhoe controller says LA at %.4f", linearSafety.getPositionEstimate());
-    ROS_INFO("Digdump AS states: %d, %d", ddAct.digging_state, ddAct.dumping_state);
+    ROS_DEBUG("backhoe controller says CD at %.4f", backhoeSafety.getPositionEstimate());
+    ROS_DEBUG("backhoe controller says LA at %.4f", linearSafety.getPositionEstimate());
+    ROS_DEBUG("Digdump AS states: %d, %d", ddAct.digging_state, ddAct.dumping_state);
 
     ros::spinOnce();
     rate.sleep();

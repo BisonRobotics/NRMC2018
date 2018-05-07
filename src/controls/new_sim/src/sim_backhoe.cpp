@@ -22,9 +22,7 @@ SimBackhoe::SimBackhoe(double shoulderTheta, double wristTheta, double shoulderB
 
 void SimBackhoe::update(double dt)
 {
-  ROS_INFO("shoulder sim update");
   sh->update(dt);
-  ROS_INFO("wrist sim update");
   wr->update(dt);
 
   // shTh += sh->getLinearVelocity() * dt;

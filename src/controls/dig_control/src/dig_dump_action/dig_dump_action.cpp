@@ -57,7 +57,7 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
             backhoe->setShoulderSetpoint(CENTRAL_MEASUREMENT_STOP_ANGLE);  // take it to close to ground
             digging_state = moving_to_ground;
             //weightMetric = 0;
-            weightMetric += 1.0;
+            weightMetric += 3.2;
           }
           break;
         case dig_state_enum::moving_to_ground:  // state 2
