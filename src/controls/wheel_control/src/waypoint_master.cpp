@@ -42,7 +42,7 @@
 
 #include <lp_research/lpresearchimu.h>
 #include <apriltag_tracker_interface/apriltag_tracker_interface.h>
-
+#include <tf2/LinearMath/Matrix3x3.h>
 #include <vector>
 #include <utility>
 
@@ -70,7 +70,7 @@ void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
   newWaypointHere = true;
 }
 
-geometry_msgs::TransformStamped create_tf(double x, double y, double theta)
+geometry_msgs::TransformStamped create_tf(double x, double y, double theta, tf2::Quaternion my_quat)
 {
   geometry_msgs::TransformStamped tfStamp;
   tfStamp.header.stamp = ros::Time::now();
@@ -80,7 +80,9 @@ geometry_msgs::TransformStamped create_tf(double x, double y, double theta)
   tfStamp.transform.translation.y = y;
   tfStamp.transform.translation.z = 0.0;
   tf2::Quaternion q;
-  q.setRPY(0, 0, theta);
+    double raw,paw,yaw;
+  tf2::Matrix3x3(tf2::Quaternion(my_quat.getX(), my_quat.getY(), my_quat.getZ(), my_quat.getW())).getRPY(raw,paw,yaw);
+  q.setRPY(raw, paw, theta);
   tfStamp.transform.rotation.x = q.x();
   tfStamp.transform.rotation.y = q.y();
   tfStamp.transform.rotation.z = q.z();
@@ -420,7 +422,7 @@ int main(int argc, char **argv)
   bl->setLinearVelocity(0);
   br->setLinearVelocity(0);
   stateVector = superLocalizer.getStateVector();
-  tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+  tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, imu->getOrientation()));
   ros::spinOnce();
   // zero point turn vescs here before waypoint controller is initialized
   // get number from topic
@@ -484,7 +486,7 @@ int main(int argc, char **argv)
 
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
-    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, imu->getOrientation()));
     ros::spinOnce();
     rate.sleep();
   }
@@ -552,7 +554,7 @@ int main(int argc, char **argv)
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
 
-    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, imu->getOrientation()));
     // also publish marker
 
     currPose.x = stateVector.x_pos;

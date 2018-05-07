@@ -38,8 +38,17 @@ ReadableSensors::ReadStatus LpResearchImu::receiveData()
 
 void LpResearchImu::imu_callback(const sensor_msgs::Imu::ConstPtr &msg)
 {
-  x_acc = (double)msg->linear_acceleration.x;
-  y_acc = (double)msg->linear_acceleration.y;
-  omega = (double)msg->angular_velocity.z;
+  x_acc = msg->linear_acceleration.x;
+  y_acc = msg->linear_acceleration.y;
+  omega = msg->angular_velocity.z;
+  quaternion.setW(msg->orientation.w);
+  quaternion.setX(msg->orientation.x);
+  quaternion.setY(msg->orientation.y);
+  quaternion.setZ(msg->orientation.z);
   is_data_valid = true;
+}
+
+tf2::Quaternion LpResearchImu::getOrientation()
+{
+  return quaternion;
 }
