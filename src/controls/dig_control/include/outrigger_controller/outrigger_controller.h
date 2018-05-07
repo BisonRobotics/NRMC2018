@@ -13,7 +13,7 @@ public:
   bool isDeployed();
   bool isRetracted();
 
-  static constexpr double TIME_TO_ACTUATE = 18.0;
+  static constexpr double TIME_TO_ACTUATE = 0.1;
 
 private:
   bool deploying, deployed, retracting, retracted;
