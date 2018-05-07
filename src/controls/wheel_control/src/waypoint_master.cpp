@@ -55,6 +55,7 @@ bool do_the_south_check = false;
 
 double topicTheta = 0;
 bool thetaHere = false;
+bool firstWaypointHere = false;
 
 void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 {
@@ -68,6 +69,7 @@ void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
   newWaypoint.theta = msg->theta;
 
   newWaypointHere = true;
+  firstWaypointHere = true;
 }
 
 geometry_msgs::TransformStamped create_tf(double x, double y, double theta)
@@ -76,15 +78,30 @@ geometry_msgs::TransformStamped create_tf(double x, double y, double theta)
   tfStamp.header.stamp = ros::Time::now();
   tfStamp.header.frame_id = "map";
   tfStamp.child_frame_id = "base_link";
-  tfStamp.transform.translation.x = x;
-  tfStamp.transform.translation.y = y;
-  tfStamp.transform.translation.z = 0.0;
-  tf2::Quaternion q;
-  q.setRPY(0, 0, theta);
-  tfStamp.transform.rotation.x = q.x();
-  tfStamp.transform.rotation.y = q.y();
-  tfStamp.transform.rotation.z = q.z();
-  tfStamp.transform.rotation.w = q.w();
+  if (!firstWaypointHere)
+  {
+    tfStamp.transform.translation.x = .6;//x;
+    tfStamp.transform.translation.y = 0;//y;
+    tfStamp.transform.translation.z = 0.0;
+    tf2::Quaternion q;
+    q.setRPY(0, 0, 0);//theta);
+    tfStamp.transform.rotation.x = q.x();
+    tfStamp.transform.rotation.y = q.y();
+    tfStamp.transform.rotation.z = q.z();
+    tfStamp.transform.rotation.w = q.w();
+  }
+  else
+  {
+    tfStamp.transform.translation.x = x;
+    tfStamp.transform.translation.y = y;
+    tfStamp.transform.translation.z = 0.0;
+    tf2::Quaternion q;
+    q.setRPY(0, 0, theta);
+    tfStamp.transform.rotation.x = q.x();
+    tfStamp.transform.rotation.y = q.y();
+    tfStamp.transform.rotation.z = q.z();
+    tfStamp.transform.rotation.w = q.w();
+  }
   return tfStamp;
 }
 
@@ -214,7 +231,7 @@ int main(int argc, char **argv)
 
   if (simulating)
   {
-    sim = new SimRobot(ROBOT_AXLE_LENGTH, .5, -.5, -M_PI);
+    sim = new SimRobot(ROBOT_AXLE_LENGTH, .5, .7, -M_PI);
     fl = (sim->getFLVesc());
     fr = (sim->getFRVesc());
     br = (sim->getBRVesc());
@@ -253,7 +270,7 @@ int main(int argc, char **argv)
   tf2_ros::TransformBroadcaster tfBroad;
   std::vector<std::pair<double, double> > waypoint_set;
   SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0, 0, 0, fl, fr, br, bl, imu, pos, SuperLocalizer_default_gains);
-
+  
   LocalizerInterface::stateVector stateVector;
   ros::Subscriber haltsub = node.subscribe("halt", 100, haltCallback);
   ros::Publisher mode_pub = node.advertise<imperio::DriveStatus>("drive_controller_status", 1000, true);
@@ -315,7 +332,6 @@ int main(int argc, char **argv)
       tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
     }
     superLocalizer.updateStateVector(loopTime.toSec());
-
 
     ros::spinOnce();
     rate.sleep();
@@ -420,7 +436,7 @@ int main(int argc, char **argv)
   bl->setLinearVelocity(0);
   br->setLinearVelocity(0);
   stateVector = superLocalizer.getStateVector();
-  tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+  tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta)); 
   ros::spinOnce();
   // zero point turn vescs here before waypoint controller is initialized
   // get number from topic
@@ -436,7 +452,6 @@ int main(int argc, char **argv)
   }
 
   ROS_INFO ("Waiting for theta");
-
 
   while (ros::ok() && !thetaHere)
   {
@@ -484,7 +499,7 @@ int main(int argc, char **argv)
 
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
-    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta)); 
     ros::spinOnce();
     rate.sleep();
   }
@@ -494,6 +509,7 @@ int main(int argc, char **argv)
   status_msg.cannot_plan_path.data = 0;
   status_msg.is_stuck.data = 0;
   mode_pub.publish(status_msg);
+  
   ros::spinOnce();
 
   // initialize waypoint controller
@@ -552,7 +568,6 @@ int main(int argc, char **argv)
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
 
-    tfBroad.sendTransform(create_tf(.6, 0, 0)); //have autonomy plan from here always
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
     // also publish marker
 
