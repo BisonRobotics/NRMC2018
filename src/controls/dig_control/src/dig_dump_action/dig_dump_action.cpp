@@ -1,5 +1,7 @@
 
 #include "dig_dump_action/dig_dump_action.h"
+#include <std_msgs/Empty.h>
+
 
 #define LINEAR_RETRACTED_POINT .047
 #define LINEAR_EXTENDED_POINT .155
@@ -13,7 +15,7 @@
 
 #define GROUND_ALPHA .2
 
-DigDumpAction::DigDumpAction(BackhoeController *backhoe, BucketController *bucket)
+DigDumpAction::DigDumpAction(BackhoeController *backhoe, BucketController *bucket, int argc, char **argv)
   : dig_as_(nh_, "dig_server", boost::bind(&DigDumpAction::digExecuteCB, this, _1), false)
   , dump_as_(nh_, "dump_server", boost::bind(&DigDumpAction::dumpExecuteCB, this, _1), false)
 {
@@ -27,6 +29,8 @@ DigDumpAction::DigDumpAction(BackhoeController *backhoe, BucketController *bucke
   this->backhoe = backhoe;
   weightMetric = 0;
   this->ground_metric = 10;
+  ros::init(argc, argv, "the_dig_control_server");
+  scoot_back_pub = nh_.advertise<std_msgs::Empty>("scoot_back", 30);
 }
 
 void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
@@ -102,10 +106,14 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
           }
           break;
         case dig_state_enum::dumping_into_bucket:  // state 6 //uncurling wrist to release dirt into bucket
-          if (backhoe->wristAtSetpoint())
+          if (true || backhoe->wristAtSetpoint()) //skip this check
           {
             backhoe->setShoulderSetpoint(CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE);  // wherever transit/initial should be
             digging_state = moving_rocks_into_holder;
+            //publish backup thing here
+            std_msgs::Empty myMsg;
+            scoot_back_pub.publish(myMsg);
+            ros::spinOnce();
           }
           break;
         case dig_state_enum::moving_rocks_into_holder:  // state 7

@@ -8,6 +8,9 @@
 #include <bucket_controller/bucket_controller.h>
 #include <backhoe_controller/backhoe_controller.h>
 
+#include <std_msgs/Empty.h>
+
+
 enum dig_state_enum
 {
   dig_idle,
@@ -35,7 +38,7 @@ enum dump_state_enum
 class DigDumpAction
 {
 public:
-  DigDumpAction(BackhoeController *backhoe, BucketController *bucket);
+  DigDumpAction(BackhoeController *backhoe, BucketController *bucket, int argc, char **argv);
   dig_state_enum digging_state;
   dump_state_enum dumping_state;
 
@@ -43,14 +46,15 @@ private:
   ros::NodeHandle nh_;
   actionlib::SimpleActionServer<dig_control::DumpAction> dump_as_;
   actionlib::SimpleActionServer<dig_control::DigAction> dig_as_;
+  ros::Publisher scoot_back_pub;
   dig_control::DigFeedback dig_feedback;
   dig_control::DigResult dig_result;
   dig_control::DumpFeedback dump_feedback;
   dig_control::DumpResult dump_result;
-  /*ros::Time*/double initial_dig_time;
+  double initial_dig_time;
   bool is_digging;
   bool is_dumping;
-  /*ros::Time*/double initial_time;
+  double initial_time;
   static constexpr float dump_time = 5;
   static constexpr float time_to_move_rocks_to_holder=1;
   void digExecuteCB(const dig_control::DigGoalConstPtr &goal);
