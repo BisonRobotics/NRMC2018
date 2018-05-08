@@ -6,6 +6,10 @@
 #include "ros/ros.h"
 #include "tf2/LinearMath/Quaternion.h"
 
+#include "tf2_ros/transform_listener.h"
+#include "tf2/LinearMath/Quaternion.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+
 class LpResearchImu : public ImuSensorInterface
 {
 public:
@@ -21,9 +25,13 @@ private:
   double y_acc;
   double omega;
   bool is_data_valid;
+  bool received_static_orientation;
   ros::Subscriber sub;
   ros::NodeHandle nh_;
-  tf2::Quaternion quaternion;
+  tf2::Quaternion orientation;
+  tf2::Quaternion static_orientation;
+  tf2_ros::Buffer tf_buffer;
+  tf2_ros::TransformListener *tf_listener;
 };
 
 #endif
