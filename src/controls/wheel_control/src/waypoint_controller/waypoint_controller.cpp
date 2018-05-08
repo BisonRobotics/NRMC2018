@@ -89,6 +89,8 @@ WaypointController::WaypointController(double axelLength, double maxSafeSpeed, p
   backing_it_in = false;
   time_backing = 0;
   
+  time_scooting = 0;
+  
   // control states
   clearControlStates();
   navigationQueue.clear();
@@ -179,6 +181,11 @@ void WaypointController::clearControlStates()
 
   LWheelError = 0;
   RWheelError = 0;
+}
+
+void WaypointController::scootBack()
+{
+    time_scooting = 1.5;
 }
 
 void WaypointController::haltAndAbort()
@@ -534,6 +541,18 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
       }
     }
     return returnStatus;
+  }
+  else if (time_scooting > 0)
+  {
+      front_left_wheel->setLinearVelocity(-.1);
+      front_right_wheel->setLinearVelocity(-.1);
+      back_left_wheel->setLinearVelocity(-.1);
+      back_right_wheel->setLinearVelocity(-.1);
+      time_scooting -= dt;
+      if (time_scooting <= 0)
+      {
+          time_scooting =0;
+      }
   }
   else
   {

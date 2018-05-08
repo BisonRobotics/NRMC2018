@@ -27,6 +27,7 @@ DigDumpAction::DigDumpAction(BackhoeController *backhoe, BucketController *bucke
   this->backhoe = backhoe;
   weightMetric = 0;
   this->ground_metric = 10;
+  scoot_back_pub = nh_.advertise<std_msgs::Empty>("scoot_back", 30);
 }
 
 void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
@@ -102,10 +103,13 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
           }
           break;
         case dig_state_enum::dumping_into_bucket:  // state 6 //uncurling wrist to release dirt into bucket
-          if (backhoe->wristAtSetpoint())
+          if (true || backhoe->wristAtSetpoint()) //skip this check
           {
             backhoe->setShoulderSetpoint(CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE);  // wherever transit/initial should be
             digging_state = moving_rocks_into_holder;
+            //publish backup thing here
+            std_msg::Empty myMsg;
+            scoot_back_pub.publish(myMsg);
           }
           break;
         case dig_state_enum::moving_rocks_into_holder:  // state 7

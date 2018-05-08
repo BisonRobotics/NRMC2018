@@ -75,6 +75,8 @@ public:
   double getStuckMetric();                                  // DEBUG
   std::pair<double, double> getSetSpeeds();                 // DEBUG
   std::pair<double, double> getCmdSpeeds();                 // DEBUG
+  
+  void scootBack();
 
   void haltAndAbort();
   void clearControlStates();
@@ -112,6 +114,8 @@ private:
   bool backing_it_in;
   bool squaring_it_up;
   double time_backing;
+  
+  double time_scooting;
   
   pose maneuverEnd;
   maneuver currMan;
