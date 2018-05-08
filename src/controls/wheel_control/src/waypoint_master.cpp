@@ -72,22 +72,21 @@ void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 
 geometry_msgs::TransformStamped create_tf(double x, double y, double theta, tf2::Quaternion imu_orientation)
 {
-  geometry_msgs::TransformStamped tfStamp;
-  tfStamp.header.stamp = ros::Time::now();
-  tfStamp.header.frame_id = "map";
-  tfStamp.child_frame_id = "base_link";
-  tfStamp.transform.translation.x = x;
-  tfStamp.transform.translation.y = y;
-  tfStamp.transform.translation.z = 0.0;
-  tf2::Quaternion q;
-  double roll,pitch,yaw;
-  tf2::Matrix3x3(imu_orientation).getRPY(roll,pitch,yaw);
-  q.setRPY(roll, pitch, theta);
-  tfStamp.transform.rotation.x = q.x();
-  tfStamp.transform.rotation.y = q.y();
-  tfStamp.transform.rotation.z = q.z();
-  tfStamp.transform.rotation.w = q.w();
-  return tfStamp;
+  geometry_msgs::TransformStamped transform;
+  transform.header.stamp = ros::Time::now();
+  transform.header.frame_id = "map";
+  transform.child_frame_id = "base_link";
+  transform.transform.translation.x = x;
+  transform.transform.translation.y = y;
+  transform.transform.translation.z = 0.0;
+  tf2::Quaternion robot_orientation;
+  robot_orientation.setRPY(0.0, 0.0, theta);
+  robot_orientation = robot_orientation * imu_orientation;
+  transform.transform.rotation.x = robot_orientation.x();
+  transform.transform.rotation.y = robot_orientation.y();
+  transform.transform.rotation.z = robot_orientation.z();
+  transform.transform.rotation.w = robot_orientation.w();
+  return transform;
 }
 
 geometry_msgs::TransformStamped create_sim_tf(double x, double y, double theta)
