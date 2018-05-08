@@ -70,7 +70,7 @@ void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
   newWaypointHere = true;
 }
 
-geometry_msgs::TransformStamped create_tf(double x, double y, double theta, tf2::Quaternion my_quat)
+geometry_msgs::TransformStamped create_tf(double x, double y, double theta, tf2::Quaternion imu_orientation)
 {
   geometry_msgs::TransformStamped tfStamp;
   tfStamp.header.stamp = ros::Time::now();
@@ -80,9 +80,9 @@ geometry_msgs::TransformStamped create_tf(double x, double y, double theta, tf2:
   tfStamp.transform.translation.y = y;
   tfStamp.transform.translation.z = 0.0;
   tf2::Quaternion q;
-    double raw,paw,yaw;
-  tf2::Matrix3x3(tf2::Quaternion(my_quat.getX(), my_quat.getY(), my_quat.getZ(), my_quat.getW())).getRPY(raw,paw,yaw);
-  q.setRPY(raw, paw, theta);
+  double roll,pitch,yaw;
+  tf2::Matrix3x3(imu_orientation).getRPY(roll,pitch,yaw);
+  q.setRPY(roll, pitch, theta);
   tfStamp.transform.rotation.x = q.x();
   tfStamp.transform.rotation.y = q.y();
   tfStamp.transform.rotation.z = q.z();
