@@ -73,6 +73,7 @@ int main(int argc, char** argv)
   {
     if (waypoints.size() > 0)
     {
+      geometry_msgs::Pose2D point_to_insert;
       ROS_INFO("LOOP FROM FILTER");
       if (!direction)
       {
@@ -80,13 +81,27 @@ int main(int argc, char** argv)
           //std::reverse(waypoints.begin(), waypoints.end());
           std::vector<geometry_msgs::Pose2D> waypoints_backwards;
           geometry_msgs::Pose2D temp_pose;
-          for(int index = 0; index < waypoints.size(); index++)
+          for(int index = 1; index < waypoints.size(); index++) //skip last waypoint (would be the first on the way back)
           {
               //temp_pose = waypoints.at(0);
-              waypoints_backwards.push_back(waypoints.at(waypoints.size() - index - 1));
+              point_to_insert.x = waypoints.at(waypoints.size() - index - 1).x;
+              point_to_insert.y = waypoints.at(waypoints.size() - index - 1).y;
+              if (index < waypoints.size() - 1)
+              {
+                point_to_insert.theta = waypoints.at(waypoints.size() - index - 2).theta;
+              }
+              else 
+              {
+                  point_to_insert.theta = 0;
+              }
+              waypoints_backwards.push_back(point_to_insert);
               //waypoints.at(waypoints.size() - index - 1) = temp_pose;
-              ROS_INFO("WAYPOINT %d REVERSED OF %d", index, waypoints.size());
+              ROS_INFO("WAYPOINT %d REVERSED OF %d", index, (int)waypoints.size());
           }
+          point_to_insert.x = .6;
+          point_to_insert.y = 0;
+          point_to_insert.theta = 0;
+          waypoints_backwards.push_back(point_to_insert);
           waypoints = waypoints_backwards;
           ROS_INFO("REVERSED WAYPOINTS ASSIGNED");
       }
@@ -110,10 +125,9 @@ int main(int argc, char** argv)
       geometry_msgs::Pose2D last_point_in_dig_zone;
       geometry_msgs::Pose2D obstacle_zone_exit_point;
       geometry_msgs::Pose2D obstacle_zone_entrance_point;
-      geometry_msgs::Pose2D point_to_insert;
       
       //compute direction metric
-      ROS_INFO("DIRECTION METRIC, %d", waypoints.size());
+      ROS_INFO("DIRECTION METRIC, %d", (int)waypoints.size());
       for (int index =0; index < waypoints.size(); index++)
       {
           if (waypoints.at(index).x < OBSTACLE_ZONE_START_X)
@@ -157,7 +171,7 @@ int main(int argc, char** argv)
             }
             // also make sure there is a waypoint in the start/dump zone and maybe through an exception if there is not.
         }
-        ROS_INFO("POINTS INSERTED IF NEEDED, %d", waypoints.size());
+        ROS_INFO("POINTS INSERTED IF NEEDED, %d", (int)waypoints.size());
         //make sure the points in the obstacle zone are spaced apart properly
         /*
         if (direction_metric > MIN_DISTANCE_FOR_RUN || direction_metric < -MIN_DISTANCE_FOR_RUN)
