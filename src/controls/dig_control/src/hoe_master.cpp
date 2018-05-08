@@ -1,6 +1,6 @@
 #include <backhoe_controller/backhoe_controller.h>
 #include <bucket_controller/bucket_controller.h>
-
+#include <std_msgs/Empty.h>
 #include <ros/ros.h>
 #include <vesc_access/vesc_access.h>
 // TODO backhoe params
@@ -20,6 +20,15 @@
 
 #define DIGGING_CONTROL_RATE_HZ 50.0
 
+
+bool should_initialize = false;
+
+void callback (const std_msgs::Empty::ConstPtr &msg)
+{
+  should_initialize = true;
+}
+
+
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "the_backhoe_master");
@@ -27,6 +36,8 @@ int main(int argc, char **argv)
   ros::NodeHandle node("~");
   ros::NodeHandle globalNode;
   ros::Rate rate(DIGGING_CONTROL_RATE_HZ);  // should be 50 Hz
+
+  ros::Subscriber initializeSub = globalNode.subscribe("init_digging",100,callback);
 
   bool simulating;
   if (node.hasParam("simulating_digging"))
@@ -107,11 +118,16 @@ int main(int argc, char **argv)
 
     // initialize real vescs here
   }
-
+ LinearSafetyController linearSafety(linear_joint_params, backhoeWristVesc);
   BackhoeSafetyController backhoeSafety(central_joint_params, backhoeShoulderVesc);
+  while (ros::ok() && !should_initialize)
+  {
+  rate.sleep();
+  }
+
   backhoeSafety.init();
 
-  LinearSafetyController linearSafety(linear_joint_params, backhoeWristVesc);
+
   bool isLinearInit = false;
   while (ros::ok() && !isLinearInit)
   {
