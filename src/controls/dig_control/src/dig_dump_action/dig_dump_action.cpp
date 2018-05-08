@@ -56,18 +56,19 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
           {
             backhoe->setShoulderSetpoint(CENTRAL_MEASUREMENT_STOP_ANGLE);  // take it to close to ground
             digging_state = moving_to_ground;
-            weightMetric = 0;
+            //weightMetric = 0;
+            weightMetric += 3.2;
           }
           break;
         case dig_state_enum::moving_to_ground:  // state 2
           // integrate work moving from measurement start to where we think the ground is
-          weightMetric += backhoe->getShoulderTorque() * backhoe->getShoulderVelocity() * .02;  //.02 is dt
+          //weightMetric += 1.0;//backhoe->getShoulderTorque() * backhoe->getShoulderVelocity() * .02;  //.02 is dt
           ground_metric = 10;
           if (backhoe->shoulderAtSetpoint())
           {
             backhoe->setShoulderSetpoint(0);  // send it into the ground
             digging_state = finding_ground;
-            dig_result.weight_harvested = weightMetric/100;
+            dig_result.weight_harvested = weightMetric;// / 100;
             prev_backhoe_position = 3*CENTRAL_MEASUREMENT_STOP_ANGLE;
           }
           break;

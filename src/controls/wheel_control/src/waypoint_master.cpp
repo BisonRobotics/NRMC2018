@@ -55,6 +55,7 @@ bool do_the_south_check = false;
 
 double topicTheta = 0;
 bool thetaHere = false;
+bool firstWaypointHere = false;
 
 void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 {
@@ -68,6 +69,7 @@ void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
   newWaypoint.theta = msg->theta;
 
   newWaypointHere = true;
+  firstWaypointHere = true;
 }
 
 geometry_msgs::TransformStamped create_tf(double x, double y, double theta, tf2::Quaternion imu_orientation)
@@ -76,16 +78,31 @@ geometry_msgs::TransformStamped create_tf(double x, double y, double theta, tf2:
   transform.header.stamp = ros::Time::now();
   transform.header.frame_id = "map";
   transform.child_frame_id = "base_link";
-  transform.transform.translation.x = x;
-  transform.transform.translation.y = y;
-  transform.transform.translation.z = 0.0;
-  tf2::Quaternion robot_orientation;
-  robot_orientation.setRPY(0.0, 0.0, theta);
-  robot_orientation = robot_orientation * imu_orientation;
-  transform.transform.rotation.x = robot_orientation.x();
-  transform.transform.rotation.y = robot_orientation.y();
-  transform.transform.rotation.z = robot_orientation.z();
-  transform.transform.rotation.w = robot_orientation.w();
+  if (!firstWaypointHere)
+  {
+    transform.transform.translation.x = .6;//x;
+    transform.transform.translation.y = 0;//y;
+    transform.transform.translation.z = 0.0;
+    tf2::Quaternion robot_orientation;
+    robot_orientation.setRPY(0, 0, 0);//theta);
+    transform.transform.rotation.x = robot_orientation.x();
+    transform.transform.rotation.y = robot_orientation.y();
+    transform.transform.rotation.z = robot_orientation.z();
+    transform.transform.rotation.w = robot_orientation.w();
+  }
+  else
+  {
+    transform.transform.translation.x = x;
+    transform.transform.translation.y = y;
+    transform.transform.translation.z = 0.0;
+    tf2::Quaternion robot_orientation;
+    robot_orientation.setRPY(0.0, 0.0, theta);
+    robot_orientation = robot_orientation * imu_orientation;
+    transform.transform.rotation.x = robot_orientation.x();
+    transform.transform.rotation.y = robot_orientation.y();
+    transform.transform.rotation.z = robot_orientation.z();
+    transform.transform.rotation.w = robot_orientation.w();
+  }
   return transform;
 }
 
@@ -215,7 +232,7 @@ int main(int argc, char **argv)
 
   if (simulating)
   {
-    sim = new SimRobot(ROBOT_AXLE_LENGTH, .5, -.5, -M_PI);
+    sim = new SimRobot(ROBOT_AXLE_LENGTH, .5, .7, -M_PI);
     fl = (sim->getFLVesc());
     fr = (sim->getFRVesc());
     br = (sim->getBRVesc());
@@ -254,7 +271,7 @@ int main(int argc, char **argv)
   tf2_ros::TransformBroadcaster tfBroad;
   std::vector<std::pair<double, double> > waypoint_set;
   SuperLocalizer superLocalizer(ROBOT_AXLE_LENGTH, 0, 0, 0, fl, fr, br, bl, imu, pos, SuperLocalizer_default_gains);
-
+  
   LocalizerInterface::stateVector stateVector;
   ros::Subscriber haltsub = node.subscribe("halt", 100, haltCallback);
   ros::Publisher mode_pub = node.advertise<imperio::DriveStatus>("drive_controller_status", 1000, true);
@@ -316,7 +333,6 @@ int main(int argc, char **argv)
       tfBroad.sendTransform(create_sim_tf(sim->getX(), sim->getY(), sim->getTheta()));
     }
     superLocalizer.updateStateVector(loopTime.toSec());
-
 
     ros::spinOnce();
     rate.sleep();
@@ -422,6 +438,7 @@ int main(int argc, char **argv)
   br->setLinearVelocity(0);
   stateVector = superLocalizer.getStateVector();
   tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, imu->getOrientation()));
+
   ros::spinOnce();
   // zero point turn vescs here before waypoint controller is initialized
   // get number from topic
@@ -437,7 +454,6 @@ int main(int argc, char **argv)
   }
 
   ROS_INFO ("Waiting for theta");
-
 
   while (ros::ok() && !thetaHere)
   {
@@ -486,6 +502,7 @@ int main(int argc, char **argv)
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
     tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, imu->getOrientation()));
+
     ros::spinOnce();
     rate.sleep();
   }
@@ -495,6 +512,7 @@ int main(int argc, char **argv)
   status_msg.cannot_plan_path.data = 0;
   status_msg.is_stuck.data = 0;
   mode_pub.publish(status_msg);
+  
   ros::spinOnce();
 
   // initialize waypoint controller
@@ -574,10 +592,10 @@ int main(int argc, char **argv)
     jsMessage.name.push_back("frame_to_back_left_wheel");
 
     jsMessage.header.stamp = ros::Time::now();
-    wheel_positions[0] += fl->getLinearVelocity() / UPDATE_RATE_HZ;
-    wheel_positions[1] += fr->getLinearVelocity() / UPDATE_RATE_HZ;
-    wheel_positions[2] += br->getLinearVelocity() / UPDATE_RATE_HZ;
-    wheel_positions[3] += bl->getLinearVelocity() / UPDATE_RATE_HZ;
+    wheel_positions[0] += 10*fl->getLinearVelocity() / UPDATE_RATE_HZ;
+    wheel_positions[1] += 10*fr->getLinearVelocity() / UPDATE_RATE_HZ;
+    wheel_positions[2] += 10*br->getLinearVelocity() / UPDATE_RATE_HZ;
+    wheel_positions[3] += 10*bl->getLinearVelocity() / UPDATE_RATE_HZ;
     jsMessage.position.push_back(wheel_positions[0]);
     jsMessage.position.push_back(wheel_positions[1]);
     jsMessage.position.push_back(wheel_positions[2]);
