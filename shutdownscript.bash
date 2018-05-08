@@ -5,4 +5,4 @@ ssh -t nrmc@node1 'sudo shutdown now'
 
 sleep 5s
 
-sudo shutdown now
+ssh -t nrmc@her-name 'sudo shutdown now'
