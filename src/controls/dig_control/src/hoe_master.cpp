@@ -122,7 +122,8 @@ int main(int argc, char **argv)
   BackhoeSafetyController backhoeSafety(central_joint_params, backhoeShoulderVesc);
   while (ros::ok() && !should_initialize)
   {
-  rate.sleep();
+    ros::spinOnce();
+    rate.sleep();
   }
 
   backhoeSafety.init();
