@@ -12,11 +12,27 @@
 #include <waypoint_controller/waypoint_controller_helper.h>
 
 std::vector<geometry_msgs::Pose2D> waypoints;
+std::vector<geometry_msgs::Pose2D> one_true_path;
+
+bool one_true_path_recieved = false;
+bool direction = true;
+
 
 void newGoalArrayCallback(const imperio::GlobalWaypoints::ConstPtr& msg)
 {
   // msg->pose_array is a vector
-  waypoints = msg->pose_array;
+  if (!one_true_path_recieved)
+  {
+    waypoints = msg->pose_array;
+    one_true_path = waypoints;//msg->pose_array;
+    one_true_path_recieved = true;
+  }
+  else
+  {
+      direction = !direction;
+      waypoints = one_true_path;
+  }
+
 }
 
 double interpolateYFromXAndTwoPoints(double x0, double y0, double x1, double y1, double x)
@@ -57,6 +73,38 @@ int main(int argc, char** argv)
   {
     if (waypoints.size() > 0)
     {
+      geometry_msgs::Pose2D point_to_insert;
+      ROS_INFO("LOOP FROM FILTER");
+      if (!direction)
+      {
+          ROS_INFO("GOING TO REVERSE WAYPOINTS");
+          //std::reverse(waypoints.begin(), waypoints.end());
+          std::vector<geometry_msgs::Pose2D> waypoints_backwards;
+          geometry_msgs::Pose2D temp_pose;
+          for(int index = 1; index < waypoints.size(); index++) //skip last waypoint (would be the first on the way back)
+          {
+              //temp_pose = waypoints.at(0);
+              point_to_insert.x = waypoints.at(waypoints.size() - index - 1).x;
+              point_to_insert.y = waypoints.at(waypoints.size() - index - 1).y;
+              if (index < waypoints.size() - 1)
+              {
+                point_to_insert.theta = waypoints.at(waypoints.size() - index - 2).theta;
+              }
+              else 
+              {
+                  point_to_insert.theta = 0;
+              }
+              waypoints_backwards.push_back(point_to_insert);
+              //waypoints.at(waypoints.size() - index - 1) = temp_pose;
+              ROS_INFO("WAYPOINT %d REVERSED OF %d", index, (int)waypoints.size());
+          }
+          point_to_insert.x = .6;
+          point_to_insert.y = 0;
+          point_to_insert.theta = 0;
+          waypoints_backwards.push_back(point_to_insert);
+          waypoints = waypoints_backwards;
+          ROS_INFO("REVERSED WAYPOINTS ASSIGNED");
+      }
       double direction_metric = 0;
       bool overwrite_dump = false;
       bool overwrite_dig = false;
@@ -77,9 +125,9 @@ int main(int argc, char** argv)
       geometry_msgs::Pose2D last_point_in_dig_zone;
       geometry_msgs::Pose2D obstacle_zone_exit_point;
       geometry_msgs::Pose2D obstacle_zone_entrance_point;
-      geometry_msgs::Pose2D point_to_insert;
       
       //compute direction metric
+      ROS_INFO("DIRECTION METRIC, %d", (int)waypoints.size());
       for (int index =0; index < waypoints.size(); index++)
       {
           if (waypoints.at(index).x < OBSTACLE_ZONE_START_X)
@@ -123,11 +171,12 @@ int main(int argc, char** argv)
             }
             // also make sure there is a waypoint in the start/dump zone and maybe through an exception if there is not.
         }
-        
+        ROS_INFO("POINTS INSERTED IF NEEDED, %d", (int)waypoints.size());
         //make sure the points in the obstacle zone are spaced apart properly
+        /*
         if (direction_metric > MIN_DISTANCE_FOR_RUN || direction_metric < -MIN_DISTANCE_FOR_RUN)
         {
-            for (int index =0; index < waypoints.size(); index++)
+            for (int index =1; index < waypoints.size(); index++)
             {
                 if (waypoints.at(index).x > OBSTACLE_ZONE_START_X && waypoints.at(index).x < OBSTACLE_ZONE_END_X) //waypoint is in obstacle field, and because we placed one in the start, there is one behind it too
                 {
@@ -147,8 +196,9 @@ int main(int argc, char** argv)
                 }
             }
         }
+        */
         
-
+      ROS_INFO("VISUALIZZTION");
       for (auto const& wp : waypoints)
       {
         if (!point_inserted)
@@ -373,6 +423,7 @@ int main(int argc, char** argv)
       rate.sleep();
       
       waypoints.clear();
+      ROS_INFO("WAYPOINTS CLEARD");
     }
     }
     else

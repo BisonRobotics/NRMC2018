@@ -1,6 +1,6 @@
 #include <backhoe_controller/backhoe_controller.h>
 #include <bucket_controller/bucket_controller.h>
-
+#include <std_msgs/Empty.h>
 #include <ros/ros.h>
 #include <vesc_access/vesc_access.h>
 // TODO backhoe params
@@ -20,6 +20,15 @@
 
 #define DIGGING_CONTROL_RATE_HZ 50.0
 
+
+bool should_initialize = false;
+
+void callback (const std_msgs::Empty::ConstPtr &msg)
+{
+  should_initialize = true;
+}
+
+
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "the_backhoe_master");
@@ -27,6 +36,8 @@ int main(int argc, char **argv)
   ros::NodeHandle node("~");
   ros::NodeHandle globalNode;
   ros::Rate rate(DIGGING_CONTROL_RATE_HZ);  // should be 50 Hz
+
+  ros::Subscriber initializeSub = globalNode.subscribe("init_digging",100,callback);
 
   bool simulating;
   if (node.hasParam("simulating_digging"))
@@ -107,21 +118,27 @@ int main(int argc, char **argv)
 
     // initialize real vescs here
   }
-
+ LinearSafetyController linearSafety(linear_joint_params, backhoeWristVesc);
   BackhoeSafetyController backhoeSafety(central_joint_params, backhoeShoulderVesc);
+  while (ros::ok() && !should_initialize)
+  {
+    ros::spinOnce();
+    rate.sleep();
+  }
+
   backhoeSafety.init();
 
-  LinearSafetyController linearSafety(linear_joint_params, backhoeWristVesc);
+
   bool isLinearInit = false;
   while (ros::ok() && !isLinearInit)
   {
     if (simulating)
     {
       backhoeSimulation->update(1.0 / DIGGING_CONTROL_RATE_HZ);
-      ROS_INFO("Linear at %.4f", backhoeSimulation->getWrTheta());
-      ROS_INFO("Linear from vesc at %.4f", backhoeSimulation->getWristVesc()->getPotPosition());
-      ROS_INFO("Linear Limit state %d", backhoeSimulation->getWristVesc()->getLimitSwitchState());
-      ROS_INFO("Linear vel set to  %.4f", backhoeSimulation->getWristVesc()->getLinearVelocity());
+      ROS_DEBUG("Linear at %.4f", backhoeSimulation->getWrTheta());
+      ROS_DEBUG("Linear from vesc at %.4f", backhoeSimulation->getWristVesc()->getPotPosition());
+      ROS_DEBUG("Linear Limit state %d", backhoeSimulation->getWristVesc()->getLimitSwitchState());
+      ROS_DEBUG("Linear vel set to  %.4f", backhoeSimulation->getWristVesc()->getLinearVelocity());
       if (((SimVesc *)backhoeSimulation->getWristVesc())->ableToHitGround())
         ROS_INFO("Linear able to hit ground");
     }
@@ -164,15 +181,15 @@ int main(int argc, char **argv)
       robotAngles.position.push_back(backhoeSimulation->getWrTheta());
 
       JsPub.publish(robotAngles);
-      ROS_INFO("shoulder joint state published with angle %f \n", backhoeSimulation->getShTheta());
-      ROS_INFO("wrist joint state published with angle %f \n", backhoeSimulation->getWrTheta());
+      ROS_DEBUG("shoulder joint state published with angle %f \n", backhoeSimulation->getShTheta());
+      ROS_DEBUG("wrist joint state published with angle %f \n", backhoeSimulation->getWrTheta());
     }
     else  // display output for physical
     {
     }
-    ROS_INFO("backhoe controller says CD at %.4f", backhoeSafety.getPositionEstimate());
-    ROS_INFO("backhoe controller says LA at %.4f", linearSafety.getPositionEstimate());
-    ROS_INFO("Digdump AS states: %d, %d", ddAct.digging_state, ddAct.dumping_state);
+    ROS_DEBUG("backhoe controller says CD at %.4f", backhoeSafety.getPositionEstimate());
+    ROS_DEBUG("backhoe controller says LA at %.4f", linearSafety.getPositionEstimate());
+    ROS_DEBUG("Digdump AS states: %d, %d", ddAct.digging_state, ddAct.dumping_state);
 
     ros::spinOnce();
     rate.sleep();
