@@ -327,10 +327,10 @@
 
     <!-- add in the IMU position-->
     <link name="imu" />
-    <joint name="imu_to_baselink" type="fixed">
+    <joint name="frame_to_imu" type="fixed">
         <parent link="frame"/>
         <child link="imu"/>
-        <origin xyz="937.5e-3 -140.65e-3 105e-3" rpy="-1.52 0 ${-pi/2}" />
+        <origin xyz="937.5e-3 -140.65e-3 105e-3" rpy="${-pi/2} 0 ${pi/2}" />
     </joint>
 
 </robot>

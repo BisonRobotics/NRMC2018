@@ -42,7 +42,7 @@
 
 #include <lp_research/lpresearchimu.h>
 #include <apriltag_tracker_interface/apriltag_tracker_interface.h>
-
+#include <tf2/LinearMath/Matrix3x3.h>
 #include <vector>
 #include <utility>
 
@@ -72,37 +72,38 @@ void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
   firstWaypointHere = true;
 }
 
-geometry_msgs::TransformStamped create_tf(double x, double y, double theta)
+geometry_msgs::TransformStamped create_tf(double x, double y, double theta, tf2::Quaternion imu_orientation)
 {
-  geometry_msgs::TransformStamped tfStamp;
-  tfStamp.header.stamp = ros::Time::now();
-  tfStamp.header.frame_id = "map";
-  tfStamp.child_frame_id = "base_link";
+  geometry_msgs::TransformStamped transform;
+  transform.header.stamp = ros::Time::now();
+  transform.header.frame_id = "map";
+  transform.child_frame_id = "base_link";
   if (!firstWaypointHere)
   {
-    tfStamp.transform.translation.x = .6;//x;
-    tfStamp.transform.translation.y = 0;//y;
-    tfStamp.transform.translation.z = 0.0;
-    tf2::Quaternion q;
-    q.setRPY(0, 0, 0);//theta);
-    tfStamp.transform.rotation.x = q.x();
-    tfStamp.transform.rotation.y = q.y();
-    tfStamp.transform.rotation.z = q.z();
-    tfStamp.transform.rotation.w = q.w();
+    transform.transform.translation.x = .6;//x;
+    transform.transform.translation.y = 0;//y;
+    transform.transform.translation.z = 0.0;
+    tf2::Quaternion robot_orientation;
+    robot_orientation.setRPY(0, 0, 0);//theta);
+    transform.transform.rotation.x = robot_orientation.x();
+    transform.transform.rotation.y = robot_orientation.y();
+    transform.transform.rotation.z = robot_orientation.z();
+    transform.transform.rotation.w = robot_orientation.w();
   }
   else
   {
-    tfStamp.transform.translation.x = x;
-    tfStamp.transform.translation.y = y;
-    tfStamp.transform.translation.z = 0.0;
-    tf2::Quaternion q;
-    q.setRPY(0, 0, theta);
-    tfStamp.transform.rotation.x = q.x();
-    tfStamp.transform.rotation.y = q.y();
-    tfStamp.transform.rotation.z = q.z();
-    tfStamp.transform.rotation.w = q.w();
+    transform.transform.translation.x = x;
+    transform.transform.translation.y = y;
+    transform.transform.translation.z = 0.0;
+    tf2::Quaternion robot_orientation;
+    robot_orientation.setRPY(0.0, 0.0, theta);
+    robot_orientation = robot_orientation * imu_orientation;
+    transform.transform.rotation.x = robot_orientation.x();
+    transform.transform.rotation.y = robot_orientation.y();
+    transform.transform.rotation.z = robot_orientation.z();
+    transform.transform.rotation.w = robot_orientation.w();
   }
-  return tfStamp;
+  return transform;
 }
 
 geometry_msgs::TransformStamped create_sim_tf(double x, double y, double theta)
@@ -436,7 +437,8 @@ int main(int argc, char **argv)
   bl->setLinearVelocity(0);
   br->setLinearVelocity(0);
   stateVector = superLocalizer.getStateVector();
-  tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta)); 
+  tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, imu->getOrientation()));
+
   ros::spinOnce();
   // zero point turn vescs here before waypoint controller is initialized
   // get number from topic
@@ -499,7 +501,8 @@ int main(int argc, char **argv)
 
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
-    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta)); 
+    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, imu->getOrientation()));
+
     ros::spinOnce();
     rate.sleep();
   }
@@ -568,7 +571,7 @@ int main(int argc, char **argv)
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
 
-    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta));
+    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, imu->getOrientation()));
     // also publish marker
 
     currPose.x = stateVector.x_pos;

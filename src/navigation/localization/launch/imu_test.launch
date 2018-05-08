@@ -1,0 +1,5 @@
+<launch>
+    <include file="$(find lpms_imu)/launch/imu_node.launch"/>
+    <node pkg="localization" type="test_imu_orientation" name="imu_test" output="screen"/>
+    <include file="$(find description)/launch/load_robot_and_arena.launch"/>
+</launch>

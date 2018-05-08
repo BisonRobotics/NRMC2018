@@ -34,3 +34,8 @@ void SimImu::update(double x1, double y1, double omega1)
   y = y1;
   omega = omega1;
 }
+
+tf2::Quaternion SimImu::getOrientation()
+{
+  return (tf2::Quaternion (0,0,0,1));
+}
