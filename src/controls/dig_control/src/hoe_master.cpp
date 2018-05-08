@@ -152,7 +152,7 @@ int main(int argc, char **argv)
   BucketController bucketC(bucketBigConveyorVesc, bucketLittleConveyorVesc, bucketSifterVesc);
   BackhoeController backhoeC(&backhoeSafety, &linearSafety);
 
-  DigDumpAction ddAct(&backhoeC, &bucketC);
+  DigDumpAction ddAct(&backhoeC, &bucketC, argc, argv);
 
   ros::Publisher JsPub = globalNode.advertise<sensor_msgs::JointState>("joint_states", 100);
 

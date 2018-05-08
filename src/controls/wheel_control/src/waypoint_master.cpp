@@ -56,6 +56,7 @@ bool do_the_south_check = false;
 double topicTheta = 0;
 bool thetaHere = false;
 bool firstWaypointHere = false;
+bool scoot_back = false;
 
 void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 {
@@ -70,6 +71,11 @@ void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
 
   newWaypointHere = true;
   firstWaypointHere = true;
+}
+
+void scootBackCallback(const std_msgs::Empty::ConstPtr &msg)
+{
+    scoot_back = true;
 }
 
 geometry_msgs::TransformStamped create_tf(double x, double y, double theta, tf2::Quaternion imu_orientation)
@@ -178,6 +184,9 @@ int main(int argc, char **argv)
 
   ros::Subscriber sub = node.subscribe("additional_waypoint", 100, newGoalCallback);
   ros::Subscriber sub_south = node.subscribe ("south_check", 100, faceSouthCheckCallback);
+                                               
+  ros::Subscriber sub_scoot = globalNode.subscribe("scoot_back", 100, scootBackCallback);
+
   ros::Publisher jspub = globalNode.advertise<sensor_msgs::JointState>("joint_states", 500);
 
   ros::Publisher angleErrorPub = node.advertise<std_msgs::Float64>("angle_error", 30);
@@ -518,6 +527,7 @@ int main(int argc, char **argv)
   // initialize waypoint controller
   WaypointController wc = WaypointController(ROBOT_AXLE_LENGTH, ROBOT_MAX_SPEED, currPose, fl, fr, br, bl,
                                              1.0 / UPDATE_RATE_HZ, waypoint_default_gains);
+
   ROS_INFO("Top");
   ROS_INFO("Xposgain : %.4f", SuperLocalizer_default_gains.x_pos);
   ROS_INFO("Yposgain : %.4f", SuperLocalizer_default_gains.y_pos);
@@ -825,6 +835,11 @@ int main(int argc, char **argv)
     {
       wc.haltAndAbort();
       break;
+    }
+    if (scoot_back)
+    {
+        wc.scootBack();
+        scoot_back = false;
     }
     // ros end stuff
     ros::spinOnce();
