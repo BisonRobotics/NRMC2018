@@ -59,11 +59,7 @@ void LpResearchImu::imu_callback(const sensor_msgs::Imu::ConstPtr &msg)
 {
   if (received_static_orientation)
   {
-    x_acc = msg->linear_acceleration.x;
-    y_acc = msg->linear_acceleration.y;
-    omega = msg->angular_velocity.z;
 
-    is_data_valid = true;
   }
 }
 
@@ -71,6 +67,10 @@ void LpResearchImu::imu_raw_callback(const sensor_msgs::Imu::ConstPtr &msg)
 {
   if (received_static_orientation)
   {
+    x_acc = -msg->linear_acceleration.z;
+    y_acc = msg->linear_acceleration.x;
+    omega = -msg->angular_velocity.y;
+
     orientation.setW(msg->orientation.w);
     orientation.setX(msg->orientation.x);
     orientation.setY(msg->orientation.y);
@@ -81,6 +81,8 @@ void LpResearchImu::imu_raw_callback(const sensor_msgs::Imu::ConstPtr &msg)
     orientation = orientation*static_orientation.inverse();
     tf2::Matrix3x3(orientation).getRPY(roll,pitch,yaw);
     orientation.setRPY(roll, pitch, 0.0);
+
+    is_data_valid = true;
   }
 }
 
