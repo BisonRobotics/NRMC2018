@@ -36,13 +36,17 @@ int main(int argc, char **argv)
   tf2_ros::TransformBroadcaster br;
 
   // Needs to be after the static transform is found
-  LpResearchImu *lpResearchImu = new LpResearchImu("imu");
+  LpResearchImu *lpResearchImu = new LpResearchImu("imu_base_link");
 
   while (ros::ok())
   {
     if (lpResearchImu->receiveData() == ReadableSensors::ReadStatus::READ_SUCCESS)
     {
       br.sendTransform(create_tf(2, 0,lpResearchImu->getOrientation()));
+    }
+    else
+    {
+      ROS_WARN("Getting invalid data");
     }
     r.sleep();
     ros::spinOnce();

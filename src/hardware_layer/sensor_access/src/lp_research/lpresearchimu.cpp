@@ -2,7 +2,8 @@
 
 LpResearchImu::LpResearchImu(std::string topic) : nh_(), orientation(0,0,0,1)
 {
-  this->sub = this->nh_.subscribe(topic, 100, &LpResearchImu::imu_callback, this);
+  this->sub1 = this->nh_.subscribe(topic, 100, &LpResearchImu::imu_callback, this);
+  this->sub2 = this->nh_.subscribe("/imu", 100, &LpResearchImu::imu_raw_callback, this);
   x_acc = 0.0f;
   y_acc = 0.0f;
   omega = 0.0f;
@@ -40,7 +41,7 @@ ReadableSensors::ReadStatus LpResearchImu::receiveData()
     }
     catch (tf2::TransformException &ex)
     {
-      ROS_WARN("[lpresearchimu.cpp: Transform not found] %s",ex.what());
+      ROS_WARN("[lpresearchimu.cpp | Transform not found] %s",ex.what());
     }
   }
 
@@ -61,6 +62,15 @@ void LpResearchImu::imu_callback(const sensor_msgs::Imu::ConstPtr &msg)
     x_acc = msg->linear_acceleration.x;
     y_acc = msg->linear_acceleration.y;
     omega = msg->angular_velocity.z;
+
+    is_data_valid = true;
+  }
+}
+
+void LpResearchImu::imu_raw_callback(const sensor_msgs::Imu::ConstPtr &msg)
+{
+  if (received_static_orientation)
+  {
     orientation.setW(msg->orientation.w);
     orientation.setX(msg->orientation.x);
     orientation.setY(msg->orientation.y);
@@ -69,13 +79,9 @@ void LpResearchImu::imu_callback(const sensor_msgs::Imu::ConstPtr &msg)
     // Transform the orientation to base_link and remove yaw offset
     double roll,pitch,yaw;
     orientation = orientation*static_orientation.inverse();
-    tf2::Matrix3x3(tf2::Quaternion(orientation.getX(), orientation.getY(),
-                                   orientation.getZ(), orientation.getW())).getRPY(roll,pitch,yaw);
+    tf2::Matrix3x3(orientation).getRPY(roll,pitch,yaw);
     orientation.setRPY(roll, pitch, 0.0);
-
-    is_data_valid = true;
   }
-
 }
 
 tf2::Quaternion LpResearchImu::getOrientation()

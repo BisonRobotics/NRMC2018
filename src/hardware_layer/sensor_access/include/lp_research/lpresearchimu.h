@@ -21,12 +21,13 @@ public:
   tf2::Quaternion getOrientation ();
 private:
   void imu_callback(const sensor_msgs::Imu::ConstPtr &msg);
+  void imu_raw_callback(const sensor_msgs::Imu::ConstPtr &msg);
   double x_acc;
   double y_acc;
   double omega;
   bool is_data_valid;
   bool received_static_orientation;
-  ros::Subscriber sub;
+  ros::Subscriber sub1, sub2;
   ros::NodeHandle nh_;
   tf2::Quaternion orientation;
   tf2::Quaternion static_orientation;
