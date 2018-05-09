@@ -1,17 +1,7 @@
 
 #include "dig_dump_action/dig_dump_action.h"
 #include <std_msgs/Empty.h>
-
-
-#define LINEAR_RETRACTED_POINT .047
-#define LINEAR_EXTENDED_POINT .155
-#define CENTRAL_MEASUREMENT_START_ANGLE 2.0
-#define CENTRAL_MEASUREMENT_STOP_ANGLE 1.5
-#define CENTRAL_HOLD_TORQUE -1          //increase the magintude
-#define CENTRAL_TRANSPORT_ANGLE 2.4                 // move this up
-#define CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE  2.85 // move this up
-#define CENTRAL_DUMP_ANGLE 2.58        // must be below safety point, where backhoe dumps into bucket
-#define CENTRAL_DEPOSITION_ANGLE 2.9  // must be below max position
+#include <wheel_params/wheel_params.h>
 
 #define GROUND_ALPHA .2
 

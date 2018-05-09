@@ -144,7 +144,16 @@ int main(int argc, char **argv)
     }
     isLinearInit = linearSafety.init();
     rate.sleep();
+    ros::spinOnce();
   }
+
+  backhoeSafety.setPositionSetpoint(CENTRAL_TRANSPORT_ANGLE);
+  while (ros::ok () && !backhoeSafety.isAtSetpoint())
+  {
+    rate.sleep();
+    ros::spinOnce();
+  }
+
 
   // pass vescs (sim or physical) to controllers
 
