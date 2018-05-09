@@ -118,7 +118,7 @@ void SafetyController::update(double dt)
   case safetycontroller::torque_control:
   case safetycontroller::position_control:
     vesc->setTorque(set_torque);
-    ROS_INFO("%s set torque: %.4f", params.name.c_str(), set_torque);
+  //  ROS_INFO("%s set torque: %.4f", params.name.c_str(), set_torque);
     break;
   case safetycontroller::none:
     vesc->setLinearVelocity(0);
@@ -137,7 +137,7 @@ bool SafetyController::isAtSetpoint(void)
     ret_val = position_estimate < set_position + params.setpoint_tolerance;
   }
 
-     return ret_val || control_mode == safetycontroller::controlModeState::none;
+     return ret_val ;//|| control_mode == safetycontroller::controlModeState::none;
   // if we are going up, we want to only check the lower tolerance
   // if we are going down we want to only check the upper toleranve
 }
