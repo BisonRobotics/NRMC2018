@@ -3,17 +3,17 @@
 #include <std_msgs/Empty.h>
 
 
-#define LINEAR_RETRACTED_POINT .047
-#define LINEAR_EXTENDED_POINT .155
+#define LINEAR_RETRACTED_POINT .03
+#define LINEAR_EXTENDED_POINT .175
 #define CENTRAL_MEASUREMENT_START_ANGLE 2.0
 #define CENTRAL_MEASUREMENT_STOP_ANGLE 1.5
-#define CENTRAL_HOLD_TORQUE -1          //increase the magintude
-#define CENTRAL_TRANSPORT_ANGLE 2.4                 // move this up
-#define CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE  2.85 // move this up
-#define CENTRAL_DUMP_ANGLE 2.58        // must be below safety point, where backhoe dumps into bucket
+#define CENTRAL_HOLD_TORQUE -3          //increase the magintude
+#define CENTRAL_TRANSPORT_ANGLE 2.65                 // move this up
+#define CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE  2.9 // move this up
+#define CENTRAL_DUMP_ANGLE 2.5        // must be below safety point, where backhoe dumps into bucket
 #define CENTRAL_DEPOSITION_ANGLE 2.9  // must be below max position
 
-#define GROUND_ALPHA .2
+#define GROUND_ALPHA .1
 
 DigDumpAction::DigDumpAction(BackhoeController *backhoe, BucketController *bucket, int argc, char **argv)
   : dig_as_(nh_, "dig_server", boost::bind(&DigDumpAction::digExecuteCB, this, _1), false)
@@ -51,6 +51,7 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
       {
         case dig_state_enum::dig_idle:  // state 0//not digging, should start here
           bucket->turnSifterOn();
+          bucket->turnLittleConveyorOn();
           backhoe->setShoulderSetpoint(CENTRAL_MEASUREMENT_START_ANGLE);  // put system in known starting config
           backhoe->setWristSetpoint(LINEAR_RETRACTED_POINT);
           digging_state = ensure_at_measurement_start;
@@ -102,18 +103,17 @@ void DigDumpAction::digExecuteCB(const dig_control::DigGoalConstPtr &goal)
           {
             backhoe->setWristSetpoint(LINEAR_RETRACTED_POINT);  // curl it out
             digging_state = dumping_into_bucket;
-            bucket->turnLittleConveyorOn();
           }
           break;
         case dig_state_enum::dumping_into_bucket:  // state 6 //uncurling wrist to release dirt into bucket
-          if (true || backhoe->wristAtSetpoint()) //skip this check
+          if (backhoe->wristAtSetpoint()) //skip this check
           {
             backhoe->setShoulderSetpoint(CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE);  // wherever transit/initial should be
             digging_state = moving_rocks_into_holder;
             //publish backup thing here
             std_msgs::Empty myMsg;
             scoot_back_pub.publish(myMsg);
-            ros::spinOnce();
+            //ros::spinOnce();
           }
           break;
         case dig_state_enum::moving_rocks_into_holder:  // state 7
@@ -170,11 +170,12 @@ void DigDumpAction::dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal)
       r.sleep();
       switch (dumping_state)
       {
-        case dump_state_enum::dump_idle:
+        case dump_state_enum::dump_idle: //state 0
           backhoe->setShoulderSetpoint(CENTRAL_DEPOSITION_ANGLE);  // move central drive to appropiate spot
+          bucket->turnSifterOn();
           dumping_state = moving_bucket_to_setpoint;
           break;
-        case dump_state_enum::moving_bucket_to_setpoint:
+        case dump_state_enum::moving_bucket_to_setpoint: //state 1
           if (backhoe->shoulderAtSetpoint())
           {
             bucket->turnBigConveyorOn();
@@ -182,12 +183,13 @@ void DigDumpAction::dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal)
             dumping_state = actuating_conveyor;
           }
           break;
-        case dump_state_enum::actuating_conveyor:
+        case dump_state_enum::actuating_conveyor: //state 2
           // keep conveyor actuated for some time? until some current feedback?
           initial_time += .02;
           if(/*ros::Time::now()-initial_time).toSec()*/ initial_time > dump_time)
           {
             bucket->turnBigConveyorOff();
+            bucket->turnSifterOff();
             backhoe->setShoulderSetpoint(CENTRAL_TRANSPORT_ANGLE);
             dumping_state = moving_bucket_to_initial;
           }

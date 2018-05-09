@@ -38,7 +38,7 @@ void BucketController::turnLittleConveyorOff()
 
 void BucketController::turnSifterOn()
 {
-  sf->setTorque(4);
+  sf->setTorque(3.4);
   sifter_state = true;
 }
 

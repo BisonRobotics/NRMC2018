@@ -120,14 +120,16 @@ int main(int argc, char **argv)
   }
  LinearSafetyController linearSafety(linear_joint_params, backhoeWristVesc);
   BackhoeSafetyController backhoeSafety(central_joint_params, backhoeShoulderVesc);
+  ROS_INFO ("WAITING for init");
   while (ros::ok() && !should_initialize)
   {
     ros::spinOnce();
     rate.sleep();
   }
-
+    
   backhoeSafety.init();
 
+    ROS_INFO ("INITING");
 
   bool isLinearInit = false;
   while (ros::ok() && !isLinearInit)
@@ -187,9 +189,9 @@ int main(int argc, char **argv)
     else  // display output for physical
     {
     }
-    ROS_DEBUG("backhoe controller says CD at %.4f", backhoeSafety.getPositionEstimate());
-    ROS_DEBUG("backhoe controller says LA at %.4f", linearSafety.getPositionEstimate());
-    ROS_DEBUG("Digdump AS states: %d, %d", ddAct.digging_state, ddAct.dumping_state);
+    ROS_INFO("backhoe controller says CD at %.4f", backhoeSafety.getPositionEstimate());
+    ROS_INFO("backhoe controller says LA at %.4f", linearSafety.getPositionEstimate());
+    ROS_INFO("Digdump AS states: %d, %d", ddAct.digging_state, ddAct.dumping_state);
 
     ros::spinOnce();
     rate.sleep();

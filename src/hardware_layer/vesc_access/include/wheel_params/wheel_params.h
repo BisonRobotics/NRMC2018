@@ -50,7 +50,7 @@
 #define SMALL_CONVEYOR_POLE_PAIRS 1
 #define SMALL_CONVEYOR_TORQUE_CONSTANT 1.0f
 
-#define MAX_LARGE_CONVEYOR_VELOCITY 35000.0f // in erpm
+#define MAX_LARGE_CONVEYOR_VELOCITY 140000.0f // in erpm
 #define MAX_LARGE_CONVEYOR_TORQUE 15.0f
 #define MAX_LARGE_CONVEYOR_DUTY .7f
 #define LARGE_CONVEYOR_GEAR_RATIO 1.0f
@@ -78,10 +78,10 @@
 #define ROBOT_AXLE_LENGTH 0.64f
 #define ROBOT_MAX_SPEED 0.5f
 
-#define LINEAR_ACTUATOR_LENGTH .1778
+#define LINEAR_ACTUATOR_LENGTH .186
 #define MINIMUM_CENTRAL_ANGLE 0
 #define MAXIMUM_CENTRAL_ANGLE 2.96
-#define SAFE_CENTRAL_ANGLE 2.40
+#define SAFE_CENTRAL_ANGLE 2.55
 #define SAFE_LINEAR_DISTANCE .04985
 
 nsVescAccess::vesc_param_struct_t front_left_param = {.max_velocity = MAX_WHEEL_VELOCITY,
@@ -211,7 +211,7 @@ safetycontroller::joint_params_t linear_joint_params = {.minimum_pos = 0,
                                                         .gain = .11,
                                                         .setpoint_tolerance = .005,
                                                         .lower_limit_position = .0286,
-                                                        .upper_limit_position = .186,
+                                                        .upper_limit_position = LINEAR_ACTUATOR_LENGTH,
                                                         .max_abs_velocity = MAX_LINEAR_ACTUATOR_VELOCITY,
                                                         .limit_switch_safety_margin = .001,
                                                         .max_abs_torque = MAX_LINEAR_ACTUATOR_TORQUE,
