@@ -112,6 +112,7 @@ class TestPlanner(object):
         assert not sp.movement_status == None
         assert sp.goal_given == False
         assert sp.halt == False
+        assert sp.oriented_waypoints == None
 
     def test_map_callback(self):
         sp = SpoofPlanner(None)
@@ -171,6 +172,21 @@ class TestPlanner(object):
         spw.movement_status = planner.MovementStatus.HAS_REACHED_GOAL
         assert spw.navigate_to_goal((0,0)) == True
         assert spw.goal_given == False
+
+    def test_saved_path(self):
+        sp = SpoofPlannerWaypoints(None)
+        map = planner.map_utils.Map()
+        sp.occupancy_grid = map
+        result = sp.navigate_to_goal((1,1))
+        assert result == False
+        assert not sp.oriented_waypoints == None
+        assert not sp.oriented_waypoints == []
+        sp.movement_status = planner.MovementStatus.HAS_REACHED_GOAL
+        sp.navigate_to_goal((1,1))
+
+        result = sp.navigate_to_goal((2,2))
+        assert result == False
+        assert sp.oriented_waypoints == []
 
 
     def test_publish_waypoints(self):
