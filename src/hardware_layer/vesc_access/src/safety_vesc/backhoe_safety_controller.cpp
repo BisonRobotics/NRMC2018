@@ -14,7 +14,7 @@ bool BackhoeSafetyController::init()
 
 void BackhoeSafetyController::updatePositionEstimate(double dt)
 {
-  this->position_estimate = vesc->getPotPosition();
-  //ROS_INFO ("POSITION ESTIMATE CENTRAL: %.4f", position_estimate);
- // SafetyController::updatePositionEstimate(dt);
+  this->last_pos = this->position_estimate;
+  this->position_estimate = this->last_pos + alpha*(vesc->getPotPosition() - last_pos);
+
 }
