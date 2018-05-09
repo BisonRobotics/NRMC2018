@@ -50,7 +50,7 @@
 #define SMALL_CONVEYOR_POLE_PAIRS 1
 #define SMALL_CONVEYOR_TORQUE_CONSTANT 1.0f
 
-#define MAX_LARGE_CONVEYOR_VELOCITY 35000.0f // in erpm
+#define MAX_LARGE_CONVEYOR_VELOCITY 140000.0f // in erpm
 #define MAX_LARGE_CONVEYOR_TORQUE 15.0f
 #define MAX_LARGE_CONVEYOR_DUTY .7f
 #define LARGE_CONVEYOR_GEAR_RATIO 1.0f
@@ -78,20 +78,20 @@
 #define ROBOT_AXLE_LENGTH 0.64f
 #define ROBOT_MAX_SPEED 0.5f
 
-#define LINEAR_ACTUATOR_LENGTH .1778
+#define LINEAR_ACTUATOR_LENGTH .186
 #define MINIMUM_CENTRAL_ANGLE 0
 #define MAXIMUM_CENTRAL_ANGLE 2.96
-#define SAFE_CENTRAL_ANGLE 2.40
+#define SAFE_CENTRAL_ANGLE 2.55
 #define SAFE_LINEAR_DISTANCE .04985
 
-#define LINEAR_RETRACTED_POINT .047
-#define LINEAR_EXTENDED_POINT .155
+#define LINEAR_RETRACTED_POINT .03
+#define LINEAR_EXTENDED_POINT .175
 #define CENTRAL_MEASUREMENT_START_ANGLE 2.0
 #define CENTRAL_MEASUREMENT_STOP_ANGLE 1.5
-#define CENTRAL_HOLD_TORQUE -1          //increase the magintude
-#define CENTRAL_TRANSPORT_ANGLE 2.4                 // move this up
-#define CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE  2.85 // move this up
-#define CENTRAL_DUMP_ANGLE 2.58        // must be below safety point, where backhoe dumps into bucket
+#define CENTRAL_HOLD_TORQUE -3          //increase the magintude
+#define CENTRAL_TRANSPORT_ANGLE 2.65                 // move this up
+#define CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE  2.9 // move this up
+#define CENTRAL_DUMP_ANGLE 2.5        // must be below safety point, where backhoe dumps into bucket
 #define CENTRAL_DEPOSITION_ANGLE 2.9  // must be below max position
 
 nsVescAccess::vesc_param_struct_t front_left_param = {.max_velocity = MAX_WHEEL_VELOCITY,
@@ -221,7 +221,7 @@ safetycontroller::joint_params_t linear_joint_params = {.minimum_pos = 0,
                                                         .gain = .11,
                                                         .setpoint_tolerance = .005,
                                                         .lower_limit_position = .0286,
-                                                        .upper_limit_position = .186,
+                                                        .upper_limit_position = LINEAR_ACTUATOR_LENGTH,
                                                         .max_abs_velocity = MAX_LINEAR_ACTUATOR_VELOCITY,
                                                         .limit_switch_safety_margin = .001,
                                                         .max_abs_torque = MAX_LINEAR_ACTUATOR_TORQUE,

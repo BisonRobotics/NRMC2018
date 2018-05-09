@@ -55,7 +55,7 @@ bool do_the_south_check = false;
 
 double topicTheta = 0;
 bool thetaHere = false;
-bool firstWaypointHere = false;
+bool firstWaypointHere = true;
 bool scoot_back = false;
 
 void newGoalCallback(const geometry_msgs::Pose2D::ConstPtr &msg)
@@ -345,6 +345,14 @@ int main(int argc, char **argv)
 
     ros::spinOnce();
     rate.sleep();
+    if (imu->receiveData() == ReadableSensors::ReadStatus::READ_FAILED)
+    {
+        ROS_WARN ("BAD IMU DATA!");
+    }
+    if (pos->receiveData()==ReadableSensors::ReadStatus::READ_FAILED)
+    {
+        ROS_WARN ("BAD POS");
+    }
   }
 
   lastTime = ros::Time::now ();

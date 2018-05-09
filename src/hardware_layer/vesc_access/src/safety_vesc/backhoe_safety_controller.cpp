@@ -1,10 +1,10 @@
 #include "safety_vesc/backhoe_safety_controller.h"
-#include <wheel_params/wheel_params.h>
+#include <ros/ros.h>
 
 BackhoeSafetyController::BackhoeSafetyController(safetycontroller::joint_params_t params, iVescAccess *vesc)
   : SafetyController(vesc, params)
 {
-  has_setpoint_been_set = false;
+
 }
 
 bool BackhoeSafetyController::init()
@@ -17,5 +17,5 @@ bool BackhoeSafetyController::init()
 void BackhoeSafetyController::updatePositionEstimate(double dt)
 {
   this->position_estimate = vesc->getPotPosition();
- // SafetyController::updatePositionEstimate(dt);
+  // SafetyController::updatePositionEstimate(dt);
 }
