@@ -1,13 +1,12 @@
 plugins:
   - {name: static_map,  type: "costmap_2d::StaticLayer"}
   - {name: rock_layer, type: "low_pass_namespace::LowPassLayer"}
-#  - {name: rock_layer, type: "costmap_2d::ObstacleLayer"}
   - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
 publish_frequency: .1
 footprint: [[-1, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0]]
 
 inflation_layer: {circumscribed_radius: 0.5, cost_scaling_factor: 1.5, enabled: true,
-    inflation_radius: 0.3, inscribed_radius: 0.2}
+    inflation_radius: 0.4, inscribed_radius: 0.2}
 
 rock_layer:
   point_cloud_sensor:
