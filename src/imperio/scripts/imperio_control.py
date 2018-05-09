@@ -117,15 +117,12 @@ class ImperioControl(object):
         """
         Digs for Regolith
         """
-        if not self.rm.outriggers_deployed:
-            self.rm.deploy_outriggers()
-        else:
-            result = self.rm.dig_regolith()
-            if result == None:
-                rospy.logwarn("[IMPERIO] : Error with Dig")
-                self.recover()
-            if result:
-                self.robot.next_state()
+        result = self.rm.dig_regolith()
+        if result == None:
+            rospy.logwarn("[IMPERIO] : Error with Dig")
+            self.recover()
+        if result:
+            self.robot.next_state()
 
     def deposit(self):
         """
