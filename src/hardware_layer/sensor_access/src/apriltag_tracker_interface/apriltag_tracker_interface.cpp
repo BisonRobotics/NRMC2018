@@ -9,6 +9,7 @@ AprilTagTrackerInterface::AprilTagTrackerInterface(std::string topic, double tim
   this->pub = this->nh_.advertise<std_msgs::Bool>("is_floating", 100);
   x = 0.0;
   y = 0.0;
+  z = 0.0;
   theta = 0.0;
   is_floating = true;
   this->timeout = ros::Duration(timeout);
