@@ -12,6 +12,7 @@ public:
   MOCK_METHOD0(getTheta, double());
   MOCK_METHOD0(isFloating, bool());
   MOCK_METHOD0(receiveData, ReadableSensors::ReadStatus());  // this is an "uninteresting function"
+  MOCK_METHOD0 (getZ, double());
 };
 
 #endif

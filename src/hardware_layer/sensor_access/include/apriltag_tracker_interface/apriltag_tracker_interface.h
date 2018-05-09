@@ -14,7 +14,7 @@ public:
   double getTheta() override;
   bool isFloating() override;
   ReadableSensors::ReadStatus receiveData() override;
-
+  double getZ () override;
 private:
   ros::Subscriber sub;
   ros::Publisher pub;
@@ -24,6 +24,7 @@ private:
   double x;
   double y;
   double theta;
+  double z;
   double qtToTheta(geometry_msgs::Quaternion);
   ros::Duration timeout;
   ros::Time last_time;
