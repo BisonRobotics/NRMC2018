@@ -56,7 +56,7 @@ add_library(bucket_controller_lib src/bucket_controller/bucket_controller.cpp)
 add_library(dig_dump_action_lib src/dig_dump_action/dig_dump_action.cpp)
 
 add_executable(hoe_master src/hoe_master.cpp)
-add_executable (dig_teleop src/dig_teleop.cpp)
+add_executable (dig_teleop src/real_dig_teleop.cpp)
 add_executable (setpoint_test src/test/safety_position_setpoint_test.cpp)
 
 add_dependencies(hoe_master

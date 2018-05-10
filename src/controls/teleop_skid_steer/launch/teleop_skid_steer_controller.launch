@@ -1,7 +1,4 @@
 <launch>
 <node pkg="teleop_skid_steer" type="teleop_interface_exec" name="teleop"/>
-
-
-
-
+<include file="$(find dig_control)/launch/dig_control.launch"/>
 </launch>
