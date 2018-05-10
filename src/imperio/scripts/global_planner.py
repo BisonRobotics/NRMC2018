@@ -30,7 +30,7 @@ class GlobalPlanner(Planner):
 
         rospy.loginfo("[IMPERIO] : Starting the path planner")
         saved_time = time.time()
-        results = RRT.find_best_rrt_path(location, goal, self.occupancy_grid, 20)
+        results = RRT.find_best_rrt_path(location, goal, self.miminal_map, 20)
         rospy.loginfo("[IMPERIO] : Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
 
         if len(results) == 0:
