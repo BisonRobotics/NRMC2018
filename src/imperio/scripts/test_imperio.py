@@ -114,6 +114,7 @@ class TestPlanner(object):
         assert not sp.movement_status == None
         assert sp.goal_given == False
         assert sp.halt == False
+        assert sp.oriented_waypoints == None
         assert sp.minimal_map == None
         assert sp.expanded_map == None
 
@@ -177,6 +178,21 @@ class TestPlanner(object):
         spw.movement_status = planner.MovementStatus.HAS_REACHED_GOAL
         assert spw.navigate_to_goal((0,0)) == True
         assert spw.goal_given == False
+
+    def test_saved_path(self):
+        sp = SpoofPlannerWaypoints(None)
+        map = planner.map_utils.Map()
+        sp.minimal_map = map
+        result = sp.navigate_to_goal((1,1))
+        assert result == False
+        assert not sp.oriented_waypoints == None
+        assert not sp.oriented_waypoints == []
+        sp.movement_status = planner.MovementStatus.HAS_REACHED_GOAL
+        sp.navigate_to_goal((1,1))
+
+        result = sp.navigate_to_goal((2,2))
+        assert result == False
+        assert sp.oriented_waypoints == []
 
 
     def test_publish_waypoints(self):
@@ -359,7 +375,7 @@ class TestRegolithManipulation(object):
         assert rm.waiting_on_action == True
 
         rm = SpoofRegMan()
-        rm.regolith_in_bucket = 10
+        rm.regolith_in_bucket = 50
         result = rm.dig_regolith()
         assert result == True
         assert rm.waiting_on_action == False
