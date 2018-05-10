@@ -20,7 +20,7 @@ void LowPassLayer::onInitialize()
   current_ = true;
   default_value_ = NO_INFORMATION;  // we can change this later if we want
   enabled_ = true;
-  enable_service = gl_nh.advertiseService ("enable_mapping", &LowPassLayer::updateEnable, this);
+  enable_service = nh.advertiseService ("enable_mapping", &LowPassLayer::updateEnable, this);
   my_personal_enabled_ = false;
 }
 
