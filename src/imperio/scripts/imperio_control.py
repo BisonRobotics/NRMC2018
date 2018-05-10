@@ -155,7 +155,6 @@ class ImperioControl(object):
         if self.robot.state == RobotState.DIG:
             rospy.loginfo("[IMPERIO] : Turn Around, changing to inbound mode from digging")
             self.robot.change_state(RobotState.INBOUND)
-            #TODO : Enact a shortened version of digging if not currently in digging mode
 
 if __name__ == "__main__":
     nav = ImperioControl()
