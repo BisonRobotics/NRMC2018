@@ -18,7 +18,8 @@ from imperio.msg import GlobalWaypoints
 from imperio.msg import DriveStatus
 from nav_msgs.msg import OccupancyGrid
 from geometry_msgs.msg import Pose2D
-from std_msgs.msg import Empty
+from std_msgs.msg import Empty, Bool
+from std_srvs.srv import Empty as EmptySrv
 
 class MovementStatus(Enum):
     """
@@ -42,9 +43,12 @@ class Planner(object):
         Initializes the global planner
         :param robot: the robot object the planner will be moving
         """
+        self.service = rospy.Service('/zr300/scan', EmptySrv)
+
         self.waypoints_publisher = rospy.Publisher('/position_controller/global_planner_goal', GlobalWaypoints, queue_size=100, latch=True)
         self.halt_publisher = rospy.Publisher('/position_controller/halt', Empty, queue_size=1, latch=True)
 
+        rospy.Subscriber('/mapping_is_good', Bool, self.map_scan_callback)
         rospy.Subscriber('/position_controller/drive_controller_status', DriveStatus, self.drive_status_callback)
         rospy.Subscriber('/costmap_less_inflation/costmap/costmap', OccupancyGrid, self.minimal_map_callback)
         rospy.Subscriber('/costmap_more_inflation/costmap/costmap', OccupancyGrid, self.expanded_map_callback)
@@ -55,7 +59,11 @@ class Planner(object):
         self.expanded_map = None
         self.movement_status = MovementStatus.HAS_REACHED_GOAL
         self.goal_given = False
+        self.map_scan = False
         self.halt = False
+
+    def map_scan_callback(self, message):
+        self.map_scan = message.data
 
     def minimal_map_callback(self, map_message):
         self.minimal_map = map_utils.Map(map_message)
