@@ -26,5 +26,6 @@ int main (int argc, char **argv)
         mapping_good.data=start_scan;
         pub.publish (mapping_good);
         r.sleep();
+        ros::spinOnce ();
     }
 }
