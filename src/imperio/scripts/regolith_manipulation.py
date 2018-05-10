@@ -50,7 +50,7 @@ class RegolithManipulation(object):
                 rospy.loginfo("[IMPERIO] : Harvested {} of regolith".format(self.regolith_in_bucket))
 
         #TODO : Define the needed threshold with the NDSU team [JIRA NRMC2018-358]
-        threshold = 10
+        threshold = 45
         if self.regolith_in_bucket < threshold:
             self.single_dig()
             self.waiting_on_action = True
