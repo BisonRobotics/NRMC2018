@@ -102,16 +102,12 @@ class ImperioControl(object):
         """
         Navigates the robot back to the collection big
         """
-
-        if self.rm.outriggers_deployed:
-            self.rm.retract_outriggers()
-        else:
-            goal = (.6, 0)
-            result =  self.planner.navigate_to_goal(goal)
-            if result == None:
-                self.robot.change_state(RobotState.HALT)
-            if result:
-                self.robot.next_state()
+        goal = (.6, 0)
+        result =  self.planner.navigate_to_goal(goal)
+        if result == None:
+            self.robot.change_state(RobotState.HALT)
+        if result:
+            self.robot.next_state()
 
     def dig(self):
         """

@@ -73,6 +73,7 @@ import math
 class SpoofPlanner(planner.Planner):
     def __init__(self, robot):
         super(SpoofPlanner, self).__init__(robot)
+        self.map_scan = True
 
     def find_waypoints(self, goal):
         return []
@@ -80,6 +81,7 @@ class SpoofPlanner(planner.Planner):
 class SpoofPlannerWaypoints(planner.Planner):
     def __init__(self, robot):
         super(SpoofPlannerWaypoints, self).__init__(robot)
+        self.map_scan = True
 
     def find_waypoints(self, goal):
         return [(0,0), (1,1), (2,2)]
