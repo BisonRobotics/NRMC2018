@@ -63,7 +63,6 @@ class Planner(object):
         self.halt = False
 
     def map_scan_callback(self, message):
-        rospy.loginfo("[IMPERIO CHECK] : Message has come in with the value {}".format(message))
         self.map_scan = message.data
 
     def minimal_map_callback(self, map_message):
