@@ -4,4 +4,5 @@
   <node name="map_server" pkg="map_server" type="map_server" args="$(find mapping)/data/costmap.yaml"/>
   <node name="costmap_less_inflation" pkg="costmap_2d" type="costmap_2d_node"/>
    <node name="costmap_more_inflation" pkg="costmap_2d" type="costmap_2d_node"/>
+    <node name="zr300_spoof" pkg="mapping" type="sim_node"/>
 </launch>
