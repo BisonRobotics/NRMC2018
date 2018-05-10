@@ -112,12 +112,16 @@ class TestPlanner(object):
         assert not sp.movement_status == None
         assert sp.goal_given == False
         assert sp.halt == False
+        assert sp.minimal_map == None
+        assert sp.expanded_map == None
 
     def test_map_callback(self):
         sp = SpoofPlanner(None)
         map_message = planner.OccupancyGrid()
-        sp.map_callback(map_message)
-        assert not sp.occupancy_grid == None
+        sp.minimal_map_callback(map_message)
+        assert not sp.minimal_map == None
+        sp.expanded_map_callback(map_message)
+        assert not sp.expanded_map == None
 
     def test_drive_status_callback(self):
         sp = SpoofPlanner(None)
@@ -158,13 +162,13 @@ class TestPlanner(object):
         assert sp.movement_status == planner.MovementStatus.WAITING
 
         map = planner.map_utils.Map()
-        sp.occupancy_grid = map
-        assert not sp.occupancy_grid == None
+        sp.minimal_map = map
+        assert not sp.minimal_map == None
         assert not sp.navigate_to_goal((1, 1))
         assert sp.goal_given == False
 
         spw = SpoofPlannerWaypoints(None)
-        spw.occupancy_grid = map
+        spw.minimal_map = map
         assert not spw.navigate_to_goal((1,1))
         assert spw.goal_given == True
 
@@ -248,8 +252,13 @@ class TestGlobalPlanner(object):
     def test_init(self):
         gp = global_planner.GlobalPlanner(None)
         assert not gp.waypoints_publisher == None
+        assert not gp.halt_publisher == None
         assert gp.robot == None
         assert gp.movement_status == planner.MovementStatus.HAS_REACHED_GOAL
+        assert gp.minimal_map == None
+        assert gp.expanded_map == None
+        assert gp.halt == False
+        assert gp.goal_given == False
 
         sr = SpoofRobot()
         gp = global_planner.GlobalPlanner(sr)
