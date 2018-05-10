@@ -44,7 +44,6 @@ class Planner(object):
         :param robot: the robot object the planner will be moving
         """
         self.service = rospy.ServiceProxy('/zr300/scan', EmptySrv)
-
         self.waypoints_publisher = rospy.Publisher('/position_controller/global_planner_goal', GlobalWaypoints, queue_size=100, latch=True)
         self.halt_publisher = rospy.Publisher('/position_controller/halt', Empty, queue_size=1, latch=True)
 
@@ -60,9 +59,11 @@ class Planner(object):
         self.movement_status = MovementStatus.HAS_REACHED_GOAL
         self.goal_given = False
         self.map_scan = False
+        self.service_called = False
         self.halt = False
 
     def map_scan_callback(self, message):
+        rospy.loginfo("[IMPERIO CHECK] : Message has come in with the value {}".format(message))
         self.map_scan = message.data
 
     def minimal_map_callback(self, map_message):
@@ -94,6 +95,7 @@ class Planner(object):
         :param goal: the global goal (based on the overall map) as (x,y)
         :return: a boolean of it the robot has reached the goal, None for a fatal error
         """
+
         if self.halt:
             return None
         if self.movement_status == MovementStatus.CANNOT_PLAN_PATH:
@@ -104,10 +106,19 @@ class Planner(object):
             self.goal_given = False
             return True
 
+
+        if not self.service_called:
+            self.service()
+            self.service_called = True
+        if not self.map_scan:
+            rospy.loginfo("[IMPERIO] : Waiting on map scan")
+            self.movement_status = MovementStatus.WAITING
+            return False
+
         rospy.loginfo("[IMPERIO] : PLANNING A PATH TO GOAL {}".format(goal))
 
         #We can't do anything until we have the occupancy grid
-        if self.minimal_map == None or not self.map_scan:
+        if self.minimal_map == None:
             rospy.logwarn("[IMPERIO] : Cannot find the occupancy grid")
             self.movement_status = MovementStatus.WAITING
             return False
