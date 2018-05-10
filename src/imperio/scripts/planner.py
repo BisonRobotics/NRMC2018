@@ -43,7 +43,7 @@ class Planner(object):
         Initializes the global planner
         :param robot: the robot object the planner will be moving
         """
-        self.service = rospy.Service('/zr300/scan', EmptySrv)
+        self.service = rospy.ServiceProxy('/zr300/scan', EmptySrv)
 
         self.waypoints_publisher = rospy.Publisher('/position_controller/global_planner_goal', GlobalWaypoints, queue_size=100, latch=True)
         self.halt_publisher = rospy.Publisher('/position_controller/halt', Empty, queue_size=1, latch=True)
@@ -107,7 +107,7 @@ class Planner(object):
         rospy.loginfo("[IMPERIO] : PLANNING A PATH TO GOAL {}".format(goal))
 
         #We can't do anything until we have the occupancy grid
-        if self.minimal_map == None:
+        if self.minimal_map == None or not self.map_scan:
             rospy.logwarn("[IMPERIO] : Cannot find the occupancy grid")
             self.movement_status = MovementStatus.WAITING
             return False
