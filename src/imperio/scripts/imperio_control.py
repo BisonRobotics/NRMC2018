@@ -54,7 +54,7 @@ class ImperioControl(object):
             self.robot.change_state(RobotState.HALT)
 
         if bool_msg.data == False:
-            self.runningOutOfTime()
+            self.turn_around()
 
     def run(self):
         """
@@ -148,12 +148,12 @@ class ImperioControl(object):
         rospy.loginfo("[IMPERIO] : Robot could not be recovered, please regain control.")
         self.robot.change_state(RobotState.HALT)
 
-    def runningOutOfTime(self):
+    def turn_around(self):
         """
         What the robot should do when it's running out of time
         """
-        rospy.loginfo("[IMPERIO] : Almost out of time, changing to inbound mode")
         if self.robot.state == RobotState.DIG:
+            rospy.loginfo("[IMPERIO] : Turn Around, changing to inbound mode from digging")
             self.robot.change_state(RobotState.INBOUND)
 
 if __name__ == "__main__":

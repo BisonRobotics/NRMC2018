@@ -12,6 +12,8 @@
 
 <!-- time limit (in minutes) should be 10, can be changed for testing purposes -->
 <param name="time_limit" value="10"/>
+<!-- time limit for when robot should turn around to maximize full autonomy points (2 runs) -->
+<param name ="optimize_points_turn_around" value="4"/>
 <!-- turn around (in minutes) is how many minutes before the competition ends that the robot should turn around -->
 <param name="turn_around" value="1"/>
 
