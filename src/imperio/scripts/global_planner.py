@@ -26,7 +26,7 @@ class GlobalPlanner(Planner):
         :param goal: the final goal as (x,y)
         :return: an array of waypoints
         """
-        location = self.get_robot_location()
+        #location = self.get_robot_location()
 
         rospy.loginfo("[IMPERIO] : Starting the path planner")
         saved_time = time.time()
