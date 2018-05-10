@@ -83,7 +83,7 @@ class RegolithManipulation(object):
                     return None
                 self.waiting_on_action = False
                 self.regolith_in_bucket = result.weight_in_bucket
-                print("Imperio : Bucket now {} full".format(self.regolith_in_bucket))
+                rospy.loginfo("[IMPERIO] : Bucket now {} full".format(self.regolith_in_bucket))
 
 
         accepted_empty_threshold = 3 #TODO: Confirm this threshold with them [JIRA NRMC2018-358]
@@ -95,7 +95,7 @@ class RegolithManipulation(object):
         return True
 
     def single_dump(self):
-        print("Imperio : Performing a dump")
+        rospy.loginfo("[IMPERIO] : Performing a dump")
         goal = self.dump_goal_message()
         self.dump_client.wait_for_server()
         self.dump_client.send_goal(goal)
