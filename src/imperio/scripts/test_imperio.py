@@ -113,12 +113,16 @@ class TestPlanner(object):
         assert sp.goal_given == False
         assert sp.halt == False
         assert sp.oriented_waypoints == None
+        assert sp.minimal_map == None
+        assert sp.expanded_map == None
 
     def test_map_callback(self):
         sp = SpoofPlanner(None)
         map_message = planner.OccupancyGrid()
-        sp.map_callback(map_message)
-        assert not sp.occupancy_grid == None
+        sp.minimal_map_callback(map_message)
+        assert not sp.minimal_map == None
+        sp.expanded_map_callback(map_message)
+        assert not sp.expanded_map == None
 
     def test_drive_status_callback(self):
         sp = SpoofPlanner(None)
@@ -159,13 +163,13 @@ class TestPlanner(object):
         assert sp.movement_status == planner.MovementStatus.WAITING
 
         map = planner.map_utils.Map()
-        sp.occupancy_grid = map
-        assert not sp.occupancy_grid == None
+        sp.minimal_map = map
+        assert not sp.minimal_map == None
         assert not sp.navigate_to_goal((1, 1))
         assert sp.goal_given == False
 
         spw = SpoofPlannerWaypoints(None)
-        spw.occupancy_grid = map
+        spw.minimal_map = map
         assert not spw.navigate_to_goal((1,1))
         assert spw.goal_given == True
 
@@ -264,8 +268,13 @@ class TestGlobalPlanner(object):
     def test_init(self):
         gp = global_planner.GlobalPlanner(None)
         assert not gp.waypoints_publisher == None
+        assert not gp.halt_publisher == None
         assert gp.robot == None
         assert gp.movement_status == planner.MovementStatus.HAS_REACHED_GOAL
+        assert gp.minimal_map == None
+        assert gp.expanded_map == None
+        assert gp.halt == False
+        assert gp.goal_given == False
 
         sr = SpoofRobot()
         gp = global_planner.GlobalPlanner(sr)
@@ -325,9 +334,6 @@ class TestRegolithManipulation(object):
         assert rm.regolith_in_bucket == 0
         assert rm.waiting_on_action == False
         assert rm.halt == False
-        assert rm.outriggers_deployed == False
-        assert rm.waiting_on_deploy_action == False
-        assert rm.waiting_on_retract_action == False
 
     def test_halt(self):
         rm = reg_man.RegolithManipulation()
@@ -336,8 +342,6 @@ class TestRegolithManipulation(object):
         assert rm.halt == True
         assert rm.dig_regolith() == None
         assert rm.deposit_regolith() == None
-        assert rm.deploy_outriggers() == None
-        assert rm.retract_outriggers() == None
 
     def test_dump_goal_message(self):
         rm = reg_man.RegolithManipulation()
@@ -353,62 +357,14 @@ class TestRegolithManipulation(object):
     def test_single_dump(self):
         pass
 
+    def test_initialize_diggint(self):
+        rm = reg_man.RegolithManipulation()
+        rm.initialize_digging()
+
     def test_dig_goal_message(self):
         rm = reg_man.RegolithManipulation()
         message = rm.dig_goal_message()
         assert not message == None
-
-    def test_deploy_outriggers(self):
-        rm = reg_man.RegolithManipulation()
-        client = SpoofActionClient()
-        rm.deploy_client = client
-
-        assert rm.deploy_outriggers() == False
-        assert client.goal_sent == True
-        assert rm.waiting_on_deploy_action == True
-
-        client.goal_sent = False
-        assert rm.deploy_outriggers() == False
-        assert client.goal_sent == False
-
-        client.goal_success = True
-        assert rm.deploy_outriggers() == True
-        assert rm.waiting_on_deploy_action == False
-        assert rm.outriggers_deployed == True
-
-    def test_retract_outriggers(self):
-        rm = reg_man.RegolithManipulation()
-        client = SpoofActionClient()
-        rm.retract_client = client
-        rm.outriggers_deployed = True
-
-        assert rm.retract_outriggers() == False
-        assert client.goal_sent == True
-        assert rm.waiting_on_retract_action == True
-
-        client.goal_sent = False
-        assert rm.retract_outriggers() == False
-        assert client.goal_sent == False
-
-        client.goal_success = True
-        assert rm.retract_outriggers() == True
-        assert rm.waiting_on_retract_action == False
-        assert rm.outriggers_deployed == False
-
-
-    def test_retract_while_deploying(self):
-        rm = reg_man.RegolithManipulation()
-        retract_client = SpoofActionClient()
-        deploy_client = SpoofActionClient()
-        rm.retract_client = retract_client
-        rm.deploy_client = deploy_client
-
-        assert rm.deploy_outriggers() == False
-        assert rm.retract_outriggers() == False
-
-        retract_client.goal_success = True
-        assert rm.retract_outriggers() == True
-        assert rm.outriggers_deployed == False
 
     def test_dig_regolith(self):
         rm = SpoofRegMan()

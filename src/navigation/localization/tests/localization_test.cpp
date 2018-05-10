@@ -26,7 +26,7 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
   }
 }
 
-geometry_msgs::TransformStamped create_tf(double x, double y, double theta, tf2::Quaternion my_quat)
+geometry_msgs::TransformStamped create_tf(double x, double y, double theta, tf2::Quaternion my_quat, double z)
 {
   geometry_msgs::TransformStamped tfStamp;
   tfStamp.header.stamp = ros::Time::now();
@@ -34,7 +34,7 @@ geometry_msgs::TransformStamped create_tf(double x, double y, double theta, tf2:
   tfStamp.child_frame_id = "base_link";
   tfStamp.transform.translation.x = x;
   tfStamp.transform.translation.y = y;
-  tfStamp.transform.translation.z = 0.0;
+  tfStamp.transform.translation.z = z;
   tf2::Quaternion q;
   double raw,paw,yaw;
   tf2::Matrix3x3(tf2::Quaternion(my_quat.getX(), my_quat.getY(), my_quat.getZ(), my_quat.getW())).getRPY(raw,paw,yaw);
@@ -83,7 +83,7 @@ int main(int argc, char **argv)
              teleopInterface.fr->getLinearVelocity(), teleopInterface.bl->getLinearVelocity(),
              teleopInterface.br->getLinearVelocity());
     ROS_INFO("x: %f y %f theta %f", aprilTags->getX(), aprilTags->getY(), aprilTags->getTheta());
-    br.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, lpResearchImu->getOrientation()));
+    br.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, lpResearchImu->getOrientation(), aprilTags->getZ()));
 
 
     r.sleep();

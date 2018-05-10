@@ -405,7 +405,7 @@ Visualization Manager:
       Draw Behind: false
       Enabled: true
       Name: Map
-      Topic: /costmap_2d_node/costmap/costmap
+      Topic: /costmap_less_inflation/costmap/costmap
       Unreliable: false
       Use Timestamp: false
       Value: true
