@@ -13,7 +13,7 @@ import actionlib
 
 from dig_control.msg import DigAction, DigActionGoal, DigActionResult
 from dig_control.msg import DumpAction, DumpActionGoal, DumpActionResult
-
+from std_msgs.msg import Empty
 
 class RegolithManipulation(object):
     def __init__(self):
@@ -23,6 +23,13 @@ class RegolithManipulation(object):
         self.regolith_in_bucket = 0
         self.waiting_on_action = False
         self.halt = False
+        self.initialize_digging()
+
+
+    def initialize_digging(self):
+        rospy.loginfo("[IMPERIO] : Initializing digging")
+        publisher = rospy.Publisher('/init_digging', Empty, queue_size=1, latch=True)
+        publisher.publish(Empty())
 
     # Tells the robot to dig the regolith
     # Returns boolean of success

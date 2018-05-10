@@ -341,6 +341,10 @@ class TestRegolithManipulation(object):
     def test_single_dump(self):
         pass
 
+    def test_initialize_diggint(self):
+        rm = reg_man.RegolithManipulation()
+        rm.initialize_digging()
+
     def test_dig_goal_message(self):
         rm = reg_man.RegolithManipulation()
         message = rm.dig_goal_message()
