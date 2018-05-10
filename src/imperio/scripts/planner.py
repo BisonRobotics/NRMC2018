@@ -13,7 +13,7 @@ import rospy
 import map_utils
 from robot import *
 from abc import ABCMeta, abstractmethod
-    
+
 from imperio.msg import GlobalWaypoints
 from imperio.msg import DriveStatus
 from nav_msgs.msg import OccupancyGrid
@@ -51,14 +51,14 @@ class Planner(object):
         #rospy.Subscriber('/map', OccupancyGrid, self.map_callback)
 
         self.robot = robot
-        self.miminal_map = None
+        self.minimal_map = None
         self.expanded_map = None
         self.movement_status = MovementStatus.HAS_REACHED_GOAL
         self.goal_given = False
         self.halt = False
 
     def minimal_map_callback(self, map_message):
-        self.miminal_map = map_utils.Map(map_message)
+        self.minimal_map = map_utils.Map(map_message)
 
     def expanded_map_callback(self, map_message):
         self.expanded_map = map_utils.Map(map_message)
@@ -99,7 +99,7 @@ class Planner(object):
         rospy.loginfo("[IMPERIO] : PLANNING A PATH TO GOAL {}".format(goal))
 
         #We can't do anything until we have the occupancy grid
-        if self.miminal_map == None:
+        if self.minimal_map == None:
             rospy.logwarn("[IMPERIO] : Cannot find the occupancy grid")
             self.movement_status = MovementStatus.WAITING
             return False

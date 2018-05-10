@@ -30,11 +30,15 @@ class GlobalPlanner(Planner):
 
         rospy.loginfo("[IMPERIO] : Starting the path planner")
         saved_time = time.time()
-        results = RRT.find_best_rrt_path(location, goal, self.miminal_map, 20)
-        rospy.loginfo("[IMPERIO] : Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
 
+        #TODO [JIRA : NRMC2018-577] might run just one non threaded path to check if there IS a possible path in the expanded map
+        #TODO [JIRA : NRMC2018-578] possible run the two results against each other in case minimal path is better
+        results = RRT.find_best_rrt_path(location, goal, self.expanded_map, 20)
         if len(results) == 0:
-            #TODO : Enter recovery behavior [Jira NRMC2018-336]
-            rospy.loginfo("IMPERIO : NO POSSIBLE PATH FOUND")
+            rospy.logwarn("[IMPERIO] : NO POSSIBLE PATH FOUND FOR EXPANDED MAP")
+            rospy.loginfo("[IMPERIO] : Switching to the minimal map")
+            results = RRT.find_best_rrt_path(location, goal, self.minimal_map, 20)
 
+        rospy.loginfo("[IMPERIO] : Path Planning Complete. Total path planning time: {} seconds".format(time.time() - saved_time))
         return results
+    
