@@ -81,8 +81,7 @@ int main(int argc, char **argv)
     bucketSifterVesc = bucketSimulation->getSifterVesc();
     // SimBackhoe
     backhoeSimulation = new SimBackhoe(2.0, .1, central_joint_params.lower_limit_position, central_joint_params.upper_limit_position,
-                                       linear_joint_params.lower_limit_position,
-                                       linear_joint_params.upper_limit_position);  // shoulder and wrist angle, limits
+                                       linear_joint_params.lower_limit_position, linear_joint_params.upper_limit_position);  // shoulder and wrist angle, limits
     backhoeShoulderVesc = backhoeSimulation->getShoulderVesc();
     backhoeWristVesc = backhoeSimulation->getWristVesc();
     // populate inital backhoe position

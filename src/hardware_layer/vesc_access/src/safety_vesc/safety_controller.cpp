@@ -99,6 +99,7 @@ void SafetyController::update(double dt)
   {
     ROS_INFO("%s stopped because guessing too close to min limit switch at %.4f", params.name.c_str(),
              position_estimate);
+    ROS_INFO("SetVel: %f, SetTorque: %f", set_velocity, set_torque);
     stop();
   }
   else if (position_estimate >= (params.maximum_pos - params.limit_switch_safety_margin) &&
@@ -106,6 +107,7 @@ void SafetyController::update(double dt)
   {
     ROS_INFO("%s stopped because guessing too close to max limit switch at %.4f", params.name.c_str(),
              position_estimate);
+    ROS_INFO("SetVel: %f, SetTorque: %f", set_velocity, set_torque);
     stop();
   }
 
