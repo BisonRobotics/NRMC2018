@@ -7,7 +7,8 @@
 <!-- node name="dashboard" pkg="imperio" type="dashboardLaunch.bash"/ -->
 
 <include file="$(find mapping)/launch/costmap_2d.launch"/>
---><node name="imperio_marker_vis" pkg="imperio" type="path_vis.py"/>
+<node name="imperio_marker_vis" pkg="imperio" type="path_vis.py"/>
+
 <node name="imperio" pkg="imperio" type="imperio_control.py" output="screen"/>
 
 <!-- time limit (in minutes) should be 10, can be changed for testing purposes -->

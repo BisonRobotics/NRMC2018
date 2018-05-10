@@ -46,17 +46,22 @@ class Planner(object):
         self.halt_publisher = rospy.Publisher('/position_controller/halt', Empty, queue_size=1, latch=True)
 
         rospy.Subscriber('/position_controller/drive_controller_status', DriveStatus, self.drive_status_callback)
-        rospy.Subscriber('/costmap_2d_node/costmap/costmap', OccupancyGrid, self.map_callback)
+        rospy.Subscriber('/costmap_less_inflation/costmap/costmap', OccupancyGrid, self.minimal_map_callback)
+        rospy.Subscriber('/costmap_more_inflation/costmap/costmap', OccupancyGrid, self.expanded_map_callback)
         #rospy.Subscriber('/map', OccupancyGrid, self.map_callback)
 
         self.robot = robot
-        self.occupancy_grid = None
+        self.minimal_map = None
+        self.expanded_map = None
         self.movement_status = MovementStatus.HAS_REACHED_GOAL
         self.goal_given = False
         self.halt = False
 
-    def map_callback(self, map_message):
-        self.occupancy_grid = map_utils.Map(map_message)
+    def minimal_map_callback(self, map_message):
+        self.minimal_map = map_utils.Map(map_message)
+
+    def expanded_map_callback(self, map_message):
+        self.expanded_map = map_utils.Map(map_message)
 
     def drive_status_callback(self, status_message):
         """
@@ -94,7 +99,7 @@ class Planner(object):
         rospy.loginfo("[IMPERIO] : PLANNING A PATH TO GOAL {}".format(goal))
 
         #We can't do anything until we have the occupancy grid
-        if self.occupancy_grid == None:
+        if self.minimal_map == None:
             rospy.logwarn("[IMPERIO] : Cannot find the occupancy grid")
             self.movement_status = MovementStatus.WAITING
             return False

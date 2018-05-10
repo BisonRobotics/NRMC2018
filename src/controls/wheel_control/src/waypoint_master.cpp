@@ -78,7 +78,7 @@ void scootBackCallback(const std_msgs::Empty::ConstPtr &msg)
     scoot_back = true;
 }
 
-geometry_msgs::TransformStamped create_tf(double x, double y, double theta, tf2::Quaternion imu_orientation)
+geometry_msgs::TransformStamped create_tf(double x, double y, double theta, tf2::Quaternion imu_orientation, double z)
 {
   geometry_msgs::TransformStamped transform;
   transform.header.stamp = ros::Time::now();
@@ -88,7 +88,7 @@ geometry_msgs::TransformStamped create_tf(double x, double y, double theta, tf2:
   {
     transform.transform.translation.x = .6;//x;
     transform.transform.translation.y = 0;//y;
-    transform.transform.translation.z = 0.0;
+    transform.transform.translation.z =z;
     tf2::Quaternion robot_orientation;
     robot_orientation.setRPY(0, 0, 0);//theta);
     transform.transform.rotation.x = robot_orientation.x();
@@ -100,7 +100,7 @@ geometry_msgs::TransformStamped create_tf(double x, double y, double theta, tf2:
   {
     transform.transform.translation.x = x;
     transform.transform.translation.y = y;
-    transform.transform.translation.z = 0.0;
+    transform.transform.translation.z =z;
     tf2::Quaternion robot_orientation;
     robot_orientation.setRPY(0.0, 0.0, theta);
     robot_orientation = robot_orientation * imu_orientation;
@@ -454,7 +454,7 @@ int main(int argc, char **argv)
   bl->setLinearVelocity(0);
   br->setLinearVelocity(0);
   stateVector = superLocalizer.getStateVector();
-  tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, imu->getOrientation()));
+  tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, imu->getOrientation(), pos->getZ()));
 
   ros::spinOnce();
   // zero point turn vescs here before waypoint controller is initialized
@@ -518,7 +518,7 @@ int main(int argc, char **argv)
 
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
-    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, imu->getOrientation()));
+    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, imu->getOrientation(), pos->getZ()));
 
     ros::spinOnce();
     rate.sleep();
@@ -589,7 +589,7 @@ int main(int argc, char **argv)
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
 
-    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, imu->getOrientation()));
+    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, imu->getOrientation(), pos->getZ()));
     // also publish marker
 
     currPose.x = stateVector.x_pos;

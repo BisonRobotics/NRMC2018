@@ -1,6 +1,7 @@
 <launch>
-  <rosparam file="$(find mapping)/yaml/competition.yaml" command="load" ns="/costmap_2d_node/costmap"/>
+  <rosparam file="$(find mapping)/yaml/more_inflation.yaml" command="load" ns="/costmap_more_inflation/costmap"/>
+  <rosparam file="$(find mapping)/yaml/less_inflation.yaml" command="load" ns="/costmap_less_inflation/costmap"/>
   <node name="map_server" pkg="map_server" type="map_server" args="$(find mapping)/data/costmap.yaml"/>
-  <node name="costmap_2d_node" pkg="costmap_2d" type="costmap_2d_node"/>
-  <param name="hole_cost" type="int" value="200"/>
+  <node name="costmap_less_inflation" pkg="costmap_2d" type="costmap_2d_node"/>
+   <node name="costmap_more_inflation" pkg="costmap_2d" type="costmap_2d_node"/>
 </launch>

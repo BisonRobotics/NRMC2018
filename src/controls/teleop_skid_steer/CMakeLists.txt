@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 )
 
+
 link_directories(/usr/src/gmock/build)
 set(GTEST_LIBRARIES gmock_main)
 
