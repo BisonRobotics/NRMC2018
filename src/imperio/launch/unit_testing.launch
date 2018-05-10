@@ -6,5 +6,6 @@
 <!-- turn around (in minutes) is how many minutes before the competition ends that the robot should turn around -->
 <param name="turn_around" value="1"/>
 <param name="location_accuracy" value="0.1"/>
+<param name ="optimize_points_turn_around" value="4"/>
 
 </launch>
