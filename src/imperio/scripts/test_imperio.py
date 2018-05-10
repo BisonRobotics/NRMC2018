@@ -180,7 +180,7 @@ class TestPlanner(object):
     def test_saved_path(self):
         sp = SpoofPlannerWaypoints(None)
         map = planner.map_utils.Map()
-        sp.occupancy_grid = map
+        sp.minimal_map = map
         result = sp.navigate_to_goal((1,1))
         assert result == False
         assert not sp.oriented_waypoints == None
@@ -373,7 +373,7 @@ class TestRegolithManipulation(object):
         assert rm.waiting_on_action == True
 
         rm = SpoofRegMan()
-        rm.regolith_in_bucket = 10
+        rm.regolith_in_bucket = 50
         result = rm.dig_regolith()
         assert result == True
         assert rm.waiting_on_action == False
