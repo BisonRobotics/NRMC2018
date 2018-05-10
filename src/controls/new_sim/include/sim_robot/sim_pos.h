@@ -9,7 +9,7 @@ public:
   double getTheta() override;
   bool isFloating() override;
   ReadableSensors::ReadStatus receiveData() override;
-
+  double getZ() override {return 0;}
   void update(double x1, double y1, double theta1);
   void setIsFloating(bool is_floating);
 

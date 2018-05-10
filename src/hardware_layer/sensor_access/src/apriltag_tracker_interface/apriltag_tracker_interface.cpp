@@ -9,6 +9,7 @@ AprilTagTrackerInterface::AprilTagTrackerInterface(std::string topic, double tim
   this->pub = this->nh_.advertise<std_msgs::Bool>("is_floating", 100);
   x = 0.0;
   y = 0.0;
+  z = 0.0;
   theta = 0.0;
   is_floating = true;
   this->timeout = ros::Duration(timeout);
@@ -66,10 +67,11 @@ ReadableSensors::ReadStatus AprilTagTrackerInterface::receiveData()
 void AprilTagTrackerInterface::callback(const geometry_msgs::PoseStamped::ConstPtr &msg)
 {
   double theta = qtToTheta(msg->pose.orientation);
-  if (std::isfinite(theta) && std::isfinite(msg->pose.position.x) && std::isfinite(msg->pose.position.y))
+  if (std::isfinite(theta) && std::isfinite(msg->pose.position.x) && std::isfinite(msg->pose.position.y) && std::isfinite(msg->pose.position.z))
   {
     this->x = msg->pose.position.x;
     this->y = msg->pose.position.y;
+    this->z = msg->pose.position.z;
     this->theta = qtToTheta(msg->pose.orientation);
     last_time = ros::Time::now();
     is_floating = false;
@@ -93,4 +95,9 @@ double AprilTagTrackerInterface::qtToTheta(geometry_msgs::Quaternion qt)
   double tmp1, tmp2, theta;
   m.getRPY(tmp1, tmp2, theta);
   return theta;
+}
+
+double AprilTagTrackerInterface::getZ ()
+{
+  return z;
 }
