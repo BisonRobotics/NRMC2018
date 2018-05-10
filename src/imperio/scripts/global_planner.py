@@ -31,6 +31,9 @@ class GlobalPlanner(Planner):
         rospy.loginfo("[IMPERIO] : Starting the path planner")
         saved_time = time.time()
 
+        #Hardcoded for competition
+        location = (0.6, 0.0, 0.0)
+
         #TODO [JIRA : NRMC2018-577] might run just one non threaded path to check if there IS a possible path in the expanded map
         #TODO [JIRA : NRMC2018-578] possible run the two results against each other in case minimal path is better
         results = RRT.find_best_rrt_path(location, goal, self.expanded_map, 20)
