@@ -146,7 +146,22 @@ int main(int argc, char **argv)
     }
     isLinearInit = linearSafety.init();
     rate.sleep();
+    ros::spinOnce();
   }
+
+  backhoeSafety.setPositionSetpoint(CENTRAL_TRANSPORT_ANGLE);
+  while (ros::ok () && !backhoeSafety.isAtSetpoint())
+  {
+    if (simulating)
+    {
+        bucketSimulation->update(1.0/DIGGING_CONTROL_RATE_HZ);
+        backhoeSimulation->update(1.0/DIGGING_CONTROL_RATE_HZ);
+    }
+    backhoeSafety.update(1.0/DIGGING_CONTROL_RATE_HZ);
+    rate.sleep();
+    ros::spinOnce();
+  }
+
 
   // pass vescs (sim or physical) to controllers
 
