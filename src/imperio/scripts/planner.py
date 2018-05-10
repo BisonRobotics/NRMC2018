@@ -61,7 +61,6 @@ class Planner(object):
         self.map_scan = False
         self.service_called = False
         self.halt = False
-        self.oriented_waypoints = None
 
     def map_scan_callback(self, message):
         self.map_scan = message.data
@@ -124,19 +123,15 @@ class Planner(object):
             return False
         rospy.loginfo("[IMPERIO] : Occupancy Grid Exists")
 
-        if not self.oriented_waypoints == None:
-            self.oriented_waypoints = []
+        waypoints = self.find_waypoints(goal)
+        oriented_waypoints = self.calculate_orientation(waypoints)
+        rospy.loginfo("[IMPERIO] : Path found : {}".format(oriented_waypoints))
+        if oriented_waypoints == [] or len(oriented_waypoints) < 2:
+            rospy.logwarn("[IMPERIO] : No possible path found")
+            return None
 
-        if self.oriented_waypoints == None:
-            waypoints = self.find_waypoints(goal)
-            self.oriented_waypoints = self.calculate_orientation(waypoints)
-            rospy.loginfo("[IMPERIO] : Path found : {}".format(self.oriented_waypoints))
-            if self.oriented_waypoints == [] or len(self.oriented_waypoints) < 2:
-                rospy.logwarn("[IMPERIO] : No possible path found")
-                return None
-            self.oriented_waypoints.pop(0)
-            
-        self.publish_waypoints(self.oriented_waypoints)
+        oriented_waypoints.pop(0)
+        self.publish_waypoints(oriented_waypoints)
         self.movement_status = MovementStatus.MOVING
         self.goal_given = True
         rospy.loginfo("[IMPERIO] : For Goal {}".format(goal))
