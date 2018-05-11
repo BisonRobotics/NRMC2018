@@ -20,6 +20,7 @@
 #define STUCK_COOLDOWN 2.0
 
 #define BACKUP_TIME 3.0
+#define SCOOT_BACK_TIME .15
 
 bool approx(double A, double B, double T)
 {
@@ -185,7 +186,7 @@ void WaypointController::clearControlStates()
 
 void WaypointController::scootBack()
 {
-    time_scooting = 1.5;
+    time_scooting = SCOOT_BACK_TIME;
 }
 
 void WaypointController::haltAndAbort()

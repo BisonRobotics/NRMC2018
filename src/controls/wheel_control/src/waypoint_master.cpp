@@ -204,7 +204,7 @@ int main(int argc, char **argv)
   double settle_time;
   if(!node.getParam("localization_settling_time", settle_time))
   {
-    settle_time = 5;
+    settle_time = 15;
     ROS_INFO_STREAM ("localization settling time " << settle_time);
   }
   
@@ -518,11 +518,25 @@ int main(int argc, char **argv)
 
     superLocalizer.updateStateVector(loopTime.toSec());
     stateVector = superLocalizer.getStateVector();
-    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, imu->getOrientation(), pos->getZ()));
+
 
     ros::spinOnce();
     rate.sleep();
   }
+
+
+  fr->setLinearVelocity(0);
+  br->setLinearVelocity(0);
+  bl->setLinearVelocity(0);
+  fl->setLinearVelocity(0);
+
+  while (((ros::Time::now()-lastTime).toSec()<settle_time) && (ros::ok()))
+  {
+    superLocalizer.updateStateVector(.02);
+    rate.sleep();
+  }
+    tfBroad.sendTransform(create_tf(stateVector.x_pos, stateVector.y_pos, stateVector.theta, imu->getOrientation(), pos->getZ()));
+  ros::spinOnce ();
 
   status_msg.in_motion.data = 0;
   status_msg.has_reached_goal.data = 1;
