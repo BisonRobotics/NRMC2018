@@ -126,7 +126,7 @@ class Planner(object):
             self.get_subs = False
 
         #We can't do anything until we have the occupancy grid
-        if self.minimal_map == None:
+        if self.minimal_map == None or self.expanded_map:
             rospy.logwarn("[IMPERIO] : Cannot find the occupancy grid")
             self.movement_status = MovementStatus.WAITING
             return False
