@@ -50,8 +50,8 @@ class Planner(object):
 
         rospy.Subscriber('/mapping_is_good', Bool, self.map_scan_callback)
         rospy.Subscriber('/position_controller/drive_controller_status', DriveStatus, self.drive_status_callback)
-        rospy.Subscriber('/costmap_less_inflation/costmap/costmap', OccupancyGrid, self.minimal_map_callback, queue_size=100)
-        rospy.Subscriber('/costmap_more_inflation/costmap/costmap', OccupancyGrid, self.expanded_map_callback, queue_size=100)
+        rospy.Subscriber('/costmap_less_inflation/costmap/costmap', OccupancyGrid, self.minimal_map_callback, queue_size=1)
+        rospy.Subscriber('/costmap_more_inflation/costmap/costmap', OccupancyGrid, self.expanded_map_callback, queue_size=1)
         #rospy.Subscriber('/map', OccupancyGrid, self.map_callback)
 
         self.robot = robot
