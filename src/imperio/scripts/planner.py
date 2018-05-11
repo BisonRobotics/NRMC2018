@@ -50,8 +50,8 @@ class Planner(object):
 
         rospy.Subscriber('/mapping_is_good', Bool, self.map_scan_callback)
         rospy.Subscriber('/position_controller/drive_controller_status', DriveStatus, self.drive_status_callback)
-        rospy.Subscriber('/costmap_less_inflation/costmap/costmap', OccupancyGrid, self.minimal_map_callback, queue_size=1)
-        rospy.Subscriber('/costmap_more_inflation/costmap/costmap', OccupancyGrid, self.expanded_map_callback, queue_size=1)
+        #rospy.Subscriber('/costmap_less_inflation/costmap/costmap', OccupancyGrid, self.minimal_map_callback, queue_size=1)
+        #rospy.Subscriber('/costmap_more_inflation/costmap/costmap', OccupancyGrid, self.expanded_map_callback, queue_size=1)
         #rospy.Subscriber('/map', OccupancyGrid, self.map_callback)
 
         self.robot = robot
@@ -66,6 +66,7 @@ class Planner(object):
 
     def map_scan_callback(self, message):
         self.map_scan = message.data
+
 
     def minimal_map_callback(self, map_message):
         self.minimal_map = map_utils.Map(map_message)
@@ -115,6 +116,11 @@ class Planner(object):
             rospy.loginfo("[IMPERIO] : Waiting on map scan")
             self.movement_status = MovementStatus.WAITING
             return False
+
+        rospy.Subscriber('/costmap_less_inflation/costmap/costmap', OccupancyGrid, self.minimal_map_callback,
+                         queue_size=1)
+        rospy.Subscriber('/costmap_more_inflation/costmap/costmap', OccupancyGrid, self.expanded_map_callback,
+                         queue_size=1)
 
         #We can't do anything until we have the occupancy grid
         if self.minimal_map == None:
