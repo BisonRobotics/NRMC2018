@@ -92,7 +92,7 @@
 #define CENTRAL_TRANSPORT_ANGLE 2.65                 // move this up
 #define CENTRAL_MOVE_ROCKS_INTO_HOPPER_ANGLE  2.9 // move this up
 #define CENTRAL_DUMP_ANGLE 2.5        // must be below safety point, where backhoe dumps into bucket
-#define CENTRAL_DEPOSITION_ANGLE 2.9  // must be below max position
+#define CENTRAL_DEPOSITION_ANGLE 2.95  // must be below max position
 
 nsVescAccess::vesc_param_struct_t front_left_param = {.max_velocity = MAX_WHEEL_VELOCITY,
                                                       .max_torque = MAX_WHEEL_TORQUE,

@@ -18,12 +18,14 @@ public:
   void toggleBigConveyor();
   void toggleSifter();
   void toggleLittleConveyor();
-
+  bool init ();
 private:
   iVescAccess *bc, *lc, *sf;
   bool sifter_state;
   bool little_conveyor_state;
   bool big_conveyor_state;
+  bool has_been_init;
+  ros::Time initial_time;
 };
 
 #endif
