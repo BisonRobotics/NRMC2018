@@ -30,7 +30,7 @@ int main(int argc, char** argv)
   map_to_tag00_tf.child_frame_id = "tag0";
   map_to_tag00_tf.transform.translation.x = 0.0;
   map_to_tag00_tf.transform.translation.y = -0.5025;
-  map_to_tag00_tf.transform.translation.z = 0.25;
+  map_to_tag00_tf.transform.translation.z = 0.2563;
   map_to_tag00_tf.transform.rotation.x = q1.getX();
   map_to_tag00_tf.transform.rotation.y = q1.getY();
   map_to_tag00_tf.transform.rotation.z = q1.getZ();
@@ -43,7 +43,7 @@ int main(int argc, char** argv)
   map_to_tag01_tf.child_frame_id = "tag1";
   map_to_tag01_tf.transform.translation.x = 0.0;
   map_to_tag01_tf.transform.translation.y = 0.5025;
-  map_to_tag01_tf.transform.translation.z = 0.25;
+  map_to_tag01_tf.transform.translation.z = 0.2563;
   map_to_tag01_tf.transform.rotation.x = q1.getX();
   map_to_tag01_tf.transform.rotation.y = q1.getY();
   map_to_tag01_tf.transform.rotation.z = q1.getZ();
@@ -58,7 +58,7 @@ int main(int argc, char** argv)
   map_to_tag03_tf.child_frame_id = "tag3";
   map_to_tag03_tf.transform.translation.x = 0.02;
   map_to_tag03_tf.transform.translation.y = -0.76;
-  map_to_tag03_tf.transform.translation.z = 0.565;
+  map_to_tag03_tf.transform.translation.z = 0.5731;
   map_to_tag03_tf.transform.rotation.x = q3.getX();
   map_to_tag03_tf.transform.rotation.y = q3.getY();
   map_to_tag03_tf.transform.rotation.z = q3.getZ();
@@ -73,7 +73,7 @@ int main(int argc, char** argv)
   map_to_tag04_tf.child_frame_id = "tag4";
   map_to_tag04_tf.transform.translation.x = 0.02;
   map_to_tag04_tf.transform.translation.y = -0.64;
-  map_to_tag04_tf.transform.translation.z = 0.565;
+  map_to_tag04_tf.transform.translation.z = 0.5731;
   map_to_tag04_tf.transform.rotation.x = q3.getX();
   map_to_tag04_tf.transform.rotation.y = q3.getY();
   map_to_tag04_tf.transform.rotation.z = q3.getZ();
@@ -88,7 +88,7 @@ int main(int argc, char** argv)
   map_to_tag05_tf.child_frame_id = "tag5";
   map_to_tag05_tf.transform.translation.x = 0.02;
   map_to_tag05_tf.transform.translation.y = 0.64;
-  map_to_tag05_tf.transform.translation.z = 0.565;
+  map_to_tag05_tf.transform.translation.z = 0.5731;
   map_to_tag05_tf.transform.rotation.x = q3.getX();
   map_to_tag05_tf.transform.rotation.y = q3.getY();
   map_to_tag05_tf.transform.rotation.z = q3.getZ();
@@ -103,7 +103,7 @@ int main(int argc, char** argv)
   map_to_tag06_tf.child_frame_id = "tag6";
   map_to_tag06_tf.transform.translation.x = 0.02;
   map_to_tag06_tf.transform.translation.y = 0.76;
-  map_to_tag06_tf.transform.translation.z = 0.565;
+  map_to_tag06_tf.transform.translation.z = 0.5731;
   map_to_tag06_tf.transform.rotation.x = q3.getX();
   map_to_tag06_tf.transform.rotation.y = q3.getY();
   map_to_tag06_tf.transform.rotation.z = q3.getZ();
