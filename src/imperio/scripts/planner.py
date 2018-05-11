@@ -115,14 +115,13 @@ class Planner(object):
             self.movement_status = MovementStatus.WAITING
             return False
 
-        rospy.loginfo("[IMPERIO] : PLANNING A PATH TO GOAL {}".format(goal))
-
         #We can't do anything until we have the occupancy grid
         if self.minimal_map == None:
             rospy.logwarn("[IMPERIO] : Cannot find the occupancy grid")
             self.movement_status = MovementStatus.WAITING
             return False
-        rospy.loginfo("[IMPERIO] : Occupancy Grid Exists")
+
+        rospy.loginfo("[IMPERIO] : PLANNING A PATH TO GOAL {}".format(goal))
 
         if not self.oriented_waypoints == None:
             self.oriented_waypoints = []
@@ -139,7 +138,6 @@ class Planner(object):
         self.publish_waypoints(self.oriented_waypoints)
         self.movement_status = MovementStatus.MOVING
         self.goal_given = True
-        rospy.loginfo("[IMPERIO] : For Goal {}".format(goal))
         return False
 
     @abstractmethod
