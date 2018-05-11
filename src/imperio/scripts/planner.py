@@ -63,6 +63,7 @@ class Planner(object):
         self.service_called = False
         self.halt = False
         self.oriented_waypoints = None
+        self.get_subs = True
 
     def map_scan_callback(self, message):
         self.map_scan = message.data
@@ -117,13 +118,15 @@ class Planner(object):
             self.movement_status = MovementStatus.WAITING
             return False
 
-        rospy.Subscriber('/costmap_less_inflation/costmap/costmap', OccupancyGrid, self.minimal_map_callback,
-                         queue_size=1)
-        rospy.Subscriber('/costmap_more_inflation/costmap/costmap', OccupancyGrid, self.expanded_map_callback,
-                         queue_size=1)
+        if self.get_subs:
+            rospy.Subscriber('/costmap_less_inflation/costmap/costmap', OccupancyGrid, self.minimal_map_callback,
+                             queue_size=1)
+            rospy.Subscriber('/costmap_more_inflation/costmap/costmap', OccupancyGrid, self.expanded_map_callback,
+                             queue_size=1)
+            self.get_subs = False
 
         #We can't do anything until we have the occupancy grid
-        if self.minimal_map == None:
+        if self.minimal_map == None or self.expanded_map == None:
             rospy.logwarn("[IMPERIO] : Cannot find the occupancy grid")
             self.movement_status = MovementStatus.WAITING
             return False
