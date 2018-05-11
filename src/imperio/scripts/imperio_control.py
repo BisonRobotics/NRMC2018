@@ -120,6 +120,7 @@ class ImperioControl(object):
             self.recover()
         if result:
             self.robot.next_state()
+            self.rm.waiting_on_digging_action = False
 
     def deposit(self):
         """
@@ -130,6 +131,7 @@ class ImperioControl(object):
             rospy.logwarn("[IMPERIO] : Error with Deposit")
         if result:
             self.robot.next_state()
+            self.rm.waiting_on_deposit_action = False
 
     def halt(self):
         """

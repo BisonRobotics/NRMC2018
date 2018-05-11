@@ -99,5 +99,6 @@ double AprilTagTrackerInterface::qtToTheta(geometry_msgs::Quaternion qt)
 
 double AprilTagTrackerInterface::getZ ()
 {
-  return z;
+  static constexpr double offset=.17;
+  return z+offset;
 }

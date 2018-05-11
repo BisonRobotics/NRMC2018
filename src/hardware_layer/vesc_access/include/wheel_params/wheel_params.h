@@ -131,7 +131,7 @@ nsVescAccess::vesc_param_struct_t back_left_param = {.max_velocity = MAX_WHEEL_V
                                                      .max_torque = MAX_WHEEL_TORQUE,
                                                      .max_duty = MAX_WHEEL_DUTY,
                                                      .gear_ratio = WHEEL_GEAR_RATIO,
-                                                     .output_ratio = -1.0f * WHEEL_OUTPUT_RATIO,
+                                                     .output_ratio =  WHEEL_OUTPUT_RATIO,
                                                      .pole_pairs = WHEEL_POLE_PAIRS,
                                                      .torque_constant = WHEEL_TORQUE_CONSTANT,
                                                      WHEEL_CAN_NETWORK,
