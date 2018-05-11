@@ -119,6 +119,7 @@ class ImperioControl(object):
             self.recover()
         if result:
             self.robot.next_state()
+            self.rm.waiting_on_digging_action = False
 
     def deposit(self):
         """
@@ -126,6 +127,7 @@ class ImperioControl(object):
         """
         if self.rm.deposit_regolith():
             self.robot.next_state()
+            self.rm.waiting_on_deposit_action = False
 
     def halt(self):
         """
