@@ -24,6 +24,7 @@ class ImperioControl(object):
         """
         Initializes the imperio node
         """
+        rospy.loginfo("[IMPERIO] : Initializing Imperio")
         self.node = rospy.init_node('imperio')
         rospy.Subscriber('/halt_autonomy', Bool, self.haltAutonomyCallback)
         rospy.Subscriber('/times_up', Bool, self.timerCallback)
@@ -124,7 +125,10 @@ class ImperioControl(object):
         """
         Deposits the regolith
         """
-        if self.rm.deposit_regolith():
+        result = self.rm.deposit_regolith()
+        if result == None:
+            rospy.logwarn("[IMPERIO] : Error with Deposit")
+        if result:
             self.robot.next_state()
 
     def halt(self):
@@ -141,7 +145,7 @@ class ImperioControl(object):
         Recovery behavior for the robot
         """
         # Currently just halts the Robot
-        rospy.loginfo("[IMPERIO] : Robot could not be recovered, please regain control.")
+        rospy.logwarn("[IMPERIO] : Robot could not be recovered, please regain control.")
         self.robot.change_state(RobotState.HALT)
 
     def turn_around(self):

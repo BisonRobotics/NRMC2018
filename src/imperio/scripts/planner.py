@@ -43,6 +43,7 @@ class Planner(object):
         Initializes the global planner
         :param robot: the robot object the planner will be moving
         """
+
         self.service = rospy.ServiceProxy('/zr300/scan', EmptySrv)
         self.waypoints_publisher = rospy.Publisher('/position_controller/global_planner_goal', GlobalWaypoints, queue_size=100, latch=True)
         self.halt_publisher = rospy.Publisher('/position_controller/halt', Empty, queue_size=1, latch=True)
