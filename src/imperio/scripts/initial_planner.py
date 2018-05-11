@@ -39,6 +39,7 @@ class InitialPlanner(object):
         if self.msg_published:
             return False
 
+        rospy.loginfo("[IMPERIO] : Turning the robot in place")
         self.publish_south_check()
         self.publish_turn_msg(0)
         return False

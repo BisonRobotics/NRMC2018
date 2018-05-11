@@ -30,7 +30,6 @@ class RegolithManipulation(object):
 
 
     def initialize_digging(self):
-        rospy.loginfo("[IMPERIO] : Initializing digging")
         publisher = rospy.Publisher('/init_digging', Empty, queue_size=1, latch=True)
         publisher.publish(Empty())
 

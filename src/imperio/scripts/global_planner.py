@@ -9,6 +9,7 @@ Version: 4
 
 import time
 import RRT
+import rospy
 
 from planner import *
 
@@ -28,7 +29,6 @@ class GlobalPlanner(Planner):
         """
         location = self.get_robot_location()
 
-        rospy.loginfo("[IMPERIO] : Starting the path planner")
         saved_time = time.time()
 
         #TODO [JIRA : NRMC2018-577] might run just one non threaded path to check if there IS a possible path in the expanded map

@@ -43,14 +43,15 @@ class Planner(object):
         Initializes the global planner
         :param robot: the robot object the planner will be moving
         """
+
         self.service = rospy.ServiceProxy('/zr300/scan', EmptySrv)
         self.waypoints_publisher = rospy.Publisher('/position_controller/global_planner_goal', GlobalWaypoints, queue_size=100, latch=True)
         self.halt_publisher = rospy.Publisher('/position_controller/halt', Empty, queue_size=1, latch=True)
 
         rospy.Subscriber('/zr300/mapping_is_good', Bool, self.map_scan_callback)
         rospy.Subscriber('/position_controller/drive_controller_status', DriveStatus, self.drive_status_callback)
-        rospy.Subscriber('/costmap_less_inflation/costmap/costmap', OccupancyGrid, self.minimal_map_callback)
-        rospy.Subscriber('/costmap_more_inflation/costmap/costmap', OccupancyGrid, self.expanded_map_callback)
+        rospy.Subscriber('/costmap_less_inflation/costmap/costmap', OccupancyGrid, self.minimal_map_callback, queue_size=100)
+        rospy.Subscriber('/costmap_more_inflation/costmap/costmap', OccupancyGrid, self.expanded_map_callback, queue_size=100)
         #rospy.Subscriber('/map', OccupancyGrid, self.map_callback)
 
         self.robot = robot
@@ -115,14 +116,13 @@ class Planner(object):
             self.movement_status = MovementStatus.WAITING
             return False
 
-        rospy.loginfo("[IMPERIO] : PLANNING A PATH TO GOAL {}".format(goal))
-
         #We can't do anything until we have the occupancy grid
         if self.minimal_map == None:
             rospy.logwarn("[IMPERIO] : Cannot find the occupancy grid")
             self.movement_status = MovementStatus.WAITING
             return False
-        rospy.loginfo("[IMPERIO] : Occupancy Grid Exists")
+
+        rospy.loginfo("[IMPERIO] : PLANNING A PATH TO GOAL {}".format(goal))
 
         if not self.oriented_waypoints == None:
             self.oriented_waypoints = []
@@ -139,7 +139,6 @@ class Planner(object):
         self.publish_waypoints(self.oriented_waypoints)
         self.movement_status = MovementStatus.MOVING
         self.goal_given = True
-        rospy.loginfo("[IMPERIO] : For Goal {}".format(goal))
         return False
 
     @abstractmethod
