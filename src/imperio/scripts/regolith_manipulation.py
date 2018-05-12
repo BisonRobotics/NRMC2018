@@ -42,6 +42,7 @@ class RegolithManipulation(object):
         threshold = 6969
         if self.regolith_in_bucket < threshold:
             self.single_dig()
+	    return False
 
         return True
 

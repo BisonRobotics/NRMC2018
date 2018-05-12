@@ -6,7 +6,7 @@ publish_frequency: .1
 footprint: [[-1, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0]]
 
 inflation_layer: {cost_scaling_factor: 1.5, enabled: true,
-    inflation_radius: 0.3}
+    inflation_radius: 0.45}
 
 rock_layer:
   point_cloud_sensor:
@@ -19,7 +19,7 @@ rock_layer:
     rolling_window: false
     observation_persistence: 0.0
     obstacle_range: 5.0
-    min_obstacle_height: -.1
+    min_obstacle_height: .1
     max_obstacle_height: .5
   observation_sources: point_cloud_sensor
 
