@@ -189,6 +189,7 @@ void DigDumpAction::dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal)
         case dump_state_enum::moving_bucket_to_initial:
           if (backhoe->shoulderAtSetpoint())
           {
+            weightMetric = 0;
             is_dumping = false;
             dumping_state = dump_idle;
             dump_as_.setSucceeded();

@@ -102,16 +102,13 @@ class ImperioControl(object):
         """
         Navigates the robot back to the collection big
         """
+        goal = (.6, 0)
+        result =  self.planner.navigate_to_goal(goal)
+        if result == None:
+            rospy.logwarn("[IMPERIO] : ERROR! SOMETHING IS WRONG WITH PLANNER!")
+        if result:
+            self.robot.next_state()
 
-        if self.rm.outriggers_deployed:
-            self.rm.retract_outriggers()
-        else:
-            goal = (.6, 0)
-            result =  self.planner.navigate_to_goal(goal)
-            if result == None:
-                rospy.logwarn("[IMPERIO] : ERROR! SOMETHING IS WRONG WITH PLANNER!")
-            if result:
-                self.robot.next_state()
 
     def dig(self):
         """
@@ -122,6 +119,7 @@ class ImperioControl(object):
             rospy.logwarn("[IMPERIO] : ERROR! SOMETHING IS WRONG WITH DIG!")
         if result:
             self.robot.next_state()
+            self.rm.waiting_on_digging_action = False
 
     def deposit(self):
         """
@@ -129,6 +127,7 @@ class ImperioControl(object):
         """
         if self.rm.deposit_regolith():
             self.robot.next_state()
+            self.rm.waiting_on_deposit_action = False
 
     def halt(self):
         """

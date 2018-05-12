@@ -18,7 +18,8 @@ from imperio.msg import GlobalWaypoints
 from imperio.msg import DriveStatus
 from nav_msgs.msg import OccupancyGrid
 from geometry_msgs.msg import Pose2D
-from std_msgs.msg import Empty
+from std_msgs.msg import Empty, Bool
+from std_srvs.srv import Empty as EmptySrv
 
 class MovementStatus(Enum):
     """
@@ -42,9 +43,11 @@ class Planner(object):
         Initializes the global planner
         :param robot: the robot object the planner will be moving
         """
+        self.service = rospy.ServiceProxy('/zr300/scan', EmptySrv)
         self.waypoints_publisher = rospy.Publisher('/position_controller/global_planner_goal', GlobalWaypoints, queue_size=100, latch=True)
         self.halt_publisher = rospy.Publisher('/position_controller/halt', Empty, queue_size=1, latch=True)
 
+        rospy.Subscriber('/mapping_is_good', Bool, self.map_scan_callback)
         rospy.Subscriber('/position_controller/drive_controller_status', DriveStatus, self.drive_status_callback)
         rospy.Subscriber('/costmap_less_inflation/costmap/costmap', OccupancyGrid, self.minimal_map_callback)
         rospy.Subscriber('/costmap_more_inflation/costmap/costmap', OccupancyGrid, self.expanded_map_callback)
@@ -55,7 +58,13 @@ class Planner(object):
         self.expanded_map = None
         self.movement_status = MovementStatus.HAS_REACHED_GOAL
         self.goal_given = False
+        self.map_scan = False
+        self.service_called = False
         self.halt = False
+        self.oriented_waypoints = None
+
+    def map_scan_callback(self, message):
+        self.map_scan = message.data
 
     def minimal_map_callback(self, map_message):
         self.minimal_map = map_utils.Map(map_message)
@@ -86,6 +95,7 @@ class Planner(object):
         :param goal: the global goal (based on the overall map) as (x,y)
         :return: a boolean of it the robot has reached the goal, None for a fatal error
         """
+
         if self.halt:
             return None
         if self.movement_status == MovementStatus.CANNOT_PLAN_PATH:
@@ -96,6 +106,15 @@ class Planner(object):
             self.goal_given = False
             return True
 
+
+        if not self.service_called:
+            self.service()
+            self.service_called = True
+        if not self.map_scan:
+            rospy.loginfo("[IMPERIO] : Waiting on map scan")
+            self.movement_status = MovementStatus.WAITING
+            return False
+
         rospy.loginfo("[IMPERIO] : PLANNING A PATH TO GOAL {}".format(goal))
 
         #We can't do anything until we have the occupancy grid
@@ -105,15 +124,19 @@ class Planner(object):
             return False
         rospy.loginfo("[IMPERIO] : Occupancy Grid Exists")
 
-        waypoints = self.find_waypoints(goal)
-        oriented_waypoints = self.calculate_orientation(waypoints)
-        rospy.loginfo("[IMPERIO] : Path found : {}".format(oriented_waypoints))
-        if oriented_waypoints == [] or len(oriented_waypoints) < 2:
-            rospy.logwarn("[IMPERIO] : No possible path found")
-            return None
+        if not self.oriented_waypoints == None:
+            self.oriented_waypoints = []
 
-        oriented_waypoints.pop(0)
-        self.publish_waypoints(oriented_waypoints)
+        if self.oriented_waypoints == None:
+            waypoints = self.find_waypoints(goal)
+            self.oriented_waypoints = self.calculate_orientation(waypoints)
+            rospy.loginfo("[IMPERIO] : Path found : {}".format(self.oriented_waypoints))
+            if self.oriented_waypoints == [] or len(self.oriented_waypoints) < 2:
+                rospy.logwarn("[IMPERIO] : No possible path found")
+                return None
+            self.oriented_waypoints.pop(0)
+            
+        self.publish_waypoints(self.oriented_waypoints)
         self.movement_status = MovementStatus.MOVING
         self.goal_given = True
         rospy.loginfo("[IMPERIO] : For Goal {}".format(goal))
