@@ -10,6 +10,8 @@ Version: 1
 """
 
 import Tkinter
+from wave import open as waveOpen
+from ossaudiodev import open as ossOpen
 import rospy
 import os
 from std_msgs.msg import Bool
@@ -27,7 +29,7 @@ class imperio_button(object):
         self.window = Tkinter.Tk()
         self.window.title("Imperio : Autonomy")
 
-        logo_path = "imperio_logo_2.gif"
+        logo_path = "../include/imperio_logo_2.gif"
         logo_full_path = os.path.abspath(logo_path)
         logo_image = Tkinter.PhotoImage(file=logo_full_path)
 
@@ -53,6 +55,8 @@ class imperio_button(object):
 
     def halt_button_callback(self):
         rospy.logwarn("[IMPERIO BUTTON] : Halting Imperio")
+
+        os.system("play ../include/halt.wav &")
 
         msg = Bool()
         msg.data = True
