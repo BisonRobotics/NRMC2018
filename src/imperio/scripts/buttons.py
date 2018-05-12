@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
-""" Robot commands that relate to the movement or manipulation of regolith.
+""" Makes the buttons for starting and ending autonomy.
+(The big red button)
 
 Author: James Madison University
-Date: 9/26/2017
+Date: 5/11/2018
 Version: 1
 
 """
@@ -19,23 +20,20 @@ class imperio_button(object):
 
         self.halt_publisher = rospy.Publisher('/halt_autonomy', Bool, queue_size = 1)
 
-        button_height = 10
-        button_width = 45
+        button_height = 7
+        button_width = 35
         border = 5
 
         self.window = Tkinter.Tk()
         self.window.title("Imperio : Autonomy")
 
-        logo_path = "../include/imperio_logo_2.gif"
-        logo_image = Tkinter.PhotoImage(file=logo_path)
+        logo_path = "imperio_logo_2.gif"
+        logo_full_path = os.path.abspath(logo_path)
+        logo_image = Tkinter.PhotoImage(file=logo_full_path)
+
+
         self.logo = Tkinter.Label(self.window, image=logo_image)
         self.logo.pack()
-
-        print(self.logo)
-
-        canvas = Tkinter.Canvas(self.window)
-        canvas.pack()
-        #canvas.create_image(20, 20, image=self.logo)
 
         self.start_imperio_button = Tkinter.Button(self.window, text="Start Imperio", command=self.start_imperio_callback)
         self.start_imperio_button.configure(bg="#009900", height=button_height, width=button_width, bd=border)
@@ -45,10 +43,13 @@ class imperio_button(object):
 
         self.pack_elements()
 
+        Tkinter.mainloop()
+
     def pack_elements(self):
-        self.logo.pack()
-        self.halt_button.pack()
-        self.start_imperio_button.pack()
+        self.logo.pack(side=Tkinter.TOP)
+        self.start_imperio_button.pack(side=Tkinter.LEFT)
+        self.halt_button.pack(side=Tkinter.LEFT)
+
 
     def halt_button_callback(self):
         rospy.logwarn("[IMPERIO BUTTON] : Halting Imperio")
@@ -67,4 +68,3 @@ class imperio_button(object):
 
 if __name__ == "__main__":
     button = imperio_button()
-    button.run()
