@@ -43,10 +43,6 @@ TEST(superWaypointFilterTests, interpolateTest4)
   ASSERT_NEAR (SuperWaypointFilter::interpolateYFromXAndTwoPoints(0,0,-1,-1,.5), .5, .001);
 }
 
-
-
-
-
 TEST(superWaypointFilterTests, addPointFromBehind2)
 {
  SuperWaypointFilter smfw;
@@ -65,6 +61,22 @@ TEST(superWaypointFilterTests, addPointFromBehind2)
  ASSERT_NEAR (startPath.at(0).y, point.y, .01); //so we take the y from the point
 }
 
+TEST(superWaypointFilterTests, contructPathFromOneWaypoint)
+{
+  SuperWaypointFilter smfw;
+  std::vector<geometry_msgs::Pose2D> startPath;
+  geometry_msgs::Pose2D point;
+  point.x = 6.0;
+  point.y = 0;
+  point.theta = 0;
+
+  startPath.clear();
+  startPath.push_back(point);
+
+  smfw.filterWaypoints(startPath);
+  ASSERT_TRUE (smfw.getForwardPath().size() > 3) <<"Actual size was: "<< smfw.getForwardPath().size();
+
+}
 
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)

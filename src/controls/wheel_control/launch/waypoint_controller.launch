@@ -1,5 +1,5 @@
 <launch>
-  <node name="waypoint_streamer" pkg="wheel_control" type="waypoint_filter" />
+  <node name="waypoint_streamer" pkg="wheel_control" type="super_waypoint_master" />
   <node name="position_controller" pkg="wheel_control" type="waypoint_master">
     <param name="simulating_driving" type="bool" value="false"/>
     <param name="initial_theta_tolerance" type="double" value=".1"/>

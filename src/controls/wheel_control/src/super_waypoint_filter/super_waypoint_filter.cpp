@@ -64,7 +64,7 @@ bool SuperWaypointFilter::filterWaypoints(std::vector<geometry_msgs::Pose2D> way
     
     //grab obstacle zone points, if any
     //also find the first point in the goal zone
-    int indexToStartAddingPointsAt = noWaypointsInStartZone ? 0 : indexOfLastWaypointInStartZone;
+    int indexToStartAddingPointsAt = noWaypointsInStartZone ? 0 : indexOfLastWaypointInStartZone + 1;
     int indexOfFirstGoalZonePoint = -1;
     for (int index =indexToStartAddingPointsAt; index< waypointList.size(); index++)
     {
@@ -87,9 +87,9 @@ bool SuperWaypointFilter::filterWaypoints(std::vector<geometry_msgs::Pose2D> way
             return false;
         }
     }
-    else if (indexOfFirstGoalZonePoint == 0)
+    else if (indexOfFirstGoalZonePoint == 0) //first point in waypointList is goal point
     {
-        if (interpolateAndAddPoint(&forwardPath, OBSTACLE_ZONE_END_X) != 1)
+        if (interpolateAndAddPoint(&forwardPath, OBSTACLE_ZONE_END_X) != 2) //have entrance point and goal point 
         {
             return false;
         }
@@ -108,9 +108,9 @@ bool SuperWaypointFilter::filterWaypoints(std::vector<geometry_msgs::Pose2D> way
     interpolateAndAddPoint(&forwardPath, 2.5);  
     interpolateAndAddPoint(&forwardPath, 3.0);  
     interpolateAndAddPoint(&forwardPath, 3.5);  
+    interpolateAndAddPoint(&forwardPath, 4.0);  
     //reverse path for backward path
     std::vector<geometry_msgs::Pose2D> backwardPath;
-    geometry_msgs::Pose2D temp_pose;
     for(int index = 1; index < forwardPath.size(); index++) //skip last waypoint (would be the first on the way back)
     {
       point_to_insert.x = forwardPath.at(forwardPath.size() - index - 1).x;
@@ -195,13 +195,13 @@ int SuperWaypointFilter::interpolateAndAddPoint( std::vector<geometry_msgs::Pose
             {
                 waypoint.x = insertX;
                 waypoint.y = interpolateYFromXAndTwoPoints(path->at(indexToPutMidPointAt).x, path->at(indexToPutMidPointAt).y,
-                                                                  path->at(indexToPutMidPointAt-1).x,path->at(indexToPutMidPointAt-1).x,
+                                                                  path->at(indexToPutMidPointAt-1).x,path->at(indexToPutMidPointAt-1).y,
                                                                   insertX);
                 waypoint.theta = path->at(indexToPutMidPointAt-1).theta;
+                path->insert(path->begin() + indexToPutMidPointAt, waypoint);
+                ret_val = 2;
                 break;
             }
-            path->insert(path->begin() + indexToPutMidPointAt, waypoint);
-            ret_val = 2;
         }
         if (indexToPutMidPointAt == path->size())
         {
