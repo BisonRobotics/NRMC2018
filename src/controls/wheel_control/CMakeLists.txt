@@ -77,6 +77,9 @@ add_executable(waypoint_filter src/waypoint_filter.cpp)
 add_dependencies(waypoint_filter way_control_helper)
 target_link_libraries(waypoint_filter way_control_helper ${catkin_LIBRARIES})
 
+add_library(super_waypoint_filter src/super_waypoint_filter/super_waypoint_filter.cpp)
+
+
 add_executable(pose_array_publisher src/test/pose_array_publisher.cpp)
 target_link_libraries(pose_array_publisher ${catkin_LIBRARIES})
 
