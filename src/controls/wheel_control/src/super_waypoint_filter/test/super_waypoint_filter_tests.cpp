@@ -61,7 +61,7 @@ TEST(superWaypointFilterTests, addPointFromBehind2)
  ASSERT_NEAR (startPath.at(0).y, point.y, .01); //so we take the y from the point
 }
 
-TEST(superWaypointFilterTests, contructPathFromOneWaypoint)
+TEST(superWaypointFilterTests, contructPathFromOneWaypointInGoal)
 {
   SuperWaypointFilter smfw;
   std::vector<geometry_msgs::Pose2D> startPath;
@@ -74,8 +74,26 @@ TEST(superWaypointFilterTests, contructPathFromOneWaypoint)
   startPath.push_back(point);
 
   smfw.filterWaypoints(startPath);
-  ASSERT_TRUE (smfw.getForwardPath().size() > 3) <<"Actual size was: "<< smfw.getForwardPath().size();
+  ASSERT_TRUE (smfw.getForwardPath().size() > 6) <<"Actual size was: "<< smfw.getForwardPath().size();
 
+}
+
+TEST(superWaypointFilterTests, contructPathWaypointsInObstacleFieldAndGoal)
+{
+  SuperWaypointFilter smfw;
+  std::vector<geometry_msgs::Pose2D> startPath;
+  geometry_msgs::Pose2D point;
+  point.x = 2.0;
+  point.y = .8;
+  point.theta = 0;
+  startPath.clear();
+  startPath.push_back(point);
+  point.x = 6.0;
+  point.y = 0;
+  point.theta = 0;
+
+  smfw.filterWaypoints(startPath);
+  ASSERT_TRUE (smfw.getForwardPath().size() > 6) <<"Actual size was: "<< smfw.getForwardPath().size();
 }
 
 // Run all the tests that were declared with TEST()
