@@ -1,5 +1,4 @@
 #include <super_waypoint_filter/super_waypoint_filter.h>
-
 #define MIN_DISTANCE_FOR_RUN 2.5
 #define OBSTACLE_ZONE_START_X 1.5
 #define OBSTACLE_ZONE_END_X 4.44
@@ -7,9 +6,18 @@
 
 #define FIELD_WIDTH_2 1.89
 
-double interpolateYFromXAndTwoPoints(double x0, double y0, double x1, double y1, double x)
+double SuperWaypointFilter::interpolateYFromXAndTwoPoints(double x0, double y0, double x1, double y1, double x)
 {
-    return ((y1 - y0)/(x1 - x0)) * (x - x0) + y0;
+    if (std::abs(x1 - x0) > 0.000001)
+    {
+        double slope = ((y1 - y0)/(x1 - x0));
+        double result = ((x - x1)*slope + y1);
+        return result;
+    }
+    else
+    {
+        return (y1 + y0)/2.0;
+    }
 }
 
 bool SuperWaypointFilter::filterWaypoints(std::vector<geometry_msgs::Pose2D> waypointList)
@@ -167,7 +175,7 @@ int SuperWaypointFilter::interpolateAndAddPoint( std::vector<geometry_msgs::Pose
                             path->front().x - cos(path->front().theta),
                             path->front().y - sin(path->front().theta), 
                             insertX);
-        if (std::abs(waypoint.y) > FIELD_WIDTH_2 - .4)
+        if (std::abs(waypoint.y) > FIELD_WIDTH_2 - .5)
         {
           waypoint.y = path->front().y;
           waypoint.theta = 0;
@@ -176,7 +184,6 @@ int SuperWaypointFilter::interpolateAndAddPoint( std::vector<geometry_msgs::Pose
         {
           waypoint.theta = path->front().theta;
         }
-        waypoint.theta = 0;//path->front().theta; 
         path->insert(path->begin(), waypoint);
         ret_val = 1;
     }

@@ -123,6 +123,16 @@ if(TARGET test_Wheels)
   )
 endif()
 
+
+catkin_add_gtest(test_SuperWaypointFilter src/super_waypoint_filter/test/super_waypoint_filter_tests.cpp src/super_waypoint_filter/super_waypoint_filter.cpp)
+if(TARGET test_SuperWaypointFilter)
+  target_link_libraries(test_SuperWaypointFilter
+    super_waypoint_filter
+    ${catkin_LIBRARIES}
+  )
+endif()
+
+
 catkin_add_gtest(test_Interface src/interface/test/interface_tests.cpp include/wheel_control/interface/interface.h src/wheels/wheels.cpp)
 if(TARGET test_Interface)
   target_link_libraries(test_Interface
