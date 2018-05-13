@@ -46,15 +46,18 @@ bool SuperWaypointFilter::filterWaypoints(std::vector<geometry_msgs::Pose2D> way
     //grab entrance to obstacle zone
     if (noWaypointsInStartZone)
     {
-        forwardPath.push_back(waypointList.front());
+        forwardPath.push_back(waypointList.front()); //grab first waypoint and extrapolate back
         if (interpolateAndAddPoint(&forwardPath, OBSTACLE_ZONE_START_X) != 1)
         {
             return false;
         }
+        forwardPath.erase(forwardPath.begin()+1);
     }
     else
     {
-        forwardPath.push_back(waypointList.at(indexOfLastWaypointInStartZone));
+        forwardPath.push_back(waypointList.at(indexOfLastWaypointInStartZone)); //valid to extrapolate this point forward
+                                                                                //because it will point at next point (in obstacle field)
+                                                                                //if there is no next point, it will still work
         if (interpolateAndAddPoint(&forwardPath, OBSTACLE_ZONE_START_X) != 3)
         {
             return false;
@@ -87,19 +90,14 @@ bool SuperWaypointFilter::filterWaypoints(std::vector<geometry_msgs::Pose2D> way
             return false;
         }
     }
-    else if (indexOfFirstGoalZonePoint == 0) //first point in waypointList is goal point
+    else if (indexOfFirstGoalZonePoint >= 0) //first point in waypointList is goal point
     {
+        forwardPath.push_back(waypointList.at(indexOfFirstGoalZonePoint));
         if (interpolateAndAddPoint(&forwardPath, OBSTACLE_ZONE_END_X) != 2) //have entrance point and goal point 
         {
             return false;
         }
-    }
-    else
-    {
-        if (interpolateAndAddPoint(&forwardPath, OBSTACLE_ZONE_END_X) != 2)
-        {
-            return false;
-        }
+        forwardPath.erase(forwardPath.end());
     }
     
     //interpolate intermediate obstacle zone points
@@ -165,6 +163,13 @@ int SuperWaypointFilter::interpolateAndAddPoint( std::vector<geometry_msgs::Pose
     geometry_msgs::Pose2D waypoint;
     int ret_val=0;
     int indexToPutMidPointAt;
+    for (auto const &wp : *path)
+    {
+        if (wp.x == insertX)
+        {
+            return 0; //waypoint is already there
+        }
+    }
     if (path->at(0).x > insertX)
     {
         //there was no point before the
@@ -208,11 +213,11 @@ int SuperWaypointFilter::interpolateAndAddPoint( std::vector<geometry_msgs::Pose
             //there was no point beyond where
             //the inserted one should be
             //so extrapolate forward
-            waypoint.x = OBSTACLE_ZONE_END_X;
+            waypoint.x = insertX;
             waypoint.y = interpolateYFromXAndTwoPoints(path->back().x, path->back().y,
             path->back().x - cos(path->back().theta),
             path->back().y - sin(path->back().theta),
-            OBSTACLE_ZONE_END_X);
+            insertX);
             if (std::abs(waypoint.y) > FIELD_WIDTH_2 - .4)
             {
                 waypoint.y = path->back().y;

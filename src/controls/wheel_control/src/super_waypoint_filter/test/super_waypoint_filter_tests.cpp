@@ -91,6 +91,7 @@ TEST(superWaypointFilterTests, contructPathWaypointsInObstacleFieldAndGoal)
   point.x = 6.0;
   point.y = 0;
   point.theta = 0;
+  startPath.push_back(point);
 
   smfw.filterWaypoints(startPath);
   ASSERT_TRUE (smfw.getForwardPath().size() > 6) <<"Actual size was: "<< smfw.getForwardPath().size();
