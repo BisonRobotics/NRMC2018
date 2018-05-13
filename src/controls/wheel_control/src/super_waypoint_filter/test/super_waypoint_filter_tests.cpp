@@ -97,6 +97,58 @@ TEST(superWaypointFilterTests, contructPathWaypointsInObstacleFieldAndGoal)
   ASSERT_TRUE (smfw.getForwardPath().size() > 6) <<"Actual size was: "<< smfw.getForwardPath().size();
 }
 
+TEST(superWaypointFilterTests, contructPathWaypointsInObstacleFieldAndGoalAndGetBackwardPath)
+{
+  SuperWaypointFilter smfw;
+  std::vector<geometry_msgs::Pose2D> startPath;
+  geometry_msgs::Pose2D point;
+  point.x = 2.0;
+  point.y = .8;
+  point.theta = 0;
+  startPath.clear();
+  startPath.push_back(point);
+  point.x = 6.0;
+  point.y = 0;
+  point.theta = 0;
+  startPath.push_back(point);
+
+  smfw.filterWaypoints(startPath);
+  ASSERT_TRUE (smfw.getForwardPath().size() > 6) <<"Actual size was: "<< smfw.getForwardPath().size();
+  ASSERT_TRUE (smfw.getBackwardPath().size() > 6) <<"Actual size was: "<< smfw.getBackwardPath().size();
+}
+
+TEST(SuperWaypointFilterTests, ableToGetBackwardPath2)
+{
+  SuperWaypointFilter smfw;
+  std::vector<geometry_msgs::Pose2D> startPath;
+  geometry_msgs::Pose2D point;
+  point.x = .5002;
+  point.y = .66289;
+  point.theta = -.2686;
+  startPath.clear();
+  startPath.push_back(point);
+  point.x = 1.464;
+  point.y = .3975;
+  point.theta = .294;
+  startPath.push_back(point);
+  point.x = 2.269;
+  point.y = .6414;
+  point.theta = -.40362;
+  startPath.push_back(point);
+  point.x = 5.487;
+  point.y = -.743132;
+  point.theta = .9667;
+  startPath.push_back(point);
+  point.x = 6.0;
+  point.y = 0;
+  point.theta = 0;
+  startPath.push_back(point);
+  
+  smfw.filterWaypoints(startPath);
+  ASSERT_TRUE (smfw.getForwardPath().size() > 6) <<"Actual size was: "<< smfw.getForwardPath().size();
+  ASSERT_TRUE (smfw.getBackwardPath().size() > 6) <<"Actual size was: "<< smfw.getBackwardPath().size();
+}
+
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {

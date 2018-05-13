@@ -73,20 +73,22 @@ int main(int argc, char** argv)
               if (smfw.filterWaypoints(waypoints))
               {
                 path_been_filtered = true;
+                ROS_WARN("WAYPOINTS FILTERED");
               }
               else
               {
                   ROS_ERROR("PATH COULD NOT BE FILTERED");
               }
-              ROS_WARN("WAYPOINTS FILTERED");
           }
           if (direction)
           {
               waypoints_to_publish = smfw.getForwardPath();
+              ROS_WARN("GETTING FORWARD PATH, SIZE: %d", (int)waypoints_to_publish.size());
           }
           else
           {
               waypoints_to_publish = smfw.getBackwardPath();
+              ROS_WARN("GETTING BACKWARD PATH, SIZE: %d", (int)waypoints_to_publish.size());
           }
           waypoints_from_autonomy = smfw.getRawPath();
           goal_markers.points.clear();

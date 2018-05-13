@@ -108,8 +108,7 @@ bool SuperWaypointFilter::filterWaypoints(std::vector<geometry_msgs::Pose2D> way
     interpolateAndAddPoint(&forwardPath, 3.5);  
     interpolateAndAddPoint(&forwardPath, 4.0);  
     //reverse path for backward path
-    std::vector<geometry_msgs::Pose2D> backwardPath;
-    for(int index = 1; index < forwardPath.size(); index++) //skip last waypoint (would be the first on the way back)
+    for(int index = 0; index < forwardPath.size(); index++)
     {
       point_to_insert.x = forwardPath.at(forwardPath.size() - index - 1).x;
       point_to_insert.y = forwardPath.at(forwardPath.size() - index - 1).y;
@@ -124,12 +123,12 @@ bool SuperWaypointFilter::filterWaypoints(std::vector<geometry_msgs::Pose2D> way
       backwardPath.push_back(point_to_insert);
     }
     //add points to forward path for digging
-    point_to_insert.x = 5.25;
+    point_to_insert.x = 5.4;
     point_to_insert.y = forwardPath.back().y + .015;
     point_to_insert.theta = 0;
     forwardPath.push_back(point_to_insert);
     
-    point_to_insert.x = 6.25;
+    point_to_insert.x = 6.4;
     point_to_insert.y = forwardPath.back().y - .015;
     point_to_insert.theta = 0;
     forwardPath.push_back(point_to_insert);
