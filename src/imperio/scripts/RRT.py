@@ -12,6 +12,7 @@ import copy
 import operator
 import multiprocessing as mp
 import rospy
+import time
 
 halt_for_visualization = False
 use_threading = True
@@ -76,6 +77,10 @@ class RRT():
             dy = newNode.y - self.end.y
             d = math.sqrt(dx * dx + dy * dy)
             if d <= self.expandDis:
+                break
+
+            if endtime < time.time():
+                rospy.loginfo("[IMPERIO] : time {}".format(time.time()-endtime))
                 break
 
         path = [[self.end.x, self.end.y]]
@@ -241,6 +246,10 @@ def path_planning(start, goal, map):
         return []
 
     rrt = RRT(start, goal, map, [min_x, max_x], [min_y, max_y])
+
+    global endtime
+    endtime = time.time() + 2
+
     path = rrt.planning()
     #draw_tree(path, map)
 
@@ -272,7 +281,7 @@ def parallel_paths(start, goal, map, num_paths):
     remain = num_paths%4
     args = []
     for i in range(0, 4):
-        paths = num_paths/4 if (remain < 1) else (num_paths/4 + 1)
+        paths = num_paths/4 if (remain < 1) else (num_paths/4 + 1) # split number of paths evenly into 4 threads, some threads get extra if num_paths is not divisible by 4
         remain -= 1
         arg = [start, goal, map, paths]
         args.append(arg)
