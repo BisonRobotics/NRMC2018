@@ -40,6 +40,8 @@ class RRT():
         self.maxIter = 500
         self.map = map
 
+        self.start_time = rospy.get_time()
+
     def planning(self):
         """
         Pathplanning
@@ -47,6 +49,10 @@ class RRT():
 
         self.nodeList = [self.start]
         while True:
+            if rospy.get_time() - self.start_time > 20:
+                rospy.logwarn("[IMPERIO] : RRT Time Out")
+                raise Exception
+
             # Random Sampling
             if random.randint(0, 100) > self.goalSampleRate:
                 rnd = [random.uniform(self.minrand_x, self.maxrand_x), random.uniform(
@@ -241,11 +247,13 @@ def path_planning(start, goal, map):
         return []
 
     rrt = RRT(start, goal, map, [min_x, max_x], [min_y, max_y])
-    path = rrt.planning()
-    #draw_tree(path, map)
+    try:
+        path = rrt.planning()
+    except Exception:
+        raise Exception
+
 
     smooth_path = remove_redundant(path_smoothing(path, 1000, map))
-    #draw_tree(smooth_path, map)
 
     smooth_path.reverse()
     return smooth_path
@@ -260,7 +268,11 @@ def find_best_rrt_path(start, goal, map, num_paths):
     lowest_path = []
 
     for i in range(0, num_paths):
-        path = path_planning(start, goal)
+        try:
+            path = path_planning(start, goal)
+        except Exception:
+            return []
+
         path_score = calculate_path_score(path)
         if path_score < lowest_path_score:
             lowest_path_score = path_score
