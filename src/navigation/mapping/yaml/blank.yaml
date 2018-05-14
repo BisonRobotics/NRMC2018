@@ -1,5 +1,5 @@
-image: death_triangle.bmp
-resolution: .01
+image: death_triangle_small.bmp
+resolution: .1
 origin: [0, -1.89, 0]
 occupied_thresh: .70
 free_thresh: .3

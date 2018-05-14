@@ -158,7 +158,7 @@ def collision_check(node, map):
 def line_collision_check(first, second, map):
     # Line Equation
 
-    check = .05
+    check = .15
 
     x1 = first[0]
     y1 = first[1]
@@ -360,6 +360,7 @@ def calculate_path_score(path):
         b = path[i]
         c = path[i+1]
 
+        """
         ab_dist = distance(a, b)
         ac_dist = distance(a, c)
         bc_dist = distance(b, c)
@@ -372,7 +373,8 @@ def calculate_path_score(path):
                 rospy.loginfo("[IMPERIO] : ab {} bc {} ac {}".format(ab_dist, bc_dist, ac_dist))
         else:
             angle = math.pi
-
+        """
+        angle = np.arctan2(a[1] - b[1], a[0] - b[0]) - np.arctan2(c[1] - b[1], c[0] - b[0]);
         angular_score += abs(math.pi - angle) ** 2
     angular_score = angular_score/len(path)
     point_num_score = len(path)
