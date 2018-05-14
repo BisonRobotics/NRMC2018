@@ -9,5 +9,5 @@
 <include file="$(find dig_control)/launch/sim_dig_master.launch"/>
 <include file="$(find dig_control)/launch/sim_outrigger_master.launch"/>
 <include file="$(find imperio)/launch/imperio.launch"/>
-
+<include file="$(find mapping)/launch/costmap_2d.launch"/>
 </launch>
