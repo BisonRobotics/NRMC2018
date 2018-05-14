@@ -77,6 +77,11 @@ add_executable(waypoint_filter src/waypoint_filter.cpp)
 add_dependencies(waypoint_filter way_control_helper)
 target_link_libraries(waypoint_filter way_control_helper ${catkin_LIBRARIES})
 
+add_library(super_waypoint_filter src/super_waypoint_filter/super_waypoint_filter.cpp)
+add_executable(super_waypoint_master src/super_waypoint_master.cpp)
+add_dependencies(super_waypoint_master super_waypoint_filter)
+target_link_libraries(super_waypoint_master super_waypoint_filter ${catkin_LIBRARIES})
+
 add_executable(pose_array_publisher src/test/pose_array_publisher.cpp)
 target_link_libraries(pose_array_publisher ${catkin_LIBRARIES})
 
@@ -119,6 +124,16 @@ if(TARGET test_Wheels)
     ${catkin_LIBRARIES}
   )
 endif()
+
+
+catkin_add_gtest(test_SuperWaypointFilter src/super_waypoint_filter/test/super_waypoint_filter_tests.cpp src/super_waypoint_filter/super_waypoint_filter.cpp)
+if(TARGET test_SuperWaypointFilter)
+  target_link_libraries(test_SuperWaypointFilter
+    super_waypoint_filter
+    ${catkin_LIBRARIES}
+  )
+endif()
+
 
 catkin_add_gtest(test_Interface src/interface/test/interface_tests.cpp include/wheel_control/interface/interface.h src/wheels/wheels.cpp)
 if(TARGET test_Interface)
