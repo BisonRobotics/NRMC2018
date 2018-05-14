@@ -410,7 +410,7 @@ int main(int argc, char** argv)
           ros::spinOnce();
           rate.sleep();
           
-          wpmsg.x = 6.25;
+          wpmsg.x = 6.40;
           wpmsg.y = obstacle_zone_exit_point.y + 0.015;
           wpmsg.theta =0;
           pub.publish(wpmsg);

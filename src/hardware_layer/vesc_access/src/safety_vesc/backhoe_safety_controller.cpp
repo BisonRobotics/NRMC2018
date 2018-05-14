@@ -4,7 +4,7 @@
 BackhoeSafetyController::BackhoeSafetyController(safetycontroller::joint_params_t params, iVescAccess *vesc)
   : SafetyController(vesc, params)
 {
-
+  torque_magnitude = 8.0;
 }
 
 bool BackhoeSafetyController::init()

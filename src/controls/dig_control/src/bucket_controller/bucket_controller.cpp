@@ -11,6 +11,22 @@ BucketController::BucketController(iVescAccess *bigConveyorVesc, iVescAccess *li
   sifter_state = false;
 }
 
+bool BucketController::init ()
+{
+    static constexpr double time_to_init=3;
+    bool ret_val = false;
+    if (!has_been_init) {
+      bc->setTorque(8.0);
+      initial_time = ros::Time::now();
+    } else if ((ros::Time::now()-initial_time).toSec() > time_to_init)
+    {
+      bc->setTorque(0);
+      ret_val = true;
+    }
+  return ret_val;
+}
+
+
 void BucketController::turnBigConveyorOn()
 {
   bc->setLinearVelocity(35000); // in erpm

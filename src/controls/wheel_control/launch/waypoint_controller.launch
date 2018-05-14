@@ -6,7 +6,7 @@
     <param name="initial_theta_gain" type="double" value=".1"/>
     <param name="time_for_blind_zero" type="double" value="7"/>
     <param name="theta_range" type="double" value=".26"/> <!-- This is 30 degrees/2-->
-    <param name="localization_settle_time" type="double" value="10"/>
+    <param name="localization_settle_time" type="double" value="20"/>
   </node>
   <include file="$(find lpms_imu)/launch/imu_node.launch"/>
   <include file="$(find launch)/launch/test_apriltag_nodes.launch"/>

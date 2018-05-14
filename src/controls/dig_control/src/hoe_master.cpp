@@ -160,13 +160,21 @@ int main(int argc, char **argv)
     rate.sleep();
     ros::spinOnce();
   }
+  BucketController bucketC(bucketBigConveyorVesc, bucketLittleConveyorVesc, bucketSifterVesc);
+  BackhoeController backhoeC(&backhoeSafety, &linearSafety);
+
+  bool bucket_init = false;
+  while(ros::ok() && bucket_init)
+  {
+    bucket_init = bucketC.init();
+    rate.sleep();
+    ros::spinOnce();
+  }
 
 
   // pass vescs (sim or physical) to controllers
 
   ROS_INFO("Init'd");
-  BucketController bucketC(bucketBigConveyorVesc, bucketLittleConveyorVesc, bucketSifterVesc);
-  BackhoeController backhoeC(&backhoeSafety, &linearSafety);
 
   DigDumpAction ddAct(&backhoeC, &bucketC, argc, argv);
 

@@ -5,6 +5,7 @@ LinearSafetyController::LinearSafetyController(safetycontroller::joint_params_t 
   : SafetyController::SafetyController(vesc, params)
 {
   has_set_init_vel = false;
+  torque_magnitude = 12.0;
 }
 
 void LinearSafetyController::updatePositionEstimate(double dt)

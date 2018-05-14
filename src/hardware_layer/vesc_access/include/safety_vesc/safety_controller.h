@@ -41,6 +41,7 @@ protected:
   iVescAccess *vesc;
   bool is_init;
   double position_estimate;
+  double torque_magnitude;
 private:
   safetycontroller::controlModeState control_mode;
   double set_position;

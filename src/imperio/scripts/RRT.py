@@ -35,7 +35,7 @@ class RRT():
         self.end = Node(goal[0], goal[1])
         self.minrand_x, self.maxrand_x = randAreaX
         self.minrand_y, self.maxrand_y = randAreaY
-        self.expandDis = 1.0
+        self.expandDis = 0.15
         self.goalSampleRate = 5
         self.maxIter = 500
         self.map = map

@@ -32,7 +32,7 @@ void SafetyController::setPositionSetpoint(double position)
     throw BackhoeException(ss.str());
   }
   this->set_position = position;
-  this->set_torque = 8.0*sign(position-position_estimate);
+  this->set_torque = torque_magnitude*sign(position-position_estimate);
   control_mode = safetycontroller::position_control;
 }
 
