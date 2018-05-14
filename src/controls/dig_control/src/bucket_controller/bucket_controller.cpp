@@ -16,7 +16,7 @@ bool BucketController::init ()
     static constexpr double time_to_init=3;
     bool ret_val = false;
     if (!has_been_init) {
-      bc->setTorque(8.0);
+      bc->setRpm(15000);
       initial_time = ros::Time::now();
     } else if ((ros::Time::now()-initial_time).toSec() > time_to_init)
     {
