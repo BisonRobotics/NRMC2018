@@ -21,6 +21,7 @@
 
 #define BACKUP_TIME 3.0
 #define SCOOT_BACK_TIME .15
+#define SQUARING_UP_TIMEOUT 9.0
 
 bool approx(double A, double B, double T)
 {
@@ -89,6 +90,7 @@ WaypointController::WaypointController(double axelLength, double maxSafeSpeed, p
 
   backing_it_in = false;
   time_backing = 0;
+  time_squaring = 0;
   
   time_scooting = 0;
   
@@ -464,8 +466,9 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
     {
       if (squaring_it_up)
       {
+          time_squaring += dt;
           double angle_measurement = WaypointControllerHelper::anglediff(robotPose.theta, 0);
-          if (std::abs(angle_measurement) > .05)
+          if (std::abs(angle_measurement) > .05 && time_squaring < SQUARING_UP_TIMEOUT)
           {
             front_left_wheel->setLinearVelocity(.12 * WaypointControllerHelper::sign(angle_measurement));
             back_left_wheel->setLinearVelocity(.12 * WaypointControllerHelper::sign(angle_measurement));
@@ -476,6 +479,7 @@ WaypointController::Status WaypointController::update(LocalizerInterface::stateV
           else 
           {
               squaring_it_up = false;
+              time_squaring = 0;
           }
       }
       else
