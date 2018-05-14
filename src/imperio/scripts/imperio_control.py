@@ -82,7 +82,7 @@ class ImperioControl(object):
     def navigateInitialPosition(self):
         result = self.initial_planner.turn_to_start()
         if result == None:
-            self.robot.change_state(RobotState.HALT)
+            rospy.logwarn("[IMPERIO] : ERROR! SOMETHING IS WRONG WITH INITIAL TURN!")
         if result:
             self.robot.next_state()
 
@@ -95,7 +95,7 @@ class ImperioControl(object):
         goal = (6, 0)
         result = self.planner.navigate_to_goal(goal)
         if result == None:
-            self.robot.change_state(RobotState.HALT)
+            rospy.logwarn("[IMPERIO] : ERROR! SOMETHING IS WRONG WITH PLANNER!")
         if result:
             self.robot.next_state()
 
@@ -106,9 +106,10 @@ class ImperioControl(object):
         goal = (.6, 0)
         result =  self.planner.navigate_to_goal(goal)
         if result == None:
-            self.robot.change_state(RobotState.HALT)
+            rospy.logwarn("[IMPERIO] : ERROR! SOMETHING IS WRONG WITH PLANNER!")
         if result:
             self.robot.next_state()
+
 
     def dig(self):
         """
@@ -116,8 +117,7 @@ class ImperioControl(object):
         """
         result = self.rm.dig_regolith()
         if result == None:
-            rospy.logwarn("[IMPERIO] : Error with Dig")
-            self.recover()
+            rospy.logwarn("[IMPERIO] : ERROR! SOMETHING IS WRONG WITH DIG!")
         if result:
             self.robot.next_state()
             self.rm.waiting_on_digging_action = False
@@ -146,9 +146,8 @@ class ImperioControl(object):
         """
         Recovery behavior for the robot
         """
-        # Currently just halts the Robot
-        rospy.logwarn("[IMPERIO] : Robot could not be recovered, please regain control.")
-        self.robot.change_state(RobotState.HALT)
+        rospy.logwarn("[IMPERIO] : CRITICAL ERROR! SOMETHING IS VERY WRONG WITH THE SYSTEM!")
+        #self.robot.change_state(RobotState.HALT)
 
     def turn_around(self):
         """
