@@ -114,6 +114,7 @@ private:
   bool backing_it_in;
   bool squaring_it_up;
   double time_backing;
+  double time_squaring;
   
   double time_scooting;
   
