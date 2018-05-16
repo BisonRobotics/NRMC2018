@@ -248,9 +248,11 @@ def path_planning(start, goal, map):
 
     rrt = RRT(start, goal, map, [min_x, max_x], [min_y, max_y])
     try:
+        rospy.loginfo("[IMPERIO] : Attempting to plan individual path")
         path = rrt.planning()
+        rospy.loginfo("[IMPERIO] : Succeeded in planning individual path")
     except Exception:
-        raise Exception
+        return Exception
 
 
     smooth_path = remove_redundant(path_smoothing(path, 1000, map))
@@ -322,6 +324,8 @@ def parallel_paths(start, goal, map, num_paths):
 
 
 def rrt_process(data, ret):
+    rospy.loginfo("[IMPERIO] : Starting the RRT Process thread")
+
     start, goal, map, paths = data
     lowest_score = 9999999
     lowest_path = None
@@ -330,16 +334,23 @@ def rrt_process(data, ret):
         ret[0] = lowest_score
         return
 
-    for i in range(0, paths):
-        path = path_planning(start, goal, map)
-        path_score = calculate_path_score(path)
-        if path_score < lowest_score:
-            lowest_path = path
-            lowest_score = path_score
-    path_array = path_to_array(lowest_path)
-    for i in range(0, len(path_array)):
-        ret[i + 1] = path_array[i]
-    ret[0] = lowest_score
+    try:
+
+        for i in range(0, paths):
+            path = path_planning(start, goal, map)
+            path_score = calculate_path_score(path)
+            if path_score < lowest_score:
+                lowest_path = path
+                lowest_score = path_score
+
+
+        path_array = path_to_array(lowest_path)
+        for i in range(0, len(path_array)):
+            ret[i + 1] = path_array[i]
+        ret[0] = lowest_score
+
+    except Exception:
+        ret[0] = lowest_score
 
 
 def path_to_array(path):
@@ -364,7 +375,7 @@ def list_to_path(array, sig_num):
 
 def calculate_path_score(path):
     if len(path) == 0:
-        return 0
+        return 9999999999999999
     angular_score = 0
     for i in range(1, len(path) - 1):
         #Using the points a, b, c to find angle from ab to bc
