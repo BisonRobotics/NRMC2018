@@ -250,7 +250,7 @@ def path_planning(start, goal, map):
     try:
         path = rrt.planning()
     except Exception:
-        return Exception
+        raise Exception
 
 
     smooth_path = remove_redundant(path_smoothing(path, 1000, map))
