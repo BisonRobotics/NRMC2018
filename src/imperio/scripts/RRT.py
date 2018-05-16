@@ -318,10 +318,12 @@ def parallel_paths(start, goal, map, num_paths):
     # Start the thread pool
     for thread in thread_pool:
         thread.start()
+        rospy.sleep(0.01)
 
     # Wait for the threads to finish
     for thread in thread_pool:
         thread.join()
+        rospy.sleep(0.01)
 
     ret_val = [rv_0, rv_1, rv_2, rv_3]
     args = [arg_0, arg_1, arg_2, arg_3]
