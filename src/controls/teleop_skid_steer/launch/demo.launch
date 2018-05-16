@@ -1,0 +1,5 @@
+<launch>
+    <include file="$(find launch)/launch/test_apriltag_nodes.launch"/>
+<node pkg="teleop_skid_steer" type="teleop_interface_exec" name="teleop"/>
+    <node name="dig_teleop" pkg="dig_control" type="dig_teleop_by_hand"/>
+</launch>
