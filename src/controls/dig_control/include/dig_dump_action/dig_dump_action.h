@@ -55,7 +55,7 @@ private:
   bool is_digging;
   bool is_dumping;
   double initial_time;
-  static constexpr float dump_time = 30;
+  static constexpr float dump_time = 90;
   static constexpr float time_to_move_rocks_to_holder=1;
   void digExecuteCB(const dig_control::DigGoalConstPtr &goal);
   void dumpExecuteCB(const dig_control::DumpGoalConstPtr &goal);
