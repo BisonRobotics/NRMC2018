@@ -282,26 +282,37 @@ def find_best_rrt_path(start, goal, map, num_paths):
 
 def parallel_paths(start, goal, map, num_paths):
     remain = num_paths%4
-    args = []
-    for i in range(0, 4):
-        paths = num_paths/4 if (remain < 1) else (num_paths/4 + 1)
-        remain -= 1
-        arg = [start, goal, map, paths]
-        args.append(arg)
+    #args = []
+    #for i in range(0, 4):
+    #    paths = num_paths/4 if (remain < 1) else (num_paths/4 + 1)
+    #    remain -= 1
+    #    arg = [start, goal, map, paths]
+    #    args.append(arg)
+
+    arg_0 = [start, goal, map, num_paths/4]
+    arg_1 = [start, goal, map, num_paths/4]
+    arg_2 = [start, goal, map, num_paths/4]
+    arg_3 = [start, goal, map, num_paths/4]
+
 
     #Signaling number to the decoder of the shared states
     sig_num = -42
 
     #Trust me, this is better than a message queue (it's essentially a pipe)
-    ret_val = []
-    for i in range(0,4):
-        ret_val.append(mp.Array('d', [sig_num] * 100))
+    #ret_val = []
+    #for i in range(0,4):
+    #    ret_val.append(mp.Array('d', [sig_num] * 100))
+
+    rv_0 = mp.Array('d', [sig_num] * 100)
+    rv_1 = mp.Array('d', [sig_num] * 100)
+    rv_2 = mp.Array('d', [sig_num] * 100)
+    rv_3 = mp.Array('d', [sig_num] * 100)
 
     # Create threads, one for each core
-    nicolenotunix = mp.Process(target=rrt_process, args=(args[0], ret_val[0]))
-    dashneptune = mp.Process(target=rrt_process, args=(args[1], ret_val[1]))
-    jacobhuesman = mp.Process(target=rrt_process, args=(args[2], ret_val[2]))
-    fworg64 = mp.Process(target=rrt_process, args=(args[3], ret_val[3]))
+    nicolenotunix = mp.Process(target=rrt_process, args=(arg_0, rv_0))
+    dashneptune = mp.Process(target=rrt_process, args=(arg_1, rv_1))
+    jacobhuesman = mp.Process(target=rrt_process, args=(arg_2, rv_2))
+    fworg64 = mp.Process(target=rrt_process, args=(arg_3, rv_3))
     thread_pool = [nicolenotunix, dashneptune, jacobhuesman, fworg64]
 
     # Start the thread pool
@@ -311,6 +322,9 @@ def parallel_paths(start, goal, map, num_paths):
     # Wait for the threads to finish
     for thread in thread_pool:
         thread.join()
+
+    ret_val = [rv_0, rv_1, rv_2, rv_3]
+    args = [arg_0, arg_1, arg_2, arg_3]
 
     results = []
     for val in ret_val:
@@ -330,16 +344,23 @@ def rrt_process(data, ret):
         ret[0] = lowest_score
         return
 
-    for i in range(0, paths):
-        path = path_planning(start, goal, map)
-        path_score = calculate_path_score(path)
-        if path_score < lowest_score:
-            lowest_path = path
-            lowest_score = path_score
-    path_array = path_to_array(lowest_path)
-    for i in range(0, len(path_array)):
-        ret[i + 1] = path_array[i]
-    ret[0] = lowest_score
+    try:
+
+        for i in range(0, paths):
+            path = path_planning(start, goal, map)
+            path_score = calculate_path_score(path)
+            if path_score < lowest_score:
+                lowest_path = path
+                lowest_score = path_score
+
+
+        path_array = path_to_array(lowest_path)
+        for i in range(0, len(path_array)):
+            ret[i + 1] = path_array[i]
+        ret[0] = lowest_score
+
+    except Exception:
+        ret[0] = lowest_score
 
 
 def path_to_array(path):
@@ -364,7 +385,7 @@ def list_to_path(array, sig_num):
 
 def calculate_path_score(path):
     if len(path) == 0:
-        return 0
+        return 9999999999999999
     angular_score = 0
     for i in range(1, len(path) - 1):
         #Using the points a, b, c to find angle from ab to bc
