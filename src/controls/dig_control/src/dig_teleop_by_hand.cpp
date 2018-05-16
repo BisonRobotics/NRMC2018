@@ -18,7 +18,7 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
   bool central_down = false;
   bool sifter_toggle = false;
   static constexpr float linear_gain = 6.0;
-  static constexpr float central_gain = 8.0f;
+  static constexpr float central_gain = 5.0f;
 
   if (joy->buttons[5])  // right bumper is safety
   {
@@ -26,7 +26,7 @@ void callback(const sensor_msgs::Joy::ConstPtr &joy)
     linear_down = joy->buttons[2];                // X is linear down
     central_up = joy->buttons[1];                 // B is central up
     central_down = joy->buttons[0];               // A is central down
-    sifter_toggle = joy->axes[2] == 1.0f;          //LT is sifter stuff
+    sifter_toggle = joy->axes[2] == -1.0f;          //LT is sifter stuff
   }
 
   if (linear_up && linear_down)
@@ -115,12 +115,13 @@ int main(int argc, char **argv)
 
   ROS_INFO ("Init!!");
   float velocity;
-  initial=ros::Time::now();
+
   while (ros::ok())
   {
+      initial=ros::Time::now();
     r.sleep();
     ros::spinOnce();
-    backhoe.update((initial - ros::Time::now()).toSec());
+    backhoe.update(1.0/40.0);
     ROS_INFO ("linear position: %.4f central position: %.4f ",linearSafety.getPositionEstimate(),backhoeSafety.getPositionEstimate() );
     initial = ros::Time::now();
     velocity = small_conveyor_vesc.getTorque();
