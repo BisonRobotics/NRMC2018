@@ -51,7 +51,7 @@ class RRT():
         while True:
             if rospy.get_time() - self.start_time > 20:
                 rospy.logwarn("[IMPERIO] : RRT Time Out")
-                raise Exception
+                return []
 
             # Random Sampling
             if random.randint(0, 100) > self.goalSampleRate:
@@ -247,10 +247,7 @@ def path_planning(start, goal, map):
         return []
 
     rrt = RRT(start, goal, map, [min_x, max_x], [min_y, max_y])
-    try:
-        path = rrt.planning()
-    except Exception:
-        raise Exception
+    path = rrt.planning()
 
 
     smooth_path = remove_redundant(path_smoothing(path, 1000, map))
@@ -268,10 +265,7 @@ def find_best_rrt_path(start, goal, map, num_paths):
     lowest_path = []
 
     for i in range(0, num_paths):
-        try:
-            path = path_planning(start, goal)
-        except Exception:
-            return []
+        path = path_planning(start, goal)
 
         path_score = calculate_path_score(path)
         if path_score < lowest_path_score:
@@ -364,7 +358,7 @@ def list_to_path(array, sig_num):
 
 def calculate_path_score(path):
     if len(path) == 0:
-        return 0
+        return 999999999999999999
     angular_score = 0
     for i in range(1, len(path) - 1):
         #Using the points a, b, c to find angle from ab to bc
